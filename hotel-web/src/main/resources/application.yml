@@ -1,0 +1,52 @@
+####### 使用YML语法形式配置，注意分号后面需要加空格
+####### 例如：port: 8088
+######################## 容器 ########################
+server:
+ port: 8080
+ context-path: /
+
+######################## Spring 全局设置 ########################
+spring:
+ application:
+  name: zhangmz-SpringBoot
+ mvc:
+  view:
+   prefix: /view/   #spring mvc返回视图的前缀
+   suffix: .jsp     #spring mvc返回视图的后缀
+# security:
+#  jwt:
+#    tokenExpirationTime: 15 # Number of minutes
+#    refreshTokenExpTime: 60 # Minutes
+#    tokenIssuer: zhangmz
+#    tokenSigningKey: xm8EV6Hy5RMFK4EEACIDAwQus
+ http:
+  encoding:
+    force: true
+    charset: UTF-8
+    enabled: true
+# thymeleaf:
+#  mode: LEGACYHTML5
+  #自动重启默认关闭
+ devtools:
+  restart:
+   enabled: true
+
+######################## 日志 ########################
+logging:
+ path: logs #日志文件目录
+ file: hotel.log #日志文件名
+# mybatis 路径
+mybatis:
+ mapperLocations: classpath*:mapper/*.xml
+
+
+ profiles:
+  active: dev
+#  active: test
+#  active: prod
+
+######################## Logback ########################
+
+# debug: true
+
+

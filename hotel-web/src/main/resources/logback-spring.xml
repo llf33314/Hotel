@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.springframework.web" level="INFO"/>
+    <!-- 设定项目某一个目录级别 -->
+    <logger name="com.gt.hotel" level="DEBUG"/>
+
+</configuration>
