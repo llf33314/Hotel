@@ -9,10 +9,10 @@ server:
 spring:
  application:
   name: zhangmz-SpringBoot
- mvc:
-  view:
-   prefix: /view/   #spring mvc返回视图的前缀
-   suffix: .jsp     #spring mvc返回视图的后缀
+ profiles:
+  active: dev
+#  active: test
+#  active: prod
 # security:
 #  jwt:
 #    tokenExpirationTime: 15 # Number of minutes
@@ -24,8 +24,10 @@ spring:
     force: true
     charset: UTF-8
     enabled: true
-# thymeleaf:
-#  mode: LEGACYHTML5
+ thymeleaf:
+  mode: LEGACYHTML5
+  suffix: .html
+
   #自动重启默认关闭
  devtools:
   restart:
@@ -33,17 +35,16 @@ spring:
 
 ######################## 日志 ########################
 #logging:
+# 注：二者不能同时使用，如若同时使用，则只有logging.file生效
 # path: logs #日志文件目录
-# file: hotel.log #日志文件名
+# 默认情况下，日志文件的大小达到10MB时会切分一次，产生新的日志文件，默认级别为：ERROR、WARN、INFO
+# file: logs/hotel.log #日志文件名
 # mybatis 路径
 mybatis:
  mapperLocations: classpath*:mapper/*.xml
+ type-aliases-package: com.gt.hotel.entity
 
 
- profiles:
-  active: dev
-#  active: test
-#  active: prod
 
 ######################## Logback ########################
 

@@ -51,3 +51,11 @@ tmp/
 .classpath
 
 /*/target/
+/hotel-com.gt.hotel.dao/src/main/java/com/gt/hotel/generator/service/
+/hotel-com.gt.hotel.dao/src/main/java/com/gt/hotel/generator/web/
+/hotel-com.gt.hotel.dao/src/main/java/com/gt/hotel/generator/entity/
+/hotel-com.gt.hotel.dao/src/main/java/com/gt/hotel/generator/mapper/
+/hotel-com.gt.hotel.dao/src/main/java/com/gt/hotel/generator/xml/
+/logs/
+/*/LOG_HOME_IS_UNDEFINED/
+/*/logs/

@@ -1,6 +1,6 @@
 package com.gt.hotel;
 
-import org.springframework.boot.Banner;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -12,8 +12,8 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @author zhangmz
  * @create 2017/7/8
  */
-//@MapperScan("com.gt.demo.core.dao")
-//@ServletComponentScan
+@MapperScan("com.gt.hotel.dao")
+@ServletComponentScan
 @SpringBootApplication
 public class HotelApplication extends SpringBootServletInitializer {
 
