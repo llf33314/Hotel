@@ -32,18 +32,18 @@ spring:
    enabled: true
 
 ######################## 日志 ########################
-logging:
- path: logs #日志文件目录
- file: hotel.log #日志文件名
+#logging:
+# path: logs #日志文件目录
+# file: hotel.log #日志文件名
 # mybatis 路径
 mybatis:
  mapperLocations: classpath*:mapper/*.xml
 
 
  profiles:
-  active: dev
+#  active: dev
 #  active: test
-#  active: prod
+  active: prod
 
 ######################## Logback ########################
 
