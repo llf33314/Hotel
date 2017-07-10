@@ -9,9 +9,12 @@
         <module>hotel-web</module>
         <module>hotel-dao</module>
         <module>hotel-common</module>
+        <module>hotel-service</module>
+        <module>hotel-entity</module>
+        <module>hotel-generator</module>
+        <module>hotel-domain</module>
     </modules>
     <packaging>pom</packaging>
-
     <name>parent</name>
     <url>http://hotel.duofee.com</url>
     <!-- 开发人员列表 -->
@@ -38,7 +41,7 @@
         <dev.lib.mybatis>1.1.1</dev.lib.mybatis>
         <dev.lib.druid>1.0.31</dev.lib.druid>
         <dev.lib.mysql>5.0.5</dev.lib.mysql>
-        <dev.lib.mybatis-plus>2.0.8</dev.lib.mybatis-plus>
+        <dev.lib.mybatis-plus>2.1-gamma</dev.lib.mybatis-plus>
         <dev.lib.velocity>1.7</dev.lib.velocity>
         <dev.lib.commons-lang3>3.5</dev.lib.commons-lang3>
         <dev.lib.nekohtml>1.9.22</dev.lib.nekohtml>
@@ -46,8 +49,9 @@
         <dev.lib.fastjson>1.2.33</dev.lib.fastjson>
         <dev.lib.jjwt>0.7.0</dev.lib.jjwt>
         <!-- Mybatis Generator -->
-        <entity.target.dir>src/main/java/</entity.target.dir>
-        <com.gt.hotel.dao.resources.dir>src/main/resources/</com.gt.hotel.dao.resources.dir>
+        <!--<entity.target.dir>src/main/java/</entity.target.dir>-->
+        <!--<com.gt.hotel.dao.resources.dir>src/main/resources/</com.gt.hotel.dao.resources.dir>-->
+        <dev.lib.lombok>1.16.18</dev.lib.lombok>
     </properties>
 
     <parent>
@@ -57,9 +61,7 @@
     </parent>
 
 
-    <!--<dependencyManagement>-->
         <dependencies>
-
 
             <!-- 将内嵌的tomcat容器标记为provided(来自官网) -->
             <dependency>
@@ -203,8 +205,13 @@
                 <version>${dev.lib.fastjson}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${dev.lib.lombok}</version>
+            </dependency>
+
         </dependencies>
-    <!--</dependencyManagement>-->
 
 
 

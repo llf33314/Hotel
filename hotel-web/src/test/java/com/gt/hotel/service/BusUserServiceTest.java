@@ -1,6 +1,7 @@
-package com.gt.hotel.dao;
+package com.gt.hotel.service;
 
 import com.gt.hotel.BasicTest;
+import com.gt.hotel.web.service.BusUserService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,14 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author zhangmz
  * @create 2017/7/9
  */
-public class BusUserDaoTest extends BasicTest {
+public class BusUserServiceTest extends BasicTest {
 
     @Autowired
-    private BusUserDao busUserDao;
+    private BusUserService busUserService;
 
     @Test
     public void testSelect() {
-        Integer selectCount = this.busUserDao.selectCount(null);
+        Integer selectCount = this.busUserService.selectCount(null);
         this.logger.info("=====>> {}", selectCount);
     }
 

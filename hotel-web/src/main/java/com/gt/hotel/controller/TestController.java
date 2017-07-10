@@ -1,10 +1,9 @@
 package com.gt.hotel.controller;
 
-import com.gt.hotel.dao.BusUserDao;
+import com.gt.hotel.web.service.BusUserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class TestController {
 
     @Autowired
-    private BusUserDao busUserDao;
+    private BusUserService busUserService;
 
     /**
      * json
@@ -36,6 +35,7 @@ public class TestController {
      * @param map
      * @return
      */
+    @ApiOperation("")
     @RequestMapping("/index")
     public ModelAndView index(ModelAndView map){
         map.addObject("test","hello zhangmz!");
@@ -46,7 +46,7 @@ public class TestController {
     @ResponseBody
     @RequestMapping("/user/count")
     public String userCount() {
-        Integer count = this.busUserDao.selectCount(null);
+        Integer count = this.busUserService.selectCount(null);
         return "用户数量：" + count;
     }
 
