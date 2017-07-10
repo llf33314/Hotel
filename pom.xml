@@ -12,7 +12,6 @@
         <module>hotel-service</module>
         <module>hotel-entity</module>
         <module>hotel-generator</module>
-        <module>hotel-domain</module>
     </modules>
     <packaging>pom</packaging>
     <name>parent</name>
