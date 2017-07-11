@@ -6,6 +6,7 @@
 
 Eclipse/Myeclipse 请逐个Import maven 项目方式加入
 
+提交代码方式：先Fork ，编写代码，再发起PullRequest合并
 
 注：不熟悉SpringBoot项目构建，请先去使用SpringBoot单方式模块构建项目
 
