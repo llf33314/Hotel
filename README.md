@@ -4,7 +4,7 @@
 
 使用Intellij IDEA方式构建项目模块
 
-Eclipse/Myeclipse 请参考此 [Maven 多模块搭建SpringBoot MyEclipse](http://note.youdao.com/share/?id=589999e5dbc54b99e2f2214f7863fde8&type=note#/)
+Eclipse/Myeclipse 请逐个Import maven 项目方式加入
 
 
 注：不熟悉SpringBoot项目构建，请先去使用SpringBoot单方式模块构建项目
