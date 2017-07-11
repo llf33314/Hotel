@@ -29,13 +29,13 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 // 获取接口的Package包
-                .apis(RequestHandlerSelectors.basePackage("com.gt.demo.core.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.gt.hotel.controller"))
                 .paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfo("SpringBootDemo", // 大标题
-                "SpringBootDemo", // 小标题
+        return new ApiInfo("Hotel-ERP API", // 大标题
+                "酒店ERP", // 小标题
                 "1.0", // 版本
                 "NO terms of service", new Contact("zhangmz", "http://www.zhangmz.me", "3001417980@qq.com"), // 作者
                 "", // 链接显示文字

@@ -3,6 +3,7 @@ package com.gt.hotel.entity;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

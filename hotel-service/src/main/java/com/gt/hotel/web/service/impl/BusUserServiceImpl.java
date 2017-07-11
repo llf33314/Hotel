@@ -4,6 +4,7 @@ import com.gt.hotel.web.service.BusUserService;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.BusUserDAO;
 import com.gt.hotel.entity.BusUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +17,13 @@ import org.springframework.stereotype.Service;
  */
 @Service("webBusService")
 public class BusUserServiceImpl extends BaseServiceImpl<BusUserDAO, BusUser> implements BusUserService {
+    @Autowired
+    private BusUserDAO busUserDAO;
 
+    @Override
+    public BusUser findUser(final Integer uid) {
+        return this.busUserDAO.selectOne(new BusUser() {{
+            setId(uid);
+        }});
+    }
 }

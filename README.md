@@ -25,4 +25,8 @@ Eclipse/Myeclipse 请参考此 [Maven 多模块搭建SpringBoot MyEclipse](http:
 
 多模块 多web 端构建项目基建。
 
+使用Lombok 插件简化 getter/setter 详细请查看：
+[使用 Lombok 自动生成 Getter and Setter](http://www.qtdebug.com/java-lombok/)
 
+多环境切换日志文件配置
+[Spring Boot干货系列：（七）默认日志logback配置解析 | 掘金技术征文](https://juejin.im/post/58f86981b123db0062363203)

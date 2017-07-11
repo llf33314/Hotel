@@ -97,8 +97,8 @@ public class DruidDataSourceConfig {
     @Bean
     public JdkRegexpMethodPointcut druidStatPointcut() {
         JdkRegexpMethodPointcut druidStatPointcut = new JdkRegexpMethodPointcut();
-        String servicePatterns = "com.gt.hotel.service.*";
-        String daoPatterns = "com.gt.hotel.dao.*";
+        String servicePatterns = "com.gt.hotel.*.service.*";
+        String daoPatterns = "com.gt.*.dao.*";
         druidStatPointcut.setPatterns(servicePatterns, daoPatterns);
         return druidStatPointcut;
     }
