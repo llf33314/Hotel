@@ -21,7 +21,9 @@ Eclipse/Myeclipse 请逐个Import maven 项目方式加入
 - hotel-generator 项目代码生成，一键生成DAO Xml Service
 - hotel-service 业务层 依赖dao
 - hotel-web  程序入口，并依赖service 统一集成单元测试，所有测试代码写入
-- hotel-web-manager 后台管理
+- hotel-web-front-management 前台管理
+- hotel-web-back-management 后台管理
+- hotel-web-mobile 移动端(包含微信页面)
 - hotel-web-api 接口层 依赖service
 
 多模块 多web 端构建项目基建。
