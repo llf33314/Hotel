@@ -25,6 +25,6 @@ public abstract class BaseController {
      * @return
      */
     public String getSessionId( HttpSession session ) {
-        return session.getId();
+	return session.getId();
     }
 }

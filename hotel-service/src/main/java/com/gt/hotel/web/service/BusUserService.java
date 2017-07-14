@@ -1,6 +1,5 @@
 package com.gt.hotel.web.service;
 
-
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.BusUser;
 

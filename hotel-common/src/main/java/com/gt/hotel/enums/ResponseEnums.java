@@ -16,17 +16,16 @@ public enum ResponseEnums {
     private final int    code;
     private final String desc;
 
-
     ResponseEnums( int code, String desc ) {
-        this.code = code;
-        this.desc = desc;
+	this.code = code;
+	this.desc = desc;
     }
 
     public int getCode() {
-        return code;
+	return code;
     }
 
     public String getDesc() {
-        return desc;
+	return desc;
     }
 }

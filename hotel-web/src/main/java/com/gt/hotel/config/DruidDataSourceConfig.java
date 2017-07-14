@@ -50,15 +50,15 @@ public class DruidDataSourceConfig {
     //监控规则
     private static final String[] MONITORING_RULES = { "com.gt.*.dao.*", "com.gt.hotel.*.service.*" };
 
-    @ConfigurationProperties(prefix = "datasource.druid")
-    @Bean(name = "datasource", initMethod = "init", destroyMethod = "close")
+    @ConfigurationProperties( prefix = "datasource.druid" )
+    @Bean( name = "datasource", initMethod = "init", destroyMethod = "close" )
     public DruidDataSource getDataSource() {
-        return new DruidDataSource();
+	return new DruidDataSource();
     }
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager( getDataSource() );
+	return new DataSourceTransactionManager( getDataSource() );
     }
 
     /**
@@ -68,16 +68,16 @@ public class DruidDataSourceConfig {
      */
     @Bean
     public ServletRegistrationBean DruidStatViewServle() {
-        //org.springframework.boot.context.embedded.ServletRegistrationBean提供类的进行注册.
-        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean( new StatViewServlet(), URL_MAPINGS );
-        //添加初始化参数：initParams
-        LOG.debug( "Druid 白名单IP：{} , 黑名单IP：{} , 登录账号/密码：{}/{} , 是否开启重置数据：{} ", ALLOW, DENY, LOGIN_USERNAME, LOGIN_PASSWORD, RESETENABLE );
-        servletRegistrationBean.addInitParameter( "allow", ALLOW );
-        servletRegistrationBean.addInitParameter( "deny", DENY );
-        servletRegistrationBean.addInitParameter( "loginUsername", LOGIN_USERNAME );
-        servletRegistrationBean.addInitParameter( "loginPassword", LOGIN_PASSWORD );
-        servletRegistrationBean.addInitParameter( "resetEnable", RESETENABLE );
-        return servletRegistrationBean;
+	//org.springframework.boot.context.embedded.ServletRegistrationBean提供类的进行注册.
+	ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean( new StatViewServlet(), URL_MAPINGS );
+	//添加初始化参数：initParams
+	LOG.debug( "Druid 白名单IP：{} , 黑名单IP：{} , 登录账号/密码：{}/{} , 是否开启重置数据：{} ", ALLOW, DENY, LOGIN_USERNAME, LOGIN_PASSWORD, RESETENABLE );
+	servletRegistrationBean.addInitParameter( "allow", ALLOW );
+	servletRegistrationBean.addInitParameter( "deny", DENY );
+	servletRegistrationBean.addInitParameter( "loginUsername", LOGIN_USERNAME );
+	servletRegistrationBean.addInitParameter( "loginPassword", LOGIN_PASSWORD );
+	servletRegistrationBean.addInitParameter( "resetEnable", RESETENABLE );
+	return servletRegistrationBean;
     }
 
     /**
@@ -87,10 +87,10 @@ public class DruidDataSourceConfig {
      */
     @Bean
     public FilterRegistrationBean druidStatFilter() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean( new WebStatFilter() );
-        filterRegistrationBean.addUrlPatterns( URLPATTERNS );
-        filterRegistrationBean.addInitParameter( "exclusions", EXCLUSIONS );
-        return filterRegistrationBean;
+	FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean( new WebStatFilter() );
+	filterRegistrationBean.addUrlPatterns( URLPATTERNS );
+	filterRegistrationBean.addInitParameter( "exclusions", EXCLUSIONS );
+	return filterRegistrationBean;
     }
 
     /**
@@ -103,7 +103,7 @@ public class DruidDataSourceConfig {
      */
     @Bean
     public DruidStatInterceptor druidStatInterceptor() {
-        return new DruidStatInterceptor();
+	return new DruidStatInterceptor();
     }
 
     /**
@@ -113,9 +113,9 @@ public class DruidDataSourceConfig {
      */
     @Bean
     public JdkRegexpMethodPointcut druidStatPointcut() {
-        JdkRegexpMethodPointcut druidStatPointcut = new JdkRegexpMethodPointcut();
-        druidStatPointcut.setPatterns( MONITORING_RULES );
-        return druidStatPointcut;
+	JdkRegexpMethodPointcut druidStatPointcut = new JdkRegexpMethodPointcut();
+	druidStatPointcut.setPatterns( MONITORING_RULES );
+	return druidStatPointcut;
     }
 
     /**
@@ -125,6 +125,6 @@ public class DruidDataSourceConfig {
      */
     @Bean
     public Advisor druidStatAdvisor() {
-        return new DefaultPointcutAdvisor( druidStatPointcut(), druidStatInterceptor() );
+	return new DefaultPointcutAdvisor( druidStatPointcut(), druidStatInterceptor() );
     }
 }

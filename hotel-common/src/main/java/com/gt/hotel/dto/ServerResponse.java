@@ -18,7 +18,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  * @create 2017/6/16
  */
 //保证序列化json的时候,如果是null的对象,key也会消失
-@JsonSerialize(typing = DEFAULT_TYPING)
+@JsonSerialize( typing = DEFAULT_TYPING )
 public class ServerResponse< T > implements Serializable {
 
     /*状态码*/
@@ -31,23 +31,23 @@ public class ServerResponse< T > implements Serializable {
     private T data;
 
     protected ServerResponse( int status ) {
-        this.status = status;
+	this.status = status;
     }
 
     protected ServerResponse( int status, T data ) {
-        this.status = status;
-        this.data = data;
+	this.status = status;
+	this.data = data;
     }
 
     protected ServerResponse( int status, String msg ) {
-        this.status = status;
-        this.msg = msg;
+	this.status = status;
+	this.msg = msg;
     }
 
     protected ServerResponse( int status, String msg, T data ) {
-        this.status = status;
-        this.msg = msg;
-        this.data = data;
+	this.status = status;
+	this.msg = msg;
+	this.data = data;
     }
 
     /**
@@ -56,7 +56,7 @@ public class ServerResponse< T > implements Serializable {
      * @return ServerResponse
      */
     public static < T > ServerResponse< T > createBySuccess() {
-        return createBySuccessMessage( ResponseEnums.SUCCESS.getDesc() );
+	return createBySuccessMessage( ResponseEnums.SUCCESS.getDesc() );
     }
 
     /**
@@ -67,7 +67,7 @@ public class ServerResponse< T > implements Serializable {
      * @return ServerResponse
      */
     public static < T > ServerResponse< T > createBySuccess( T data ) {
-        return createBySuccess( null, data );
+	return createBySuccess( null, data );
     }
 
     /**
@@ -78,7 +78,7 @@ public class ServerResponse< T > implements Serializable {
      * @return ServerResponse
      */
     public static < T > ServerResponse< T > createBySuccessMessage( String msg ) {
-        return createBySuccess( msg, null );
+	return createBySuccess( msg, null );
     }
 
     /**
@@ -90,7 +90,7 @@ public class ServerResponse< T > implements Serializable {
      * @return ServerResponse
      */
     public static < T > ServerResponse< T > createBySuccess( String msg, T data ) {
-        return createBySuccessCodeMessage( ResponseEnums.SUCCESS.getCode(), msg, data );
+	return createBySuccessCodeMessage( ResponseEnums.SUCCESS.getCode(), msg, data );
     }
 
     /**
@@ -103,7 +103,7 @@ public class ServerResponse< T > implements Serializable {
      * @return ServerResponse
      */
     public static < T > ServerResponse< T > createBySuccessCodeMessage( int status, String msg, T data ) {
-        return new ServerResponse<>( status, msg, data );
+	return new ServerResponse<>( status, msg, data );
     }
 
     /**
@@ -112,7 +112,7 @@ public class ServerResponse< T > implements Serializable {
      * @return ServerResponse
      */
     public static < T > ServerResponse< T > createByError() {
-        return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getDesc() );
+	return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getDesc() );
     }
 
     /**
@@ -123,7 +123,7 @@ public class ServerResponse< T > implements Serializable {
      * @return ServerResponse
      */
     public static < T > ServerResponse< T > createByErrorMessage( String errorMessage ) {
-        return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), errorMessage );
+	return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), errorMessage );
     }
 
     /**
@@ -135,26 +135,25 @@ public class ServerResponse< T > implements Serializable {
      * @return ServerResponse
      */
     public static < T > ServerResponse< T > createByErrorCodeMessage( int errorCode, String errorMessage ) {
-        return new ServerResponse<>( errorCode, errorMessage );
+	return new ServerResponse<>( errorCode, errorMessage );
     }
 
     //使之不在json序列化结果当中，作用用于判断
     @JsonIgnore
     public boolean isSuccess() {
-        return this.status == ResponseEnums.SUCCESS.getCode();
+	return this.status == ResponseEnums.SUCCESS.getCode();
     }
 
     public int getStatus() {
-        return status;
+	return status;
     }
 
     public T getData() {
-        return data;
+	return data;
     }
 
     public String getMsg() {
-        return msg;
+	return msg;
     }
-
 
 }

@@ -25,19 +25,19 @@ public class GlobalDefaultExceptionHandler {
 
     // 页面
     // 统一异常处理 页面跳转
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler( value = Exception.class )
     public ModelAndView defaultErrorHandler( HttpServletRequest request, Exception e ) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject( "ex", e );
-        modelAndView.addObject( "url", request.getRequestURL() );
-        modelAndView.setViewName( DEFAULT_ERROR_VIEW );
-        return modelAndView;
+	ModelAndView modelAndView = new ModelAndView();
+	modelAndView.addObject( "ex", e );
+	modelAndView.addObject( "url", request.getRequestURL() );
+	modelAndView.setViewName( DEFAULT_ERROR_VIEW );
+	return modelAndView;
     }
 
     // 统一异常处理 Ajax请求
     @ResponseBody
-    @ExceptionHandler(value = ResponseEntityException.class)
+    @ExceptionHandler( value = ResponseEntityException.class )
     public ErrorInfo< String > defaultErrorHandler( HttpServletRequest request, ResponseEntityException e ) {
-        return ErrorInfo.createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), e.getMessage(), request.getRequestURL().toString() );
+	return ErrorInfo.createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), e.getMessage(), request.getRequestURL().toString() );
     }
 }

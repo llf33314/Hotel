@@ -15,15 +15,15 @@ import org.springframework.stereotype.Service;
  * @author zhangmz
  * @since 2017-07-10
  */
-@Service("webBusService")
-public class BusUserServiceImpl extends BaseServiceImpl< BusUserDAO, BusUser > implements BusUserService {
+@Service( "webBusService" )
+public class BusUserServiceImpl extends BaseServiceImpl< BusUserDAO,BusUser > implements BusUserService {
     @Autowired
     private BusUserDAO busUserDAO;
 
     @Override
     public BusUser findUser( final Integer uid ) {
-        return this.busUserDAO.selectOne( new BusUser() {{
-            setId( uid );
-        }} );
+	return this.busUserDAO.selectOne( new BusUser() {{
+	    setId( uid );
+	}} );
     }
 }

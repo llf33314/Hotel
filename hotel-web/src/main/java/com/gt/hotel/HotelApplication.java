@@ -13,17 +13,17 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @author zhangmz
  * @create 2017/7/8
  */
-@MapperScan("com.gt.hotel.dao")
+@MapperScan( "com.gt.hotel.dao" )
 @ServletComponentScan
 @SpringBootApplication
 public class HotelApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure( SpringApplicationBuilder application ) {
-        return application.sources( HotelApplication.class );
+	return application.sources( HotelApplication.class );
     }
 
     public static void main( String[] args ) {
-        SpringApplication.run( HotelApplication.class, args );
+	SpringApplication.run( HotelApplication.class, args );
     }
 }
