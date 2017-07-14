@@ -2,7 +2,7 @@ package com.gt.hotel.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gt.hotel.emuns.ResponseCode;
+import com.gt.hotel.enums.ResponseEnums;
 
 import java.io.Serializable;
 
@@ -16,8 +16,8 @@ import java.io.Serializable;
  * @create 2017/6/16
  */
 //保证序列化json的时候,如果是null的对象,key也会消失
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class ServerResponse<T> implements Serializable {
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+public class ServerResponse< T > implements Serializable {
 
     /*状态码*/
     private int status;
@@ -28,21 +28,21 @@ public class ServerResponse<T> implements Serializable {
     /*泛型数据*/
     private T data;
 
-    protected ServerResponse(int status) {
+    protected ServerResponse( int status ) {
         this.status = status;
     }
 
-    protected ServerResponse(int status, T data) {
+    protected ServerResponse( int status, T data ) {
         this.status = status;
         this.data = data;
     }
 
-    protected ServerResponse(int status, String msg) {
+    protected ServerResponse( int status, String msg ) {
         this.status = status;
         this.msg = msg;
     }
 
-    protected ServerResponse(int status, String msg, T data) {
+    protected ServerResponse( int status, String msg, T data ) {
         this.status = status;
         this.msg = msg;
         this.data = data;
@@ -53,28 +53,30 @@ public class ServerResponse<T> implements Serializable {
      *
      * @return ServerResponse
      */
-    public static <T> ServerResponse<T> createBySuccess() {
-        return createBySuccessMessage(null);
+    public static < T > ServerResponse< T > createBySuccess() {
+        return createBySuccessMessage( ResponseEnums.SUCCESS.getDesc() );
     }
 
     /**
      * 创建响应成功
      *
      * @param data 数据包
+     *
      * @return ServerResponse
      */
-    public static <T> ServerResponse<T> createBySuccess(T data) {
-        return createBySuccess(null, data);
+    public static < T > ServerResponse< T > createBySuccess( T data ) {
+        return createBySuccess( null, data );
     }
 
     /**
      * 创建响应成功
      *
      * @param msg 返回消息
+     *
      * @return ServerResponse
      */
-    public static <T> ServerResponse<T> createBySuccessMessage(String msg) {
-        return createBySuccess(msg, null);
+    public static < T > ServerResponse< T > createBySuccessMessage( String msg ) {
+        return createBySuccess( msg, null );
     }
 
     /**
@@ -82,10 +84,11 @@ public class ServerResponse<T> implements Serializable {
      *
      * @param msg  消息
      * @param data 数据包
+     *
      * @return ServerResponse
      */
-    public static <T> ServerResponse<T> createBySuccess(String msg, T data) {
-        return createBySuccessCodeMessage(ResponseCode.SUCCESS.getCode(), msg, data);
+    public static < T > ServerResponse< T > createBySuccess( String msg, T data ) {
+        return createBySuccessCodeMessage( ResponseEnums.SUCCESS.getCode(), msg, data );
     }
 
     /**
@@ -94,10 +97,11 @@ public class ServerResponse<T> implements Serializable {
      * @param status 状态码
      * @param msg    消息
      * @param data   数据包
+     *
      * @return ServerResponse
      */
-    public static <T> ServerResponse<T> createBySuccessCodeMessage(int status, String msg, T data) {
-        return new ServerResponse<>(status, msg, data);
+    public static < T > ServerResponse< T > createBySuccessCodeMessage( int status, String msg, T data ) {
+        return new ServerResponse<>( status, msg, data );
     }
 
     /**
@@ -105,18 +109,19 @@ public class ServerResponse<T> implements Serializable {
      *
      * @return ServerResponse
      */
-    public static <T> ServerResponse<T> createByError() {
-        return createByErrorCodeMessage(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getDesc());
+    public static < T > ServerResponse< T > createByError() {
+        return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getDesc() );
     }
 
     /**
      * 创建响应失败
      *
      * @param errorMessage 消息
+     *
      * @return ServerResponse
      */
-    public static <T> ServerResponse<T> createByErrorMessage(String errorMessage) {
-        return createByErrorCodeMessage(ResponseCode.ERROR.getCode(), errorMessage);
+    public static < T > ServerResponse< T > createByErrorMessage( String errorMessage ) {
+        return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), errorMessage );
     }
 
     /**
@@ -124,16 +129,17 @@ public class ServerResponse<T> implements Serializable {
      *
      * @param errorCode    状态码
      * @param errorMessage 消息
+     *
      * @return ServerResponse
      */
-    public static <T> ServerResponse<T> createByErrorCodeMessage(int errorCode, String errorMessage) {
-        return new ServerResponse<>(errorCode, errorMessage);
+    public static < T > ServerResponse< T > createByErrorCodeMessage( int errorCode, String errorMessage ) {
+        return new ServerResponse<>( errorCode, errorMessage );
     }
 
-    //使之不在json序列化结果当中，作用用于判断界面
+    //使之不在json序列化结果当中，作用用于判断
     @JsonIgnore
     public boolean isSuccess() {
-        return this.status == ResponseCode.SUCCESS.getCode();
+        return this.status == ResponseEnums.SUCCESS.getCode();
     }
 
     public int getStatus() {

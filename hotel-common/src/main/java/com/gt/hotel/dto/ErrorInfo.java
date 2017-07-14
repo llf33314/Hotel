@@ -1,7 +1,7 @@
 package com.gt.hotel.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gt.hotel.emuns.ResponseCode;
+import com.gt.hotel.enums.ResponseEnums;
 
 import java.io.Serializable;
 
@@ -22,7 +22,7 @@ public class ErrorInfo<T> extends ServerResponse<T> implements Serializable {
     }
 
     public static <T> ErrorInfo<T> createByError() {
-        return createByErrorCodeMessage(ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getDesc());
+        return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getDesc() );
     }
 
     public static <T> ErrorInfo<T> createByErrorCodeMessage(int errorCode, String errorMessage) {
@@ -39,10 +39,6 @@ public class ErrorInfo<T> extends ServerResponse<T> implements Serializable {
 
     public String getUrl() {
         return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
 }

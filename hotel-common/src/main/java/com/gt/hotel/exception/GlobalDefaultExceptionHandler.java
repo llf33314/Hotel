@@ -1,7 +1,7 @@
 package com.gt.hotel.exception;
 
 import com.gt.hotel.dto.ErrorInfo;
-import com.gt.hotel.emuns.ResponseCode;
+import com.gt.hotel.enums.ResponseEnums;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +38,6 @@ public class GlobalDefaultExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = ResponseEntityException.class)
     public ErrorInfo<String> defaultErrorHandler(HttpServletRequest request, ResponseEntityException e) {
-        return ErrorInfo.createByErrorCodeMessage(ResponseCode.ERROR.getCode(), e.getMessage(), request.getRequestURL().toString());
+        return ErrorInfo.createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), e.getMessage(), request.getRequestURL().toString() );
     }
 }
