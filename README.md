@@ -21,6 +21,16 @@ eclipse 请使用**doc/java-code-style-eclipse.xml**
 
 注：不熟悉SpringBoot项目构建，请先去使用SpringBoot单方式模块构建项目
 
+### 运行
+运行项目有两种方式：
+
+1. 使用HotelApplication.java
+2. 使用tomcat
+
+默认打包成war
+
+> 注:打包上（测试 or 正式）环境前，请先确定当前环境。
+
 多模块细分各模块职责。
 
 ### 酒店ERP 系统
