@@ -15,15 +15,16 @@ public abstract class BaseController {
     /**
      * 日志
      */
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     /**
      * 获取Sessionid
      *
      * @param session HttpSession
+     *
      * @return
      */
-    public String getSessionId(HttpSession session) {
+    public String getSessionId( HttpSession session ) {
         return session.getId();
     }
 }

@@ -6,6 +6,8 @@ import com.gt.hotel.enums.ResponseEnums;
 
 import java.io.Serializable;
 
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEFAULT_TYPING;
+
 /**
  * 服务响应类
  * <pre>
@@ -16,7 +18,7 @@ import java.io.Serializable;
  * @create 2017/6/16
  */
 //保证序列化json的时候,如果是null的对象,key也会消失
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonSerialize(typing = DEFAULT_TYPING)
 public class ServerResponse< T > implements Serializable {
 
     /*状态码*/
