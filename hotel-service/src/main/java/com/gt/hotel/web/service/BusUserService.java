@@ -12,7 +12,7 @@ import com.gt.hotel.entity.BusUser;
  * @author zhangmz
  * @since 2017-07-10
  */
-public interface BusUserService extends BaseService<BusUser> {
+public interface BusUserService extends BaseService< BusUser > {
 
-    BusUser findUser(Integer uid);
+    BusUser findUser( Integer uid );
 }

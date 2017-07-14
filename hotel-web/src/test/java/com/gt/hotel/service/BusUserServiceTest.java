@@ -17,8 +17,8 @@ public class BusUserServiceTest extends BasicTest {
 
     @Test
     public void testSelect() {
-        Integer selectCount = this.busUserService.selectCount(null);
-        this.logger.info("=====>> {}", selectCount);
+        Integer selectCount = this.busUserService.selectCount( null );
+        this.logger.info( "=====>> {}", selectCount );
     }
 
 }

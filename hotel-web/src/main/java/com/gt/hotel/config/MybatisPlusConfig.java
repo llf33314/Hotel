@@ -52,7 +52,7 @@ public class MybatisPlusConfig {
     public PaginationInterceptor paginationInterceptor() {
         PaginationInterceptor page = new PaginationInterceptor();
         // 设置数据库方言
-        page.setDialectType("mysql");
+        page.setDialectType( "mysql" );
         return page;
     }
 
@@ -65,37 +65,37 @@ public class MybatisPlusConfig {
     @Bean
     public MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean() {
         MybatisSqlSessionFactoryBean mybatisPlus = new MybatisSqlSessionFactoryBean();
-        mybatisPlus.setDataSource(dataSource);
-        mybatisPlus.setVfs(SpringBootVFS.class);
-        if (StringUtils.hasText(this.properties.getConfigLocation())) {
-            mybatisPlus.setConfigLocation(this.resourceLoader.getResource(this.properties.getConfigLocation()));
+        mybatisPlus.setDataSource( dataSource );
+        mybatisPlus.setVfs( SpringBootVFS.class );
+        if ( StringUtils.hasText( this.properties.getConfigLocation() ) ) {
+            mybatisPlus.setConfigLocation( this.resourceLoader.getResource( this.properties.getConfigLocation() ) );
         }
-        mybatisPlus.setConfiguration(properties.getConfiguration());
-        if (!ObjectUtils.isEmpty(this.interceptors)) {
-            mybatisPlus.setPlugins(this.interceptors);
+        mybatisPlus.setConfiguration( properties.getConfiguration() );
+        if ( !ObjectUtils.isEmpty( this.interceptors ) ) {
+            mybatisPlus.setPlugins( this.interceptors );
         }
         // MP 全局配置，更多内容进入类看注释
         GlobalConfiguration globalConfig = new GlobalConfiguration();
         //配置公共字段自动填写
         //globalConfig.setMetaObjectHandler(myMetaObjectHandler);
-        globalConfig.setDbType(DBType.MYSQL.name());
+        globalConfig.setDbType( DBType.MYSQL.name() );
         // ID 策略 AUTO->`0`("数据库ID自增") INPUT->`1`(用户输入ID") ID_WORKER->`2`("全局唯一ID") UUID->`3`("全局唯一ID")
-        globalConfig.setIdType(3);
-        mybatisPlus.setGlobalConfig(globalConfig);
+        globalConfig.setIdType( 3 );
+        mybatisPlus.setGlobalConfig( globalConfig );
         MybatisConfiguration mc = new MybatisConfiguration();
-        mc.setDefaultScriptingLanguage(MybatisXMLLanguageDriver.class);
-        mybatisPlus.setConfiguration(mc);
-        if (this.databaseIdProvider != null) {
-            mybatisPlus.setDatabaseIdProvider(this.databaseIdProvider);
+        mc.setDefaultScriptingLanguage( MybatisXMLLanguageDriver.class );
+        mybatisPlus.setConfiguration( mc );
+        if ( this.databaseIdProvider != null ) {
+            mybatisPlus.setDatabaseIdProvider( this.databaseIdProvider );
         }
-        if (StringUtils.hasLength(this.properties.getTypeAliasesPackage())) {
-            mybatisPlus.setTypeAliasesPackage(this.properties.getTypeAliasesPackage());
+        if ( StringUtils.hasLength( this.properties.getTypeAliasesPackage() ) ) {
+            mybatisPlus.setTypeAliasesPackage( this.properties.getTypeAliasesPackage() );
         }
-        if (StringUtils.hasLength(this.properties.getTypeHandlersPackage())) {
-            mybatisPlus.setTypeHandlersPackage(this.properties.getTypeHandlersPackage());
+        if ( StringUtils.hasLength( this.properties.getTypeHandlersPackage() ) ) {
+            mybatisPlus.setTypeHandlersPackage( this.properties.getTypeHandlersPackage() );
         }
-        if (!ObjectUtils.isEmpty(this.properties.resolveMapperLocations())) {
-            mybatisPlus.setMapperLocations(this.properties.resolveMapperLocations());
+        if ( !ObjectUtils.isEmpty( this.properties.resolveMapperLocations() ) ) {
+            mybatisPlus.setMapperLocations( this.properties.resolveMapperLocations() );
         }
         return mybatisPlus;
     }

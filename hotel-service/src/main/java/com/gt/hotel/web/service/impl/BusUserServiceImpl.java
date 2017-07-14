@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
  * @since 2017-07-10
  */
 @Service("webBusService")
-public class BusUserServiceImpl extends BaseServiceImpl<BusUserDAO, BusUser> implements BusUserService {
+public class BusUserServiceImpl extends BaseServiceImpl< BusUserDAO, BusUser > implements BusUserService {
     @Autowired
     private BusUserDAO busUserDAO;
 
     @Override
-    public BusUser findUser(final Integer uid) {
-        return this.busUserDAO.selectOne(new BusUser() {{
-            setId(uid);
-        }});
+    public BusUser findUser( final Integer uid ) {
+        return this.busUserDAO.selectOne( new BusUser() {{
+            setId( uid );
+        }} );
     }
 }
