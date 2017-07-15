@@ -3,6 +3,8 @@ package com.gt.hotel.web.service;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.BusUser;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务类
@@ -14,4 +16,6 @@ import com.gt.hotel.entity.BusUser;
 public interface BusUserService extends BaseService< BusUser > {
 
     BusUser findUser( Integer uid );
+
+    List< BusUser > findUsername( String username );
 }
