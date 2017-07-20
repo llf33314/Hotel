@@ -1,6 +1,5 @@
 package com.gt.hotel.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,19 +10,17 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 
 /**
  * RedisSession配置Config
- *
+ * 默认session超时时间 1小时 3600秒
  * @author zhangmz
  * @version 1.0.0
  * @date 2017/07/16
  */
 @Configuration
-@EnableRedisHttpSession
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
 public class RedisSessionConfig {
 
     /** 日志 */
     private static final Logger LOG                          = LoggerFactory.getLogger( RedisSessionConfig.class );
-    //maxInactiveIntervalInSeconds session超时时间,单位秒
-    private              int    maxInactiveIntervalInSeconds = 180;
     // 注入配置属性 根据环境配置切换
     @Value( "${redisSession.cookieName}" )
     private String cookieName;
@@ -32,16 +29,11 @@ public class RedisSessionConfig {
     @Value( "${redisSession.domainName}" )
     private String domainName;
 
-    public DruidDataSource getDataSource() {
-	return new DruidDataSource();
-    }
-
     /**
      * 设置Cookie作用于
      *
      * @return DefaultCookieSerializer
      */
-
     @Bean( name = "defaultCookieSerializer" )
     public DefaultCookieSerializer defaultCookieSerializer() {
 	LOG.debug( " domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath );
