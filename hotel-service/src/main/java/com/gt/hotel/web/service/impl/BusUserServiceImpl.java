@@ -34,11 +34,11 @@ public class BusUserServiceImpl extends BaseServiceImpl< BusUserDAO,BusUser > im
 
     @Override
     public List< BusUser > findUsername( String username ) {
-	if(username==null){
+	if ( username == null ) {
 	    throw new BusinessException( "参数错误" );
 	}
-	Wrapper<BusUser> busUserWrapper = new EntityWrapper<>(  );
-	busUserWrapper.like( "username",username );
+	Wrapper< BusUser > busUserWrapper = new EntityWrapper<>();
+	busUserWrapper.like( "username", username );
 
 	List< BusUser > userList = this.busUserDAO.selectList( busUserWrapper );
 	return userList;

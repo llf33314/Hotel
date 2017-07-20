@@ -13,13 +13,18 @@ spring:
    enabled: true
  thymeleaf:
    cache: false
-
+ redis:
+   host: 14.29.79.226
+   port: 6379
+   password: gt@123456
+ session:
+   store-type: redis
 
 datasource:
  druid:
   url: jdbc:mysql://127.0.0.1:3306/springbootdemo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
   username: zhangmz
-  password: zhangmz123
+  password: zhangmz
   driver-class-name: com.mysql.jdbc.Driver
   platform: mysql
   type: com.alibaba.druid.pool.DruidDataSource
@@ -48,10 +53,11 @@ datasource:
   # 合并多个DruidDataSource的监控数据
   #useGlobalDataSourceStat: true
 
-server:
-  port: 8080
-  session:
-    timeout: 30
+### 设置 Redis session 共享
+redisSession:
+  domainName: .example.com
+  cookiePath: /
+  cookieName: JSESSIONID
 
 
 

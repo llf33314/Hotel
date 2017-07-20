@@ -1,7 +1,6 @@
 package com.gt.hotel.exception;
 
 /**
- *
  * @author zhangmz
  * @version 1.0.0
  * @date 2017-07-15

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * API 参考类
  *
@@ -37,7 +39,8 @@ public class TestController extends BaseController {
      */
     @ResponseBody
     @GetMapping( value = { "/", "" } )
-    public String hello( @RequestParam( defaultValue = " world,zhangmz!" ) String name ) {
+    public String hello( @RequestParam( defaultValue = " world,zhangmz!" ) String name, HttpSession session ) {
+	System.out.println( session.getId() );
 	return "hello " + name;
     }
 
