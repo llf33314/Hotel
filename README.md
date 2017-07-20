@@ -2,13 +2,34 @@
 
 项目基于[SpringBootDemo 项目](http://git.duofee.com/zhangmz/SpringBootDemo), 升级至多模块项目。
 
+### 构建方式
 使用Intellij IDEA方式构建项目模块
 
 Eclipse/Myeclipse 请逐个Import maven 项目方式加入
 
-提交代码方式：先Fork ，编写代码，再发起PullRequest合并
+### 代码风格：
+
+IDEA 请使用**doc/java-code-style-IDEA.xml**
+
+eclipse 请使用**doc/java-code-style-eclipse.xml**
+
+导入以上Java代码风格，提交代码请先格式化后再提交。
+
+### 提交代码方式：
+
+先Fork ，编写代码，再发起PullRequest合并
 
 注：不熟悉SpringBoot项目构建，请先去使用SpringBoot单方式模块构建项目
+
+### 运行
+运行项目有两种方式：
+
+1. 使用HotelApplication.java
+2. 使用tomcat
+
+默认打包成war
+
+> 注:打包上（测试 or 正式）环境前，请先确定当前环境。
 
 多模块细分各模块职责。
 

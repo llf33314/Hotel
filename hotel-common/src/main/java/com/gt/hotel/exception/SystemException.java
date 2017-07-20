@@ -15,23 +15,23 @@ public class SystemException extends RuntimeException {
 
     private String message;//错误消息
 
-    public SystemException(String message) {
-        super(message);
-        this.message = message;
+    public SystemException( String message ) {
+	super( message );
+	this.message = message;
     }
 
-    public SystemException(int code, String message) {
-        super(message);
-        this.message = message;
-        this.code = code;
+    public SystemException( int code, String message ) {
+	super( message );
+	this.message = message;
+	this.code = code;
     }
 
     public int getCode() {
-        return code;
+	return code;
     }
 
     @Override
     public String getMessage() {
-        return message;
+	return message;
     }
 }

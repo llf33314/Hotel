@@ -1,7 +1,7 @@
 package com.gt.hotel.exception;
 
 import com.gt.hotel.dto.ErrorInfo;
-import com.gt.hotel.emuns.ResponseCode;
+import com.gt.hotel.enums.ResponseEnums;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,19 +25,19 @@ public class GlobalDefaultExceptionHandler {
 
     // 页面
     // 统一异常处理 页面跳转
-    @ExceptionHandler(value = Exception.class)
-    public ModelAndView defaultErrorHandler(HttpServletRequest request, Exception e) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("ex", e);
-        modelAndView.addObject("url", request.getRequestURL());
-        modelAndView.setViewName(DEFAULT_ERROR_VIEW);
-        return modelAndView;
+    @ExceptionHandler( value = Exception.class )
+    public ModelAndView defaultErrorHandler( HttpServletRequest request, Exception e ) {
+	ModelAndView modelAndView = new ModelAndView();
+	modelAndView.addObject( "ex", e );
+	modelAndView.addObject( "url", request.getRequestURL() );
+	modelAndView.setViewName( DEFAULT_ERROR_VIEW );
+	return modelAndView;
     }
 
     // 统一异常处理 Ajax请求
     @ResponseBody
-    @ExceptionHandler(value = ResponseEntityException.class)
-    public ErrorInfo<String> defaultErrorHandler(HttpServletRequest request, ResponseEntityException e) {
-        return ErrorInfo.createByErrorCodeMessage(ResponseCode.ERROR.getCode(), e.getMessage(), request.getRequestURL().toString());
+    @ExceptionHandler( value = ResponseEntityException.class )
+    public ErrorInfo< String > defaultErrorHandler( HttpServletRequest request, ResponseEntityException e ) {
+	return ErrorInfo.createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), e.getMessage(), request.getRequestURL().toString() );
     }
 }

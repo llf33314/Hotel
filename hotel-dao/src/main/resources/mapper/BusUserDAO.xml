@@ -45,7 +45,10 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, email, password, phone, gender, register_ip AS registerIp, recent_ip AS recentIp, ctime, mtime, status, fans_currency AS fansCurrency, flow, city_id AS cityId, level, startTime, endTime, years, statTime, industryid, pid, sms_count AS smsCount, istechnique, advert, busmoney_level AS busmoneyLevel, regionids, isagent, agentid, realname, login_source AS loginSource, is_binding AS isBinding, unbundling_time AS unbundlingTime, fixed_phone AS fixedPhone, customer_id AS customerId, merchant_name AS merchantName, add_source AS addSource, wz_auth AS wzAuth
+        id, name, email, password, phone, gender, register_ip AS registerIp, recent_ip AS recentIp, ctime, mtime, status, fans_currency AS fansCurrency, flow, city_id AS cityId,
+        level, startTime, endTime, years, statTime, industryid, pid, sms_count AS smsCount, istechnique, advert, busmoney_level AS busmoneyLevel, regionids, isagent, agentid,
+        realname, login_source AS loginSource, is_binding AS isBinding, unbundling_time AS unbundlingTime, fixed_phone AS fixedPhone, customer_id AS customerId, merchant_name AS
+        merchantName, add_source AS addSource, wz_auth AS wzAuth
     </sql>
 
 </mapper>
