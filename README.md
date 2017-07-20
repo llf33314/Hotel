@@ -49,6 +49,8 @@ eclipse 请使用**doc/java-code-style-eclipse.xml**
 
 多模块 多web 端构建项目基建。
 
+[Redis Session 共享配置 -- 子域名共享Session](http://git.duofee.com/zhangmz/SpringBootDemo/wiki/Redis+Session+%E5%85%B1%E4%BA%AB%E9%85%8D%E7%BD%AE+--+%E5%AD%90%E5%9F%9F%E5%90%8D%E5%85%B1%E4%BA%ABSession)
+
 使用Lombok 插件简化 getter/setter 详细请查看：
 [使用 Lombok 自动生成 Getter and Setter](http://www.qtdebug.com/java-lombok/)
 
