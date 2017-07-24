@@ -19,7 +19,7 @@ eclipse 请使用**doc/java-code-style-eclipse.xml**
 
 先Fork ，编写代码，再发起PullRequest合并
 
-注：不熟悉SpringBoot项目构建，请先去使用SpringBoot单方式模块构建项目
+注：不熟悉SpringBoot项目构建，请先去使用SpringBoot单模块方式构建项目
 
 ### 运行
 运行项目有两种方式：
