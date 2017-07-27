@@ -51,8 +51,6 @@ eclipse 请使用**doc/java-code-style-eclipse.xml**
 
 [Redis Session 共享配置 -- 子域名共享Session](http://git.duofee.com/zhangmz/SpringBootDemo/wiki/Redis+Session+%E5%85%B1%E4%BA%AB%E9%85%8D%E7%BD%AE+--+%E5%AD%90%E5%9F%9F%E5%90%8D%E5%85%B1%E4%BA%ABSession)
 
-使用Lombok 插件简化 getter/setter 详细请查看：
 [使用 Lombok 自动生成 Getter and Setter](http://www.qtdebug.com/java-lombok/)
 
-多环境切换日志文件配置
 [Spring Boot干货系列：（七）默认日志logback配置解析 | 掘金技术征文](https://juejin.im/post/58f86981b123db0062363203)
