@@ -15,6 +15,23 @@ eclipse 请使用**doc/java-code-style-eclipse.xml**
 
 导入以上Java代码风格，提交代码请先格式化后再提交。
 
+### 代码编写风格：
+
+DAO 层，
+
+- 编写代码一律不许使用 * 方式查询结果。
+- 返回结果集，不允许使用Map返回。
+
+Service 层
+
+- 所有业务逻辑不通过的代码一律使用 throw new XXXException(); 抛出并声明消息
+- 接口方法必须声明所抛出的异常类型，不允许直接使用Exception
+
+Controller 层
+
+- 必须捕获Service声明的所有异常。
+-
+
 ### 提交代码方式：
 
 先Fork ，编写代码，再发起PullRequest合并
