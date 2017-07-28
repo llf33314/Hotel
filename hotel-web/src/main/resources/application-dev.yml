@@ -22,9 +22,9 @@ spring:
 
 datasource:
  druid:
-  url: jdbc:mysql://127.0.0.1:3306/springbootdemo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+  url: jdbc:mysql://localhost:3306/springbootdemo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
   username: zhangmz
-  password: zhangmz
+  password: zhangmz123
   driver-class-name: com.mysql.jdbc.Driver
   platform: mysql
   type: com.alibaba.druid.pool.DruidDataSource
@@ -53,11 +53,20 @@ datasource:
   # 合并多个DruidDataSource的监控数据
   #useGlobalDataSourceStat: true
 
+### 会员CXF项目接口地址
+project:
+ member:
+  cxf-url: http://jiaoyu.yifriend.net/memberWS?wsdl
+
+
 ### 设置 Redis session 共享
 redisSession:
   domainName: .example.com
   cookiePath: /
   cookieName: JSESSIONID
+### CXF 配置
+cxf:
+  path: /webservice
 
 
 

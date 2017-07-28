@@ -18,6 +18,19 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.gt.hotel</groupId>
+            <artifactId>hotel-cxf-client</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gt.hotel</groupId>
+            <artifactId>hotel-cxf-server</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
@@ -51,5 +64,33 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+
+        <plugins>
+            <!--<plugin>
+                &lt;!&ndash; 合并多个web项目 &ndash;&gt;
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    &lt;!&ndash; 打包时,去除 tk api wechat 的部分文件 &ndash;&gt;
+                    <packagingExcludes>
+                        WEB-INF/web.xml,
+                        regex[WEB-INF/lib/*.jar]
+                    </packagingExcludes>
+                    <overlays>
+                        &lt;!&ndash; 覆盖时去除部分文件 &ndash;&gt;
+                        <overlay>
+                            <groupId>com.gt.hotel</groupId>
+                            <artifactId>hotel-cxf-server</artifactId>
+                            <excludes>
+                                <exclude>WEB-INF/classes/rebel.xml</exclude>
+                                <exclude>WEB-INF/lib/*.jar</exclude>
+                            </excludes>
+                        </overlay>
+
+
+                    </overlays>
+                </configuration>
+            </plugin>-->
+        </plugins>
     </build>
 </project>

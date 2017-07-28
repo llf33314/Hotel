@@ -1,5 +1,7 @@
 package com.gt.hotel.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.gt.hotel.BasicTest;
 import com.gt.hotel.web.service.BusUserService;
 import org.junit.Test;
@@ -19,5 +21,13 @@ public class BusUserServiceTest extends BasicTest {
 	Integer selectCount = this.busUserService.selectCount( null );
 	this.logger.info( "=====>> {}", selectCount );
     }
+
+    @Test
+    public void testListPage() {
+	PageHelper.startPage( 1, 10 );
+	this.busUserService.selectList( null );
+
+    }
+
 
 }
