@@ -1,5 +1,7 @@
 package com.gt.hotel.exception;
 
+import com.gt.hotel.enums.ResponseEnums;
+
 /**
  * Ajax 异常
  * <pre>
@@ -13,6 +15,10 @@ public class ResponseEntityException extends SystemException {
 
     public ResponseEntityException( String message ) {
 	super( message );
+    }
+
+    public ResponseEntityException( ResponseEnums responseEnums ) {
+	super( responseEnums );
     }
 
     public ResponseEntityException( int code, String message ) {
