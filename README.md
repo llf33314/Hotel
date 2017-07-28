@@ -41,9 +41,9 @@ eclipse 请使用**doc/java-code-style-eclipse.xml**
 - hotel-entity 实体层 
 - hotel-generator 项目代码生成，一键生成DAO Xml Service
 - hotel-service 业务层 依赖dao
-- hotel-web  程序入口，并依赖service 统一集成单元测试，所有测试代码写入
 - hotel-cxf-client 客户端调用(仅生成CXF服务端代码，供客户端调用)
 - hotel-cxf-server 服务端提供(提供cxf的服务端)
+- hotel-web  程序入口，并依赖service 统一集成单元测试，所有测试代码写入
 - hotel-web-front-management 前台管理
 - hotel-web-back-management 后台管理
 - hotel-web-mobile 移动端(包含微信页面)
