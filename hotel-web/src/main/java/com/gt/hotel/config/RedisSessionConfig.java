@@ -37,7 +37,7 @@ public class RedisSessionConfig {
      */
     @Bean( name = "defaultCookieSerializer" )
     public DefaultCookieSerializer defaultCookieSerializer() {
-	LOG.debug( " domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath );
+	LOG.debug( "domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath );
 	DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
 	cookieSerializer.setDomainName( domainName );
 	cookieSerializer.setCookieName( cookieName );

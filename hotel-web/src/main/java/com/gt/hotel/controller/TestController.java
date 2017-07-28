@@ -56,7 +56,19 @@ public class TestController extends BaseController {
     public ModelAndView index( ModelAndView map ) {
 	map.addObject( "test", "hello zhangmz!" );
 	map.setViewName( "index" );
+	this.logger.info( "hahahah" );
+	//	this.logger.info( "你好嘛" );
+	this.logger.info( "不是吧" );
 	return map;
+    }
+
+    @GetMapping( "/test" )
+    @ResponseBody
+    public String haha() {
+	this.logger.info( "测试热部署" );
+	this.logger.info( "22333" );
+	this.logger.info( "230000000" );
+	return "你好嘛";
     }
 
     /**

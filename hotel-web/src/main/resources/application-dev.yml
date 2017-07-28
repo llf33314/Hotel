@@ -14,9 +14,9 @@ spring:
  thymeleaf:
    cache: false
  redis:
-   host: 14.29.79.226
+   host: localhost
    port: 6379
-   password: gt@123456
+#   password: gt@123456
  session:
    store-type: redis
 
@@ -61,7 +61,7 @@ project:
 
 ### 设置 Redis session 共享
 redisSession:
-  domainName: .example.com
+  domainName: null
   cookiePath: /
   cookieName: JSESSIONID
 ### CXF 配置
