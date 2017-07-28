@@ -11,16 +11,17 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 /**
  * RedisSession配置Config
  * 默认session超时时间 1小时 3600秒
+ *
  * @author zhangmz
  * @version 1.0.0
  * @date 2017/07/16
  */
 @Configuration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
+@EnableRedisHttpSession( maxInactiveIntervalInSeconds = 3600 )
 public class RedisSessionConfig {
 
     /** 日志 */
-    private static final Logger LOG                          = LoggerFactory.getLogger( RedisSessionConfig.class );
+    private static final Logger LOG = LoggerFactory.getLogger( RedisSessionConfig.class );
     // 注入配置属性 根据环境配置切换
     @Value( "${redisSession.cookieName}" )
     private String cookieName;

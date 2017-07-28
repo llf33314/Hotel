@@ -29,5 +29,4 @@ public class BusUserServiceTest extends BasicTest {
 
     }
 
-
 }
