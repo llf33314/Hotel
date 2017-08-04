@@ -19,8 +19,8 @@ eclipse 请使用**doc/java-code-style-eclipse.xml**
 
 DAO 层，
 
-- 编写代码一律不许使用 * 方式查询结果。
-- 返回结果集，不允许使用Map返回。
+- SQL代码一律不许使用 * 方式查询结果。
+- 返回结果集，不允许使用Map or List<Map> 返回。
 
 Service 层
 
@@ -29,8 +29,8 @@ Service 层
 
 Controller 层
 
-- 必须捕获Service声明的所有异常。
--
+- 参数校验
+- 统一返回值处理
 
 ### 提交代码方式：
 
@@ -52,19 +52,19 @@ Controller 层
 
 ### 酒店ERP 系统
 模块分析
-- hotel  基础 提供jar包依赖管理并管理各子模块
-- hotel-common 提供基础设施
-- hotel-dao  数据持久层 依赖 entity 和 common
-- hotel-entity 实体层 
-- hotel-generator 项目代码生成，一键生成DAO Xml Service
-- hotel-service 业务层 依赖dao
-- hotel-cxf-client 客户端调用(仅生成CXF服务端代码，供客户端调用)
-- hotel-cxf-server 服务端提供(提供cxf的服务端)
-- hotel-web  程序入口，并依赖service 统一集成单元测试，所有测试代码写入
-- hotel-web-front-management 前台管理
-- hotel-web-back-management 后台管理
-- hotel-web-mobile 移动端(包含微信页面)
-- hotel-web-api 接口层 依赖service
+- hotel                         基础 提供jar包依赖管理并管理各子模块
+- hotel-common                  提供基础设施
+- hotel-dao                     数据持久层 依赖 entity 和 common
+- hotel-entity                  实体层
+- hotel-generator               项目代码生成，一键生成DAO Xml Service
+- hotel-service                 业务层 依赖dao
+- hotel-cxf-client              客户端调用(仅生成CXF服务端代码，供客户端调用)
+- hotel-cxf-server              服务端提供(提供cxf的服务端)
+- hotel-web                     程序入口，并依赖service 统一集成单元测试，所有测试代码写入
+- hotel-web-front-management    前台管理
+- hotel-web-back-management     后台管理
+- hotel-web-mobile              移动端(包含微信页面)
+- hotel-web-api                 接口层 依赖service
 
 多模块 多web 端构建项目基建。
 
