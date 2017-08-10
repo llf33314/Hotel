@@ -14,18 +14,18 @@ public enum ResponseEnums {
     JWT_TOKEN_EXPIRED( 11, "TOKEN失效" );
 
     private final int    code;
-    private final String desc;
+    private final String msg;
 
-    ResponseEnums( int code, String desc ) {
-	this.code = code;
-	this.desc = desc;
+    ResponseEnums( int code, String msg ) {
+        this.code = code;
+        this.msg = msg;
     }
 
     public int getCode() {
-	return code;
+        return code;
     }
 
-    public String getDesc() {
-	return desc;
+    public String getMsg() {
+        return msg;
     }
 }

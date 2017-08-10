@@ -55,6 +55,13 @@ public class MpGenerator {
     // 密码
     public static final  String   password           = "zhangmz123";
 
+    public static final String baseService = "com.gt.hotel.base.BaseService";
+
+    public static final String baseServiceImpl = "com.gt.hotel.base.BaseServiceImpl";
+
+    public static final String baseController = "com.gt.hotel.base.BaseController";
+
+
     private static Logger logger = LoggerFactory.getLogger( MpGenerator.class );
 
     /**
@@ -86,7 +93,7 @@ public class MpGenerator {
 					    // 自定义数据库表字段类型转换【可选】
 					    @Override
 					    public DbColumnType processTypeConvert( String fieldType ) {
-						logger.info( "转换类型：{}", fieldType );
+						//						logger.info( "转换类型：{}", fieldType );
 						// if ( fieldType.toLowerCase().contains( "tinyint" ) ) {
 						//    return DbColumnType.BOOLEAN;
 						// }
@@ -96,7 +103,7 @@ public class MpGenerator {
 			// 策略配置
 			new StrategyConfig()
 					// .setCapitalMode(true)// 全局大写命名
-					// .setDbColumnUnderline(true)//全局下划线命名
+					.setDbColumnUnderline( true )//全局下划线命名
 					.setTablePrefix( tablePrefix )// 此处可以修改为您的表前缀
 					.setNaming( NamingStrategy.underline_to_camel )// 表名生成策略
 					.setInclude( generatorTableName ) // 需要生成的表
@@ -106,19 +113,19 @@ public class MpGenerator {
 					// 自定义实体，公共字段
 					.setSuperEntityColumns( new String[] {} ).setTableFillList( tableFillList )
 					// 自定义 mapper 父类
-					.setSuperMapperClass( "com.baomidou.mybatisplus.mapper.BaseMapper" )
+					//					.setSuperMapperClass( "com.baomidou.mybatisplus.mapper.BaseMapper" )
 					// 自定义 service 父类
-					.setSuperServiceClass( "com.gt.hotel.base.BaseService" )
+					.setSuperServiceClass( baseService )
 					// 自定义 service 实现类父类
-					.setSuperServiceImplClass( "com.gt.hotel.base.BaseServiceImpl" )
+					.setSuperServiceImplClass( baseServiceImpl )
 					// 自定义 controller 父类
-					.setSuperControllerClass( "com.gt.hotel.base.BaseController" )
+					.setSuperControllerClass( baseController )
 					// 【实体】是否生成字段常量（默认 false）
 					// public static final String ID = "test_id";
 					// .setEntityColumnConstant(true)
 					// 【实体】是否为构建者模型（默认 false）
 					// public User setName(String name) {this.name = name; return this;}
-					//                        .setEntityBuilderModel(true)
+					//					.setEntityBuilderModel( true )
 					// 【实体】是否为lombok模型（默认 false）<a href="https://projectlombok.org/">document</a>
 					.setEntityLombokModel( true )
 			// Boolean类型字段是否移除is前缀处理
