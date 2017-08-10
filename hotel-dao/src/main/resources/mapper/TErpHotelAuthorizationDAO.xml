@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelAuthorizationDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotelAuthorization">
+		<id column="id" property="id" />
+		<result column="shop_id" property="shopId" />
+		<result column="account_id" property="accountId" />
+		<result column="authorization_name" property="authorizationName" />
+		<result column="creator" property="creator" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, shop_id AS shopId, account_id AS accountId, authorization_name AS authorizationName, creator, create_time AS createTime
+    </sql>
+
+</mapper>

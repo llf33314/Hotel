@@ -1,4 +1,4 @@
-package com.gt.hotel.controller;
+package com.gt.hotel.backstage.controller;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,13 +29,12 @@ import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.web.service.TErpHotelService;
 
-import ch.qos.logback.classic.Logger;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/back")
+@RequestMapping("/backstage")
 public class HotelController extends BaseController{
 	
 	@Autowired
@@ -51,10 +49,18 @@ public class HotelController extends BaseController{
 	public ServerResponse queryHotel(@RequestParam(name = "id", required = false) String id, 
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "1") Integer pageIndex){
+		boolean flag = false;
 		Page<TErpHotel> page = new Page<>(pageIndex, pageSize);
-		Wrapper<TErpHotel> wrapper = new EntityWrapper<>();
-		if(id != null) wrapper.eq("id", id);
-		return ServerResponse.createBySuccess(tErpHotelService.selectPage(page, wrapper));
+		try {
+			Wrapper<TErpHotel> wrapper = new EntityWrapper<>();
+			if(id != null) wrapper.eq("id", id);
+			page = tErpHotelService.selectPage(page, wrapper);
+		} catch (Exception e) {
+			logger.error("backstage hotel get error",e);
+			throw new ResponseEntityException(ResponseEnums.ERROR);
+		}
+		if(flag) return ServerResponse.createBySuccess(page);
+		else return ServerResponse.createByError();
 	}
 	
 	@ApiOperation(value = "新增酒店-新增酒店", notes = "新增酒店")
@@ -85,31 +91,32 @@ public class HotelController extends BaseController{
 				flag = tErpHotelService.insertOrUpdate(hotel);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("backstage hotel post error",e);
+			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		return ServerResponse.createBySuccess(flag);
+		if(flag) return ServerResponse.createBySuccess();
+		else return ServerResponse.createByError();
 	}
 	
 	@ApiOperation(value = "删除酒店", notes = "删除酒店")
-	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID集合(数组)", paramType = "delete", required = false, dataType = "List")})
+	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID集合(数组)", paramType = "delete", required = false, dataType = "List")})
 	@SuppressWarnings({ "rawtypes" })
 	@DeleteMapping("/hotel")
 	public ServerResponse deleteHotel(Integer[] ids){
+		boolean flag = false;
 		try {
 			for(Integer i : ids)
 				System.err.println(i);
 			if(ids != null && ids.length > 0){
 				List<Integer> idList = Arrays.asList(ids);
-//				flag = tErpHotelService.deleteBatchIds(idList);
-				if(tErpHotelService.deleteHotel(idList)){
-					return ServerResponse.createBySuccess();
-				}
-				return ServerResponse.createByError();
+				flag = tErpHotelService.deleteBatchIds(idList);
 			}
 		} catch (Exception e) {
-			logger.error("出错啦 ",e);
+			logger.error("backstage hotel delete error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
+		if(flag) return ServerResponse.createBySuccess();
+		else return ServerResponse.createByError();
 	}
 
 	@ApiOperation(value = "酒店-ERP设置-ERP前台设置-保存", notes = "ERP设置")
@@ -151,10 +158,11 @@ public class HotelController extends BaseController{
 			flag = tErpHotelService.hotelErpSet(hotel, hotelImage, depositList, checkOutList);	
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("backstage hotel erpset post error",e);
+			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-	
-		return ServerResponse.createBySuccess(flag);
+		if(flag) return ServerResponse.createBySuccess();
+		else return ServerResponse.createByError();
 	}
 	
 	@ApiOperation(value = "酒店-ERP设置-授权管理-添加", notes = "ERP设置")
@@ -180,66 +188,12 @@ public class HotelController extends BaseController{
 //			flag = tErpHotelService.insertHotelAuthor(authorizationList);	
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("backstage author post error",e);
+			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-	
-		return ServerResponse.createBySuccess(flag);
+		if(flag) return ServerResponse.createBySuccess();
+		else return ServerResponse.createByError();
 	}
 	
-	@ApiOperation(value = "酒店-ERP设置-授权管理-删除", notes = "ERP设置")
-	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", required = true, dataType = "Integer"), 
-		@ApiImplicitParam(name = "authorizations", value = "员工数组(形如: '[{shopId:1, accountId:1, authorizationName:\"张三\"}, {shopId:1, accountId:2, authorizationName:\"李四\"}]')", required = true, dataType = "String")})
-	@SuppressWarnings("rawtypes")
-	@DeleteMapping("/hotel/author")
-	public ServerResponse hotelAuthorDetele(String authorizations){
-		boolean flag = false;
-		try {
-			List<TErpHotelAuthorization> authorizationList = JSON.parseArray(authorizations, TErpHotelAuthorization.class);
-			Iterator<TErpHotelAuthorization> it = authorizationList.iterator();
-			while (it.hasNext()) {
-				TErpHotelAuthorization a = it.next();
-				a.setCreator("me");
-				a.setCreateTime(new Date());
-			}
-			for(TErpHotelAuthorization e : authorizationList){
-				System.err.println(e);
-			}
-			
-//			flag = tErpHotelService.insertHotelAuthor(authorizationList);	
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		return ServerResponse.createBySuccess(flag);
-	}
-	
-	@ApiOperation(value = "酒店-ER", notes = "ERP设置")
-	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", required = true, dataType = "Integer"), 
-		@ApiImplicitParam(name = "authorizations", value = "员工数组(形如: '[{shopId:1, accountId:1, authorizationName:\"张三\"}, {shopId:1, accountId:2, authorizationName:\"李四\"}]')", required = true, dataType = "String")})
-	@SuppressWarnings("rawtypes")
-	@GetMapping("/hotel/author/{id}")
-	public ServerResponse hotelAuthorGet(@PathVariable String id,String name,String ss){
-		boolean flag = false;
-		try {
-			List<TErpHotelAuthorization> authorizationList = JSON.parseArray(authorizations, TErpHotelAuthorization.class);
-			Iterator<TErpHotelAuthorization> it = authorizationList.iterator();
-			while (it.hasNext()) {
-				TErpHotelAuthorization a = it.next();
-				a.setCreator("me");
-				a.setCreateTime(new Date());
-			}
-			for(TErpHotelAuthorization e : authorizationList){
-				System.err.println(e);
-			}
-			
-//			flag = tErpHotelService.insertHotelAuthor(authorizationList);	
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		return ServerResponse.createBySuccess(flag);
-	}
 	
 }
