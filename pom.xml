@@ -133,22 +133,7 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>${dev.lib.swagger2}</version>
         </dependency>
-        <!-- Mybatis -->
-        <!--<dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${dev.lib.mybatis}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>mybatis-spring</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
+
 
         <!-- mybatisPlus代码生成模板引擎 -->
         <dependency>

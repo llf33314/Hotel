@@ -61,7 +61,6 @@ public class MpGenerator {
 
     public static final String baseController = "com.gt.hotel.base.BaseController";
 
-
     private static Logger logger = LoggerFactory.getLogger( MpGenerator.class );
 
     /**
