@@ -53,10 +53,6 @@ datasource:
   # 合并多个DruidDataSource的监控数据
   #useGlobalDataSourceStat: true
 
-### 会员CXF项目接口地址
-project:
- member:
-  cxf-url: http://jiaoyu.yifriend.net/memberWS?wsdl
 
 
 ### 设置 Redis session 共享
@@ -64,9 +60,6 @@ redisSession:
   domainName: null
   cookiePath: /
   cookieName: JSESSIONID
-### CXF 配置
-cxf:
-  path: /webservice
 
 
 
