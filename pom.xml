@@ -51,7 +51,6 @@
         <!--<entity.target.dir>src/main/java/</entity.target.dir>-->
         <!--<com.gt.hotel.dao.resources.dir>src/main/resources/</com.gt.hotel.dao.resources.dir>-->
         <dev.lib.lombok>1.16.18</dev.lib.lombok>
-        <dev.lib.cxf>3.1.12</dev.lib.cxf>
     </properties>
 
     <parent>
