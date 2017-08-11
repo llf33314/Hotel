@@ -236,7 +236,7 @@ public class HotelErpSetController extends BaseController{
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "1") Integer pageIndex){
 		boolean flag = false;
-		//TODO 酒店-ERP设置-授权管理-列表(未完)
+		// TODO 酒店-ERP设置-授权管理-列表(未完)
 		Page<TErpHotelAuthorization> page = new Page<>(pageIndex, pageSize);
 		try {
 			Wrapper<TErpHotelAuthorization> wrapper = new EntityWrapper<>();

@@ -38,17 +38,22 @@ public class HotelController extends BaseController{
 	@ApiOperation(value = "新增酒店-酒店查询", notes = "酒店查询 参数ID")
 	@ApiImplicitParams({@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10"),
 			@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1"),
-			@ApiImplicitParam(name = "id", value = "酒店ID", paramType = "query", required = true, dataType = "int", defaultValue = "0")})
+			@ApiImplicitParam(name = "id", value = "酒店ID", paramType = "query", required = false, dataType = "int", defaultValue = "0"), 
+			@ApiImplicitParam(name = "keyword", value = "关键字", paramType = "query", required = false, dataType = "String", defaultValue = "")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel")
 	public ServerResponse queryHotel(@RequestParam(name = "id", required = false) String id, 
 			@RequestParam(defaultValue = "10") Integer pageSize,
-			@RequestParam(defaultValue = "1") Integer pageIndex){
+			@RequestParam(defaultValue = "1") Integer pageIndex, 
+			String keyword){
 		boolean flag = false;
 		Page<TErpHotel> page = new Page<>(pageIndex, pageSize);
 		try {
 			Wrapper<TErpHotel> wrapper = new EntityWrapper<>();
-			if(id != null) wrapper.eq("id", id);
+			wrapper.eq(id != null, "id", id);
+			wrapper.like(keyword != null, "name", keyword);
+			wrapper.like(keyword != null, "phone", keyword);
+			wrapper.like(keyword != null, "address", keyword);
 			page = tErpHotelService.selectPage(page, wrapper);
 			flag = true;
 		} catch (Exception e) {
@@ -101,7 +106,7 @@ public class HotelController extends BaseController{
 	@SuppressWarnings({ "rawtypes" })
 	@DeleteMapping("/hotel")
 	public ServerResponse deleteHotel(Integer[] ids){
-		//TODO 新增酒店-删除酒店(未完)
+		// TODO 新增酒店-删除酒店(未完)
 		boolean flag = false;
 		try {
 			for(Integer i : ids)

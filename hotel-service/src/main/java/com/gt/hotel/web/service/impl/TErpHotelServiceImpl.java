@@ -47,23 +47,29 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 	public boolean hotelErpSet(TErpHotel hotel, TErpHotelImage hotelImage,
 			List<TErpHotelMemberDepositRelation> depositList, List<TErpHotelMemberCheckOutRelation> checkOutList) {
 		boolean flag = false;
-		Wrapper<TErpHotelImage> wrapper = new EntityWrapper<TErpHotelImage>();
-		Wrapper<TErpHotelMemberDepositRelation> wrapperI = new EntityWrapper<TErpHotelMemberDepositRelation>();
-		Wrapper<TErpHotelMemberCheckOutRelation> wrapperII = new EntityWrapper<TErpHotelMemberCheckOutRelation>();
-		Wrapper<TErpHotelInstallationRelation> wrapperIII = new EntityWrapper<TErpHotelInstallationRelation>();
-		wrapper.eq("subjection", hotelImage.getSubjection());
-		wrapper.eq("subjection_id", hotelImage.getSubjectionId());
-		wrapper.eq("type", hotelImage.getType());
-		wrapperI.eq("hotel_id", hotel.getId());
-		wrapperII.eq("hotel_id", hotel.getId());
-		wrapperIII.eq("hotel_id", hotel.getId());
-		tErpHotelImageDAO.delete(wrapper);
-		tErpHotelMemberDepositRelationService.delete(wrapperI);
-		tErpHotelMemberCheckOutRelationService.delete(wrapperII);
 		this.updateById(hotel);
-		tErpHotelImageDAO.insert(hotelImage);
-		tErpHotelMemberDepositRelationService.insertBatch(depositList);
-		tErpHotelMemberCheckOutRelationService.insertBatch(checkOutList);
+		if(hotelImage != null){
+			Wrapper<TErpHotelImage> wrapper = new EntityWrapper<TErpHotelImage>();
+			wrapper.eq("subjection", hotelImage.getSubjection());
+			wrapper.eq("subjection_id", hotelImage.getSubjectionId());
+			wrapper.eq("type", hotelImage.getType());
+			tErpHotelImageDAO.delete(wrapper);
+			tErpHotelImageDAO.insert(hotelImage);
+		}
+		if(depositList != null){
+			Wrapper<TErpHotelMemberDepositRelation> wrapperI = new EntityWrapper<TErpHotelMemberDepositRelation>();
+			wrapperI.eq("hotel_id", hotel.getId());
+			tErpHotelMemberDepositRelationService.delete(wrapperI);
+			tErpHotelMemberDepositRelationService.insertBatch(depositList);
+		}
+		if(checkOutList != null){
+			Wrapper<TErpHotelMemberCheckOutRelation> wrapperII = new EntityWrapper<TErpHotelMemberCheckOutRelation>();
+			wrapperII.eq("hotel_id", hotel.getId());
+			tErpHotelMemberCheckOutRelationService.delete(wrapperII);
+			tErpHotelMemberCheckOutRelationService.insertBatch(checkOutList);
+		}
+//		Wrapper<TErpHotelInstallationRelation> wrapperIII = new EntityWrapper<TErpHotelInstallationRelation>();
+//		wrapperIII.eq("hotel_id", hotel.getId());
 		flag = true;
 		return flag;
 	}
@@ -72,23 +78,23 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 	@Override
 	public boolean deleteHotel(List<Integer> idList) {
 		boolean flag = false;
-		
-		this.deleteBatchIds(idList);
-		Wrapper<TErpHotelImage> wrapper = new EntityWrapper<TErpHotelImage>();
-		Wrapper<TErpHotelMemberDepositRelation> wrapperI = new EntityWrapper<TErpHotelMemberDepositRelation>();
-		Wrapper<TErpHotelMemberCheckOutRelation> wrapperII = new EntityWrapper<TErpHotelMemberCheckOutRelation>();
-		Wrapper<TErpHotelInstallationRelation> wrapperIII = new EntityWrapper<TErpHotelInstallationRelation>();
-		wrapper.eq("subjection", 0);
-		wrapper.in("subjection_id", idList);
-		wrapperI.in("hotel_id", idList);
-		wrapperII.in("hotel_id", idList);
-		wrapperIII.in("hotel_id", idList);
-		tErpHotelImageDAO.delete(wrapper);
-		tErpHotelMemberDepositRelationService.delete(wrapperI);
-		tErpHotelMemberCheckOutRelationService.delete(wrapperII);
-		tErpHotelInstallationRelationDAO.delete(wrapperIII);
-		
-		flag = true;
+		if(idList != null){
+			this.deleteBatchIds(idList);
+			Wrapper<TErpHotelImage> wrapper = new EntityWrapper<TErpHotelImage>();
+			Wrapper<TErpHotelMemberDepositRelation> wrapperI = new EntityWrapper<TErpHotelMemberDepositRelation>();
+			Wrapper<TErpHotelMemberCheckOutRelation> wrapperII = new EntityWrapper<TErpHotelMemberCheckOutRelation>();
+			Wrapper<TErpHotelInstallationRelation> wrapperIII = new EntityWrapper<TErpHotelInstallationRelation>();
+			wrapper.eq("subjection", 0);
+			wrapper.in("subjection_id", idList);
+			wrapperI.in("hotel_id", idList);
+			wrapperII.in("hotel_id", idList);
+			wrapperIII.in("hotel_id", idList);
+			tErpHotelImageDAO.delete(wrapper);
+			tErpHotelMemberDepositRelationService.delete(wrapperI);
+			tErpHotelMemberCheckOutRelationService.delete(wrapperII);
+			tErpHotelInstallationRelationDAO.delete(wrapperIII);
+			flag = true;
+		}
 		return flag;
 	}
 

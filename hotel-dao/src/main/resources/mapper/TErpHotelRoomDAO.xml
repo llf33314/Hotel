@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelRoomDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotelRoom">
+		<id column="id" property="id" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="type" property="type" />
+		<result column="total" property="total" />
+		<result column="introduction" property="introduction" />
+		<result column="price" property="price" />
+		<result column="deposit" property="deposit" />
+		<result column="if_discount_price" property="ifDiscountPrice" />
+		<result column="discount_price" property="discountPrice" />
+		<result column="if_weekend_price" property="ifWeekendPrice" />
+		<result column="weekend_price" property="weekendPrice" />
+		<result column="if_monday_price" property="ifMondayPrice" />
+		<result column="monday_price" property="mondayPrice" />
+		<result column="if_tuesday_price" property="ifTuesdayPrice" />
+		<result column="tuesday_price" property="tuesdayPrice" />
+		<result column="if_wednesday_price" property="ifWednesdayPrice" />
+		<result column="wednesday_price" property="wednesdayPrice" />
+		<result column="if_thursday_price" property="ifThursdayPrice" />
+		<result column="thursday_price" property="thursdayPrice" />
+		<result column="if_sunday_price" property="ifSundayPrice" />
+		<result column="sunday_price" property="sundayPrice" />
+		<result column="team_price" property="teamPrice" />
+		<result column="team_price_effective" property="teamPriceEffective" />
+		<result column="if_use" property="ifUse" />
+		<result column="creator" property="creator" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, hotel_id AS hotelId, type, total, introduction, price, deposit, if_discount_price AS ifDiscountPrice, discount_price AS discountPrice, if_weekend_price AS ifWeekendPrice, weekend_price AS weekendPrice, if_monday_price AS ifMondayPrice, monday_price AS mondayPrice, if_tuesday_price AS ifTuesdayPrice, tuesday_price AS tuesdayPrice, if_wednesday_price AS ifWednesdayPrice, wednesday_price AS wednesdayPrice, if_thursday_price AS ifThursdayPrice, thursday_price AS thursdayPrice, if_sunday_price AS ifSundayPrice, sunday_price AS sundayPrice, team_price AS teamPrice, team_price_effective AS teamPriceEffective, if_use AS ifUse, creator, create_time AS createTime, update_time AS updateTime
+    </sql>
+
+</mapper>
