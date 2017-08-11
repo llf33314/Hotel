@@ -27,7 +27,6 @@ public class TErpHotelMemberCheckOutRelation extends Model<TErpHotelMemberCheckO
     /**
      * 酒店ID
      */
-	@TableId
 	@TableField("hotel_id")
 	private Integer hotelId;
     /**

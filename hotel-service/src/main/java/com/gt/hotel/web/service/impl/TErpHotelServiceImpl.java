@@ -13,6 +13,7 @@ import com.gt.hotel.dao.TErpHotelDAO;
 import com.gt.hotel.dao.TErpHotelImageDAO;
 import com.gt.hotel.dao.TErpHotelInstallationRelationDAO;
 import com.gt.hotel.entity.TErpHotel;
+import com.gt.hotel.entity.TErpHotelERPSet;
 import com.gt.hotel.entity.TErpHotelImage;
 import com.gt.hotel.entity.TErpHotelInstallationRelation;
 import com.gt.hotel.entity.TErpHotelMemberCheckOutRelation;
@@ -46,6 +47,19 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 	public boolean hotelErpSet(TErpHotel hotel, TErpHotelImage hotelImage,
 			List<TErpHotelMemberDepositRelation> depositList, List<TErpHotelMemberCheckOutRelation> checkOutList) {
 		boolean flag = false;
+		Wrapper<TErpHotelImage> wrapper = new EntityWrapper<TErpHotelImage>();
+		Wrapper<TErpHotelMemberDepositRelation> wrapperI = new EntityWrapper<TErpHotelMemberDepositRelation>();
+		Wrapper<TErpHotelMemberCheckOutRelation> wrapperII = new EntityWrapper<TErpHotelMemberCheckOutRelation>();
+		Wrapper<TErpHotelInstallationRelation> wrapperIII = new EntityWrapper<TErpHotelInstallationRelation>();
+		wrapper.eq("subjection", hotelImage.getSubjection());
+		wrapper.eq("subjection_id", hotelImage.getSubjectionId());
+		wrapper.eq("type", hotelImage.getType());
+		wrapperI.eq("hotel_id", hotel.getId());
+		wrapperII.eq("hotel_id", hotel.getId());
+		wrapperIII.eq("hotel_id", hotel.getId());
+		tErpHotelImageDAO.delete(wrapper);
+		tErpHotelMemberDepositRelationService.delete(wrapperI);
+		tErpHotelMemberCheckOutRelationService.delete(wrapperII);
 		this.updateById(hotel);
 		tErpHotelImageDAO.insert(hotelImage);
 		tErpHotelMemberDepositRelationService.insertBatch(depositList);
@@ -76,6 +90,33 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 		
 		flag = true;
 		return flag;
+	}
+
+	@Transactional
+	@Override
+	public TErpHotelERPSet selectERPSetById(Integer id) {
+		TErpHotelERPSet hotel = new TErpHotelERPSet();
+		TErpHotel h = selectById(id);
+		TErpHotelImage i = new TErpHotelImage();
+		i.setSubjection(0);
+		i.setSubjectionId(id);
+		i.setType("logo");
+		i = tErpHotelImageDAO.selectOne(i);
+		Wrapper<TErpHotelMemberDepositRelation> wrapper = new EntityWrapper<TErpHotelMemberDepositRelation>();
+		Wrapper<TErpHotelMemberCheckOutRelation> wrapper2 = new EntityWrapper<TErpHotelMemberCheckOutRelation>();
+		wrapper.eq("hotel_id", id);
+		wrapper2.eq("hotel_id", id);
+		List<TErpHotelMemberDepositRelation> d = tErpHotelMemberDepositRelationService.selectList(wrapper);
+		List<TErpHotelMemberCheckOutRelation> c = tErpHotelMemberCheckOutRelationService.selectList(wrapper2);
+		hotel.setHotelId(h.getId());
+		hotel.setIfBreakfast(h.getIfBreakfast());
+		hotel.setIfFreeDeposit(h.getIfFreeDeposit());
+		hotel.setIfLastCheckOut(h.getIfLastCheckOut());
+		hotel.setBreakfastQuantity(h.getBreakfastQuantity());
+		hotel.setLogo(i.getUrl());
+		hotel.setDeposits(d);
+		hotel.setCheckOuts(c);
+		return hotel;
 	}
 	
 }

@@ -26,7 +26,6 @@ public class TErpHotelMemberDepositRelation extends Model<TErpHotelMemberDeposit
     /**
      * 酒店ID
      */
-	@TableId
 	@TableField("hotel_id")
 	private Integer hotelId;
     /**

@@ -1,11 +1,11 @@
 package com.gt.hotel.entity;
 
+import java.io.Serializable;
+
+import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
-import java.io.Serializable;
-import com.baomidou.mybatisplus.enums.FieldFill;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

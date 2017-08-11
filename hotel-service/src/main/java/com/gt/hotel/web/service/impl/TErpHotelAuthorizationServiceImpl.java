@@ -9,11 +9,11 @@ import com.gt.hotel.web.service.TErpHotelAuthorizationService;
 
 /**
  * <p>
- * 授权人 服务实现类
+ * 授权人-功能-关系 服务实现类
  * </p>
  *
  * @author 
- * @since 2017-08-09
+ * @since 2017-08-10
  */
 @Service
 public class TErpHotelAuthorizationServiceImpl extends BaseServiceImpl<TErpHotelAuthorizationDAO, TErpHotelAuthorization> implements TErpHotelAuthorizationService {

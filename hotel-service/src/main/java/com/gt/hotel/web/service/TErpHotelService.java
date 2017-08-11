@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TErpHotel;
+import com.gt.hotel.entity.TErpHotelERPSet;
 import com.gt.hotel.entity.TErpHotelImage;
 import com.gt.hotel.entity.TErpHotelMemberCheckOutRelation;
 import com.gt.hotel.entity.TErpHotelMemberDepositRelation;
@@ -22,6 +23,8 @@ public interface TErpHotelService extends BaseService<TErpHotel> {
 			List<TErpHotelMemberCheckOutRelation> checkOutList);
 
 	boolean deleteHotel(List<Integer> idList);
+
+	TErpHotelERPSet selectERPSetById(Integer id);
 
 	
 }

@@ -1,24 +1,24 @@
 package com.gt.hotel.entity;
 
+import java.io.Serializable;
+import java.util.Date;
+
+import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
-import java.util.Date;
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
-import java.io.Serializable;
-import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 授权人
+ * 授权人-功能-关系
  * </p>
  *
  * @author 
- * @since 2017-08-09
+ * @since 2017-08-11
  */
 @Data
 @Accessors(chain = true)
@@ -33,6 +33,11 @@ public class TErpHotelAuthorization extends Model<TErpHotelAuthorization> {
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
     /**
+     * 酒店ID
+     */
+	@TableField("hotel_id")
+	private Integer hotelId;
+    /**
      * 门店ID
      */
 	@TableField("shop_id")
@@ -43,10 +48,10 @@ public class TErpHotelAuthorization extends Model<TErpHotelAuthorization> {
 	@TableField("account_id")
 	private Integer accountId;
     /**
-     * 核销员名称
+     * 功能ID
      */
-	@TableField("authorization_name")
-	private String authorizationName;
+	@TableField("function_id")
+	private Integer functionId;
     /**
      * 创建者
      */
@@ -67,9 +72,10 @@ public class TErpHotelAuthorization extends Model<TErpHotelAuthorization> {
 	public String toString() {
 		return "TErpHotelAuthorization{" +
 			"id=" + id +
+			", hotelId=" + hotelId +
 			", shopId=" + shopId +
 			", accountId=" + accountId +
-			", authorizationName=" + authorizationName +
+			", functionId=" + functionId +
 			", creator=" + creator +
 			", createTime=" + createTime +
 			"}";
@@ -81,6 +87,14 @@ public class TErpHotelAuthorization extends Model<TErpHotelAuthorization> {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getHotelId() {
+		return hotelId;
+	}
+
+	public void setHotelId(Integer hotelId) {
+		this.hotelId = hotelId;
 	}
 
 	public Integer getShopId() {
@@ -99,12 +113,12 @@ public class TErpHotelAuthorization extends Model<TErpHotelAuthorization> {
 		this.accountId = accountId;
 	}
 
-	public String getAuthorizationName() {
-		return authorizationName;
+	public Integer getFunctionId() {
+		return functionId;
 	}
 
-	public void setAuthorizationName(String authorizationName) {
-		this.authorizationName = authorizationName;
+	public void setFunctionId(Integer functionId) {
+		this.functionId = functionId;
 	}
 
 	public String getCreator() {
@@ -122,6 +136,4 @@ public class TErpHotelAuthorization extends Model<TErpHotelAuthorization> {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
-	
 }
