@@ -17,12 +17,9 @@ public class SystemException extends RuntimeException {
 
     private String message;//错误消息
 
-    /**
-     * @param message
-     */
     public SystemException( String message ) {
-	super( message );
-	this.message = message;
+        super( message );
+        this.message = message;
     }
 
     /**
@@ -42,17 +39,17 @@ public class SystemException extends RuntimeException {
      * @param message
      */
     public SystemException( int code, String message ) {
-	super( message );
-	this.message = message;
-	this.code = code;
+        super( message );
+        this.message = message;
+        this.code = code;
     }
 
     public int getCode() {
-	return code;
+        return code;
     }
 
     @Override
     public String getMessage() {
-	return message;
+        return message;
     }
 }

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
-import com.gt.hotel.dto.ResponseUtils;
+import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.BusUser;
 import com.gt.hotel.web.service.BusUserService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,7 +13,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -81,16 +84,15 @@ public class TestController extends BaseController {
     @ApiImplicitParam( name = "phone", value = "手机号码", paramType = "query", dataType = "long" )
     @ResponseBody
     @GetMapping( value = "/user/count", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-    public ResponseUtils userCount( Long phone ) {
-	logger.debug( "phone is {}", phone );
+    public ResponseDTO userCount( Long phone ) {
+	this.logger.debug( "phone is {}", phone );
 	Wrapper< BusUser > busUserWrapper = null;
 	if ( phone != null ) {
 	    busUserWrapper = new EntityWrapper<>();
 	    busUserWrapper.like( "phone", phone.toString() );
 	}
 	Integer count = this.busUserService.selectCount( busUserWrapper );
-	List< BusUser > busUserList = this.busUserService.selectList( busUserWrapper );
-	return ResponseUtils.createBySuccess( count );
+	return ResponseDTO.createBySuccess( count );
     }
 
     /**
@@ -100,7 +102,7 @@ public class TestController extends BaseController {
      * @param pageIndex      页码
      * @param searchKeyWords 关键字搜索 匹配 name & phone
      *
-     * @return ResponseUtils
+     * @return ResponseDTO
      */
     @ApiOperation( value = "手机号、姓名模糊查询", notes = "手机号、姓名模糊查询" )
     @ApiImplicitParams( { @ApiImplicitParam( name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10" ),
@@ -108,15 +110,15 @@ public class TestController extends BaseController {
 		    @ApiImplicitParam( name = "searchKeyWords", value = "用户姓名或手机号", paramType = "query", required = true, dataType = "String" ) } )
     @ResponseBody
     @GetMapping( "/user" )
-    public ResponseUtils findUsers( @RequestParam( defaultValue = "10" ) Integer pageSize, @RequestParam( defaultValue = "1" ) Integer pageIndex, String searchKeyWords ) {
-	logger.debug( "searchKeyWords is {}", searchKeyWords );
-	logger.debug( "pageIndex is {}", pageIndex );
-	logger.debug( "pageSize is {}", pageSize );
+    public ResponseDTO findUsers( @RequestParam( defaultValue = "10" ) Integer pageSize, @RequestParam( defaultValue = "1" ) Integer pageIndex, String searchKeyWords ) {
+	this.logger.debug( "searchKeyWords is {}", searchKeyWords );
+	this.logger.debug( "pageIndex is {}", pageIndex );
+	this.logger.debug( "pageSize is {}", pageSize );
 	Page< BusUser > page = new Page<>( pageIndex, pageSize );
 	Wrapper< BusUser > busUserWrapper = new EntityWrapper<>();
 	busUserWrapper.like( "phone", searchKeyWords );
 	busUserWrapper.like( "name", searchKeyWords );
-	return ResponseUtils.createBySuccess( this.busUserService.selectPage( page, busUserWrapper ) );
+	return ResponseDTO.createBySuccess( this.busUserService.selectPage( page, busUserWrapper ) );
     }
 
     /**
@@ -124,14 +126,14 @@ public class TestController extends BaseController {
      *
      * @param uid 用户ID
      *
-     * @return ResponseUtils
+     * @return ResponseDTO
      */
     @ApiOperation( value = "用户ID 查询用户信息", notes = "查询用户信息" )
     @ApiImplicitParam( name = "uid", value = "用户ID", paramType = "path", required = true, dataType = "Integer" )
     @ResponseBody
     @GetMapping( "/user/{uid}" )
-    public ResponseUtils findUser( @PathVariable Integer uid ) {
-	return ResponseUtils.createBySuccess( this.busUserService.findUser( uid ) );
+    public ResponseDTO findUser( @PathVariable Integer uid ) {
+	return ResponseDTO.createBySuccess( this.busUserService.findUser( uid ) );
     }
 
 }

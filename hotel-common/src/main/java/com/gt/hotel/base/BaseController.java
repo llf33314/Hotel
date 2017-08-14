@@ -15,7 +15,6 @@ public abstract class BaseController {
     /**
      * 日志
      */
-    /** 日志 */
     protected static final Logger logger = LoggerFactory.getLogger( BaseController.class );
 
     /**

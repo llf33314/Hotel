@@ -1,6 +1,6 @@
 package com.gt.hotel.exception;
 
-import com.gt.hotel.dto.ErrorInfo;
+import com.gt.hotel.dto.ResponseErrorDTO;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +36,7 @@ public class GlobalDefaultExceptionHandler {
     // 统一异常处理 Ajax请求
     @ResponseBody
     @ExceptionHandler( value = ResponseEntityException.class )
-    public ErrorInfo< String > defaultErrorHandler( HttpServletRequest request, ResponseEntityException e ) {
-	return ErrorInfo.createByErrorCodeMessage( e.getCode(), e.getMessage(), request.getRequestURL().toString() );
+    public ResponseErrorDTO< String > defaultErrorHandler( HttpServletRequest request, ResponseEntityException e ) {
+	return ResponseErrorDTO.createByErrorCodeMessage( e.getCode(), e.getMessage(), request.getRequestURL().toString() );
     }
 }

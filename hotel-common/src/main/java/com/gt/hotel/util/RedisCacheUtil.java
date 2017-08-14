@@ -76,10 +76,8 @@ public class RedisCacheUtil {
      * @return Object
      */
     public Object get( final String key ) {
-	Object result = null;
 	ValueOperations< Serializable,Object > operations = redisTemplate.opsForValue();
-	result = operations.get( key );
-	return result;
+	return operations.get( key );
     }
 
     /**
@@ -92,27 +90,21 @@ public class RedisCacheUtil {
      * @return boolean
      */
     public boolean set( final String key, Object value ) {
-	return set(key,value,7200L);
+	return set( key, value, 7200L );
     }
 
     /**
      * 写入缓存
      *
-     * @param key   key
-     * @param value value
+     * @param key        key
+     * @param value      value
      * @param expireTime 过期时间
+     *
      * @return boolean
      */
     public boolean set( final String key, Object value, Long expireTime ) {
-	boolean result = false;
-	try {
-	    ValueOperations< Serializable,Object > operations = redisTemplate.opsForValue();
-	    operations.set( key, value );
-	    redisTemplate.expire( key, expireTime, TimeUnit.SECONDS );
-	    result = true;
-	} catch ( Exception e ) {
-	    e.printStackTrace();
-	}
-	return result;
+	ValueOperations< Serializable,Object > operations = redisTemplate.opsForValue();
+	operations.set( key, value );
+	return redisTemplate.expire( key, expireTime, TimeUnit.SECONDS );
     }
 }

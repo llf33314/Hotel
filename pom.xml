@@ -51,7 +51,6 @@
         <!--<entity.target.dir>src/main/java/</entity.target.dir>-->
         <!--<com.gt.hotel.dao.resources.dir>src/main/resources/</com.gt.hotel.dao.resources.dir>-->
         <dev.lib.lombok>1.16.18</dev.lib.lombok>
-        <!--<dev.lib.cxf>3.1.12</dev.lib.cxf>-->
     </properties>
 
     <parent>
@@ -131,22 +130,7 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>${dev.lib.swagger2}</version>
         </dependency>
-        <!-- Mybatis -->
-        <!--<dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${dev.lib.mybatis}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>mybatis-spring</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
+
 
         <!-- mybatisPlus代码生成模板引擎 -->
         <dependency>
@@ -155,18 +139,17 @@
             <version>${dev.lib.velocity}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatisplus-spring-boot-starter</artifactId>
-            <version>${dev.lib.mybatisplus-spring-boot-starter}</version>
-        </dependency>
-
-
         <!-- MP 核心库 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
             <version>${dev.lib.mybatis-plus}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatisplus-spring-boot-starter</artifactId>
+            <version>${dev.lib.mybatisplus-spring-boot-starter}</version>
         </dependency>
 
         <!-- druid阿里巴巴数据库连接池 -->
@@ -239,19 +222,6 @@
             <version>${dev.lib.lombok}</version>
         </dependency>
 
-        <!-- CXF jar包 -->
-   <!--     <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
-            <version>${dev.lib.cxf}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web-services</artifactId>
-            <scope>test</scope>
-        </dependency>
--->
 
     </dependencies>
 
