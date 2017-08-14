@@ -1,6 +1,5 @@
 package com.gt.hotel.web.service.impl;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +46,12 @@ public class TErpHotelRoomServiceImpl extends BaseServiceImpl<TErpHotelRoomDAO, 
 			wrapper.eq("subjection", 1);
 			wrapper.eq("type", "0");
 			tErpHotelImageService.delete(wrapper);
-			Iterator<TErpHotelImage> it = imageList.iterator();
-			while (it.hasNext()) {
-				TErpHotelImage a = it.next();
+			for(TErpHotelImage a : imageList){
 				a.setSubjection(1);
 				a.setSubjectionId(room.getId());
 				a.setType("0");
 			}
-			System.err.println(imageList.get(0));
+//			System.err.println(imageList.get(0));
 			tErpHotelImageService.insertBatch(imageList);
 		}
 		flag = true;

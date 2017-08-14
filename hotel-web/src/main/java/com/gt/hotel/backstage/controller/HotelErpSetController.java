@@ -2,7 +2,6 @@ package com.gt.hotel.backstage.controller;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -186,15 +185,10 @@ public class HotelErpSetController extends BaseController{
 		try {
 //			System.err.println(hotelId);
 			List<TErpHotelAuthorization> authorizationList = JSON.parseArray(authorizations, TErpHotelAuthorization.class);
-			Iterator<TErpHotelAuthorization> it = authorizationList.iterator();
-			while (it.hasNext()) {
-				TErpHotelAuthorization a = it.next();
+			for(TErpHotelAuthorization a : authorizationList){
 				a.setCreator(getUser(session).getName());
 				a.setCreateTime(new Date());
 			}
-//			for(TErpHotelAuthorization e : authorizationList){
-//				System.err.println(e);
-//			}
 			flag = tErpHotelAuthorizationService.insertBatch(authorizationList);	
 		} catch (Exception e) {
 			logger.error("backstage hotel author post error",e);

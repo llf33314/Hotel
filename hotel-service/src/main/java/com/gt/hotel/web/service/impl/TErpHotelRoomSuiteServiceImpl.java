@@ -1,10 +1,17 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TErpHotelRoomSuiteDAO;
 import com.gt.hotel.entity.TErpHotelRoomSuite;
+import com.gt.hotel.entity.TErpHotelRoomSuiteFloorVer;
 import com.gt.hotel.web.service.TErpHotelRoomSuiteService;
 
 /**
@@ -17,5 +24,28 @@ import com.gt.hotel.web.service.TErpHotelRoomSuiteService;
  */
 @Service
 public class TErpHotelRoomSuiteServiceImpl extends BaseServiceImpl<TErpHotelRoomSuiteDAO, TErpHotelRoomSuite> implements TErpHotelRoomSuiteService {
+	
+	@Autowired
+	TErpHotelRoomSuiteDAO TErpHotelRoomSuiteDAO;
+
+	@Override
+	public List<TErpHotelRoomSuiteFloorVer> selectFloorVerList(Integer roomId) {
+		List<TErpHotelRoomSuiteFloorVer> list = new ArrayList<TErpHotelRoomSuiteFloorVer>();
+		Wrapper<TErpHotelRoomSuite> wrapper = new EntityWrapper<TErpHotelRoomSuite>();
+		wrapper.eq(roomId != null, "room_id", roomId);
+		List<TErpHotelRoomSuite> suites = TErpHotelRoomSuiteDAO.selectList(wrapper);
+		for(TErpHotelRoomSuite rs : suites){
+			TErpHotelRoomSuiteFloorVer fv = new TErpHotelRoomSuiteFloorVer(rs.getFloor());
+			if(!list.contains(fv)) list.add(fv);
+		}
+		for(TErpHotelRoomSuiteFloorVer fv : list){
+			List<TErpHotelRoomSuite> _suites = new ArrayList<TErpHotelRoomSuite>();
+			for(TErpHotelRoomSuite rs : suites){
+				if(fv.getFloor().equals(rs.getFloor())) _suites.add(rs);
+			}
+			fv.settErpHotelRoomSuites(_suites);
+		}
+		return list;
+	}
 	
 }
