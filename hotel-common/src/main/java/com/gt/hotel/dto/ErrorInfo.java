@@ -1,7 +1,5 @@
 package com.gt.hotel.dto;
 
-import com.alibaba.druid.support.json.JSONParser;
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gt.hotel.enums.ResponseEnums;
@@ -17,7 +15,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  * @create 2017/6/21
  */
 @JsonSerialize( typing = DEFAULT_TYPING )
-public class ErrorInfo< T > extends ServerResponse< T > implements Serializable {
+public class ErrorInfo< T > extends ResponseUtils< T > implements Serializable {
 
     private String url;
 
@@ -27,7 +25,7 @@ public class ErrorInfo< T > extends ServerResponse< T > implements Serializable 
     }
 
     public static < T > ErrorInfo< T > createByError() {
-	return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getDesc() );
+	return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getMsg() );
     }
 
     public static < T > ErrorInfo< T > createByErrorCodeMessage( int errorCode, String errorMessage ) {
@@ -47,7 +45,7 @@ public class ErrorInfo< T > extends ServerResponse< T > implements Serializable 
     }
 
     public static void main( String[] args ) {
-	ErrorInfo< Object > error = ErrorInfo.createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getDesc() );
+	ErrorInfo< Object > error = ErrorInfo.createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getMsg() );
 	System.out.println( " url " + error.getUrl() );
 	System.out.println( JSONObject.toJSON( error ) );
     }

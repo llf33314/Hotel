@@ -24,4 +24,5 @@ public class ResponseEntityException extends SystemException {
     public ResponseEntityException( int code, String message ) {
 	super( code, message );
     }
+
 }

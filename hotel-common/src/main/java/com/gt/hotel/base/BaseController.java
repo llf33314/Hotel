@@ -15,7 +15,8 @@ public abstract class BaseController {
     /**
      * 日志
      */
-    protected Logger logger = LoggerFactory.getLogger( this.getClass() );
+    /** 日志 */
+    protected static final Logger logger = LoggerFactory.getLogger( BaseController.class );
 
     /**
      * 获取Sessionid

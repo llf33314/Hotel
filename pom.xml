@@ -12,8 +12,6 @@
         <module>hotel-service</module>
         <module>hotel-entity</module>
         <module>hotel-generator</module>
-        <module>hotel-cxf-client</module>
-        <module>hotel-cxf-server</module>
     </modules>
     <packaging>pom</packaging>
     <name>parent</name>
@@ -41,7 +39,8 @@
         <dev.lib.mybatis>1.1.1</dev.lib.mybatis>
         <dev.lib.druid>1.0.31</dev.lib.druid>
         <dev.lib.mysql>5.0.5</dev.lib.mysql>
-        <dev.lib.mybatis-plus>2.1-gamma</dev.lib.mybatis-plus>
+        <dev.lib.mybatis-plus>2.1.0</dev.lib.mybatis-plus>
+        <dev.lib.mybatisplus-spring-boot-starter>1.0.4</dev.lib.mybatisplus-spring-boot-starter>
         <dev.lib.velocity>1.7</dev.lib.velocity>
         <dev.lib.commons-lang3>3.5</dev.lib.commons-lang3>
         <dev.lib.nekohtml>1.9.22</dev.lib.nekohtml>
@@ -52,7 +51,7 @@
         <!--<entity.target.dir>src/main/java/</entity.target.dir>-->
         <!--<com.gt.hotel.dao.resources.dir>src/main/resources/</com.gt.hotel.dao.resources.dir>-->
         <dev.lib.lombok>1.16.18</dev.lib.lombok>
-        <dev.lib.cxf>3.1.12</dev.lib.cxf>
+        <!--<dev.lib.cxf>3.1.12</dev.lib.cxf>-->
     </properties>
 
     <parent>
@@ -133,7 +132,7 @@
             <version>${dev.lib.swagger2}</version>
         </dependency>
         <!-- Mybatis -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>${dev.lib.mybatis}</version>
@@ -147,7 +146,7 @@
                     <groupId>org.mybatis</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
         <!-- mybatisPlus代码生成模板引擎 -->
         <dependency>
@@ -155,6 +154,13 @@
             <artifactId>velocity</artifactId>
             <version>${dev.lib.velocity}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatisplus-spring-boot-starter</artifactId>
+            <version>${dev.lib.mybatisplus-spring-boot-starter}</version>
+        </dependency>
+
 
         <!-- MP 核心库 -->
         <dependency>
@@ -234,7 +240,7 @@
         </dependency>
 
         <!-- CXF jar包 -->
-        <dependency>
+   <!--     <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
             <version>${dev.lib.cxf}</version>
@@ -245,7 +251,7 @@
             <artifactId>spring-boot-starter-web-services</artifactId>
             <scope>test</scope>
         </dependency>
-
+-->
 
     </dependencies>
 

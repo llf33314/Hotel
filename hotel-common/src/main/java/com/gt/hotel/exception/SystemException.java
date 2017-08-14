@@ -30,8 +30,8 @@ public class SystemException extends RuntimeException {
      * @param responseEnums
      */
     public SystemException( ResponseEnums responseEnums ) {
-	super( responseEnums.getDesc() );
-	this.message = responseEnums.getDesc();
+	super( responseEnums.getMsg() );
+	this.message = responseEnums.getMsg();
 	this.code = responseEnums.getCode();
     }
 
