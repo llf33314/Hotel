@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotel">
+		<id column="id" property="id" />
+		<result column="bus_id" property="busId" />
+		<result column="shop_id" property="shopId" />
+		<result column="name" property="name" />
+		<result column="introduction" property="introduction" />
+		<result column="phone" property="phone" />
+		<result column="address" property="address" />
+		<result column="if_reserve_man" property="ifReserveMan" />
+		<result column="if_reserve_phone" property="ifReservePhone" />
+		<result column="if_remark" property="ifRemark" />
+		<result column="pay_mode" property="payMode" />
+		<result column="if_sms" property="ifSms" />
+		<result column="sms_phone" property="smsPhone" />
+		<result column="if_check_out" property="ifCheckOut" />
+		<result column="if_food" property="ifFood" />
+		<result column="if_bulletin" property="ifBulletin" />
+		<result column="bulletin" property="bulletin" />
+		<result column="if_remnant_room" property="ifRemnantRoom" />
+		<result column="if_continue" property="ifContinue" />
+		<result column="if_confirm_info" property="ifConfirmInfo" />
+		<result column="if_breakfast" property="ifBreakfast" />
+		<result column="breakfast_quantity" property="breakfastQuantity" />
+		<result column="if_activity_prices" property="ifActivityPrices" />
+		<result column="if_free_deposit" property="ifFreeDeposit" />
+		<result column="if_last_check_out" property="ifLastCheckOut" />
+		<result column="creator" property="creator" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bus_id AS busId, shop_id AS shopId, name, introduction, phone, address, if_reserve_man AS ifReserveMan, if_reserve_phone AS ifReservePhone, if_remark AS ifRemark, pay_mode AS payMode, if_sms AS ifSms, sms_phone AS smsPhone, if_check_out AS ifCheckOut, if_food AS ifFood, if_bulletin AS ifBulletin, bulletin, if_remnant_room AS ifRemnantRoom, if_continue AS ifContinue, if_confirm_info AS ifConfirmInfo, if_breakfast AS ifBreakfast, breakfast_quantity AS breakfastQuantity, if_activity_prices AS ifActivityPrices, if_free_deposit AS ifFreeDeposit, if_last_check_out AS ifLastCheckOut, creator, create_time AS createTime, update_time AS updateTime
+    </sql>
+
+</mapper>

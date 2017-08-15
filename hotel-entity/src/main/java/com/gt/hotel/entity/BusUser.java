@@ -80,7 +80,303 @@ public class BusUser extends Model< BusUser > {
 	return this.id;
     }
 
-    @Override
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Long getPhone() {
+		return phone;
+	}
+
+	public void setPhone(Long phone) {
+		this.phone = phone;
+	}
+
+	public Integer getGender() {
+		return gender;
+	}
+
+	public void setGender(Integer gender) {
+		this.gender = gender;
+	}
+
+	public String getRegisterIp() {
+		return registerIp;
+	}
+
+	public void setRegisterIp(String registerIp) {
+		this.registerIp = registerIp;
+	}
+
+	public String getRecentIp() {
+		return recentIp;
+	}
+
+	public void setRecentIp(String recentIp) {
+		this.recentIp = recentIp;
+	}
+
+	public String getCtime() {
+		return ctime;
+	}
+
+	public void setCtime(String ctime) {
+		this.ctime = ctime;
+	}
+
+	public String getMtime() {
+		return mtime;
+	}
+
+	public void setMtime(String mtime) {
+		this.mtime = mtime;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Double getFansCurrency() {
+		return fansCurrency;
+	}
+
+	public void setFansCurrency(Double fansCurrency) {
+		this.fansCurrency = fansCurrency;
+	}
+
+	public Double getFlow() {
+		return flow;
+	}
+
+	public void setFlow(Double flow) {
+		this.flow = flow;
+	}
+
+	public Integer getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Integer cityId) {
+		this.cityId = cityId;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public Integer getYears() {
+		return years;
+	}
+
+	public void setYears(Integer years) {
+		this.years = years;
+	}
+
+	public String getStatTime() {
+		return statTime;
+	}
+
+	public void setStatTime(String statTime) {
+		this.statTime = statTime;
+	}
+
+	public Integer getIndustryid() {
+		return industryid;
+	}
+
+	public void setIndustryid(Integer industryid) {
+		this.industryid = industryid;
+	}
+
+	public Integer getPid() {
+		return pid;
+	}
+
+	public void setPid(Integer pid) {
+		this.pid = pid;
+	}
+
+	public Integer getSmsCount() {
+		return smsCount;
+	}
+
+	public void setSmsCount(Integer smsCount) {
+		this.smsCount = smsCount;
+	}
+
+	public Integer getIstechnique() {
+		return istechnique;
+	}
+
+	public void setIstechnique(Integer istechnique) {
+		this.istechnique = istechnique;
+	}
+
+	public Integer getAdvert() {
+		return advert;
+	}
+
+	public void setAdvert(Integer advert) {
+		this.advert = advert;
+	}
+
+	public Integer getBusmoneyLevel() {
+		return busmoneyLevel;
+	}
+
+	public void setBusmoneyLevel(Integer busmoneyLevel) {
+		this.busmoneyLevel = busmoneyLevel;
+	}
+
+	public Integer getRegionids() {
+		return regionids;
+	}
+
+	public void setRegionids(Integer regionids) {
+		this.regionids = regionids;
+	}
+
+	public Integer getIsagent() {
+		return isagent;
+	}
+
+	public void setIsagent(Integer isagent) {
+		this.isagent = isagent;
+	}
+
+	public Integer getAgentid() {
+		return agentid;
+	}
+
+	public void setAgentid(Integer agentid) {
+		this.agentid = agentid;
+	}
+
+	public String getRealname() {
+		return realname;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
+	}
+
+	public Integer getLoginSource() {
+		return loginSource;
+	}
+
+	public void setLoginSource(Integer loginSource) {
+		this.loginSource = loginSource;
+	}
+
+	public Integer getIsBinding() {
+		return isBinding;
+	}
+
+	public void setIsBinding(Integer isBinding) {
+		this.isBinding = isBinding;
+	}
+
+	public String getUnbundlingTime() {
+		return unbundlingTime;
+	}
+
+	public void setUnbundlingTime(String unbundlingTime) {
+		this.unbundlingTime = unbundlingTime;
+	}
+
+	public String getFixedPhone() {
+		return fixedPhone;
+	}
+
+	public void setFixedPhone(String fixedPhone) {
+		this.fixedPhone = fixedPhone;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
+
+	public Integer getAddSource() {
+		return addSource;
+	}
+
+	public void setAddSource(Integer addSource) {
+		this.addSource = addSource;
+	}
+
+	public Integer getWzAuth() {
+		return wzAuth;
+	}
+
+	public void setWzAuth(Integer wzAuth) {
+		this.wzAuth = wzAuth;
+	}
+
+	@Override
     public String toString() {
 	return "BusUser{" + "id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phone=" + phone + ", gender=" + gender + ", registerIp=" + registerIp
 			+ ", recentIp=" + recentIp + ", ctime=" + ctime + ", mtime=" + mtime + ", status=" + status + ", fansCurrency=" + fansCurrency + ", flow=" + flow

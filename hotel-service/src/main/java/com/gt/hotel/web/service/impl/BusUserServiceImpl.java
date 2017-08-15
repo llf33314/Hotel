@@ -22,7 +22,8 @@ import java.util.List;
  */
 @Service( "webBusService" )
 public class BusUserServiceImpl extends BaseServiceImpl< BusUserDAO,BusUser > implements BusUserService {
-    @Autowired
+    
+	@Autowired
     private BusUserDAO busUserDAO;
 
     @Override

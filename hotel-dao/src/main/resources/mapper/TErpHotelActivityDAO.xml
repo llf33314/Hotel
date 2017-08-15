@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelActivityDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotelActivity">
+		<id column="id" property="id" />
+		<result column="bus_id" property="busId" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="activity_name" property="activityName" />
+		<result column="activity_stime" property="activityStime" />
+		<result column="activity_etime" property="activityEtime" />
+		<result column="type" property="type" />
+		<result column="is_room_limit" property="isRoomLimit" />
+		<result column="room_limit" property="roomLimit" />
+		<result column="is_vipcard" property="isVipcard" />
+		<result column="is_cardvolume" property="isCardvolume" />
+		<result column="rule" property="rule" />
+		<result column="is_room_count" property="isRoomCount" />
+		<result column="room_count" property="roomCount" />
+		<result column="activity_status" property="activityStatus" />
+		<result column="createtime" property="createtime" />
+		<result column="live_stime" property="liveStime" />
+		<result column="live_etime" property="liveEtime" />
+		<result column="grouplowest" property="grouplowest" />
+		<result column="grouplowesttip" property="grouplowesttip" />
+		<result column="limit_hour" property="limitHour" />
+		<result column="whenrentstime" property="whenrentstime" />
+		<result column="whenrentetime" property="whenrentetime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bus_id AS busId, hotel_id AS hotelId, activity_name AS activityName, activity_stime AS activityStime, activity_etime AS activityEtime, type, is_room_limit AS isRoomLimit, room_limit AS roomLimit, is_vipcard AS isVipcard, is_cardvolume AS isCardvolume, rule, is_room_count AS isRoomCount, room_count AS roomCount, activity_status AS activityStatus, createtime, live_stime AS liveStime, live_etime AS liveEtime, grouplowest, grouplowesttip, limit_hour AS limitHour, whenrentstime, whenrentetime, update_time AS updateTime
+    </sql>
+
+</mapper>
