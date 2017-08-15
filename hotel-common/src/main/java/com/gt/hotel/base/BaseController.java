@@ -1,5 +1,6 @@
 package com.gt.hotel.base;
 
+import com.gt.hotel.entity.BusUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,15 @@ public abstract class BaseController {
      *
      * @return
      */
-    public String getSessionId( HttpSession session ) {
+    protected String getSessionId( HttpSession session ) {
 	return session.getId();
+    }
+
+    protected BusUser getUser( HttpSession session ) {
+        BusUser bu = new BusUser();
+        bu.setId(1);
+        bu.setName("test user");
+        bu.setPhone(15012345678L);
+        return bu;
     }
 }

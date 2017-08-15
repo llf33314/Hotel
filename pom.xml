@@ -37,7 +37,8 @@
         <java.version>1.7</java.version>
         <dev.lib.swagger2>2.6.0</dev.lib.swagger2>
         <dev.lib.mybatis>1.1.1</dev.lib.mybatis>
-        <dev.lib.druid>1.0.31</dev.lib.druid>
+        <!--<dev.lib.druid>1.0.31</dev.lib.druid>-->
+        <dev.lib.druid-spring-boot-starter>1.1.2</dev.lib.druid-spring-boot-starter>
         <dev.lib.mysql>5.0.5</dev.lib.mysql>
         <dev.lib.mybatis-plus>2.1.0</dev.lib.mybatis-plus>
         <dev.lib.mybatisplus-spring-boot-starter>1.0.4</dev.lib.mybatisplus-spring-boot-starter>
@@ -155,8 +156,8 @@
         <!-- druid阿里巴巴数据库连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${dev.lib.druid}</version>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${dev.lib.druid-spring-boot-starter}</version>
         </dependency>
         <!-- MySql数据库驱动 -->
         <dependency>
