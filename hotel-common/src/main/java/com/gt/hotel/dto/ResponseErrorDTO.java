@@ -17,29 +17,29 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  * @create 2017/6/21
  */
 @JsonSerialize( typing = DEFAULT_TYPING )
-public class ErrorInfo< T > extends ServerResponse< T > implements Serializable {
+public class ResponseErrorDTO< T > extends ResponseDTO< T > implements Serializable {
 
     private String url;
 
-    private ErrorInfo( int status, String msg, T data, String url ) {
+    private ResponseErrorDTO( int status, String msg, T data, String url ) {
 	super( status, msg, data );
 	this.url = url;
     }
 
-    public static < T > ErrorInfo< T > createByError() {
-	return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getDesc() );
+    public static < T > ResponseErrorDTO< T > createByError() {
+	return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getMsg() );
     }
 
-    public static < T > ErrorInfo< T > createByErrorCodeMessage( int errorCode, String errorMessage ) {
+    public static < T > ResponseErrorDTO< T > createByErrorCodeMessage( int errorCode, String errorMessage ) {
 	return createByErrorCodeMessage( errorCode, errorMessage, null );
     }
 
-    public static < T > ErrorInfo< T > createByErrorCodeMessage( int errorCode, String errorMessage, String url ) {
+    public static < T > ResponseErrorDTO< T > createByErrorCodeMessage( int errorCode, String errorMessage, String url ) {
 	return createByErrorCodeMessage( errorCode, errorMessage, null, url );
     }
 
-    public static < T > ErrorInfo< T > createByErrorCodeMessage( int errorCode, String errorMessage, T data, String url ) {
-	return new ErrorInfo<>( errorCode, errorMessage, data, url );
+    public static < T > ResponseErrorDTO< T > createByErrorCodeMessage( int errorCode, String errorMessage, T data, String url ) {
+	return new ResponseErrorDTO<>( errorCode, errorMessage, data, url );
     }
 
     public String getUrl() {
@@ -47,7 +47,7 @@ public class ErrorInfo< T > extends ServerResponse< T > implements Serializable 
     }
 
     public static void main( String[] args ) {
-	ErrorInfo< Object > error = ErrorInfo.createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getDesc() );
+	ResponseErrorDTO< Object > error = ResponseErrorDTO.createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getMsg() );
 	System.out.println( " url " + error.getUrl() );
 	System.out.println( JSONObject.toJSON( error ) );
     }

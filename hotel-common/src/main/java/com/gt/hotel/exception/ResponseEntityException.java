@@ -17,11 +17,12 @@ public class ResponseEntityException extends SystemException {
 	super( message );
     }
 
+    public ResponseEntityException( int code, String message ) {
+	super( code, message );
+    }
+
     public ResponseEntityException( ResponseEnums responseEnums ) {
 	super( responseEnums );
     }
 
-    public ResponseEntityException( int code, String message ) {
-	super( code, message );
-    }
 }
