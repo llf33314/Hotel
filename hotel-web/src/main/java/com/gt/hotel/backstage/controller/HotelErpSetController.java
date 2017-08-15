@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
-import com.gt.hotel.dto.ServerResponse;
+import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TErpHotel;
 import com.gt.hotel.entity.TErpHotelAuthorization;
 import com.gt.hotel.entity.TErpHotelERPSet;
@@ -54,7 +54,7 @@ public class HotelErpSetController extends BaseController{
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "酒店ID", paramType = "query", required = true, dataType = "int", defaultValue = "0")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/erpSet")
-	public ServerResponse hotelErpSetOne(@RequestParam(name = "id", required = false) Integer id){
+	public ResponseDTO hotelErpSetOne(@RequestParam(name = "id", required = false) Integer id){
 		boolean flag = false;
 		TErpHotelERPSet hotel = new TErpHotelERPSet();
 		try {
@@ -66,8 +66,8 @@ public class HotelErpSetController extends BaseController{
 			logger.error("backstage hotel erpSet get error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess(hotel);
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess(hotel);
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "酒店-ERP设置-ERP前台设置-保存 or 更新", notes = "ERP设置")
@@ -81,7 +81,7 @@ public class HotelErpSetController extends BaseController{
 		@ApiImplicitParam(name = "checkOuts", value = "最晚退房数组(形如: '[{hotelId:1, vipLevel:1, last_check_out:\"2017-01-01 01:01:01\"}, {hotelId:1, vipLevel:2, last_check_out:\"2017-01-01 01:01:01\"}]')", required = true, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/erpSet")
-	public ServerResponse hotelErpSetInsert(Integer hotelId, String logo, Integer ifBreakfast, Integer breakfastQuantity, Integer ifFreeDeposit, Integer ifLastCheckOut, 
+	public ResponseDTO hotelErpSetInsert(Integer hotelId, String logo, Integer ifBreakfast, Integer breakfastQuantity, Integer ifFreeDeposit, Integer ifLastCheckOut,
 			String deposits, String checkOuts){
 		boolean flag = false;
 		try {
@@ -109,8 +109,8 @@ public class HotelErpSetController extends BaseController{
 			logger.error("backstage hotel erpset post error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "酒店-ERP设置-长包房-添加 or 更新", notes = "ERP设置")
@@ -124,7 +124,7 @@ public class HotelErpSetController extends BaseController{
 		@ApiImplicitParam(name = "deposit", value = "押金", required = false, dataType = "Integer")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/longtimeroom")
-	public ServerResponse hotelLTRoomInsert(TErpHotelLongTimeRoom ltRoom, HttpSession session){
+	public ResponseDTO hotelLTRoomInsert(TErpHotelLongTimeRoom ltRoom, HttpSession session){
 		boolean flag = false;
 		try {
 			ltRoom.setCreator(getUser(session).getName());
@@ -135,15 +135,15 @@ public class HotelErpSetController extends BaseController{
 			logger.error("backstage hotel longtimeroom post error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "酒店-ERP设置-长包房-列表", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = true, dataType = "int", defaultValue = "0")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/longtimeroom")
-	public ServerResponse hotelLTRoomList(@RequestParam(name = "hotelId", required = true) Integer hotelId){
+	public ResponseDTO hotelLTRoomList(@RequestParam(name = "hotelId", required = true) Integer hotelId){
 		boolean flag = false;
 		List<TErpHotelLongTimeRoom> ltr = null;
 		try {
@@ -155,15 +155,15 @@ public class HotelErpSetController extends BaseController{
 			logger.error("backstage hotel longtimeroom get error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess(ltr);
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess(ltr);
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "酒店-ERP设置-长包房-删除", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "Integer[]")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/longtimeroom")
-	public ServerResponse hotelLTRoomDel(Integer[] ids, HttpSession session){
+	public ResponseDTO hotelLTRoomDel(Integer[] ids, HttpSession session){
 		boolean flag = false;
 		try {
 			List<Integer> idList = Arrays.asList(ids);
@@ -172,15 +172,15 @@ public class HotelErpSetController extends BaseController{
 			logger.error("backstage hotel longtimeroom delete error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "酒店-ERP设置-授权管理-添加", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "authorizations", value = "员工数组(形如: '[{hotelId: 1, shopId:1, accountId:1, functionId:1}, {hotelId: 1, shopId:1, accountId:2, functionId:1}]')", required = true, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/author")
-	public ServerResponse hotelAuthorInsert(Integer hotelId, String authorizations, HttpSession session){
+	public ResponseDTO hotelAuthorInsert(Integer hotelId, String authorizations, HttpSession session){
 		boolean flag = false;
 		try {
 //			System.err.println(hotelId);
@@ -194,15 +194,15 @@ public class HotelErpSetController extends BaseController{
 			logger.error("backstage hotel author post error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "酒店-ERP设置-授权管理-重置授权&取消资格", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "accountIds", value = "用户ID(数组)", required = true, dataType = "Integer[]")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/author")
-	public ServerResponse hotelAuthorDel(Integer[] accountIds, HttpSession session){
+	public ResponseDTO hotelAuthorDel(Integer[] accountIds, HttpSession session){
 		boolean flag = false;
 		try {
 //			for(int i : accountIds){
@@ -216,8 +216,8 @@ public class HotelErpSetController extends BaseController{
 			logger.error("backstage hotel author delete error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "酒店-ERP设置-授权管理-列表(未完)", notes = "ERP设置")
@@ -226,7 +226,7 @@ public class HotelErpSetController extends BaseController{
 		@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/author")
-	public ServerResponse hotelAuthorList(@RequestParam(name = "shopId", required = false) String shopId, 
+	public ResponseDTO hotelAuthorList(@RequestParam(name = "shopId", required = false) String shopId,
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "1") Integer pageIndex){
 		boolean flag = false;
@@ -242,8 +242,8 @@ public class HotelErpSetController extends BaseController{
 			logger.error("backstage hotel hotel get error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess(page);
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess(page);
+		else return ResponseDTO.createByError();
 	}
 	
 	
