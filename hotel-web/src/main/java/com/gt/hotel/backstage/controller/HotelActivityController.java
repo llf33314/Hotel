@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
-import com.gt.hotel.dto.ServerResponse;
+import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TErpHotelActivity;
 import com.gt.hotel.entity.TErpHotelActivityRoomSuite;
 import com.gt.hotel.enums.ResponseEnums;
@@ -47,7 +47,7 @@ public class HotelActivityController extends BaseController{
 			@ApiImplicitParam(name = "status", value = "活动状态(0=未开始, 1=进行中, 2=已结束)", paramType = "query", required = false, dataType = "Integer", defaultValue = "-1") })
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/activity")
-	public ServerResponse hotelActivityQuery(@RequestParam(name = "hotelId", required = true) String hotelId, 
+	public ResponseDTO hotelActivityQuery(@RequestParam(name = "hotelId", required = true) String hotelId, 
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "1") Integer pageIndex, 
 			@RequestParam(required = true, defaultValue = "0") Integer type, 
@@ -66,8 +66,8 @@ public class HotelActivityController extends BaseController{
 			logger.error("backstage hotel get error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess(page);
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess(page);
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "活动设置", notes = "新增 or 更新")
@@ -94,7 +94,7 @@ public class HotelActivityController extends BaseController{
 		@ApiImplicitParam(name = "activitySuites", value = "房间信息数组(形如: '[{roomId:1, suiteId:2, price:666}, {roomId:1, suiteId:2, price:666}]')", required = false, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/activity")
-	public ServerResponse hotelActivityInsert(TErpHotelActivity activity, String activitySuites, HttpSession session){
+	public ResponseDTO hotelActivityInsert(TErpHotelActivity activity, String activitySuites, HttpSession session){
 		boolean flag = false;
 		try {
 			activity.selectById(getUser(session).getId());
@@ -104,8 +104,8 @@ public class HotelActivityController extends BaseController{
 			logger.error("backstage hotel erpset post error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 	

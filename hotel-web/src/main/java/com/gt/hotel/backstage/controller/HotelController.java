@@ -18,7 +18,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
-import com.gt.hotel.dto.ServerResponse;
+import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TErpHotel;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
@@ -42,7 +42,7 @@ public class HotelController extends BaseController{
 			@ApiImplicitParam(name = "keyword", value = "关键字", paramType = "query", required = false, dataType = "String", defaultValue = "")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel")
-	public ServerResponse queryHotel(@RequestParam(name = "id", required = false) String id, 
+	public ResponseDTO queryHotel(@RequestParam(name = "id", required = false) String id,
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "1") Integer pageIndex, 
 			String keyword){
@@ -60,8 +60,8 @@ public class HotelController extends BaseController{
 			logger.error("backstage hotel get error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess(page);
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess(page);
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "新增酒店-添加酒店", notes = "新增酒店")
@@ -72,8 +72,8 @@ public class HotelController extends BaseController{
 		@ApiImplicitParam(name = "introduction", value = "酒店介绍", required = true, dataType = "String", defaultValue = "null")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel")
-//	public ServerResponse insertHotel(TErpHotel hotel){
-	public ServerResponse insertHotel(Integer shopId, String name, String phone, String address, String introduction, HttpSession session){
+//	public ResponseDTO insertHotel(TErpHotel hotel){
+	public ResponseDTO insertHotel(Integer shopId, String name, String phone, String address, String introduction, HttpSession session){
 		boolean flag = false;
 		try {
 			if(shopId != null && 
@@ -97,15 +97,15 @@ public class HotelController extends BaseController{
 			logger.error("backstage hotel post error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "新增酒店-删除酒店(未完)", notes = "删除酒店")
 	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID集合(数组)", paramType = "delete", required = false, dataType = "List")})
 	@SuppressWarnings({ "rawtypes" })
 	@DeleteMapping("/hotel")
-	public ServerResponse deleteHotel(Integer[] ids){
+	public ResponseDTO deleteHotel(Integer[] ids){
 		// TODO 新增酒店-删除酒店(未完)
 		boolean flag = false;
 		try {
@@ -119,8 +119,8 @@ public class HotelController extends BaseController{
 			logger.error("backstage hotel delete error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 
 }
