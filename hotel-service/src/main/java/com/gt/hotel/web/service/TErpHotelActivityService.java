@@ -18,5 +18,7 @@ import com.gt.hotel.base.BaseService;
 public interface TErpHotelActivityService extends BaseService<TErpHotelActivity> {
 
 	boolean insertOrUpdate(TErpHotelActivity activity, List<TErpHotelActivityRoomSuite> activitySuiteList);
+
+	boolean delHotelActivity(List<Integer> idList);
 	
 }

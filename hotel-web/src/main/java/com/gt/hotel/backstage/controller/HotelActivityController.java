@@ -1,10 +1,12 @@
 package com.gt.hotel.backstage.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,6 @@ import com.gt.hotel.entity.TErpHotelActivityRoomSuite;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.web.service.TErpHotelActivityService;
-import com.gt.hotel.web.service.TErpHotelService;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,9 +33,6 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/backstage")
 public class HotelActivityController extends BaseController{
 	
-	@Autowired
-	TErpHotelService tErpHotelService;
-
 	@Autowired
 	TErpHotelActivityService TErpHotelActivityService;
 	
@@ -91,13 +89,13 @@ public class HotelActivityController extends BaseController{
 		@ApiImplicitParam(name = "limitHour", value = "时租房使用时间", required = false, dataType = "String"), 
 		@ApiImplicitParam(name = "whenrentstime", value = "时租房可预订起始时间", required = false, dataType = "Date"), 
 		@ApiImplicitParam(name = "whenrentetime", value = "时租房可预订结束时间", required = false, dataType = "Date"), 
-		@ApiImplicitParam(name = "activitySuites", value = "房间信息数组(形如: '[{roomId:1, suiteId:2, price:666}, {roomId:1, suiteId:2, price:666}]')", required = false, dataType = "String")})
+		@ApiImplicitParam(name = "activitySuites", value = "房间信息数组(形如: '[{roomId:1, suiteId:2, price:666}, {roomId:1, suiteId:3, price:666}]')", required = false, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/activity")
 	public ResponseDTO hotelActivityInsert(TErpHotelActivity activity, String activitySuites, HttpSession session){
 		boolean flag = false;
 		try {
-			activity.selectById(getUser(session).getId());
+			activity.setBusId(getUser(session).getId());
 			List<TErpHotelActivityRoomSuite> activitySuiteList = JSON.parseArray(activitySuites, TErpHotelActivityRoomSuite.class);
 			flag = TErpHotelActivityService.insertOrUpdate(activity, activitySuiteList);
 		} catch (Exception e) {
@@ -108,6 +106,22 @@ public class HotelActivityController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
+	@ApiOperation(value = "活动设置", notes = "删除")
+	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "Integer[]")})
+	@SuppressWarnings("rawtypes")
+	@DeleteMapping("/hotel/activity")
+	public ServerResponse hotelActivityDel(Integer[] ids, HttpSession session){
+		boolean flag = false;
+		try {
+			List<Integer> idList = Arrays.asList(ids);
+			flag = TErpHotelActivityService.delHotelActivity(idList);
+		} catch (Exception e) {
+			logger.error("backstage hotel longtimeroom delete error",e);
+			throw new ResponseEntityException(ResponseEnums.ERROR);
+		}
+		if(flag) return ServerResponse.createBySuccess();
+		else return ServerResponse.createByError();
+	}
 	
 	
 }

@@ -35,7 +35,7 @@ public class HotelController extends BaseController{
 	@Autowired
 	TErpHotelService tErpHotelService;
 	
-	@ApiOperation(value = "新增酒店-酒店查询", notes = "酒店查询 参数ID")
+	@ApiOperation(value = "酒店后台-新增酒店-酒店查询", notes = "酒店查询 参数ID")
 	@ApiImplicitParams({@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10"),
 			@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1"),
 			@ApiImplicitParam(name = "id", value = "酒店ID", paramType = "query", required = false, dataType = "int", defaultValue = "0"), 
@@ -64,7 +64,7 @@ public class HotelController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "新增酒店-添加酒店", notes = "新增酒店")
+	@ApiOperation(value = "酒店后台-新增酒店-添加酒店", notes = "新增酒店")
 	@ApiImplicitParams({@ApiImplicitParam(name = "shopId", value = "门店ID", required = true, dataType = "Integer", defaultValue = "null"), 
 		@ApiImplicitParam(name = "name", value = "酒店名称", required = true, dataType = "String", defaultValue = "null"), 
 		@ApiImplicitParam(name = "phone", value = "酒店电话", required = true, dataType = "String", defaultValue = "null"), 
@@ -101,7 +101,7 @@ public class HotelController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "新增酒店-删除酒店(未完)", notes = "删除酒店")
+	@ApiOperation(value = "酒店后台-新增酒店-删除酒店(未完)", notes = "删除酒店")
 	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID集合(数组)", paramType = "delete", required = false, dataType = "List")})
 	@SuppressWarnings({ "rawtypes" })
 	@DeleteMapping("/hotel")

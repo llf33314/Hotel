@@ -50,7 +50,7 @@ public class HotelErpSetController extends BaseController{
 	@Autowired
 	TErpHotelLongTimeRoomService tErpHotelLongTimeRoomService;
 
-	@ApiOperation(value = "酒店-ERP设置-ERP前台设置-查询", notes = "ERP设置")
+	@ApiOperation(value = "酒店后台-ERP设置-ERP前台设置-查询", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "酒店ID", paramType = "query", required = true, dataType = "int", defaultValue = "0")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/erpSet")
@@ -58,8 +58,8 @@ public class HotelErpSetController extends BaseController{
 		boolean flag = false;
 		TErpHotelERPSet hotel = new TErpHotelERPSet();
 		try {
-			Wrapper<TErpHotel> wrapper = new EntityWrapper<TErpHotel>();
-			if(id != null) wrapper.eq("id", id);
+//			Wrapper<TErpHotel> wrapper = new EntityWrapper<TErpHotel>();
+//			if(id != null) wrapper.eq("id", id);
 			hotel = tErpHotelService.selectERPSetById(id);
 			flag = true;
 		} catch (Exception e) {
@@ -70,7 +70,7 @@ public class HotelErpSetController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "酒店-ERP设置-ERP前台设置-保存 or 更新", notes = "ERP设置")
+	@ApiOperation(value = "酒店后台-ERP设置-ERP前台设置-保存 or 更新", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", required = true, dataType = "Integer"), 
 		@ApiImplicitParam(name = "logo", value = "酒店LOGO URL", required = true, dataType = "String"), 
 		@ApiImplicitParam(name = "ifBreakfast", value = "是否开启早餐券", required = true, dataType = "Integer"), 
@@ -113,7 +113,7 @@ public class HotelErpSetController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "酒店-ERP设置-长包房-添加 or 更新", notes = "ERP设置")
+	@ApiOperation(value = "酒店后台-ERP设置-长包房-添加 or 更新", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID(更新时需输入)", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "hotelId", value = "酒店ID", required = true, dataType = "Integer"),
 		@ApiImplicitParam(name = "roomId", value = "房型ID", required = false, dataType = "Integer"),
@@ -139,7 +139,7 @@ public class HotelErpSetController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "酒店-ERP设置-长包房-列表", notes = "ERP设置")
+	@ApiOperation(value = "酒店后台-ERP设置-长包房-列表", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = true, dataType = "int", defaultValue = "0")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/longtimeroom")
@@ -159,7 +159,7 @@ public class HotelErpSetController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "酒店-ERP设置-长包房-删除", notes = "ERP设置")
+	@ApiOperation(value = "酒店后台-ERP设置-长包房-删除", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "Integer[]")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/longtimeroom")
@@ -176,7 +176,7 @@ public class HotelErpSetController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "酒店-ERP设置-授权管理-添加", notes = "ERP设置")
+	@ApiOperation(value = "酒店后台-ERP设置-授权管理-添加", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "authorizations", value = "员工数组(形如: '[{hotelId: 1, shopId:1, accountId:1, functionId:1}, {hotelId: 1, shopId:1, accountId:2, functionId:1}]')", required = true, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/author")
@@ -198,7 +198,7 @@ public class HotelErpSetController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "酒店-ERP设置-授权管理-重置授权&取消资格", notes = "ERP设置")
+	@ApiOperation(value = "酒店后台-ERP设置-授权管理-重置授权&取消资格", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "accountIds", value = "用户ID(数组)", required = true, dataType = "Integer[]")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/author")
@@ -220,7 +220,7 @@ public class HotelErpSetController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
-	@ApiOperation(value = "酒店-ERP设置-授权管理-列表(未完)", notes = "ERP设置")
+	@ApiOperation(value = "酒店后台-ERP设置-授权管理-列表(未完)", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "shopId", value = "门店ID", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10"),
 		@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1")})
