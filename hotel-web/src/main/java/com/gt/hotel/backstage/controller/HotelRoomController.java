@@ -49,7 +49,7 @@ public class HotelRoomController extends BaseController{
 	@Autowired
 	TErpHotelRoomSuiteService tErpHotelRoomSuiteService;
 	
-	@ApiOperation(value = "房间管理-列表", notes = "酒店 房间 查询")
+	@ApiOperation(value = "酒店后台-房间管理-列表", notes = "酒店 房间 查询")
 	@ApiImplicitParams({@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "Integer", defaultValue = "10"),
 			@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "Integer", defaultValue = "1"),
 			@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = false, dataType = "Integer"),
@@ -76,7 +76,7 @@ public class HotelRoomController extends BaseController{
 		else return ServerResponse.createByError();
 	}
 	
-	@ApiOperation(value = "房间管理-添加 or 更新", notes = "酒店 房间 添加")
+	@ApiOperation(value = "酒店后台-房间管理-添加 or 更新", notes = "酒店 房间 添加")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID(更新时需要)", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "hotelId", value = "酒店ID", required = true, dataType = "Integer", defaultValue = "null"), 
 		@ApiImplicitParam(name = "type", value = "房间类型", required = false, dataType = "String", defaultValue = "null"), 
@@ -108,7 +108,7 @@ public class HotelRoomController extends BaseController{
 		else return ServerResponse.createByError();
 	}
 
-	@ApiOperation(value = "房间管理-删除", notes = "酒店 房间 del")
+	@ApiOperation(value = "酒店后台-房间管理-删除", notes = "酒店 房间 del")
 	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "Integer[]")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/room")
@@ -125,7 +125,7 @@ public class HotelRoomController extends BaseController{
 		else return ServerResponse.createByError();
 	}
 	
-	@ApiOperation(value = "房间管理-日历改价", notes = "查询")
+	@ApiOperation(value = "酒店后台-房间管理-日历改价", notes = "查询")
 	@ApiImplicitParams({/*@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "Integer", defaultValue = "10"),
 			@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "Integer", defaultValue = "1"),*/
 			@ApiImplicitParam(name = "roomId", value = "房型ID", paramType = "query", required = true, dataType = "Integer") })
@@ -151,7 +151,7 @@ public class HotelRoomController extends BaseController{
 		else return ServerResponse.createByError();
 	}
 	
-	@ApiOperation(value = "房间管理-日历改价", notes = "添加 or 更新 or 删除(价格-1, 有ID)")
+	@ApiOperation(value = "酒店后台-房间管理-日历改价", notes = "添加 or 更新 or 删除(价格-1, 有ID)")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID(更新时需要)", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "roomId", value = "房间ID", paramType = "query", required = true, dataType = "Integer"), 
 		@ApiImplicitParam(name = "price", value = "价格", paramType = "query", required = true, dataType = "Integer"), 
@@ -174,7 +174,7 @@ public class HotelRoomController extends BaseController{
 		else return ServerResponse.createByError();
 	}
 	
-	@ApiOperation(value = "房间管理-房间", notes = "查询")
+	@ApiOperation(value = "酒店后台-房间管理-房间", notes = "查询")
 	@ApiImplicitParams({@ApiImplicitParam(name = "roomId", value = "房型ID", paramType = "query", required = true, dataType = "Integer") })
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/room/suite")
@@ -192,7 +192,7 @@ public class HotelRoomController extends BaseController{
 		else return ServerResponse.createByError();
 	}
 	
-	@ApiOperation(value = "房间管理-房间", notes = "新增")
+	@ApiOperation(value = "酒店后台-房间管理-房间", notes = "新增")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID(更新时需要)", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "roomId", value = "房型ID", paramType = "query", required = true, dataType = "Integer"), 
 		@ApiImplicitParam(name = "floor", value = "楼层", paramType = "query", required = true, dataType = "String"), 
@@ -211,7 +211,7 @@ public class HotelRoomController extends BaseController{
 		else return ServerResponse.createByError();
 	}
 	
-	@ApiOperation(value = "房间管理-房间-楼层修改", notes = "楼层修改")
+	@ApiOperation(value = "酒店后台-房间管理-房间-楼层修改", notes = "楼层修改")
 	@ApiImplicitParams({@ApiImplicitParam(name = "roomId", value = "房型ID", paramType = "query", required = true, dataType = "Integer"), 
 		@ApiImplicitParam(name = "oldFloor", value = "旧楼层", paramType = "query", required = true, dataType = "String"), 
 		@ApiImplicitParam(name = "newFloor", value = "新楼层", paramType = "query", required = true, dataType = "String") })
@@ -234,7 +234,7 @@ public class HotelRoomController extends BaseController{
 		else return ServerResponse.createByError();
 	}
 	
-	@ApiOperation(value = "房间管理-房间", notes = "删除(单个房间 or 楼层)(只传其中一个参数, 传两个优先floor)")
+	@ApiOperation(value = "酒店后台-房间管理-房间", notes = "删除(单个房间 or 楼层)(只传其中一个参数, 传两个优先floor)")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "floor", value = "楼层", paramType = "query", required = false, dataType = "String") })
 	@SuppressWarnings("rawtypes")
