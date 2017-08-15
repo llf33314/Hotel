@@ -22,20 +22,20 @@ import java.util.*;
 public class MpGenerator {
 
     // 项目的绝对路径
-    public static final  String   outPutBaseDir      = "/Users/zhangmz/work/GT/duofee/hotel/hotel-generator/";
+    public static final  String   outPutBaseDir      = "C:\\Users\\Administrator\\Desktop\\";
     // 生成*.java 的文件路径
     public static final  String   outPutJavaModel    = outPutBaseDir + "src/main/java";
     // 需要生成的表
-    public static final  String[] generatorTableName = new String[] { "Bus_User" };
+    public static final  String[] generatorTableName = new String[] { "t_erp_hotel_activity" };
     // 作者
-    private static final String   author             = "zhangmz";
+    private static final String   author             = "";
     // 去除表前缀 例如：bus_user 填入bus 生成的 user
     public static final  String[] tablePrefix        = new String[] {};
     // 生成的包路径
-    public static final  String   packagePath        = "com.gt.hotel.generator";
+    public static final  String   packagePath        = "com.gt.hotel";
     public static final  String   moduleName         = "";
     // 生成mapper.xml 文件路径
-    public static final  String   generatorXmlPath   = outPutBaseDir + "src/main/java/com/gt/hotel/generator/xml/";
+    public static final  String   generatorXmlPath   = outPutBaseDir + "src/main/java/com/gt/hotel/mapper/";
     // Mapper.java Mapper 后缀修改 DAO
     public static final  String   setMapperName      = "%sDAO";
     // Mapper.xml Mapper 后缀修改 DAO
@@ -49,11 +49,11 @@ public class MpGenerator {
     // 驱动
     public static final  String   driverName         = "com.mysql.jdbc.Driver";
     // url
-    public static final  String   url                = "jdbc:mysql://127.0.0.1:3306/springbootdemo?characterEncoding=utf8";
+    public static final  String   url                = "jdbc:mysql://113.106.202.51:3306/gt_aliyuan?characterEncoding=utf8";
     // 数据库用户名
-    public static final  String   username           = "zhangmz";
+    public static final  String   username           = "root";
     // 密码
-    public static final  String   password           = "zhangmz123";
+    public static final  String   password           = "gt123456";
 
     private static Logger logger = LoggerFactory.getLogger( MpGenerator.class );
 

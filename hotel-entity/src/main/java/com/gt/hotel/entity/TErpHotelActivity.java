@@ -3,6 +3,9 @@ package com.gt.hotel.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -47,11 +50,13 @@ public class TErpHotelActivity extends Model<TErpHotelActivity> {
     /**
      * 生效时间 始
      */
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@TableField("activity_stime")
 	private Date activityStime;
     /**
      * 生效时间 末
      */
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@TableField("activity_etime")
 	private Date activityEtime;
     /**
@@ -104,11 +109,13 @@ public class TErpHotelActivity extends Model<TErpHotelActivity> {
     /**
      * 居住开始时间
      */
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@TableField("live_stime")
 	private Date liveStime;
     /**
      * 居住结束时间
      */
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@TableField("live_etime")
 	private Date liveEtime;
     /**
@@ -127,10 +134,12 @@ public class TErpHotelActivity extends Model<TErpHotelActivity> {
     /**
      * 时租房可预订起始时间
      */
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date whenrentstime;
     /**
      * 时租房可预订结束时间
      */
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date whenrentetime;
     /**
      * 更新时间
@@ -173,4 +182,197 @@ public class TErpHotelActivity extends Model<TErpHotelActivity> {
 			", updateTime=" + updateTime +
 			"}";
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getBusId() {
+		return busId;
+	}
+
+	public void setBusId(Integer busId) {
+		this.busId = busId;
+	}
+
+	public Integer getHotelId() {
+		return hotelId;
+	}
+
+	public void setHotelId(Integer hotelId) {
+		this.hotelId = hotelId;
+	}
+
+	public String getActivityName() {
+		return activityName;
+	}
+
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
+	}
+
+	public Date getActivityStime() {
+		return activityStime;
+	}
+
+	public void setActivityStime(Date activityStime) {
+		this.activityStime = activityStime;
+	}
+
+	public Date getActivityEtime() {
+		return activityEtime;
+	}
+
+	public void setActivityEtime(Date activityEtime) {
+		this.activityEtime = activityEtime;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getIsRoomLimit() {
+		return isRoomLimit;
+	}
+
+	public void setIsRoomLimit(Integer isRoomLimit) {
+		this.isRoomLimit = isRoomLimit;
+	}
+
+	public Integer getRoomLimit() {
+		return roomLimit;
+	}
+
+	public void setRoomLimit(Integer roomLimit) {
+		this.roomLimit = roomLimit;
+	}
+
+	public Integer getIsVipcard() {
+		return isVipcard;
+	}
+
+	public void setIsVipcard(Integer isVipcard) {
+		this.isVipcard = isVipcard;
+	}
+
+	public Integer getIsCardvolume() {
+		return isCardvolume;
+	}
+
+	public void setIsCardvolume(Integer isCardvolume) {
+		this.isCardvolume = isCardvolume;
+	}
+
+	public String getRule() {
+		return rule;
+	}
+
+	public void setRule(String rule) {
+		this.rule = rule;
+	}
+
+	public Integer getIsRoomCount() {
+		return isRoomCount;
+	}
+
+	public void setIsRoomCount(Integer isRoomCount) {
+		this.isRoomCount = isRoomCount;
+	}
+
+	public Integer getRoomCount() {
+		return roomCount;
+	}
+
+	public void setRoomCount(Integer roomCount) {
+		this.roomCount = roomCount;
+	}
+
+	public Integer getActivityStatus() {
+		return activityStatus;
+	}
+
+	public void setActivityStatus(Integer activityStatus) {
+		this.activityStatus = activityStatus;
+	}
+
+	public Date getCreatetime() {
+		return createtime;
+	}
+
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
+
+	public Date getLiveStime() {
+		return liveStime;
+	}
+
+	public void setLiveStime(Date liveStime) {
+		this.liveStime = liveStime;
+	}
+
+	public Date getLiveEtime() {
+		return liveEtime;
+	}
+
+	public void setLiveEtime(Date liveEtime) {
+		this.liveEtime = liveEtime;
+	}
+
+	public Integer getGrouplowest() {
+		return grouplowest;
+	}
+
+	public void setGrouplowest(Integer grouplowest) {
+		this.grouplowest = grouplowest;
+	}
+
+	public String getGrouplowesttip() {
+		return grouplowesttip;
+	}
+
+	public void setGrouplowesttip(String grouplowesttip) {
+		this.grouplowesttip = grouplowesttip;
+	}
+
+	public Integer getLimitHour() {
+		return limitHour;
+	}
+
+	public void setLimitHour(Integer limitHour) {
+		this.limitHour = limitHour;
+	}
+
+	public Date getWhenrentstime() {
+		return whenrentstime;
+	}
+
+	public void setWhenrentstime(Date whenrentstime) {
+		this.whenrentstime = whenrentstime;
+	}
+
+	public Date getWhenrentetime() {
+		return whenrentetime;
+	}
+
+	public void setWhenrentetime(Date whenrentetime) {
+		this.whenrentetime = whenrentetime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+	
 }

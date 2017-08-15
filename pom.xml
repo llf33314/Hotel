@@ -12,8 +12,6 @@
         <module>hotel-service</module>
         <module>hotel-entity</module>
         <module>hotel-generator</module>
-        <module>hotel-cxf-client</module>
-        <module>hotel-cxf-server</module>
     </modules>
     <packaging>pom</packaging>
     <name>parent</name>
@@ -234,11 +232,11 @@
         </dependency>
 
         <!-- CXF jar包 -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
             <version>${dev.lib.cxf}</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

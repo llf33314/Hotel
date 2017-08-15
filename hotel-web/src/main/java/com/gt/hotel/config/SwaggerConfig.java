@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
     // 扫描包
-    private static final String  BASEPACKAGE         = "com.gt.hotel.controller";
+    private static final String  BASEPACKAGE         = "com.gt.hotel";
     // 标题
     private static final String  TITLE               = "Hotel-ERP API";
     // 描述

@@ -1,6 +1,10 @@
 package com.gt.hotel.web.service;
 
 import com.gt.hotel.entity.TErpHotelActivity;
+import com.gt.hotel.entity.TErpHotelActivityRoomSuite;
+
+import java.util.List;
+
 import com.gt.hotel.base.BaseService;
 
 /**
@@ -12,5 +16,7 @@ import com.gt.hotel.base.BaseService;
  * @since 2017-08-14
  */
 public interface TErpHotelActivityService extends BaseService<TErpHotelActivity> {
+
+	boolean insertOrUpdate(TErpHotelActivity activity, List<TErpHotelActivityRoomSuite> activitySuiteList);
 	
 }
