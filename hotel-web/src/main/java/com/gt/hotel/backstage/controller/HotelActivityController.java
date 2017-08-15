@@ -110,7 +110,7 @@ public class HotelActivityController extends BaseController{
 	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "Integer[]")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/activity")
-	public ServerResponse hotelActivityDel(Integer[] ids, HttpSession session){
+	public ResponseDTO hotelActivityDel(Integer[] ids, HttpSession session){
 		boolean flag = false;
 		try {
 			List<Integer> idList = Arrays.asList(ids);
@@ -119,8 +119,8 @@ public class HotelActivityController extends BaseController{
 			logger.error("backstage hotel longtimeroom delete error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess();
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 	
