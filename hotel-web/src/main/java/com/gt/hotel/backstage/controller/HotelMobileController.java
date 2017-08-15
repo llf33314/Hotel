@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.hotel.base.BaseController;
-import com.gt.hotel.dto.ServerResponse;
+import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TErpHotel;
 import com.gt.hotel.entity.TErpHotelERPSet;
 import com.gt.hotel.enums.ResponseEnums;
@@ -31,7 +31,7 @@ public class HotelMobileController extends BaseController{
 	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = true, dataType = "Integer", defaultValue = "0")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/mobile")
-	public ServerResponse hotelErpSetOne(@RequestParam(name = "id", required = true) Integer hotelId){
+	public ResponseDTO hotelErpSetOne(@RequestParam(name = "id", required = true) Integer hotelId){
 		boolean flag = false;
 		TErpHotelERPSet hotel = new TErpHotelERPSet();
 		try {
@@ -43,8 +43,8 @@ public class HotelMobileController extends BaseController{
 			logger.error("backstage hotel erpSet get error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ServerResponse.createBySuccess(hotel);
-		else return ServerResponse.createByError();
+		if(flag) return ResponseDTO.createBySuccess(hotel);
+		else return ResponseDTO.createByError();
 	}
 	
 }
