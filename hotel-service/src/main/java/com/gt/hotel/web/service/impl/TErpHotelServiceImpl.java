@@ -1,5 +1,6 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,17 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TErpHotelDAO;
 import com.gt.hotel.dao.TErpHotelImageDAO;
-import com.gt.hotel.dao.TErpHotelInstallationRelationDAO;
+import com.gt.hotel.dao.TErpHotelInstallationDAO;
 import com.gt.hotel.entity.TErpHotel;
 import com.gt.hotel.entity.TErpHotelERPSet;
 import com.gt.hotel.entity.TErpHotelImage;
+import com.gt.hotel.entity.TErpHotelInstallation;
 import com.gt.hotel.entity.TErpHotelInstallationRelation;
 import com.gt.hotel.entity.TErpHotelMemberCheckOutRelation;
 import com.gt.hotel.entity.TErpHotelMemberDepositRelation;
+import com.gt.hotel.entity.TErpHotelMobileSet;
+import com.gt.hotel.web.service.TErpHotelImageService;
+import com.gt.hotel.web.service.TErpHotelInstallationRelationService;
 import com.gt.hotel.web.service.TErpHotelMemberCheckOutRelationService;
 import com.gt.hotel.web.service.TErpHotelMemberDepositRelationService;
 import com.gt.hotel.web.service.TErpHotelService;
@@ -40,8 +45,12 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 	@Autowired
 	TErpHotelImageDAO tErpHotelImageDAO;
 	@Autowired
-	TErpHotelInstallationRelationDAO tErpHotelInstallationRelationDAO;
-
+	TErpHotelImageService TErpHotelImageService;
+	@Autowired
+	TErpHotelInstallationRelationService tErpHotelInstallationRelationDAO;
+	@Autowired
+	TErpHotelInstallationDAO TErpHotelInstallationDAO;
+	
 	@Transactional
 	@Override
 	public boolean hotelErpSet(TErpHotel hotel, TErpHotelImage hotelImage,
@@ -124,5 +133,90 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 		hotel.setCheckOuts(c);
 		return hotel;
 	}
+
+	@Override
+	public TErpHotelMobileSet selectMobileOne(Wrapper<TErpHotel> wrapper) {
+		TErpHotelMobileSet ms = new TErpHotelMobileSet();
+		TErpHotel h = this.selectOne(wrapper);
+		ms.setId(h.getId());
+		ms.setIfReserveMan(h.getIfReserveMan());
+		ms.setIfReservePhone(h.getIfReservePhone());
+		ms.setIfRemark(h.getIfRemark());
+		ms.setPayMode(h.getPayMode());
+		ms.setIfSms(h.getIfSms());
+		ms.setSmsPhone(h.getSmsPhone());
+		ms.setIfCheckOut(h.getIfCheckOut());
+		ms.setIfFood(h.getIfFood());
+		ms.setIfBulletin(h.getIfBulletin());
+		ms.setBulletin(h.getBulletin());
+		ms.setIfRemnantRoom(h.getIfRemnantRoom());
+		ms.setIfContinue(h.getIfContinue());
+		ms.setIfConfirmInfo(h.getIfConfirmInfo());
+		Wrapper<TErpHotelImage> i_wrapper = new EntityWrapper<TErpHotelImage>();
+		i_wrapper.eq("subjection_id", h.getId());
+		i_wrapper.eq("subjection", 0);
+		i_wrapper.eq("type", "酒店图片");
+		List<TErpHotelImage> images = tErpHotelImageDAO.selectList(i_wrapper);
+		ms.setImages(images);
+		List<TErpHotelInstallation> installations = TErpHotelInstallationDAO.selectByHotelId(h.getId());
+		ms.setInstallations(installations);
+		return ms;
+	}
+
+	@Transactional
+	@Override
+	public boolean mobileInfoUpdate(TErpHotelMobileSet es, List<TErpHotelImage> imageList,
+			List<Integer> idList) {
+		boolean flag = false;
+		TErpHotel h = this.selectById(es.getId());
+		h.setId(es.getId());
+		h.setIfReserveMan(es.getIfReserveMan());
+		h.setIfReservePhone(es.getIfReservePhone());
+		h.setIfRemark(es.getIfRemark());
+		h.setPayMode(es.getPayMode());
+		h.setIfSms(es.getIfSms());
+		h.setSmsPhone(es.getSmsPhone());
+		h.setIfCheckOut(es.getIfCheckOut());
+		h.setIfFood(es.getIfFood());
+		h.setIfBulletin(es.getIfBulletin());
+		h.setBulletin(es.getBulletin());
+		h.setIfRemnantRoom(es.getIfRemnantRoom());
+		h.setIfContinue(es.getIfContinue());
+		h.setIfConfirmInfo(es.getIfConfirmInfo());
+		this.insertOrUpdate(h);
+		if(imageList.size() > 0){
+			Wrapper<TErpHotelImage> iw = new EntityWrapper<TErpHotelImage>();
+			iw.eq("subjection_id", h.getId());
+			iw.eq("subjection", 0);
+			iw.eq("type", "酒店图片");
+			tErpHotelImageDAO.delete(iw);
+			for(TErpHotelImage i : imageList){
+				i.setSubjectionId(h.getId());
+				i.setSubjection(0);
+				i.setType("酒店图片");
+			}
+			TErpHotelImageService.insertBatch(imageList);
+		}
+		if(idList.size() > 0){
+			Wrapper<TErpHotelInstallationRelation> hi = new EntityWrapper<TErpHotelInstallationRelation>();
+			hi.eq("hotel_id", h.getId());
+			tErpHotelInstallationRelationDAO.delete(hi);
+			List<TErpHotelInstallationRelation> ir = new ArrayList<TErpHotelInstallationRelation>();
+			for(Integer i : idList){
+				TErpHotelInstallationRelation t = new TErpHotelInstallationRelation();
+				t.setHotelId(h.getId());
+				t.setInstallationId(i);
+				ir.add(t);
+			}
+			tErpHotelInstallationRelationDAO.insertBatch(ir);
+		}
+		flag = true;
+		return flag;
+	}
+	
+	
+	
+	
+	
 	
 }
