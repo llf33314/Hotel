@@ -49,4 +49,22 @@ public class TErpHotelInstallationRelation extends Model<TErpHotelInstallationRe
 			", installationId=" + installationId +
 			"}";
 	}
+
+	public Integer getHotelId() {
+		return hotelId;
+	}
+
+	public void setHotelId(Integer hotelId) {
+		this.hotelId = hotelId;
+	}
+
+	public Integer getInstallationId() {
+		return installationId;
+	}
+
+	public void setInstallationId(Integer installationId) {
+		this.installationId = installationId;
+	}
+	
+	
 }
