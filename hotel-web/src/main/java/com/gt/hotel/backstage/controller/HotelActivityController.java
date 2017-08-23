@@ -28,6 +28,7 @@ import com.gt.hotel.web.service.TErpHotelActivityService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/backstage")
@@ -61,7 +62,7 @@ public class HotelActivityController extends BaseController{
 			page = TErpHotelActivityService.selectPage(page, wrapper);
 			flag = true;
 		} catch (Exception e) {
-			logger.error("backstage hotel get error",e);
+			logger.error("backstage hotel activity get error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
 		if(flag) return ResponseDTO.createBySuccess(page);
@@ -92,14 +93,14 @@ public class HotelActivityController extends BaseController{
 		@ApiImplicitParam(name = "activitySuites", value = "房间信息数组(形如: '[{roomId:1, suiteId:2, price:666}, {roomId:1, suiteId:3, price:666}]')", required = false, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/activity")
-	public ResponseDTO hotelActivityInsert(TErpHotelActivity activity, String activitySuites, HttpSession session){
+	public ResponseDTO hotelActivityInsert(@ApiParam(hidden = true) TErpHotelActivity activity, String activitySuites, HttpSession session){
 		boolean flag = false;
 		try {
 			activity.setBusId(getUser(session).getId());
 			List<TErpHotelActivityRoomSuite> activitySuiteList = JSON.parseArray(activitySuites, TErpHotelActivityRoomSuite.class);
 			flag = TErpHotelActivityService.insertOrUpdate(activity, activitySuiteList);
 		} catch (Exception e) {
-			logger.error("backstage hotel erpset post error",e);
+			logger.error("backstage hotel activity post error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
 		if(flag) return ResponseDTO.createBySuccess();
@@ -116,7 +117,7 @@ public class HotelActivityController extends BaseController{
 			List<Integer> idList = Arrays.asList(ids);
 			flag = TErpHotelActivityService.delHotelActivity(idList);
 		} catch (Exception e) {
-			logger.error("backstage hotel longtimeroom delete error",e);
+			logger.error("backstage hotel activity delete error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
 		if(flag) return ResponseDTO.createBySuccess();
