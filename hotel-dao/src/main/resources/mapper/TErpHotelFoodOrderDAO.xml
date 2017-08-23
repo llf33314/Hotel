@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelFoodOrderDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotelFoodOrder">
+		<id column="id" property="id" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="bus_id" property="busId" />
+		<result column="number" property="number" />
+		<result column="price" property="price" />
+		<result column="order_number" property="orderNumber" />
+		<result column="book_name" property="bookName" />
+		<result column="book_phone" property="bookPhone" />
+		<result column="create_time" property="createTime" />
+		<result column="arrival_time" property="arrivalTime" />
+		<result column="pay_type" property="payType" />
+		<result column="pay_time" property="payTime" />
+		<result column="pay_status" property="payStatus" />
+		<result column="order_status" property="orderStatus" />
+		<result column="remark" property="remark" />
+		<result column="source" property="source" />
+		<result column="available" property="available" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMapVO" type="com.gt.hotel.entity.TErpHotelFoodOrderVO" extends="BaseResultMap">
+		<result column="name" property="hotelName" />
+		<result column="company_name" property="companyName" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, hotel_id AS hotelId, bus_id AS busId, number, price, order_number AS orderNumber, book_name AS bookName, book_phone AS bookPhone, create_time AS createTime, arrival_time AS arrivalTime, pay_type AS payType, pay_time AS payTime, pay_status AS payStatus, order_status AS orderStatus, remark, source, available 
+    </sql>
+
+	<select id="selectFoodOrderVOList" resultMap="BaseResultMapVO" parameterType="Map">
+		SELECT a.*, c.company_name, d.`name` 
+		FROM t_erp_hotel_food_order a 
+		JOIN t_erp_hotel_food_order_relation b ON a.id = b.order_id 
+		JOIN t_erp_hotel_food c ON b.food_id = c.id 
+		JOIN t_erp_hotel d ON a.hotel_id = d.id 
+		WHERE a.bus_id = #{bus_id} 
+		<if test="id != null">
+			AND a.id = #{id} 
+		</if>
+		<if test="hotel_id != null">
+			AND a.hotel_id = #{hotel_id} 
+		</if>
+		<if test="provide_from != null">
+			AND a.provide_from = #{provide_from} 
+		</if>
+		<if test="order_status != null">
+			AND a.order_status = #{order_status} 
+		</if>
+		<if test="pay_status != null">
+			AND a.pay_status = #{pay_status} 
+		</if>
+		<if test="keyword != null">
+			AND (a.book_name LIKE #{keyword} OR a.book_phone LIKE #{keyword} ) 
+		</if>
+		GROUP BY a.id 
+		<if test="page != null">
+			LIMIT #{page},#{pageSize} 
+		</if>
+	</select>
+	
+	<select id="selectFoodOrderVOListCount" resultType="Integer" parameterType="Map">
+		SELECT COUNT(z.id) 
+		FROM (
+			SELECT a.id 
+			FROM t_erp_hotel_food_order a 
+			JOIN t_erp_hotel_food_order_relation b ON a.id = b.order_id 
+			JOIN t_erp_hotel_food c ON b.food_id = c.id 
+			JOIN t_erp_hotel d ON a.hotel_id = d.id 
+			WHERE a.bus_id = #{bus_id} 
+			<if test="id != null">
+				AND a.id = #{id} 
+			</if>
+			<if test="hotel_id != null">
+				AND a.hotel_id = #{hotel_id} 
+			</if>
+			<if test="provide_from != null">
+				AND a.provide_from = #{provide_from} 
+			</if>
+			<if test="order_status != null">
+				AND a.order_status = #{order_status} 
+			</if>
+			<if test="pay_status != null">
+				AND a.pay_status = #{pay_status} 
+			</if>
+			<if test="keyword != null">
+				AND (a.book_name LIKE #{keyword} OR a.book_phone LIKE #{keyword} ) 
+			</if>
+			GROUP BY a.id 
+		) z 
+		
+	</select>
+	
+	<update id="updateOrderDel">
+		UPDATE t_erp_hotel_food_order SET available = 0 
+		WHERE id IN 
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+	</update>
+
+	<update id="updateStatus" parameterType="com.gt.hotel.entity.TErpHotelFoodOrder">
+		UPDATE t_erp_hotel_room_order SET order_status = #{orderStatus} 
+		WHERE id = #{id} 
+	</update>
+		
+</mapper>
