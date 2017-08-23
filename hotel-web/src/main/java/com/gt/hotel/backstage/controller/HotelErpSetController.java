@@ -36,6 +36,7 @@ import com.gt.hotel.web.service.TErpHotelService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/backstage")
@@ -85,7 +86,7 @@ public class HotelErpSetController extends BaseController{
 			String deposits, String checkOuts){
 		boolean flag = false;
 		try {
-			TErpHotel hotel = new TErpHotel();
+			TErpHotel hotel = tErpHotelService.selectById(hotelId);
 			hotel.setId(hotelId);
 			hotel.setIfBreakfast(ifBreakfast);
 			hotel.setBreakfastQuantity(breakfastQuantity);
@@ -124,7 +125,7 @@ public class HotelErpSetController extends BaseController{
 		@ApiImplicitParam(name = "deposit", value = "押金", required = false, dataType = "Integer")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/longtimeroom")
-	public ResponseDTO hotelLTRoomInsert(TErpHotelLongTimeRoom ltRoom, HttpSession session){
+	public ResponseDTO hotelLTRoomInsert(@ApiParam(hidden = true) TErpHotelLongTimeRoom ltRoom, HttpSession session){
 		boolean flag = false;
 		try {
 			ltRoom.setCreator(getUser(session).getName());

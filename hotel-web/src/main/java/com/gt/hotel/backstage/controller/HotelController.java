@@ -36,20 +36,21 @@ public class HotelController extends BaseController{
 	TErpHotelService tErpHotelService;
 	
 	@ApiOperation(value = "酒店后台-新增酒店-酒店查询", notes = "酒店查询 参数ID")
-	@ApiImplicitParams({@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10"),
-			@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1"),
-			@ApiImplicitParam(name = "id", value = "酒店ID", paramType = "query", required = false, dataType = "int", defaultValue = "0"), 
+	@ApiImplicitParams({@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "Integer", defaultValue = "10"),
+			@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "Integer", defaultValue = "1"),
+			@ApiImplicitParam(name = "id", value = "酒店ID", paramType = "query", required = false, dataType = "Integer", defaultValue = "0"), 
 			@ApiImplicitParam(name = "keyword", value = "关键字", paramType = "query", required = false, dataType = "String", defaultValue = "")})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel")
 	public ResponseDTO queryHotel(@RequestParam(name = "id", required = false) String id,
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "1") Integer pageIndex, 
-			String keyword){
+			String keyword, HttpSession session){
 		boolean flag = false;
 		Page<TErpHotel> page = new Page<>(pageIndex, pageSize);
 		try {
 			Wrapper<TErpHotel> wrapper = new EntityWrapper<>();
+			wrapper.eq("bus_id", getUser(session).getId());
 			wrapper.eq(id != null, "id", id);
 			wrapper.like(keyword != null, "name", keyword);
 			wrapper.like(keyword != null, "phone", keyword);

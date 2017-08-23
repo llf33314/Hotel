@@ -35,6 +35,7 @@ import com.gt.hotel.web.service.TErpHotelRoomSuiteService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/backstage")
@@ -93,7 +94,7 @@ public class HotelRoomController extends BaseController{
 		@ApiImplicitParam(name = "images", value = "图片数组(形如: '[{name:'啊', url:'a.jpg'}, {name:'吧', url:'b.jpg'}]')", required = false, dataType = "String", defaultValue = "null")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/room")
-	public ResponseDTO insertHotelRoom(TErpHotelRoom room, String images, HttpSession session){
+	public ResponseDTO insertHotelRoom(@ApiParam(hidden = true) TErpHotelRoom room, String images, HttpSession session){
 		boolean flag = false;
 		try {
 			room.setCreator(getUser(session).getName());
@@ -158,7 +159,7 @@ public class HotelRoomController extends BaseController{
 		@ApiImplicitParam(name = "time", value = "时间日期", paramType = "query", required = false, dataType = "datetime") })
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/room/calendar")
-	public ResponseDTO hotelRoomCalQquery(TErpHotelRoomCalendar roomCal){
+	public ResponseDTO hotelRoomCalQquery(@ApiParam(hidden = true) TErpHotelRoomCalendar roomCal){
 		boolean flag = false;
 		try {
 			if(roomCal.getPrice() != null && roomCal.getPrice() != -1){
@@ -199,7 +200,7 @@ public class HotelRoomController extends BaseController{
 		@ApiImplicitParam(name = "number", value = "房间号", paramType = "query", required = true, dataType = "String") })
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/room/suite")
-	public ResponseDTO hotelRoomSuiteInsert(TErpHotelRoomSuite suite){
+	public ResponseDTO hotelRoomSuiteInsert(@ApiParam(hidden = true) TErpHotelRoomSuite suite){
 		boolean flag = false;
 		try {
 			flag = tErpHotelRoomSuiteService.insertOrUpdate(suite);
