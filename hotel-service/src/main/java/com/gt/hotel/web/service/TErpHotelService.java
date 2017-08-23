@@ -24,6 +24,7 @@ public interface TErpHotelService extends BaseService<TErpHotel> {
 	boolean hotelErpSet(TErpHotel hotel, TErpHotelImage hotelImage, List<TErpHotelMemberDepositRelation> depositList,
 			List<TErpHotelMemberCheckOutRelation> checkOutList);
 
+	@Deprecated
 	boolean deleteHotel(List<Integer> idList);
 
 	TErpHotelERPSet selectERPSetById(Integer id);
@@ -32,6 +33,8 @@ public interface TErpHotelService extends BaseService<TErpHotel> {
 
 	boolean mobileInfoUpdate(TErpHotelMobileSet erpHotelMobileSet, List<TErpHotelImage> imageList,
 			List<Integer> idList);
+
+	boolean deleteHotelBatchIds(List<Integer> idList);
 
 	
 }

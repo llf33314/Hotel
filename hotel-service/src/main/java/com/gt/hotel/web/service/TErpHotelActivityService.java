@@ -20,5 +20,7 @@ public interface TErpHotelActivityService extends BaseService<TErpHotelActivity>
 	boolean insertOrUpdate(TErpHotelActivity activity, List<TErpHotelActivityRoomSuite> activitySuiteList);
 
 	boolean delHotelActivity(List<Integer> idList);
+
+	List<Integer> selectActivityIdsByHotelIds(List<Integer> idList);
 	
 }

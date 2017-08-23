@@ -58,6 +58,14 @@ public class TErpHotel extends Model<TErpHotel> {
      * 地址
      */
 	private String address;
+	/**
+     * 经度
+     */
+	private Double longitude;
+	/**
+     * 纬度
+     */
+	private Double latitude;
     /**
      * 是否收集预约人
      */
@@ -170,36 +178,16 @@ public class TErpHotel extends Model<TErpHotel> {
 
 	@Override
 	public String toString() {
-		return "TErpHotel{" +
-			"id=" + id +
-			", busId=" + busId +
-			", shopId=" + shopId +
-			", name=" + name +
-			", introduction=" + introduction +
-			", phone=" + phone +
-			", address=" + address +
-			", ifReserveMan=" + ifReserveMan +
-			", ifReservePhone=" + ifReservePhone +
-			", ifRemark=" + ifRemark +
-			", payMode=" + payMode +
-			", ifSms=" + ifSms +
-			", smsPhone=" + smsPhone +
-			", ifCheckOut=" + ifCheckOut +
-			", ifFood=" + ifFood +
-			", ifBulletin=" + ifBulletin +
-			", bulletin=" + bulletin +
-			", ifRemnantRoom=" + ifRemnantRoom +
-			", ifContinue=" + ifContinue +
-			", ifConfirmInfo=" + ifConfirmInfo +
-			", ifBreakfast=" + ifBreakfast +
-			", breakfastQuantity=" + breakfastQuantity +
-			", ifActivityPrices=" + ifActivityPrices +
-			", ifFreeDeposit=" + ifFreeDeposit +
-			", ifLastCheckOut=" + ifLastCheckOut +
-			", creator=" + creator +
-			", createTime=" + createTime +
-			", updateTime=" + updateTime +
-			"}";
+		return "TErpHotel [id=" + id + ", busId=" + busId + ", shopId=" + shopId + ", name=" + name + ", introduction="
+				+ introduction + ", phone=" + phone + ", address=" + address + ", longitude=" + longitude
+				+ ", latitude=" + latitude + ", ifReserveMan=" + ifReserveMan + ", ifReservePhone=" + ifReservePhone
+				+ ", ifRemark=" + ifRemark + ", payMode=" + payMode + ", ifSms=" + ifSms + ", smsPhone=" + smsPhone
+				+ ", ifCheckOut=" + ifCheckOut + ", ifFood=" + ifFood + ", ifBulletin=" + ifBulletin + ", bulletin="
+				+ bulletin + ", ifRemnantRoom=" + ifRemnantRoom + ", ifContinue=" + ifContinue + ", ifConfirmInfo="
+				+ ifConfirmInfo + ", ifBreakfast=" + ifBreakfast + ", breakfastQuantity=" + breakfastQuantity
+				+ ", ifActivityPrices=" + ifActivityPrices + ", ifFreeDeposit=" + ifFreeDeposit + ", ifLastCheckOut="
+				+ ifLastCheckOut + ", creator=" + creator + ", createTime=" + createTime + ", updateTime=" + updateTime
+				+ "]";
 	}
 
 	public Integer getId() {
@@ -424,6 +412,22 @@ public class TErpHotel extends Model<TErpHotel> {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
 	}
 	
 	

@@ -34,6 +34,9 @@ public class TErpHotelRoomServiceImpl extends BaseServiceImpl<TErpHotelRoomDAO, 
 	@Autowired
 	TErpHotelRoomSuiteService tErpHotelRoomSuiteService;
 	
+	@Autowired
+	TErpHotelRoomDAO TErpHotelRoomDAO;
+	
 	@Transactional
 	@Override
 	public boolean roomInsertOrUpdate(TErpHotelRoom room, List<TErpHotelImage> imageList) {
@@ -75,6 +78,11 @@ public class TErpHotelRoomServiceImpl extends BaseServiceImpl<TErpHotelRoomDAO, 
 			flag = true;
 		}
 		return flag;
+	}
+
+	@Override
+	public List<Integer> selectRoomIdsByHotelIds(List<Integer> idList) {
+		return TErpHotelRoomDAO.selectRoomIdsByHotelIds(idList);
 	}
 
 	

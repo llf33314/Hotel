@@ -70,17 +70,21 @@ public class HotelController extends BaseController{
 		@ApiImplicitParam(name = "name", value = "酒店名称", required = true, dataType = "String", defaultValue = "null"), 
 		@ApiImplicitParam(name = "phone", value = "酒店电话", required = true, dataType = "String", defaultValue = "null"), 
 		@ApiImplicitParam(name = "address", value = "酒店地址", required = true, dataType = "String", defaultValue = "null"), 
+		@ApiImplicitParam(name = "longitude", value = "地址经度", required = true, dataType = "Double", defaultValue = "null"), 
+		@ApiImplicitParam(name = "latitude", value = "地址纬度", required = true, dataType = "Double", defaultValue = "null"), 
 		@ApiImplicitParam(name = "introduction", value = "酒店介绍", required = true, dataType = "String", defaultValue = "null")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel")
 //	public ResponseDTO insertHotel(TErpHotel hotel){
-	public ResponseDTO insertHotel(Integer shopId, String name, String phone, String address, String introduction, HttpSession session){
+	public ResponseDTO insertHotel(Integer shopId, String name, String phone, String address, Double longitude, Double latitude, String introduction, HttpSession session){
 		boolean flag = false;
 		try {
 			if(shopId != null && 
 					name != null && !name.isEmpty() && 
 					phone != null && !phone.isEmpty() && 
 					address != null && !address.isEmpty() && 
+					longitude != null && !address.isEmpty() && 
+					latitude != null && !address.isEmpty() && 
 					introduction != null && !introduction.isEmpty()){
 				TErpHotel hotel = new TErpHotel();
 				hotel.setBusId(1);
@@ -88,6 +92,8 @@ public class HotelController extends BaseController{
 				hotel.setName(name);
 				hotel.setPhone(phone);
 				hotel.setAddress(address);
+				hotel.setLongitude(longitude);
+				hotel.setLatitude(latitude);
 				hotel.setIntroduction(introduction);
 				hotel.setCreator(getUser(session).getName());
 				hotel.setCreateTime(new Date());
@@ -107,14 +113,14 @@ public class HotelController extends BaseController{
 	@SuppressWarnings({ "rawtypes" })
 	@DeleteMapping("/hotel")
 	public ResponseDTO deleteHotel(Integer[] ids){
-		// TODO 新增酒店-删除酒店(未完)
 		boolean flag = false;
 		try {
 			for(Integer i : ids)
 				System.err.println(i);
 			if(ids != null && ids.length > 0){
 				List<Integer> idList = Arrays.asList(ids);
-				flag = tErpHotelService.deleteBatchIds(idList);
+//				flag = tErpHotelService.deleteBatchIds(idList);
+				flag = tErpHotelService.deleteHotelBatchIds(idList);
 			}
 		} catch (Exception e) {
 			logger.error("backstage hotel delete error",e);

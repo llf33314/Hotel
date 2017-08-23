@@ -27,4 +27,10 @@
         id, hotel_id AS hotelId, name, breakfast, lunch, dinner, supper, provide_from AS provideFrom, company_name AS companyName, order_phone AS orderPhone, food_price AS foodPrice, food_deliver_time AS foodDeliverTime, if_use AS ifUse, creator, create_time AS createTime, update_time AS updateTime 
     </sql>
 
+	<select id="selectFoodIdsByHotelIds" resultType="Integer">
+		SELECT id FROM t_erp_hotel_food WHERE hotel_id IN 
+		<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

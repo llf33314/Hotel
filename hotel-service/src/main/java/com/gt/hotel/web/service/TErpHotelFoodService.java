@@ -22,5 +22,7 @@ public interface TErpHotelFoodService extends BaseService<TErpHotelFood> {
 	boolean deleteBatchIdsANDImage(List<Integer> idList);
 
 	TErpHotelFoodVO selectPageFoodVO(Integer id);
+
+	List<Integer> selectFoodIdsByHotelIds(List<Integer> idList);
 	
 }

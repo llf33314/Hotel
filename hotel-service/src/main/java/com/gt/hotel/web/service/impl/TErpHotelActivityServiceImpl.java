@@ -29,6 +29,8 @@ public class TErpHotelActivityServiceImpl extends BaseServiceImpl<TErpHotelActiv
 	
 	@Autowired
 	TErpHotelActivityRoomSuiteService TErpHotelActivityRoomSuiteService;
+	@Autowired
+	TErpHotelActivityDAO TErpHotelActivityDAO;
 	
 	@Transactional
 	@Override
@@ -65,6 +67,11 @@ public class TErpHotelActivityServiceImpl extends BaseServiceImpl<TErpHotelActiv
 		TErpHotelActivityRoomSuiteService.delete(wrapper);
 		flag = true;
 		return flag;
+	}
+
+	@Override
+	public List<Integer> selectActivityIdsByHotelIds(List<Integer> idList) {
+		return TErpHotelActivityDAO.selectActivityIdsByHotelIds(idList);
 	}
 	
 }

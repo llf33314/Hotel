@@ -38,4 +38,10 @@
         id, hotel_id AS hotelId, type, total, introduction, price, deposit, if_discount_price AS ifDiscountPrice, discount_price AS discountPrice, if_weekend_price AS ifWeekendPrice, weekend_price AS weekendPrice, if_monday_price AS ifMondayPrice, monday_price AS mondayPrice, if_tuesday_price AS ifTuesdayPrice, tuesday_price AS tuesdayPrice, if_wednesday_price AS ifWednesdayPrice, wednesday_price AS wednesdayPrice, if_thursday_price AS ifThursdayPrice, thursday_price AS thursdayPrice, if_sunday_price AS ifSundayPrice, sunday_price AS sundayPrice, team_price AS teamPrice, team_price_effective AS teamPriceEffective, if_use AS ifUse, creator, create_time AS createTime, update_time AS updateTime  
     </sql>
 
+	<select id="selectRoomIdsByHotelIds" resultType="Integer">
+		SELECT id FROM t_erp_hotel_room WHERE hotel_id IN 
+		<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

@@ -35,4 +35,11 @@
         id, bus_id AS busId, hotel_id AS hotelId, activity_name AS activityName, activity_stime AS activityStime, activity_etime AS activityEtime, type, is_room_limit AS isRoomLimit, room_limit AS roomLimit, is_vipcard AS isVipcard, is_cardvolume AS isCardvolume, rule, is_room_count AS isRoomCount, room_count AS roomCount, activity_status AS activityStatus, createtime, live_stime AS liveStime, live_etime AS liveEtime, grouplowest, grouplowesttip, limit_hour AS limitHour, whenrentstime, whenrentetime, update_time AS updateTime
     </sql>
 
+	<select id="selectActivityIdsByHotelIds" resultType="Integer">
+		SELECT id FROM t_erp_hotel_activity WHERE hotel_id IN 
+		<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	
 </mapper>

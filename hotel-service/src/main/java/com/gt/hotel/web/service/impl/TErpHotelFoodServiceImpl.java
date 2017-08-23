@@ -30,6 +30,9 @@ public class TErpHotelFoodServiceImpl extends BaseServiceImpl<TErpHotelFoodDAO, 
 	@Autowired
 	TErpHotelImageService TErpHotelImageService;
 
+	@Autowired
+	TErpHotelFoodDAO TErpHotelFoodDAO;
+	
 	@Transactional
 	@Override
 	public boolean insertOrUpdate(TErpHotelFood food, List<TErpHotelImage> images) {
@@ -80,6 +83,11 @@ public class TErpHotelFoodServiceImpl extends BaseServiceImpl<TErpHotelFoodDAO, 
 		f.setFood(_f);
 		f.setImages(is);
 		return f;
+	}
+
+	@Override
+	public List<Integer> selectFoodIdsByHotelIds(List<Integer> idList) {
+		return TErpHotelFoodDAO.selectFoodIdsByHotelIds(idList);
 	}
 	
 }

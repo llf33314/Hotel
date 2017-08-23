@@ -20,5 +20,7 @@ public interface TErpHotelRoomService extends BaseService<TErpHotelRoom> {
 	boolean roomInsertOrUpdate(TErpHotelRoom room, List<TErpHotelImage> imageList);
 
 	boolean delRoom(List<Integer> idList);
+
+	List<Integer> selectRoomIdsByHotelIds(List<Integer> idList);
 	
 }
