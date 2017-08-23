@@ -70,6 +70,7 @@ create table t_erp_hotel_installation
    name                 varchar(20) not null unique comment '名称',
    logo                 varchar(2000) comment 'LOGO路径',
    if_use               int(1) not null default 0 comment '是否启用',
+   type                 int(1) not null default 0 comment '类型(0:酒店)',
    primary key (id)
 );
 
@@ -415,7 +416,11 @@ create table t_erp_hotel_food
    id                   int not null auto_increment comment 'ID',
    hotel_id             int(11) not null comment '酒店ID',
    name                 varchar(50) not null comment '菜品名称',
-   type                 int(1) not null comment '菜式类型 1:早餐 2:午餐 3:晚餐 4:宵夜',
+   -- type                 int(1) not null comment '菜式类型 1:早餐 2:午餐 3:晚餐 4:宵夜',
+   breakfast            int(1) default 0 comment '早餐',
+   lunch                int(1) default 0 comment '午餐',
+   dinner               int(1) default 0 comment '晚餐',
+   supper               int(1) default 0 comment '宵夜',
    provide_from         int(1) not null comment '菜品提供方 1:本酒店 2:合作方',
    company_name         varchar(50) comment '合作方名称',
    order_phone          varchar(20) comment '新订单接受电话',
@@ -492,7 +497,7 @@ create table t_erp_hotel_room_order
    document_type        varchar(20) not null comment '证件类型',
    document_type_value  varchar(50) not null comment '证件号码',*/
    check_in_mode        int(1) not null comment '入住方式(0：散客，1：协议单位， 2：团队)',
-   check_in_standard    int(1) not null comment '入住标准(0：全天房，1：钟点房，2：长包房)',
+   check_in_standard    int(1) not null comment '入住标准(0：全天房，1：钟点房，2：长包房)', 
    price                int(10) not null default 0 comment '订单价格',
    quantity             int(4) not null comment '数量',
    if_cash_pledge       int(1) not null comment '是否免押金',
@@ -503,11 +508,12 @@ create table t_erp_hotel_room_order
    create_time          datetime not null comment '创建时间',
    pay_type             int(4) not null comment '支付方式 1:在线支付 2:到店支付 3:储值卡支付 4:支付宝 5:银行卡 6:现金',
    pay_time             datetime comment '支付时间时间',
-   pay_status           int(1) not null comment '支付状态 0:未支付 1:已支付 2:挂账',
-   order_status         int(1) not null comment '订单状态',
+   pay_status           int(1) not null comment '支付状态 0:未支付 1:已支付 2:挂账, 3:已退款',
+   order_status         int(1) not null comment '订单状态 0:处理中 1:已确认 2:已取消 3:已入住 4:已完成',
    remark               varchar(140) comment '备注',
    source               varchar(20) comment '来源',
-   primary key (id),
+   available            int(1) default 1 comment '是否可用(0:false, 1:true)',
+   primary key (id)
 );
 
 alter table t_erp_hotel_room_order engine=innodb default charset=utf8 comment 'ERP酒店-房间-订单';
@@ -528,7 +534,7 @@ create table t_erp_hotel_room_order_guest
    document_type        varchar(20) not null comment '证件类型',
    document_type_value  varchar(50) not null comment '证件号码',
    guest_type           int(1) not null comment '客人类型(0：主，1：从)',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_room_order_guest engine=innodb default charset=utf8 comment 'ERP酒店-房间-订单-客人';
@@ -548,7 +554,7 @@ create table t_erp_hotel_room_order_suite
    price                int(10) not null default 0 comment '房价',
    check_in_days        int(8) not null comment '入住天数',
    remark               varchar(140) comment '备注',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_room_order_suite engine=innodb default charset=utf8 comment 'ERP酒店-房间-订单-房间';
@@ -564,7 +570,7 @@ create table t_erp_hotel_room_order_member_card
    order_id             int(11) not null comment '订单ID',
    cardVolumeCode       varchar(20) comment '卡券code',
    fenbi                int(10) default '0' comment '粉币',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_room_order_member_card engine=innodb default charset=utf8 comment 'ERP酒店-房间-订单-会员卡使用情况';
@@ -576,11 +582,13 @@ drop table if exists t_erp_hotel_room_order_protocol_unit;
 /*==============================================================*/
 create table t_erp_hotel_room_order_protocol_unit
 (
+   id                   int(11) not null auto_increment comment 'id',
    order_id             int(11) not null comment '订单ID',
    protocol_unit_id     int(11) comment '协议单位ID',
    protocol_unit_name   varchar(20) comment '协议单位名称',
    protocol_set_id      int(11) comment '协议套餐ID',
    protocol_set_price   int(10) not null default 0 comment '协议套餐价格',
+   primary key (id)
 );
 
 alter table t_erp_hotel_room_order_protocol_unit engine=innodb default charset=utf8 comment 'ERP酒店-房间-订单-协议单位';
@@ -594,7 +602,7 @@ create table t_erp_hotel_invoice_category
 (
    id                   int(11) not null auto_increment comment 'id',
    name                 varchar(20) not null comment '发票类目名',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_invoice_category engine=innodb default charset=utf8 comment 'ERP酒店-发票类目';
@@ -612,7 +620,7 @@ create table t_erp_hotel_room_order_check_out
    room_suite_id        int(11) not null comment '房间ID',
    invoice_header       varchar(50) not null comment '发票抬头',
    invoice_category_id  int(11) not null comment '发票类目ID',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_room_order_check_out engine=innodb default charset=utf8 comment 'ERP酒店-房间-订单-退房记录';
@@ -633,7 +641,7 @@ create table t_erp_hotel_room_order_consumption
    price                int(10) not null default 0 comment '物品价格',
    count                int(5) not null comment '物品数量',
    create_time          datetime not null comment '创建时间',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_room_order_consumption engine=innodb default charset=utf8 comment 'ERP酒店-房间-订单-损坏&消费';
@@ -659,11 +667,12 @@ create table t_erp_hotel_food_order
    arrival_time         datetime not null comment '预计到达时间',
    pay_type             int(4) not null comment '支付方式 1:在线支付 2:到店支付 3:储值卡支付 4:支付宝 5:银行卡 6:现金',
    pay_time             datetime comment '支付时间时间',
-   pay_status           int(1) not null comment '支付状态 0:未支付 1:已支付 2:挂账',
-   order_status         int(1) not null comment '订单状态',
+   pay_status           int(1) not null comment '支付状态 0:未支付 1:已支付 2:挂账 3:退款',
+   order_status         int(1) not null comment '订单状态 0:处理中 1:已确认 2:已取消 3:已入住(不需要) 4:已完成',
    remark               varchar(140) comment '备注',
    source               varchar(20) comment '来源 ',
-   primary key (id),
+   available            int(1) default 1 comment '是否可用(0:false, 1:true)',
+   primary key (id)
 );
 
 alter table t_erp_hotel_food_order engine=innodb default charset=utf8 comment 'ERP酒店-餐饮-订单';
@@ -697,7 +706,7 @@ create table t_erp_hotel_shift_records
    man_name             varchar(20) comment '交班人姓名(交班前者账号)',
    price                int(10) not null default 0 comment '交班金额(现金部分)',
    shift_time           datetime comment '交班时间',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_shift_records engine=innodb default charset=utf8 comment 'ERP酒店-交班记录';
@@ -716,7 +725,7 @@ create table t_erp_hotel_allocate_change
    man_name             varchar(20) comment '被分配人姓名(分配后者账号)',
    allocate_price       int(10) not null default 0 comment '分配金额',
    allocate_time        datetime comment '分配时间',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_allocate_change engine=innodb default charset=utf8 comment 'ERP酒店-分配零钱';
@@ -747,7 +756,7 @@ create table t_erp_hotel_protocol_unit
    account_id           int(11) comment '账号ID',
    type                 int(1) not null comment '0:协议单位, 1:中介',
    status               int(1) not null comment '是否可用',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_protocol_unit engine=innodb default charset=utf8 comment 'ERP酒店-协议单位&中介(需创建账号)';
@@ -772,7 +781,7 @@ alter table t_erp_hotel_protocol_unit engine=innodb default charset=utf8 comment
    operator_name        varchar(10) comment '操作人', 
    if_check             int(1) not null comment '审核',
    account_id           int(11) comment '账号ID',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_intermediary engine=innodb default charset=utf8 comment 'ERP酒店-中介(需创建账号)';*/
@@ -792,7 +801,7 @@ create table t_erp_hotel_classes
    create_time          datetime comment '创建时间',
    operator_id          int(11) not null comment '操作人ID',
    operator_name        varchar(10) comment '操作人', 
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_classes engine=innodb default charset=utf8 comment 'ERP酒店-班次';
@@ -811,7 +820,7 @@ create table t_erp_hotel_set
    operator_id          int(11) not null comment '操作人ID',
    operator_name        varchar(10) comment '操作人', 
    type                 int(1) not null comment '套餐类型(0：协议单位， 1：中介)',
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_set engine=innodb default charset=utf8 comment 'ERP酒店-套餐';
@@ -847,7 +856,7 @@ create table t_erp_hotel_debts
    create_time          datetime comment '创建时间',
    operator_id          int(11) not null comment '操作人ID',
    operator_name        varchar(10) comment '操作人', 
-   primary key (id),
+   primary key (id)
 );
 
 alter table t_erp_hotel_debts engine=innodb default charset=utf8 comment 'ERP酒店-挂账';
@@ -873,7 +882,7 @@ create table t_erp_hotel_activity
    is_vipcard           int(4) not null comment '是否关联会员卡',
    is_cardvolume        int(4) not null comment '是否关联卡券',
    rule                 varchar(200) comment '规则',
-   is_room_count        int(4) comment '房间剩余数',
+   is_room_count        int(4) comment '是否显示房间剩余数',
    room_count           int(8) comment '当房剩余 room_count  间时显',
    activity_status      int(4) not null comment '活动状态(0=未开始, 1=进行中, 2=已结束)',
    createtime           datetime not null comment '创建时间',
