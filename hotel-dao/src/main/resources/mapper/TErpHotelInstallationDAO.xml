@@ -8,11 +8,18 @@
 		<result column="name" property="name" />
 		<result column="logo" property="logo" />
 		<result column="if_use" property="ifUse" />
+		<result column="type" property="type" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, logo, if_use AS ifUse
+        id, name, logo, if_use, type
     </sql>
+
+	<select id="selectByHotelId" parameterType="Integer" resultMap="BaseResultMap">
+		SELECT a.* FROM t_erp_hotel_installation a 
+		JOIN t_erp_hotel_installation_relation b ON a.id = b.installation_id 
+		WHERE b.hotel_id = #{id} 
+	</select>
 
 </mapper>

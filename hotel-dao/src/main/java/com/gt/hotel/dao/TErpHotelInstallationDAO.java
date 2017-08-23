@@ -1,5 +1,7 @@
 package com.gt.hotel.dao;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.gt.hotel.entity.TErpHotelInstallation;
 
@@ -12,5 +14,7 @@ import com.gt.hotel.entity.TErpHotelInstallation;
  * @since 2017-08-08
  */
 public interface TErpHotelInstallationDAO extends BaseMapper<TErpHotelInstallation> {
+
+	List<TErpHotelInstallation> selectByHotelId(Integer id);
 
 }
