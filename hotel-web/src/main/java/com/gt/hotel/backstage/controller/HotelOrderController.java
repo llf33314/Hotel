@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
@@ -103,14 +104,14 @@ public class HotelOrderController extends BaseController{
 	}
 	
 	@ApiOperation(value = "酒店后台-订单管理-房间订单", notes = "删除")
-	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID集合(数组)", paramType = "delete", required = false, dataType = "List")})
+	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID集合(数组)", paramType = "delete", required = false, dataType = "String")})
 	@SuppressWarnings({ "rawtypes" })
 	@DeleteMapping("/hotel/order/room")
-	public ResponseDTO hotelOrderRoomD(Integer[] ids){
+	public ResponseDTO hotelOrderRoomD(String ids){
 		boolean flag = false;
 		try {
-			if(ids != null && ids.length > 0){
-				List<Integer> idList = Arrays.asList(ids);
+			if(ids != null && ids.length() > 0){
+				List<Integer> idList = JSON.parseArray(ids, Integer.class);
 				flag = TErpHotelRoomOrderService.deleteRoomOrder(idList);
 			}
 		} catch (Exception e) {

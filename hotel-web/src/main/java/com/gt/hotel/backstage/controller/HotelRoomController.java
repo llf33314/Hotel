@@ -1,7 +1,6 @@
 package com.gt.hotel.backstage.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -122,13 +121,13 @@ public class HotelRoomController extends BaseController{
 	}
 
 	@ApiOperation(value = "酒店后台-房间管理-删除", notes = "酒店 房间 del")
-	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "Integer[]")})
+	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/room")
-	public ResponseDTO hotelRoomDel(Integer[] ids, HttpSession session){
+	public ResponseDTO hotelRoomDel(String ids, HttpSession session){
 		boolean flag = false;
 		try {
-			List<Integer> idList = Arrays.asList(ids);
+			List<Integer> idList = JSON.parseArray(ids, Integer.class);
 			flag = tErpHotelRoomService.delRoom(idList);
 		} catch (Exception e) {
 			logger.error("backstage hotel room delete error",e);

@@ -1,6 +1,5 @@
 package com.gt.hotel.backstage.controller;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,13 +158,13 @@ public class HotelActivityController extends BaseController{
 	}
 	
 	@ApiOperation(value = "活动设置", notes = "删除")
-	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "Integer[]")})
+	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/activity")
-	public ResponseDTO hotelActivityDel(Integer[] ids, HttpSession session){
+	public ResponseDTO hotelActivityDel(String ids, HttpSession session){
 		boolean flag = false;
 		try {
-			List<Integer> idList = Arrays.asList(ids);
+			List<Integer> idList = JSON.parseArray(ids, Integer.class);
 			flag = TErpHotelActivityService.delHotelActivity(idList);
 		} catch (Exception e) {
 			logger.error("backstage hotel activity delete error",e);

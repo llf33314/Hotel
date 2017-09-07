@@ -1,6 +1,5 @@
 package com.gt.hotel.backstage.controller;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
@@ -143,13 +143,11 @@ public class HotelController extends BaseController{
 	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID集合(数组)", paramType = "delete", required = false, dataType = "List")})
 	@SuppressWarnings({ "rawtypes" })
 	@DeleteMapping("/hotel")
-	public ResponseDTO deleteHotel(Integer[] ids){
+	public ResponseDTO deleteHotel(String ids){
 		boolean flag = false;
 		try {
-			for(Integer i : ids)
-				System.err.println(i);
-			if(ids != null && ids.length > 0){
-				List<Integer> idList = Arrays.asList(ids);
+			if(ids != null && ids.length() > 0){
+				List<Integer> idList = JSON.parseArray(ids, Integer.class);
 //				flag = tErpHotelService.deleteBatchIds(idList);
 				flag = tErpHotelService.deleteHotelBatchIds(idList);
 			}

@@ -1,6 +1,5 @@
 package com.gt.hotel.backstage.controller;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -207,13 +206,11 @@ public class HotelMobileController extends BaseController{
 	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID集合(数组)", paramType = "delete", required = false, dataType = "List")})
 	@SuppressWarnings({ "rawtypes" })
 	@DeleteMapping("/hotel/food")
-	public ResponseDTO hotelMobileFoodDel(Integer[] ids){
+	public ResponseDTO hotelMobileFoodDel(String ids){
 		boolean flag = false;
 		try {
-			for(Integer i : ids)
-				System.err.println(i);
-			if(ids != null && ids.length > 0){
-				List<Integer> idList = Arrays.asList(ids);
+			if(ids != null && ids.length() > 0){
+				List<Integer> idList = JSON.parseArray(ids, Integer.class);
 				flag = TErpHotelFoodService.deleteBatchIdsANDImage(idList);
 			}
 		} catch (Exception e) {

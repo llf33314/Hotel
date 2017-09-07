@@ -3,7 +3,6 @@ package com.gt.hotel.backstage.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -184,13 +183,13 @@ public class HotelErpSetController extends BaseController{
 	}
 	
 	@ApiOperation(value = "酒店后台-ERP设置-长包房-删除", notes = "ERP设置")
-	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "Integer[]")})
+	@ApiImplicitParams({@ApiImplicitParam(name = "ids", value = "ID(数组)", required = true, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/longtimeroom")
-	public ResponseDTO hotelLTRoomDel(Integer[] ids, HttpSession session){
+	public ResponseDTO hotelLTRoomDel(String ids, HttpSession session){
 		boolean flag = false;
 		try {
-			List<Integer> idList = Arrays.asList(ids);
+			List<Integer> idList = JSON.parseArray(ids, Integer.class);
 			flag = tErpHotelLongTimeRoomService.deleteBatchIds(idList);
 		} catch (Exception e) {
 			logger.error("backstage hotel longtimeroom delete error",e);
@@ -223,17 +222,14 @@ public class HotelErpSetController extends BaseController{
 	}
 	
 	@ApiOperation(value = "酒店后台-ERP设置-授权管理-重置授权&取消资格", notes = "ERP设置")
-	@ApiImplicitParams({@ApiImplicitParam(name = "accountIds", value = "用户ID(数组)", required = false, dataType = "Integer[]"), 
+	@ApiImplicitParams({@ApiImplicitParam(name = "accountIds", value = "用户ID(数组)", required = false, dataType = "String"), 
 		@ApiImplicitParam(name = "shopId", value = "门店ID", required = false, dataType = "Integer")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/author")
-	public ResponseDTO hotelAuthorDel(Integer[] accountIds, Integer shopId, HttpSession session){
+	public ResponseDTO hotelAuthorDel(String accountIds, Integer shopId, HttpSession session){
 		boolean flag = false;
 		try {
-//			for(int i : accountIds){
-//				System.err.println(i);
-//			}
-			List<Integer> idList = Arrays.asList(accountIds);
+			List<Integer> idList = JSON.parseArray(accountIds, Integer.class);
 			Wrapper<TErpHotelAuthorization> wrapper = new EntityWrapper<TErpHotelAuthorization>();
 			wrapper.in(idList != null && idList.size() > 0, "account_id", idList);
 			wrapper.eq(shopId != null, "shop_id", shopId);
