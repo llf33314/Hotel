@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelAuthorizationDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotelAuthorization">
+		<id column="id" property="id" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="shop_id" property="shopId" />
+		<result column="account_id" property="accountId" />
+		<result column="function_id" property="functionId" />
+		<result column="creator" property="creator" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, shop_id AS shopId, account_id AS accountId, function_id AS functionId, creator, create_time AS createTime
+    </sql>
+
+	<select id="selectShopAccountPage" resultType="com.gt.hotel.entity.TCommonStaff" parameterType="Map">
+		SELECT id, name, shop_id shopId, phone FROM t_common_staff 
+		<where>
+			<if test="shopId != null">
+				AND shop_id = #{shopId} 
+			</if>
+		</where>
+		<if test="page != null">
+			LIMIT #{page},#{pageSize} 
+		</if>
+	</select>
+	
+	<select id="selectShopAccountPageCount" resultType="Integer" parameterType="Map">
+		SELECT COUNT(id) FROM t_common_staff 
+		<where>
+			<if test="shopId != null">
+				AND shop_id = #{shopId} 
+			</if>
+		</where>
+	</select>
+	
+</mapper>

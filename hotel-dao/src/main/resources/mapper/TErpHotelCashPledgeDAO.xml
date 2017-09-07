@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelCashPledgeDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotelCashPledge">
+		<id column="id" property="id" />
+		<result column="bus_id" property="busId" />
+		<result column="member_id" property="memberId" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="book_name" property="bookName" />
+		<result column="book_phone" property="bookPhone" />
+		<result column="cash_pledge" property="cashPledge" />
+		<result column="status" property="status" />
+		<result column="type" property="type" />
+		<result column="refunds" property="refunds" />
+		<result column="refunds_explain" property="refundsExplain" />
+		<result column="createtime" property="createtime" />
+		<result column="order_id" property="orderId" />
+		<result column="lookstatus" property="lookstatus" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bus_id AS busId, member_id AS memberId, hotel_id AS hotelId, book_name AS bookName, book_phone AS bookPhone, cash_pledge AS cashPledge, status, type, refunds, refunds_explain AS refundsExplain, createtime, order_id AS orderId, lookstatus
+    </sql>
+	
+	<select id="selectCPVBPage" resultType="com.gt.hotel.entity.TErpHotelCashPledgeVB" parameterType="Map">
+		SELECT a.id, a.bus_id AS busId, a.member_id AS memberId, a.hotel_id AS hotelId, 
+			a.book_name AS bookName, a.book_phone AS bookPhone, a.cash_pledge AS cashPledge, a.status, 
+			a.type, a.refunds, a.refunds_explain AS refundsExplain, a.createtime, a.order_id AS orderId, 
+			a.lookstatus, b.check_in_time, b.check_out_time, c.`name` hotelName 
+		FROM t_erp_hotel_cash_pledge a 
+		JOIN t_erp_hotel_room_order b ON a.order_id = b.id 
+		LEFT JOIN t_erp_hotel c ON a.hotel_id = c.id 
+		<where>
+			<if test="id != null">
+				AND a.id = #{id} 
+			</if>
+			<if test="bus_id != null">
+				AND a.bus_id = #{bus_id} 
+			</if>
+			<if test="hotel_id != null">
+				AND a.hotel_id = #{hotel_id} 
+			</if>
+			<if test="keyword != null">
+				AND (a.bookPhone LIKE #{keyword} OR a.bookName LIKE #{keyword} ) 
+			</if>
+		</where>
+		<if test="page != null">
+			LIMIT #{page},#{pageSize} 
+		</if>
+	</select>
+	
+	<select id="selectCPVBPageCount" resultType="Integer" parameterType="Map">
+		SELECT COUNT(a.id)  
+		FROM t_erp_hotel_cash_pledge a 
+		JOIN t_erp_hotel_room_order b ON a.order_id = b.id 
+		LEFT JOIN t_erp_hotel c ON a.hotel_id = c.id 
+		<where>
+			<if test="id != null">
+				AND a.id = #{id} 
+			</if>
+			<if test="bus_id != null">
+				AND a.bus_id = #{bus_id} 
+			</if>
+			<if test="hotel_id != null">
+				AND a.hotel_id = #{hotel_id} 
+			</if>
+			<if test="keyword != null">
+				AND (a.bookPhone LIKE #{keyword} OR a.bookName LIKE #{keyword} ) 
+			</if>
+		</where>
+	</select>
+	
+	<update id="refundsUpdate" parameterType="Map">
+		UPDATE t_erp_hotel_cash_pledge SET 
+		refunds = #{refunds} AND refunds_explain = #{refunds_explain} 
+		WHERE id = #{id} 
+	</update>
+	
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelRoomDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotelRoom">
+		<id column="id" property="id" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="type" property="type" />
+		<result column="total" property="total" />
+		<result column="introduction" property="introduction" />
+		<result column="price" property="price" />
+		<result column="deposit" property="deposit" />
+		<result column="if_discount_price" property="ifDiscountPrice" />
+		<result column="discount_price" property="discountPrice" />
+		<result column="if_weekend_price" property="ifWeekendPrice" />
+		<result column="weekend_price" property="weekendPrice" />
+		<result column="if_monday_price" property="ifMondayPrice" />
+		<result column="monday_price" property="mondayPrice" />
+		<result column="if_tuesday_price" property="ifTuesdayPrice" />
+		<result column="tuesday_price" property="tuesdayPrice" />
+		<result column="if_wednesday_price" property="ifWednesdayPrice" />
+		<result column="wednesday_price" property="wednesdayPrice" />
+		<result column="if_thursday_price" property="ifThursdayPrice" />
+		<result column="thursday_price" property="thursdayPrice" />
+		<result column="if_sunday_price" property="ifSundayPrice" />
+		<result column="sunday_price" property="sundayPrice" />
+		<result column="team_price" property="teamPrice" />
+		<result column="team_price_effective" property="teamPriceEffective" />
+		<result column="if_use" property="ifUse" />
+		<result column="creator" property="creator" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMapVO" type="com.gt.hotel.entity.TErpHotelRoomAndCount" extends="BaseResultMap">
+		<result column="roomCount" property="roomCount" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, hotel_id AS hotelId, type, total, introduction, price, deposit, if_discount_price AS ifDiscountPrice, discount_price AS discountPrice, if_weekend_price AS ifWeekendPrice, weekend_price AS weekendPrice, if_monday_price AS ifMondayPrice, monday_price AS mondayPrice, if_tuesday_price AS ifTuesdayPrice, tuesday_price AS tuesdayPrice, if_wednesday_price AS ifWednesdayPrice, wednesday_price AS wednesdayPrice, if_thursday_price AS ifThursdayPrice, thursday_price AS thursdayPrice, if_sunday_price AS ifSundayPrice, sunday_price AS sundayPrice, team_price AS teamPrice, team_price_effective AS teamPriceEffective, if_use AS ifUse, creator, create_time AS createTime, update_time AS updateTime  
+    </sql>
+
+	<select id="selectRoomIdsByHotelIds" resultType="Integer">
+		SELECT id FROM t_erp_hotel_room WHERE hotel_id IN 
+		<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="selectHotelRoom" resultMap="BaseResultMapVO" parameterType="Map">
+		SELECT a.id, a.hotel_id, a.type, a.total, a.introduction, a.price, a.deposit, a.if_discount_price, 
+			a.discount_price, a.if_weekend_price, a.weekend_price, a.if_monday_price, a.monday_price, 
+			a.if_tuesday_price, a.tuesday_price, a.if_wednesday_price, a.wednesday_price, 
+			a.if_thursday_price, a.thursday_price, a.if_sunday_price, a.sunday_price, a.team_price, 
+			a.team_price_effective, a.if_use, a.creator, a.create_time, a.update_time, COUNT(b.id) roomCount  
+		FROM t_erp_hotel_room a 
+		LEFT JOIN t_erp_hotel_room_suite b ON a.id = b.room_id 
+		<where>
+			<if test="hotel_id != null">
+				AND a.hotel_id = #{hotel_id} 
+			</if>
+			<if test="id != null">
+				AND a.id = #{id} 
+			</if>
+		</where>
+		GROUP BY a.id 
+		<if test="page != null">
+			LIMIT #{page},#{pageSize} 
+		</if>
+	</select>
+	
+	<select id="selectHotelRoomCount" resultType="Integer" parameterType="Map">
+		SELECT COUNT(z.id) 
+		FROM (
+			SELECT a.id 
+			FROM t_erp_hotel_room a 
+			LEFT JOIN t_erp_hotel_room_suite b ON a.id = b.room_id 
+			<where>
+				<if test="hotel_id != null">
+					AND a.hotel_id = #{hotel_id} 
+				</if>
+				<if test="id != null">
+					AND a.id = #{id} 
+				</if>
+			</where>
+			GROUP BY a.id 
+		) z 
+	</select>
+	
+</mapper>
