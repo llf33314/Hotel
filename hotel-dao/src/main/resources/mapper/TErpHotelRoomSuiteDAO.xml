@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TErpHotelRoomSuiteDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TErpHotelRoomSuite">
+		<id column="id" property="id" />
+		<result column="room_id" property="roomId" />
+		<result column="floor" property="floor" />
+		<result column="number" property="number" />
+		<result column="status" property="status" />
+		<result column="room_status" property="roomStatus" />
+		<result column="remark" property="remark" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, room_id AS roomId, floor, number, status, room_status AS roomStatus, remark
+    </sql>
+
+</mapper>
