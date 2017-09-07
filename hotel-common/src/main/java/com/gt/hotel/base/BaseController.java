@@ -6,19 +6,23 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpSession;
 
 /**
- * Controller 抽象类
+ * BaseController
  *
  * @author zhangmz
- * @create 2017/6/20
+ * @create 2017/7/10
  */
 public abstract class BaseController {
-    /** 日志 */
+    /**
+     * 日志
+     */
     protected static final Logger logger = LoggerFactory.getLogger( BaseController.class );
 
     /**
      * 获取Sessionid
      *
-     * @return sessionid
+     * @param session HttpSession
+     *
+     * @return
      */
     public String getSessionId( HttpSession session ) {
 	return session.getId();

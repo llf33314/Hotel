@@ -22,16 +22,26 @@ public class SystemException extends RuntimeException {
         this.message = message;
     }
 
+    /**
+     * 枚举方式实现异常类
+     * @param responseEnums
+     */
+    public SystemException( ResponseEnums responseEnums ) {
+	super( responseEnums.getMsg() );
+	this.message = responseEnums.getMsg();
+	this.code = responseEnums.getCode();
+    }
+
+    /**
+     * 实现code 和msg
+     *
+     * @param code
+     * @param message
+     */
     public SystemException( int code, String message ) {
         super( message );
         this.message = message;
         this.code = code;
-    }
-
-    public SystemException( ResponseEnums responseEnums ) {
-        super( responseEnums.getMsg() );
-        this.code = responseEnums.getCode();
-        this.message = responseEnums.getMsg();
     }
 
     public int getCode() {

@@ -17,15 +17,15 @@ public enum ResponseEnums {
     private final String msg;
 
     ResponseEnums( int code, String msg ) {
-        this.code = code;
-        this.msg = msg;
+	this.code = code;
+	this.msg = msg;
     }
 
     public int getCode() {
-        return code;
+	return code;
     }
 
     public String getMsg() {
-        return msg;
+	return msg;
     }
 }
