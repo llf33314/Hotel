@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,12 +28,14 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TCommonStaff;
 import com.gt.hotel.entity.TErpHotel;
 import com.gt.hotel.entity.TErpHotelAuthorization;
+import com.gt.hotel.entity.TErpHotelAuthorizationVS;
 import com.gt.hotel.entity.TErpHotelERPSet;
 import com.gt.hotel.entity.TErpHotelFunction;
 import com.gt.hotel.entity.TErpHotelImage;
 import com.gt.hotel.entity.TErpHotelLongTimeRoom;
 import com.gt.hotel.entity.TErpHotelMemberCheckOutRelation;
 import com.gt.hotel.entity.TErpHotelMemberDepositRelation;
+import com.gt.hotel.entity.TErpHotelShop;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.web.service.TErpHotelAuthorizationService;
@@ -60,6 +64,9 @@ public class HotelErpSetController extends BaseController{
 	@Autowired
 	TErpHotelLongTimeRoomService tErpHotelLongTimeRoomService;
 
+	@Autowired
+	TErpHotelService TErpHotelService;
+	
 	@ApiOperation(value = "酒店后台-ERP设置-ERP前台设置-查询", notes = "ERP设置")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "酒店ID", paramType = "query", required = true, dataType = "int", defaultValue = "0")})
 	@SuppressWarnings("rawtypes")
@@ -216,10 +223,11 @@ public class HotelErpSetController extends BaseController{
 	}
 	
 	@ApiOperation(value = "酒店后台-ERP设置-授权管理-重置授权&取消资格", notes = "ERP设置")
-	@ApiImplicitParams({@ApiImplicitParam(name = "accountIds", value = "用户ID(数组)", required = true, dataType = "Integer[]")})
+	@ApiImplicitParams({@ApiImplicitParam(name = "accountIds", value = "用户ID(数组)", required = false, dataType = "Integer[]"), 
+		@ApiImplicitParam(name = "shopId", value = "门店ID", required = false, dataType = "Integer")})
 	@SuppressWarnings("rawtypes")
 	@DeleteMapping("/hotel/author")
-	public ResponseDTO hotelAuthorDel(Integer[] accountIds, HttpSession session){
+	public ResponseDTO hotelAuthorDel(Integer[] accountIds, Integer shopId, HttpSession session){
 		boolean flag = false;
 		try {
 //			for(int i : accountIds){
@@ -227,7 +235,8 @@ public class HotelErpSetController extends BaseController{
 //			}
 			List<Integer> idList = Arrays.asList(accountIds);
 			Wrapper<TErpHotelAuthorization> wrapper = new EntityWrapper<TErpHotelAuthorization>();
-			wrapper.in("account_id", idList);
+			wrapper.in(idList != null && idList.size() > 0, "account_id", idList);
+			wrapper.eq(shopId != null, "shop_id", shopId);
 			flag = tErpHotelAuthorizationService.delete(wrapper);
 		} catch (Exception e) {
 			logger.error("backstage hotel author delete error",e);
@@ -241,19 +250,28 @@ public class HotelErpSetController extends BaseController{
 	@ApiImplicitParams({@ApiImplicitParam(name = "shopId", value = "门店ID", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10"),
 		@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1")})
-	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelAuthorization.class)})
-	@SuppressWarnings("rawtypes")
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelAuthorizationVS.class)})
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping("/hotel/author")
-	public ResponseDTO hotelAuthorList(@RequestParam(name = "shopId", required = false) String shopId,
+	public ResponseDTO hotelAuthorList(@RequestParam(name = "shopId", required = false) Integer shopId,
 			@RequestParam(defaultValue = "10") Integer pageSize,
-			@RequestParam(defaultValue = "1") Integer pageIndex){
+			@RequestParam(defaultValue = "1") Integer pageIndex, HttpSession session){
 		boolean flag = false;
-		Page<TErpHotelAuthorization> page = new Page<>(pageIndex, pageSize);
+		Page<TErpHotelAuthorizationVS> page = new Page<>(pageIndex, pageSize);
 		try {
-			Wrapper<TErpHotelAuthorization> wrapper = new EntityWrapper<>();
-//			System.err.println(shopId);
-			wrapper.eq(shopId != null, "shop_id", shopId);
-			page = tErpHotelAuthorizationService.selectPage(page, wrapper);
+			List ids = new ArrayList<>();
+			if(shopId != null) ids.add(shopId);
+			else {
+				HashMap<String, Object> param1 = new HashMap<>();
+				param1.put("bus_id", getUser(session).getId());
+				List<TErpHotelShop> ls = TErpHotelService.selectHotelShop(new Page<TErpHotelShop>(0, 9999999), param1).getRecords();
+				for(TErpHotelShop s : ls){
+					ids.add(s.getId());
+				}
+			}
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("shop_id", ids);
+			page = tErpHotelAuthorizationService.selectAuthorPage(page, param);
 			flag = true;
 		} catch (Exception e) {
 			logger.error("backstage hotel author get error",e);

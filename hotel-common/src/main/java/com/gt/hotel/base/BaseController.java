@@ -1,9 +1,11 @@
 package com.gt.hotel.base;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpSession;
+import com.gt.hotel.entity.BusUser;
 
 /**
  * BaseController
@@ -15,7 +17,7 @@ public abstract class BaseController {
     /**
      * 日志
      */
-    protected static final Logger logger = LoggerFactory.getLogger( BaseController.class );
+    protected Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     /**
      * 获取Sessionid
@@ -26,5 +28,13 @@ public abstract class BaseController {
      */
     public String getSessionId( HttpSession session ) {
 	return session.getId();
+    }
+    
+    public BusUser getUser( HttpSession session ) {
+    	BusUser bu = new BusUser();
+    	bu.setId(33);
+    	bu.setName("test user");
+    	bu.setPhone(15012345678L);
+    	return bu;
     }
 }

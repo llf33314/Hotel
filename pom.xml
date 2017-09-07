@@ -12,6 +12,8 @@
         <module>hotel-service</module>
         <module>hotel-entity</module>
         <module>hotel-generator</module>
+        <module>hotel-cxf-client</module>
+        <module>hotel-cxf-server</module>
     </modules>
     <packaging>pom</packaging>
     <name>parent</name>
@@ -39,8 +41,7 @@
         <dev.lib.mybatis>1.1.1</dev.lib.mybatis>
         <dev.lib.druid>1.0.31</dev.lib.druid>
         <dev.lib.mysql>5.0.5</dev.lib.mysql>
-        <dev.lib.mybatis-plus>2.1.0</dev.lib.mybatis-plus>
-        <dev.lib.mybatisplus-spring-boot-starter>1.0.4</dev.lib.mybatisplus-spring-boot-starter>
+        <dev.lib.mybatis-plus>2.1-gamma</dev.lib.mybatis-plus>
         <dev.lib.velocity>1.7</dev.lib.velocity>
         <dev.lib.commons-lang3>3.5</dev.lib.commons-lang3>
         <dev.lib.nekohtml>1.9.22</dev.lib.nekohtml>
@@ -51,6 +52,7 @@
         <!--<entity.target.dir>src/main/java/</entity.target.dir>-->
         <!--<com.gt.hotel.dao.resources.dir>src/main/resources/</com.gt.hotel.dao.resources.dir>-->
         <dev.lib.lombok>1.16.18</dev.lib.lombok>
+        <dev.lib.cxf>3.1.12</dev.lib.cxf>
     </properties>
 
     <parent>
@@ -130,7 +132,22 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>${dev.lib.swagger2}</version>
         </dependency>
-
+        <!-- Mybatis -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${dev.lib.mybatis}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mybatis</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mybatis-spring</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!-- mybatisPlus代码生成模板引擎 -->
         <dependency>
@@ -144,12 +161,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
             <version>${dev.lib.mybatis-plus}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatisplus-spring-boot-starter</artifactId>
-            <version>${dev.lib.mybatisplus-spring-boot-starter}</version>
         </dependency>
 
         <!-- druid阿里巴巴数据库连接池 -->
@@ -171,7 +182,21 @@
             <artifactId>commons-lang3</artifactId>
             <version>${dev.lib.commons-lang3}</version>
         </dependency>
-
+        <!-- thymeleaf&Vue 模板 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>${dev.lib.nekohtml}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>vue</artifactId>
+            <version>${dev.lib.vue}</version>
+        </dependency>
         <!-- 单元测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -208,6 +233,25 @@
             <version>${dev.lib.lombok}</version>
         </dependency>
 
+        <!-- CXF jar包 -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+            <version>${dev.lib.cxf}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web-services</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>3.16</version>
+		</dependency>
 
     </dependencies>
 

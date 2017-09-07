@@ -13,6 +13,7 @@ import com.gt.hotel.dao.TErpHotelAuthorizationDAO;
 import com.gt.hotel.dao.TErpHotelFunctionDAO;
 import com.gt.hotel.entity.TCommonStaff;
 import com.gt.hotel.entity.TErpHotelAuthorization;
+import com.gt.hotel.entity.TErpHotelAuthorizationVS;
 import com.gt.hotel.entity.TErpHotelFunction;
 import com.gt.hotel.web.service.TErpHotelAuthorizationService;
 
@@ -50,6 +51,20 @@ public class TErpHotelAuthorizationServiceImpl extends BaseServiceImpl<TErpHotel
 	@Override
 	public List<TErpHotelFunction> selectAuthorFunction() {
 		return TErpHotelFunctionDAO.selectList(null);
+	}
+
+	@Override
+	public Page<TErpHotelAuthorizationVS> selectAuthorPage(Page<TErpHotelAuthorizationVS> page,
+			Map<String, Object> param) {
+		Integer c = page.getCurrent();
+		Integer s = page.getSize();
+		param.put("page", (c-1)*s);
+		param.put("pageSize", s);
+		List<TErpHotelAuthorizationVS> list = TErpHotelAuthorizationDAO.selectAuthorPage(param);
+		Integer total = TErpHotelAuthorizationDAO.selectAuthorPageCount(param);
+		page.setTotal(total);
+		page.setRecords(list);
+		return page;
 	}
 	
 }
