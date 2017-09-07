@@ -20,6 +20,8 @@ public interface TErpHotelRoomOrderDAO extends BaseMapper<TErpHotelRoomOrder> {
 
 	List<TErpHotelRoomOrderEx> selectRoomOrderExport(Map<String, Object> p);
 
+	Integer selectRoomOrderExportCount(Map<String, Object> p);
+	
 	void updateOrderDel(List<Integer> idList);
 
 	Integer updateStatus(TErpHotelRoomOrder po);

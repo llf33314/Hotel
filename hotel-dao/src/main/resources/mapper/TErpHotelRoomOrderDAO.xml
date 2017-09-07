@@ -33,9 +33,13 @@
 
 	<select id="selectRoomOrderExport" parameterType="Map" resultType="com.gt.hotel.entity.TErpHotelRoomOrderEx">
 		SELECT a.id, c.`name`, b.book_name, b.book_phone, a.check_in_time, a.check_out_time, a.check_in_standard, a.price, a.quantity, a.order_status, a.pay_status, a.pay_type 
-		FROM t_erp_hotel_room_order a LEFT JOIN t_erp_hotel_room_order_guest b ON a.id = b.order_id 
+		FROM t_erp_hotel_room_order a 
+		LEFT JOIN t_erp_hotel_room_order_guest b ON a.id = b.order_id 
 		LEFT JOIN t_erp_hotel c ON a.hotel_id = c.id 
 		WHERE b.guest_type = 0 
+		<if test="id != null">
+			AND a.id = #{id} 
+		</if> 
 		<if test="bus_id != null">
 			AND a.bus_id = #{bus_id} 
 		</if>
@@ -48,7 +52,48 @@
 		<if test="payStatus != null">
 			AND a.pay_status = #{payStatus} 
 		</if>
-		<if test="keyword != null">
+		<if test="check_in_time != null">
+			<![CDATA[ AND a.check_in_time >= #{check_in_time} ]]>
+		</if>
+		<if test="check_out_time != null">
+			<![CDATA[ AND a.check_out_time <= #{check_out_time} ]]> 
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND (b.book_name LIKE #{keyword} OR b.book_phone LIKE #{keyword}) 
+		</if>
+		<if test="page != null">
+			LIMIT #{page},#{pageSize} 
+		</if>
+	</select>
+	
+	<select id="selectRoomOrderExportCount" parameterType="Map" resultType="Integer">
+		SELECT COUNT(a.id)  
+		FROM t_erp_hotel_room_order a 
+		LEFT JOIN t_erp_hotel_room_order_guest b ON a.id = b.order_id 
+		LEFT JOIN t_erp_hotel c ON a.hotel_id = c.id 
+		WHERE b.guest_type = 0
+		<if test="id != null">
+			AND a.id = #{id} 
+		</if> 
+		<if test="bus_id != null">
+			AND a.bus_id = #{bus_id} 
+		</if>
+		<if test="hotelId != null">
+			AND c.id = #{hotelId} 
+		</if>
+		<if test="orderStatus != null">
+			AND a.order_status = #{orderStatus} 
+		</if>
+		<if test="payStatus != null">
+			AND a.pay_status = #{payStatus} 
+		</if>
+		<if test="check_in_time != null">
+			<![CDATA[ AND a.check_in_time >= #{check_in_time} ]]>
+		</if>
+		<if test="check_out_time != null">
+			<![CDATA[ AND a.check_out_time <= #{check_out_time} ]]> 
+		</if>
+		<if test="keyword != null and keyword != ''">
 			AND (b.book_name LIKE #{keyword} OR b.book_phone LIKE #{keyword}) 
 		</if>
 	</select>

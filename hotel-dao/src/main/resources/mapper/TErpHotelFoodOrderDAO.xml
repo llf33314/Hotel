@@ -26,6 +26,7 @@
 	<resultMap id="BaseResultMapVO" type="com.gt.hotel.entity.TErpHotelFoodOrderVO" extends="BaseResultMap">
 		<result column="name" property="hotelName" />
 		<result column="company_name" property="companyName" />
+		<result column="provide_from" property="provide_from" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
@@ -34,10 +35,11 @@
     </sql>
 
 	<select id="selectFoodOrderVOList" resultMap="BaseResultMapVO" parameterType="Map">
-		SELECT a.*, c.company_name, d.`name` 
+		SELECT a.id, a.hotel_id, a.bus_id, a.number, a.price, a.order_number, a.book_name, a.book_phone, a.create_time, a.arrival_time, 
+			a.pay_type, a.pay_time, a.pay_status, a.order_status, a.remark, a.source, a.available, c.company_name, d.`name`, c.provide_from 
 		FROM t_erp_hotel_food_order a 
 		JOIN t_erp_hotel_food_order_relation b ON a.id = b.order_id 
-		JOIN t_erp_hotel_food c ON b.food_id = c.id 
+		LEFT JOIN t_erp_hotel_food c ON b.food_id = c.id 
 		JOIN t_erp_hotel d ON a.hotel_id = d.id 
 		WHERE a.bus_id = #{bus_id} 
 		<if test="id != null">
@@ -47,7 +49,7 @@
 			AND a.hotel_id = #{hotel_id} 
 		</if>
 		<if test="provide_from != null">
-			AND a.provide_from = #{provide_from} 
+			AND c.provide_from = #{provide_from} 
 		</if>
 		<if test="order_status != null">
 			AND a.order_status = #{order_status} 
@@ -70,7 +72,7 @@
 			SELECT a.id 
 			FROM t_erp_hotel_food_order a 
 			JOIN t_erp_hotel_food_order_relation b ON a.id = b.order_id 
-			JOIN t_erp_hotel_food c ON b.food_id = c.id 
+			LEFT JOIN t_erp_hotel_food c ON b.food_id = c.id 
 			JOIN t_erp_hotel d ON a.hotel_id = d.id 
 			WHERE a.bus_id = #{bus_id} 
 			<if test="id != null">
@@ -80,7 +82,7 @@
 				AND a.hotel_id = #{hotel_id} 
 			</if>
 			<if test="provide_from != null">
-				AND a.provide_from = #{provide_from} 
+				AND c.provide_from = #{provide_from} 
 			</if>
 			<if test="order_status != null">
 				AND a.order_status = #{order_status} 

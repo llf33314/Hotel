@@ -1,9 +1,11 @@
 package com.gt.hotel.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.gt.hotel.entity.TErpHotelRoom;
+import com.gt.hotel.entity.TErpHotelRoomAndCount;
 
 /**
  * <p>
@@ -16,5 +18,9 @@ import com.gt.hotel.entity.TErpHotelRoom;
 public interface TErpHotelRoomDAO extends BaseMapper<TErpHotelRoom> {
 
 	List<Integer> selectRoomIdsByHotelIds(List<Integer> idList);
+
+	List<TErpHotelRoomAndCount> selectHotelRoom(Map<String, Object> param);
+
+	Integer selectHotelRoomCount(Map<String, Object> param);
 
 }

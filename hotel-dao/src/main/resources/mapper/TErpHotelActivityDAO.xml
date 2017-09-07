@@ -42,4 +42,32 @@
 		</foreach>
 	</select>
 	
+	<select id="selectActivitySuitePage" resultType="com.gt.hotel.entity.TErpHotelActivityAndSuite" parameterType="Map">
+		SELECT <include refid="Base_Column_List" /> 
+		FROM t_erp_hotel_activity  
+		<where>
+			<if test="id != null">
+				AND id = #{id} 
+			</if>
+		</where>
+		<if test="page != null">
+			LIMIT #{page},#{pageSize} 
+		</if>
+	</select>
+	
+	<select id="selectActivitySuitePageCount" resultType="Integer" parameterType="Map">
+		SELECT COUNT(id)  
+		FROM t_erp_hotel_activity 
+		<where>
+			<if test="id != null">
+				AND id = #{id} 
+			</if>
+		</where>
+		
+	</select>
+	
+	<update id="updateAStatus" parameterType="com.gt.hotel.entity.TErpHotelActivity">
+		UPDATE t_erp_hotel_activity SET activity_status = #{activityStatus} WHERE id = #{id} 
+	</update>
+	
 </mapper>

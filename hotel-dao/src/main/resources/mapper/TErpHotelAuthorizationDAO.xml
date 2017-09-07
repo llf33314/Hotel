@@ -18,4 +18,25 @@
         id, shop_id AS shopId, account_id AS accountId, function_id AS functionId, creator, create_time AS createTime
     </sql>
 
+	<select id="selectShopAccountPage" resultType="com.gt.hotel.entity.TCommonStaff" parameterType="Map">
+		SELECT id, name, shop_id shopId, phone FROM t_common_staff 
+		<where>
+			<if test="shopId != null">
+				AND shop_id = #{shopId} 
+			</if>
+		</where>
+		<if test="page != null">
+			LIMIT #{page},#{pageSize} 
+		</if>
+	</select>
+	
+	<select id="selectShopAccountPageCount" resultType="Integer" parameterType="Map">
+		SELECT COUNT(id) FROM t_common_staff 
+		<where>
+			<if test="shopId != null">
+				AND shop_id = #{shopId} 
+			</if>
+		</where>
+	</select>
+	
 </mapper>
