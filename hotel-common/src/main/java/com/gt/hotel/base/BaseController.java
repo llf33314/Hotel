@@ -32,7 +32,7 @@ public abstract class BaseController {
     
     public BusUser getUser( HttpSession session ) {
     	BusUser bu = new BusUser();
-    	bu.setId(1);
+    	bu.setId(33);
     	bu.setName("test user");
     	bu.setPhone(15012345678L);
     	return bu;

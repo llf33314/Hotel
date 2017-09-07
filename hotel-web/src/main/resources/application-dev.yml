@@ -61,7 +61,7 @@ datasource:
 
 ### 设置 Redis session 共享
 redisSession:
-  domainName: null
+  domainName: localhost
   cookiePath: /
   cookieName: JSESSIONID
 ### CXF 配置

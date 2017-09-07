@@ -18,10 +18,14 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.web.service.TErpHotelRoomService;
 import com.gt.hotel.web.service.TErpHotelService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
+@Api(description = "移动端")
 @RestController
 @RequestMapping("/mobile")
 public class MoblieHotelController extends BaseController{
@@ -34,6 +38,7 @@ public class MoblieHotelController extends BaseController{
 	
 	@ApiOperation(value = "移动端首页-酒店信息", notes = "首页数据")
 	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = true, dataType = "int", defaultValue = "null") })
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotel.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/info")
 	public ResponseDTO hotelInfo(@RequestParam(name = "hotelId", required = true) String id){
@@ -56,6 +61,7 @@ public class MoblieHotelController extends BaseController{
 	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = true, dataType = "int", defaultValue = "null"), 
 		@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "Integer", defaultValue = "10"),
 		@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "Integer", defaultValue = "1") })
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelRoom.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/room/info")
 	public ResponseDTO roomInfo(@RequestParam(name = "hotelId", required = true) String id, Integer pageSize, Integer pageIndex){
