@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -18,6 +20,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-08
  */
+@ApiModel("酒店 - 基础设施")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_installation_relation")
@@ -28,11 +31,13 @@ public class TErpHotelInstallationRelation extends Model<TErpHotelInstallationRe
     /**
      * 酒店ID
      */
+    @ApiModelProperty("酒店ID")
     @TableId("hotel_id")
 	private Integer hotelId;
     /**
      * 基础设施ID
      */
+    @ApiModelProperty("基础设施ID")
 	@TableField("installation_id")
 	private Integer installationId;
 

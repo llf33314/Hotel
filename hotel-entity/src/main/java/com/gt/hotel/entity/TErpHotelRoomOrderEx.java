@@ -1,12 +1,8 @@
 package com.gt.hotel.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import com.baomidou.mybatisplus.annotations.TableName;
-
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -16,29 +12,44 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-17
  */
+@ApiModel("TErpHotelRoomOrderEx")
 @Data
 public class TErpHotelRoomOrderEx {
+	
+	@ApiModelProperty("ID")
+	Integer id;
 
+	@ApiModelProperty("酒店名称")
 	String name;
 	
+	@ApiModelProperty("预定人")
 	String book_name;
 	
+	@ApiModelProperty("预订电话")
 	String book_phone;
 	
+	@ApiModelProperty("入住时间")
 	String check_in_time;
 
+	@ApiModelProperty("离店时间")
 	String check_out_time;
 	
+	@ApiModelProperty("入住标准(0：全天房，1：钟点房，2：长包房)")
 	Integer check_in_standard;
 	
+	@ApiModelProperty("价格")
 	Integer price;
 	
+	@ApiModelProperty("数量")
 	Integer quantity;
 	
+	@ApiModelProperty("订单状态")
 	Integer order_status;
 	
+	@ApiModelProperty("支付状态")
 	Integer pay_status;
 	
+	@ApiModelProperty("支付类型")
 	Integer pay_type;
 
 	public String getName() {
@@ -129,13 +140,21 @@ public class TErpHotelRoomOrderEx {
 		this.pay_type = pay_type;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "TErpHotelRoomOrderEx [name=" + name + ", book_name=" + book_name + ", book_phone=" + book_phone
-				+ ", check_in_time=" + check_in_time + ", check_out_time=" + check_out_time + ", check_in_standard="
-				+ check_in_standard + ", price=" + price + ", quantity=" + quantity + ", order_status=" + order_status
-				+ ", pay_status=" + pay_status + ", pay_type=" + pay_type + "]";
+		return "TErpHotelRoomOrderEx [id=" + id + ", name=" + name + ", book_name=" + book_name + ", book_phone="
+				+ book_phone + ", check_in_time=" + check_in_time + ", check_out_time=" + check_out_time
+				+ ", check_in_standard=" + check_in_standard + ", price=" + price + ", quantity=" + quantity
+				+ ", order_status=" + order_status + ", pay_status=" + pay_status + ", pay_type=" + pay_type + "]";
 	}
-	
+
 	
 }

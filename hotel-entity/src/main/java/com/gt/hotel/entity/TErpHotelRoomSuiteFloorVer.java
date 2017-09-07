@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -15,6 +17,7 @@ import lombok.Data;
  * @author 
  * @since 2017-08-11
  */
+@ApiModel("TErpHotelRoomSuiteFloorVer")
 @Data
 public class TErpHotelRoomSuiteFloorVer extends Model<TErpHotelRoomSuiteFloorVer> {
 
@@ -22,8 +25,10 @@ public class TErpHotelRoomSuiteFloorVer extends Model<TErpHotelRoomSuiteFloorVer
     
     private Integer id;
 
+    @ApiModelProperty("楼层")
 	private String floor;
 	
+    @ApiModelProperty("房间集合")
 	private List<TErpHotelRoomSuite> tErpHotelRoomSuites;
 
 	public TErpHotelRoomSuiteFloorVer(String floor) {

@@ -4,6 +4,10 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import java.util.Date;
 import com.baomidou.mybatisplus.enums.IdType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -20,6 +24,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-11
  */
+@ApiModel("TErpHotelLongTimeRoom")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_long_time_room")
@@ -35,42 +40,51 @@ public class TErpHotelLongTimeRoom extends Model<TErpHotelLongTimeRoom> {
     /**
      * 酒店ID
      */
+	@ApiModelProperty("酒店ID")
 	@TableField("hotel_id")
 	private Integer hotelId;
     /**
      * 房型ID
      */
+	@ApiModelProperty("房型ID")
 	@TableField("room_id")
 	private Integer roomId;
     /**
      * 房型类型
      */
+	@ApiModelProperty("房型类型")
 	private String type;
     /**
      * 规则名称
      */
+	@ApiModelProperty("规则名称")
 	@TableField("rule_name")
 	private String ruleName;
     /**
      * 最少入住天数
      */
+	@ApiModelProperty("最少入住天数")
 	@TableField("minimum_day")
 	private Integer minimumDay;
     /**
      * 价格
      */
+	@ApiModelProperty("价格")
 	private Integer price;
     /**
      * 押金
      */
+	@ApiModelProperty("押金")
 	private Integer deposit;
     /**
      * 创建者
      */
+	@ApiModelProperty("创建者")
 	private String creator;
     /**
      * 创建时间
      */
+	@ApiModelProperty("创建时间")
 	@TableField("create_time")
 	private Date createTime;
 

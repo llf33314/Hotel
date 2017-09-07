@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,10 +22,24 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-07
  */
+@ApiModel(value = "TErpHotel", description = "酒店")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel")
 public class TErpHotel extends Model<TErpHotel> {
+	
+	/**
+	 * 支付方式(1：在线支付)
+	 */
+	public static final Integer ONLINE_PAY = 1;
+	/**
+	 * 支付方式(2：到店支付)
+	 */
+	public static final Integer OFFLINE_PAY = 2;
+	/**
+	 * 支付方式(3：1&2)
+	 */
+	public static final Integer ALL_PAY = 3;
 
     private static final long serialVersionUID = 1L;
 
@@ -35,159 +51,228 @@ public class TErpHotel extends Model<TErpHotel> {
     /**
      * 商家ID
      */
+	@ApiModelProperty(value = "商家ID")
 	@TableField("bus_id")
 	private Integer busId;
     /**
      * 门店ID
      */
+	@ApiModelProperty(value = "门店ID")
 	@TableField("shop_id")
 	private Integer shopId;
     /**
      * 名称
      */
+	@ApiModelProperty(value = "名称")
 	private String name;
     /**
      * 介绍
      */
+	@ApiModelProperty(value = "介绍")
 	private String introduction;
     /**
      * 电话
      */
+	@ApiModelProperty(value = "电话")
 	private String phone;
     /**
      * 地址
      */
+	@ApiModelProperty(value = "地址")
 	private String address;
 	/**
      * 经度
      */
+	@ApiModelProperty(value = "经度")
 	private Double longitude;
 	/**
      * 纬度
      */
+	@ApiModelProperty(value = "纬度")
 	private Double latitude;
     /**
      * 是否收集预约人
      */
+	@ApiModelProperty(value = "是否收集预约人")
 	@TableField("if_reserve_man")
 	private Integer ifReserveMan;
     /**
      * 是否收集预约电话
      */
+	@ApiModelProperty(value = "是否收集预约电话")
 	@TableField("if_reserve_phone")
 	private Integer ifReservePhone;
     /**
      * 是否收集备注
      */
+	@ApiModelProperty(value = "是否收集备注")
 	@TableField("if_remark")
 	private Integer ifRemark;
     /**
      * 支付方式(1：在线支付 | 2：到店支付 | 3：1&2)
      */
+	@ApiModelProperty(value = "支付方式(1：在线支付 | 2：到店支付 | 3：1&2)")
 	@TableField("pay_mode")
 	private Integer payMode;
     /**
      * 是否开启短信通知
      */
+	@ApiModelProperty(value = "是否开启短信通知")
 	@TableField("if_sms")
 	private Integer ifSms;
     /**
      * 接受信息手机号
      */
+	@ApiModelProperty(value = "接受信息手机号")
 	@TableField("sms_phone")
 	private String smsPhone;
     /**
      * 是否开启一键退房
      */
+	@ApiModelProperty(value = "是否开启一键退房")
 	@TableField("if_check_out")
 	private Integer ifCheckOut;
     /**
      * 是否开启餐饮
      */
+	@ApiModelProperty(value = "是否开启餐饮")
 	@TableField("if_food")
 	private Integer ifFood;
     /**
      * 是否开启公告
      */
+	@ApiModelProperty(value = "是否开启公告")
 	@TableField("if_bulletin")
 	private Integer ifBulletin;
     /**
      * 公告
      */
+	@ApiModelProperty(value = "公告")
 	private String bulletin;
     /**
      * 是否显示剩余房型
      */
+	@ApiModelProperty(value = "是否显示剩余房型")
 	@TableField("if_remnant_room")
 	private Integer ifRemnantRoom;
     /**
      * 是否显示一键续住
      */
+	@ApiModelProperty(value = "是否显示一键续住")
 	@TableField("if_continue")
 	private Integer ifContinue;
     /**
      * 是否确认订单信息功能
      */
+	@ApiModelProperty(value = "是否确认订单信息功能")
 	@TableField("if_confirm_info")
 	private Integer ifConfirmInfo;
     /**
      * 是否开启早餐券
      */
+	@ApiModelProperty(value = "是否开启早餐券")
 	@TableField("if_breakfast")
 	private Integer ifBreakfast;
     /**
      * 默认早餐券数量
      */
+	@ApiModelProperty(value = "默认早餐券数量")
 	@TableField("breakfast_quantity")
 	private Integer breakfastQuantity;
     /**
      * 是否开启房价活动
      */
+	@ApiModelProperty(value = "是否开启房价活动")
 	@TableField("if_activity_prices")
 	private Integer ifActivityPrices;
     /**
      * 是否开启会员免押金
      */
+	@ApiModelProperty(value = "是否开启会员免押金")
 	@TableField("if_free_deposit")
 	private Integer ifFreeDeposit;
     /**
      * 是否开启会员最晚退房时间
      */
+	@ApiModelProperty(value = "是否开启会员最晚退房时间")
 	@TableField("if_last_check_out")
 	private Integer ifLastCheckOut;
+	/**
+     * 是否开启团购
+     */
+	@ApiModelProperty(value = "是否开启团购")
+	@TableField("if_group_buy")
+	private Integer ifGroupBuy;
+	/**
+     * 是否开启秒杀房
+     */
+	@ApiModelProperty(value = "是否开启秒杀房")
+	@TableField("if_spike")
+	private Integer ifSpike;
+	/**
+     * 是否开启钟点房
+     */
+	@ApiModelProperty(value = "是否开启钟点房")
+	@TableField("if_hour")
+	private Integer ifHour;
+	/**
+	 * 是否开启特价房
+	 */
+	@ApiModelProperty(value = "是否开启特价房")
+	@TableField("if_special")
+	private Integer ifSpecial;
     /**
      * 创建者
      */
+	@ApiModelProperty(value = "创建者")
 	private String creator;
     /**
      * 创建时间
      */
+	@ApiModelProperty(value = "创建时间")
 	@TableField("create_time")
 	private Date createTime;
     /**
      * 更新时间
      */
+	@ApiModelProperty(value = "更新时间")
 	@TableField("update_time")
 	private Date updateTime;
-
+	
+	/**
+     * 餐饮支付方式(1：在线支付 | 2：到店支付 | 3：1&2)
+     */
+	@ApiModelProperty(value = "餐饮支付方式(1：在线支付 | 2：到店支付 | 3：1&2)")
+	@TableField("food_pay_mode")
+	private String foodPayMode;
+	/**
+     * 退房接受信息手机号
+     */
+	@ApiModelProperty(value = "退房接受信息手机号")
+	@TableField("check_out_phone")
+	private String checkOutPhone;
+	/**
+     * 是否开启预约发票
+     */
+	@ApiModelProperty(value = "是否开启预约发票")
+	@TableField("if_invoice")
+	private String ifInvoice;
+	/**
+     * 需发票退房成功提示
+     */
+	@ApiModelProperty(value = "需发票退房成功提示")
+	@TableField("neek_prompt")
+	private String neekPrompt;
+	/**
+     * 无需发票退房成功提示
+     */
+	@ApiModelProperty(value = "无需发票退房成功提示")
+	@TableField("unneek_prompt")
+	private String unneekPrompt;
 
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
-	}
-
-	@Override
-	public String toString() {
-		return "TErpHotel [id=" + id + ", busId=" + busId + ", shopId=" + shopId + ", name=" + name + ", introduction="
-				+ introduction + ", phone=" + phone + ", address=" + address + ", longitude=" + longitude
-				+ ", latitude=" + latitude + ", ifReserveMan=" + ifReserveMan + ", ifReservePhone=" + ifReservePhone
-				+ ", ifRemark=" + ifRemark + ", payMode=" + payMode + ", ifSms=" + ifSms + ", smsPhone=" + smsPhone
-				+ ", ifCheckOut=" + ifCheckOut + ", ifFood=" + ifFood + ", ifBulletin=" + ifBulletin + ", bulletin="
-				+ bulletin + ", ifRemnantRoom=" + ifRemnantRoom + ", ifContinue=" + ifContinue + ", ifConfirmInfo="
-				+ ifConfirmInfo + ", ifBreakfast=" + ifBreakfast + ", breakfastQuantity=" + breakfastQuantity
-				+ ", ifActivityPrices=" + ifActivityPrices + ", ifFreeDeposit=" + ifFreeDeposit + ", ifLastCheckOut="
-				+ ifLastCheckOut + ", creator=" + creator + ", createTime=" + createTime + ", updateTime=" + updateTime
-				+ "]";
 	}
 
 	public Integer getId() {
@@ -244,6 +329,22 @@ public class TErpHotel extends Model<TErpHotel> {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
 	}
 
 	public Integer getIfReserveMan() {
@@ -390,6 +491,38 @@ public class TErpHotel extends Model<TErpHotel> {
 		this.ifLastCheckOut = ifLastCheckOut;
 	}
 
+	public Integer getIfGroupBuy() {
+		return ifGroupBuy;
+	}
+
+	public void setIfGroupBuy(Integer ifGroupBuy) {
+		this.ifGroupBuy = ifGroupBuy;
+	}
+
+	public Integer getIfSpike() {
+		return ifSpike;
+	}
+
+	public void setIfSpike(Integer ifSpike) {
+		this.ifSpike = ifSpike;
+	}
+
+	public Integer getIfHour() {
+		return ifHour;
+	}
+
+	public void setIfHour(Integer ifHour) {
+		this.ifHour = ifHour;
+	}
+
+	public Integer getIfSpecial() {
+		return ifSpecial;
+	}
+
+	public void setIfSpecial(Integer ifSpecial) {
+		this.ifSpecial = ifSpecial;
+	}
+
 	public String getCreator() {
 		return creator;
 	}
@@ -414,21 +547,60 @@ public class TErpHotel extends Model<TErpHotel> {
 		this.updateTime = updateTime;
 	}
 
-	public Double getLongitude() {
-		return longitude;
+	public String getFoodPayMode() {
+		return foodPayMode;
 	}
 
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
+	public void setFoodPayMode(String foodPayMode) {
+		this.foodPayMode = foodPayMode;
 	}
 
-	public Double getLatitude() {
-		return latitude;
+	public String getCheckOutPhone() {
+		return checkOutPhone;
 	}
 
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
+	public void setCheckOutPhone(String checkOutPhone) {
+		this.checkOutPhone = checkOutPhone;
 	}
-	
-	
+
+	public String getIfInvoice() {
+		return ifInvoice;
+	}
+
+	public void setIfInvoice(String ifInvoice) {
+		this.ifInvoice = ifInvoice;
+	}
+
+	public String getNeekPrompt() {
+		return neekPrompt;
+	}
+
+	public void setNeekPrompt(String neekPrompt) {
+		this.neekPrompt = neekPrompt;
+	}
+
+	public String getUnneekPrompt() {
+		return unneekPrompt;
+	}
+
+	public void setUnneekPrompt(String unneekPrompt) {
+		this.unneekPrompt = unneekPrompt;
+	}
+
+	@Override
+	public String toString() {
+		return "TErpHotel [id=" + id + ", busId=" + busId + ", shopId=" + shopId + ", name=" + name + ", introduction="
+				+ introduction + ", phone=" + phone + ", address=" + address + ", longitude=" + longitude
+				+ ", latitude=" + latitude + ", ifReserveMan=" + ifReserveMan + ", ifReservePhone=" + ifReservePhone
+				+ ", ifRemark=" + ifRemark + ", payMode=" + payMode + ", ifSms=" + ifSms + ", smsPhone=" + smsPhone
+				+ ", ifCheckOut=" + ifCheckOut + ", ifFood=" + ifFood + ", ifBulletin=" + ifBulletin + ", bulletin="
+				+ bulletin + ", ifRemnantRoom=" + ifRemnantRoom + ", ifContinue=" + ifContinue + ", ifConfirmInfo="
+				+ ifConfirmInfo + ", ifBreakfast=" + ifBreakfast + ", breakfastQuantity=" + breakfastQuantity
+				+ ", ifActivityPrices=" + ifActivityPrices + ", ifFreeDeposit=" + ifFreeDeposit + ", ifLastCheckOut="
+				+ ifLastCheckOut + ", ifGroupBuy=" + ifGroupBuy + ", ifSpike=" + ifSpike + ", ifHour=" + ifHour
+				+ ", ifSpecial=" + ifSpecial + ", creator=" + creator + ", createTime=" + createTime + ", updateTime="
+				+ updateTime + ", foodPayMode=" + foodPayMode + ", checkOutPhone=" + checkOutPhone + ", ifInvoice="
+				+ ifInvoice + ", neekPrompt=" + neekPrompt + ", unneekPrompt=" + unneekPrompt + "]";
+	}
+
 }

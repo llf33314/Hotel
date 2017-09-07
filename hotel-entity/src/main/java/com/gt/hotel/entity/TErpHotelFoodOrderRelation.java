@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 import com.baomidou.mybatisplus.enums.FieldFill;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -18,6 +20,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-17
  */
+@ApiModel("TErpHotelFoodOrderRelation")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_food_order_relation")
@@ -28,11 +31,13 @@ public class TErpHotelFoodOrderRelation extends Model<TErpHotelFoodOrderRelation
     /**
      * 订单ID
      */
+    @ApiModelProperty("订单ID")
     @TableId("order_id")
 	private Integer orderId;
     /**
      * 酒店菜品ID
      */
+    @ApiModelProperty("酒店菜品ID")
 	@TableField("food_id")
 	private Integer foodId;
 

@@ -3,6 +3,10 @@ package com.gt.hotel.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -19,6 +23,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-09
  */
+@ApiModel("授权功能")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_function")
@@ -34,12 +39,19 @@ public class TErpHotelFunction extends Model<TErpHotelFunction> {
     /**
      * 功能名称
      */
+	@ApiModelProperty("功能名称")
 	@TableField("function_name")
 	private String functionName;
     /**
      * 功能描述
      */
+	@ApiModelProperty("功能描述")
 	private String description;
+	/**
+	 * 模块
+	 */
+	@ApiModelProperty("模块")
+	private String model;
 
 
 	@Override
@@ -53,6 +65,7 @@ public class TErpHotelFunction extends Model<TErpHotelFunction> {
 			"id=" + id +
 			", functionName=" + functionName +
 			", description=" + description +
+			", model=" + model +
 			"}";
 	}
 
@@ -78,6 +91,14 @@ public class TErpHotelFunction extends Model<TErpHotelFunction> {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 	
 	

@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -15,6 +17,7 @@ import lombok.Data;
  * @author 
  * @since 2017-08-16
  */
+@ApiModel("TErpHotelFoodVO")
 @Data
 public class TErpHotelFoodVO extends Model<TErpHotelFoodVO> {
 
@@ -22,8 +25,10 @@ public class TErpHotelFoodVO extends Model<TErpHotelFoodVO> {
 
     private Integer id;
     
+    @ApiModelProperty("菜品对象")
     private TErpHotelFood food;
 
+    @ApiModelProperty("图片集合")
 	private List<TErpHotelImage> images;
 
 	@Override

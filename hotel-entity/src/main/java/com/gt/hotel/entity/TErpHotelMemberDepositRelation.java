@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -18,6 +20,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-08
  */
+@ApiModel("TErpHotelMemberDepositRelation")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_member_deposit_relation")
@@ -26,16 +29,19 @@ public class TErpHotelMemberDepositRelation extends Model<TErpHotelMemberDeposit
     /**
      * 酒店ID
      */
+	@ApiModelProperty("酒店ID")
 	@TableField("hotel_id")
 	private Integer hotelId;
     /**
      * 会员等级
      */
+	@ApiModelProperty("会员等级")
 	@TableField("vip_level")
 	private Integer vipLevel;
     /**
      * 是否免押金
      */
+	@ApiModelProperty("是否免押金")
 	@TableField("if_free_deposit")
 	private Integer ifFreeDeposit;
 

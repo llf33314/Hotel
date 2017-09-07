@@ -3,6 +3,10 @@ package com.gt.hotel.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -19,6 +23,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-14
  */
+@ApiModel(value = "TErpHotelActivityRoomSuite")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_activity_room_suite")
@@ -31,21 +36,25 @@ public class TErpHotelActivityRoomSuite extends Model<TErpHotelActivityRoomSuite
     /**
      * 活动id
      */
+	@ApiModelProperty(value = "活动id")
 	@TableField("activity_id")
 	private Integer activityId;
     /**
      * 房型ID
      */
+	@ApiModelProperty(value = "房型ID")
 	@TableField("room_id")
 	private Integer roomId;
     /**
      * 房间ID
      */
+	@ApiModelProperty(value = "房间ID")
 	@TableField("suite_id")
 	private Integer suiteId;
     /**
      * 活动价格
      */
+	@ApiModelProperty(value = "活动价格")
 	private Integer price;
 
 

@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,6 +22,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-11
  */
+@ApiModel(value = "TErpHotelAuthorization")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_authorization")
@@ -35,30 +38,36 @@ public class TErpHotelAuthorization extends Model<TErpHotelAuthorization> {
     /**
      * 酒店ID
      */
+	@ApiModelProperty(value = "酒店ID")
 	@TableField("hotel_id")
 	private Integer hotelId;
     /**
      * 门店ID
      */
+	@ApiModelProperty(value = "门店ID")
 	@TableField("shop_id")
 	private Integer shopId;
     /**
      * 账号ID
      */
+	@ApiModelProperty(value = "账号ID")
 	@TableField("account_id")
 	private Integer accountId;
     /**
      * 功能ID
      */
+	@ApiModelProperty(value = "功能ID")
 	@TableField("function_id")
 	private Integer functionId;
     /**
      * 创建者
      */
+	@ApiModelProperty(value = "创建者")
 	private String creator;
     /**
      * 创建时间
      */
+	@ApiModelProperty(value = "创建时间")
 	@TableField("create_time")
 	private Date createTime;
 

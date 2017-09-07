@@ -3,6 +3,10 @@ package com.gt.hotel.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -19,6 +23,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-17
  */
+@ApiModel("TErpHotelRoomOrderSuite")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_room_order_suite")
@@ -27,6 +32,19 @@ public class TErpHotelRoomOrderSuite extends Model<TErpHotelRoomOrderSuite> {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 入住方式(0：散客)
+     */
+    public static final Integer FIT = 0;
+    /**
+     * 入住方式(1：协议单位)
+     */
+    public static final Integer UNIT = 1;
+    /**
+     * 入住方式(2：团队)
+     */
+    public static final Integer TEAM = 2;
+    
+    /**
      * id
      */
 	@TableId(value="id", type= IdType.AUTO)
@@ -34,30 +52,36 @@ public class TErpHotelRoomOrderSuite extends Model<TErpHotelRoomOrderSuite> {
     /**
      * 订单ID
      */
+	@ApiModelProperty("订单ID")
 	@TableField("order_id")
 	private Integer orderId;
     /**
      * 房间ID
      */
+	@ApiModelProperty("房间ID")
 	@TableField("room_suite_id")
 	private Integer roomSuiteId;
     /**
      * 入住方式(0：散客，1：协议单位， 2：团队)
      */
+	@ApiModelProperty("入住方式(0：散客，1：协议单位， 2：团队)")
 	@TableField("check_in_mode")
 	private Integer checkInMode;
     /**
      * 房价
      */
+	@ApiModelProperty("房价")
 	private Integer price;
     /**
      * 入住天数
      */
+	@ApiModelProperty("入住天数")
 	@TableField("check_in_days")
 	private Integer checkInDays;
     /**
      * 备注
      */
+	@ApiModelProperty("备注")
 	private String remark;
 
 

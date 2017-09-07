@@ -1,13 +1,14 @@
 package com.gt.hotel.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
-import com.baomidou.mybatisplus.enums.FieldFill;
 
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -19,6 +20,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-08
  */
+@ApiModel("ERP酒店基础设施")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_installation")
@@ -26,6 +28,19 @@ public class TErpHotelInstallation extends Model<TErpHotelInstallation> {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+     * 类型(0:酒店)
+     */
+    public static final Integer HOTEL = 0;
+    /**
+     * 启用 0 
+     */
+    public static final Integer AVAILABLE = 0;
+    /**
+     * 不启用 1
+     */
+    public static final Integer UNAVAILABLE = 1;
+	
     /**
      * ID
      */
@@ -34,18 +49,22 @@ public class TErpHotelInstallation extends Model<TErpHotelInstallation> {
     /**
      * 名称
      */
+	@ApiModelProperty("名称")
 	private String name;
     /**
      * LOGO路径
      */
+	@ApiModelProperty("LOGO路径")
 	private String logo;
     /**
      * 是否启用
      */
+	@ApiModelProperty("是否启用")
 	private Integer ifUse;
     /**
      * 类型(0:酒店)
      */
+	@ApiModelProperty("类型(0:酒店)")
 	private Integer type;
 
 

@@ -3,6 +3,10 @@ package com.gt.hotel.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -19,6 +23,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-17
  */
+@ApiModel("TErpHotelRoomOrderMemberCard")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_room_order_member_card")
@@ -34,15 +39,18 @@ public class TErpHotelRoomOrderMemberCard extends Model<TErpHotelRoomOrderMember
     /**
      * 订单ID
      */
+	@ApiModelProperty("订单ID")
 	@TableField("order_id")
 	private Integer orderId;
     /**
      * 卡券code
      */
+	@ApiModelProperty("卡券code")
 	private String cardVolumeCode;
     /**
      * 粉币
      */
+	@ApiModelProperty("粉币")
 	private Integer fenbi;
 
 

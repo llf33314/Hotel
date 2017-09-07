@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableName;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -16,6 +18,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-17
  */
+@ApiModel("TErpHotelRoomOrderVO")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_room_order")
@@ -45,6 +48,10 @@ public class TErpHotelRoomOrderVO extends TErpHotelRoomOrder {
 	}
 
 
+	@ApiModelProperty("酒店名称")
+	private String hotelName;
+	
+	@ApiModelProperty("客人集合")
 	private List<TErpHotelRoomOrderGuest> guests;
 
 	public List<TErpHotelRoomOrderGuest> getGuests() {
@@ -54,4 +61,13 @@ public class TErpHotelRoomOrderVO extends TErpHotelRoomOrder {
 	public void setGuests(List<TErpHotelRoomOrderGuest> guests) {
 		this.guests = guests;
 	}
+
+	public String getHotelName() {
+		return hotelName;
+	}
+
+	public void setHotelName(String hotelName) {
+		this.hotelName = hotelName;
+	}
+	
 }

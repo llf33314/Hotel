@@ -3,6 +3,10 @@ package com.gt.hotel.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.enums.IdType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -19,6 +23,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-17
  */
+@ApiModel("TErpHotelRoomOrderGuest")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_room_order_guest")
@@ -34,41 +39,49 @@ public class TErpHotelRoomOrderGuest extends Model<TErpHotelRoomOrderGuest> {
     /**
      * 订单ID
      */
+	@ApiModelProperty("订单ID")
 	@TableField("order_id")
 	private Integer orderId;
     /**
      * 会员ID
      */
+	@ApiModelProperty("会员ID")
 	@TableField("member_id")
 	private Integer memberId;
     /**
      * 预订人
      */
+	@ApiModelProperty("预订人")
 	@TableField("book_name")
 	private String bookName;
     /**
      * 电话
      */
+	@ApiModelProperty("电话")
 	@TableField("book_phone")
 	private String bookPhone;
     /**
      * 性别
      */
+	@ApiModelProperty("性别")
 	@TableField("book_gender")
 	private String bookGender;
     /**
      * 证件类型
      */
+	@ApiModelProperty("证件类型")
 	@TableField("document_type")
 	private String documentType;
     /**
      * 证件号码
      */
+	@ApiModelProperty("证件号码")
 	@TableField("document_type_value")
 	private String documentTypeValue;
     /**
      * 客人类型(0：主，1：从)
      */
+	@ApiModelProperty("客人类型(0：主，1：从)")
 	@TableField("guest_type")
 	private Integer guestType;
 

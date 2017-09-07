@@ -10,7 +10,10 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -22,6 +25,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-14
  */
+@ApiModel("TErpHotelRoomCalendar")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_room_calendar")
@@ -37,16 +41,20 @@ public class TErpHotelRoomCalendar extends Model<TErpHotelRoomCalendar> {
     /**
      * 房型ID
      */
+	@ApiModelProperty("房型ID")
 	@TableField("room_id")
 	private Integer roomId;
     /**
      * 价格
      */
+	@ApiModelProperty("价格")
 	private Integer price;
     /**
      * 时间日期
      */
+	@ApiModelProperty("时间日期")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
 	private Date time;
 
 

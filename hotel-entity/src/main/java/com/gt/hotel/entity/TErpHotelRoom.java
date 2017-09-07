@@ -7,6 +7,10 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 
 import com.baomidou.mybatisplus.enums.IdType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -23,6 +27,7 @@ import lombok.experimental.Accessors;
  * @author 
  * @since 2017-08-11
  */
+@ApiModel("TErpHotelRoom")
 @Data
 @Accessors(chain = true)
 @TableName("t_erp_hotel_room")
@@ -38,130 +43,156 @@ public class TErpHotelRoom extends Model<TErpHotelRoom> {
     /**
      * 酒店ID
      */
+	@ApiModelProperty("酒店ID")
 	@NotNull(message = "酒店ID不能为空")
 	@TableField("hotel_id")
 	private Integer hotelId;
     /**
      * 房型类型
      */
+	@ApiModelProperty("房型类型")
 	@NotNull(message = "不能为空")
 	private String type;
     /**
      * 房型总数
      */
+	@ApiModelProperty("房型总数")
 	@NotNull(message = "不能为空")
 	private Integer total;
     /**
      * 简介
      */
+	@ApiModelProperty("简介")
 	private String introduction;
     /**
      * 价格
      */
+	@ApiModelProperty("价格")
 	@NotNull(message = "不能为空")
 	private Integer price;
     /**
      * 押金
      */
+	@ApiModelProperty("押金")
 	@NotNull(message = "不能为空")
 	private Integer deposit;
     /**
      * 是否启用折扣价
      */
+	@ApiModelProperty("是否启用折扣价")
 	@TableField("if_discount_price")
 	private Integer ifDiscountPrice;
     /**
      * 折扣价
      */
+	@ApiModelProperty("折扣价")
 	@TableField("discount_price")
 	private Integer discountPrice;
     /**
      * 是否启用周末价
      */
+	@ApiModelProperty("是否启用周末价")
 	@TableField("if_weekend_price")
 	private Integer ifWeekendPrice;
     /**
      * 周末价
      */
+	@ApiModelProperty("周末价")
 	@TableField("weekend_price")
 	private Integer weekendPrice;
     /**
      * 是否启用周一价
      */
+	@ApiModelProperty("是否启用周一价")
 	@TableField("if_monday_price")
 	private Integer ifMondayPrice;
     /**
      * 周末价
      */
+	@ApiModelProperty("周末价")
 	@TableField("monday_price")
 	private Integer mondayPrice;
     /**
      * 是否启用周二价
      */
+	@ApiModelProperty("是否启用周二价")
 	@TableField("if_tuesday_price")
 	private Integer ifTuesdayPrice;
     /**
-     * 周末价
+     * 周二价
      */
+	@ApiModelProperty("周二价")
 	@TableField("tuesday_price")
 	private Integer tuesdayPrice;
     /**
      * 是否启用周三价
      */
+	@ApiModelProperty("是否启用周三价")
 	@TableField("if_wednesday_price")
 	private Integer ifWednesdayPrice;
     /**
      * 周末价
      */
+	@ApiModelProperty("周三价")
 	@TableField("wednesday_price")
 	private Integer wednesdayPrice;
     /**
      * 是否启用周四价
      */
+	@ApiModelProperty("是否启用周四价")
 	@TableField("if_thursday_price")
 	private Integer ifThursdayPrice;
     /**
      * 周末价
      */
+	@ApiModelProperty("周四价")
 	@TableField("thursday_price")
 	private Integer thursdayPrice;
     /**
      * 是否启用周日价
      */
+	@ApiModelProperty("是否启用周日价")
 	@TableField("if_sunday_price")
 	private Integer ifSundayPrice;
     /**
      * 周末价
      */
+	@ApiModelProperty("周日价")
 	@TableField("sunday_price")
 	private Integer sundayPrice;
     /**
      * 团队价
      */
+	@ApiModelProperty("团队价")
 	@TableField("team_price")
 	private Integer teamPrice;
     /**
      * 团队价生效数量
      */
+	@ApiModelProperty("团队价生效数量")
 	@TableField("team_price_effective")
 	private Integer teamPriceEffective;
     /**
      * 是否启用
      */
+	@ApiModelProperty("是否启用")
 	@TableField("if_use")
 	private Integer ifUse;
     /**
      * 创建者
      */
+	@ApiModelProperty("创建者")
 	private String creator;
     /**
      * 创建时间
      */
+	@ApiModelProperty("创建时间")
 	@TableField("create_time")
 	private Date createTime;
     /**
      * 更新时间
      */
+	@ApiModelProperty("更新时间")
 	@TableField("update_time")
 	private Date updateTime;
 
