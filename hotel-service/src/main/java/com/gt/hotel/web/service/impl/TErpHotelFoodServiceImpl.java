@@ -41,7 +41,7 @@ public class TErpHotelFoodServiceImpl extends BaseServiceImpl<TErpHotelFoodDAO, 
 			if(images.size() > 0){
 				Wrapper<TErpHotelImage> iw = new EntityWrapper<TErpHotelImage>();
 				iw.eq("subjection_id", food.getId());
-				iw.eq("subjection", 2);
+				iw.eq("subjection", TErpHotelImage.FOOD);
 				iw.eq("type", "菜品图片");
 				TErpHotelImageService.delete(iw);
 			}
@@ -49,7 +49,7 @@ public class TErpHotelFoodServiceImpl extends BaseServiceImpl<TErpHotelFoodDAO, 
 		this.insertOrUpdate(food);
 		for(TErpHotelImage i : images){
 			i.setSubjectionId(food.getId());
-			i.setSubjection(2);
+			i.setSubjection(TErpHotelImage.FOOD);
 			i.setType("菜品图片");
 		}
 		TErpHotelImageService.insertBatch(images);
@@ -64,7 +64,7 @@ public class TErpHotelFoodServiceImpl extends BaseServiceImpl<TErpHotelFoodDAO, 
 		this.deleteBatchIds(idList);
 		Wrapper<TErpHotelImage> iw = new EntityWrapper<TErpHotelImage>();
 		iw.in("subjection_id", idList);
-		iw.eq("subjection", 2);
+		iw.eq("subjection", TErpHotelImage.FOOD);
 		iw.eq("type", "菜品图片");
 		TErpHotelImageService.delete(iw);
 		flag = true;
@@ -77,7 +77,7 @@ public class TErpHotelFoodServiceImpl extends BaseServiceImpl<TErpHotelFoodDAO, 
 		TErpHotelFood _f = this.selectById(id);
 		Wrapper<TErpHotelImage> iw = new EntityWrapper<TErpHotelImage>();
 		iw.eq("subjection_id", id);
-		iw.eq("subjection", 2);
+		iw.eq("subjection", TErpHotelImage.FOOD);
 		iw.eq("type", "菜品图片");
 		List<TErpHotelImage> is = TErpHotelImageService.selectList(iw);
 		f.setFood(_f);

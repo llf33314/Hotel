@@ -2,9 +2,12 @@ package com.gt.hotel.web.service;
 
 import com.gt.hotel.entity.TErpHotelImage;
 import com.gt.hotel.entity.TErpHotelRoom;
+import com.gt.hotel.entity.TErpHotelRoomAndCount;
 
 import java.util.List;
+import java.util.Map;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 
 /**
@@ -17,10 +20,12 @@ import com.gt.hotel.base.BaseService;
  */
 public interface TErpHotelRoomService extends BaseService<TErpHotelRoom> {
 
-	boolean roomInsertOrUpdate(TErpHotelRoom room, List<TErpHotelImage> imageList);
+	Integer roomInsertOrUpdate(TErpHotelRoom room, List<TErpHotelImage> imageList);
 
 	boolean delRoom(List<Integer> idList);
 
 	List<Integer> selectRoomIdsByHotelIds(List<Integer> idList);
+
+	Page<TErpHotelRoomAndCount> selectHotelRoom(Page<TErpHotelRoomAndCount> page, Map<String, Object> param);
 	
 }

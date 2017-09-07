@@ -29,5 +29,7 @@ public interface TErpHotelRoomOrderService extends BaseService<TErpHotelRoomOrde
 	boolean deleteRoomOrder(List<Integer> idList);
 
 	boolean updateStatus(TErpHotelRoomOrder po);
+
+	Page<TErpHotelRoomOrderEx> selectRoomOrderPageEx(Page<TErpHotelRoomOrderEx> page, Map<String, Object> param);
 	
 }

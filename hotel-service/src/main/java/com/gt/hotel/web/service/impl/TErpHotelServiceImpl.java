@@ -2,6 +2,7 @@ package com.gt.hotel.web.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,22 +10,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TErpHotelDAO;
 import com.gt.hotel.dao.TErpHotelImageDAO;
 import com.gt.hotel.dao.TErpHotelInstallationDAO;
 import com.gt.hotel.entity.TErpHotel;
+import com.gt.hotel.entity.TErpHotelAndImage;
 import com.gt.hotel.entity.TErpHotelERPSet;
 import com.gt.hotel.entity.TErpHotelImage;
 import com.gt.hotel.entity.TErpHotelInstallation;
 import com.gt.hotel.entity.TErpHotelInstallationRelation;
+import com.gt.hotel.entity.TErpHotelInvoiceRelation;
 import com.gt.hotel.entity.TErpHotelMemberCheckOutRelation;
 import com.gt.hotel.entity.TErpHotelMemberDepositRelation;
 import com.gt.hotel.entity.TErpHotelMobileSet;
+import com.gt.hotel.entity.TErpHotelShop;
 import com.gt.hotel.web.service.TErpHotelActivityService;
 import com.gt.hotel.web.service.TErpHotelFoodService;
 import com.gt.hotel.web.service.TErpHotelImageService;
 import com.gt.hotel.web.service.TErpHotelInstallationRelationService;
+import com.gt.hotel.web.service.TErpHotelInvoiceRelationService;
 import com.gt.hotel.web.service.TErpHotelMemberCheckOutRelationService;
 import com.gt.hotel.web.service.TErpHotelMemberDepositRelationService;
 import com.gt.hotel.web.service.TErpHotelRoomService;
@@ -41,6 +47,8 @@ import com.gt.hotel.web.service.TErpHotelService;
 @Service
 public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHotel> implements TErpHotelService {
 	
+	@Autowired
+	TErpHotelDAO TErpHotelDAO;
 	@Autowired
 	TErpHotelMemberDepositRelationService tErpHotelMemberDepositRelationService;
 	@Autowired
@@ -59,6 +67,8 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 	TErpHotelFoodService TErpHotelFoodService;
 	@Autowired
 	TErpHotelActivityService TErpHotelActivityService;
+	@Autowired
+	TErpHotelInvoiceRelationService TErpHotelInvoiceRelationService;
 	
 	@Transactional
 	@Override
@@ -137,7 +147,7 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 		hotel.setIfFreeDeposit(h.getIfFreeDeposit());
 		hotel.setIfLastCheckOut(h.getIfLastCheckOut());
 		hotel.setBreakfastQuantity(h.getBreakfastQuantity());
-		hotel.setLogo(i.getUrl());
+		hotel.setLogo(i != null?i.getUrl():null);
 		hotel.setDeposits(d);
 		hotel.setCheckOuts(c);
 		return hotel;
@@ -163,19 +173,23 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 		ms.setIfConfirmInfo(h.getIfConfirmInfo());
 		Wrapper<TErpHotelImage> i_wrapper = new EntityWrapper<TErpHotelImage>();
 		i_wrapper.eq("subjection_id", h.getId());
-		i_wrapper.eq("subjection", 0);
+		i_wrapper.eq("subjection", TErpHotelImage.HOTEL);
 		i_wrapper.eq("type", "酒店图片");
 		List<TErpHotelImage> images = tErpHotelImageDAO.selectList(i_wrapper);
 		ms.setImages(images);
 		List<TErpHotelInstallation> installations = TErpHotelInstallationDAO.selectByHotelId(h.getId());
 		ms.setInstallations(installations);
+		Wrapper<TErpHotelInvoiceRelation> in_wrapper = new EntityWrapper<TErpHotelInvoiceRelation>();
+		in_wrapper.eq("hotel_id", h.getId());
+		List<TErpHotelInvoiceRelation> invoices = TErpHotelInvoiceRelationService.selectList(in_wrapper);
+		ms.setInvoices(invoices);
 		return ms;
 	}
 
 	@Transactional
 	@Override
 	public boolean mobileInfoUpdate(TErpHotelMobileSet es, List<TErpHotelImage> imageList,
-			List<Integer> idList) {
+			List<Integer> idList, List<TErpHotelInvoiceRelation> invoices) {
 		boolean flag = false;
 		TErpHotel h = this.selectById(es.getId());
 		h.setId(es.getId());
@@ -192,19 +206,36 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 		h.setIfRemnantRoom(es.getIfRemnantRoom());
 		h.setIfContinue(es.getIfContinue());
 		h.setIfConfirmInfo(es.getIfConfirmInfo());
+		h.setIfGroupBuy(es.getIfGroupBuy());
+		h.setIfSpike(es.getIfSpike());
+		h.setIfHour(es.getIfHour());
+		h.setIfSpecial(es.getIfSpecial());
+
+		h.setFoodPayMode(es.getFoodPayMode());
+		h.setCheckOutPhone(es.getCheckOutPhone());
+		h.setIfInvoice(es.getIfInvoice());
+		h.setNeekPrompt(es.getNeekPrompt());
+		h.setUnneekPrompt(es.getUnneekPrompt());
+		
 		this.insertOrUpdate(h);
 		if(imageList.size() > 0){
 			Wrapper<TErpHotelImage> iw = new EntityWrapper<TErpHotelImage>();
 			iw.eq("subjection_id", h.getId());
-			iw.eq("subjection", 0);
+			iw.eq("subjection", TErpHotelImage.HOTEL);
 			iw.eq("type", "酒店图片");
 			tErpHotelImageDAO.delete(iw);
 			for(TErpHotelImage i : imageList){
 				i.setSubjectionId(h.getId());
-				i.setSubjection(0);
+				i.setSubjection(TErpHotelImage.HOTEL);
 				i.setType("酒店图片");
 			}
 			TErpHotelImageService.insertBatch(imageList);
+		}
+		if(invoices.size() > 0){
+			Wrapper<TErpHotelInvoiceRelation> wrapper_inv = new EntityWrapper<TErpHotelInvoiceRelation>();
+			wrapper_inv.eq("hotel_id", invoices.get(0).getHotelId());
+			TErpHotelInvoiceRelationService.delete(wrapper_inv);
+			TErpHotelInvoiceRelationService.insertBatch(invoices);
 		}
 		if(idList.size() > 0){
 			Wrapper<TErpHotelInstallationRelation> hi = new EntityWrapper<TErpHotelInstallationRelation>();
@@ -231,7 +262,7 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 			this.deleteBatchIds(idList);
 			Wrapper<TErpHotelImage> wrapper = new EntityWrapper<TErpHotelImage>();
 			wrapper.in("subjection_id", idList);
-			wrapper.eq("subjection", 0);
+			wrapper.eq("subjection", TErpHotelImage.HOTEL);
 			TErpHotelImageService.delete(wrapper);
 			Wrapper<TErpHotelMemberDepositRelation> wrapperI = new EntityWrapper<TErpHotelMemberDepositRelation>();
 			wrapperI.in("hotel_id", idList);
@@ -243,18 +274,45 @@ public class TErpHotelServiceImpl extends BaseServiceImpl<TErpHotelDAO, TErpHote
 			wrapperIII.in("hotel_id", idList);
 			tErpHotelInstallationRelationDAO.delete(wrapperIII);
 			List<Integer> roomIdList = TErpHotelRoomService.selectRoomIdsByHotelIds(idList);
-			TErpHotelRoomService.delRoom(roomIdList);
+			if(roomIdList != null && roomIdList.size() > 0) TErpHotelRoomService.delRoom(roomIdList);
 			List<Integer> foodIdList = TErpHotelFoodService.selectFoodIdsByHotelIds(idList);
-			TErpHotelFoodService.deleteBatchIdsANDImage(foodIdList);
+			if(foodIdList != null && foodIdList.size() > 0) TErpHotelFoodService.deleteBatchIdsANDImage(foodIdList);
 			List<Integer> activityIdList = TErpHotelActivityService.selectActivityIdsByHotelIds(idList);
-			TErpHotelActivityService.delHotelActivity(activityIdList);
+			if(activityIdList != null && activityIdList.size() > 0) TErpHotelActivityService.delHotelActivity(activityIdList);
 			flag = true;
 		}
 		return flag;
 	}
-	
-	
-	
+
+	@Override
+	public Page<TErpHotelAndImage> selectHotelAndImagePage(Page<TErpHotelAndImage> page,
+			Map<String, Object> param) {
+		Integer c = page.getCurrent();
+		Integer s = page.getSize();
+		param.put("page", (c-1)*s);
+		param.put("pageSize", s);
+		List<TErpHotelAndImage> list = TErpHotelDAO.selectHotelAndImagePage(param);
+		Integer total = TErpHotelDAO.selectHotelAndImagePageCount(param);
+		page.setTotal(total);
+//		page.setPages((total + s -1) / s);
+		page.setRecords(list);
+		return page;
+	}
+
+	@Override
+	public Page<TErpHotelShop> selectHotelShop(Page<TErpHotelShop> page,
+			Map<String, Object> param) {
+		Integer c = page.getCurrent();
+		Integer s = page.getSize();
+		param.put("page", (c-1)*s);
+		param.put("pageSize", s);
+		List<TErpHotelShop> list = TErpHotelDAO.selectHotelShop(param);
+		Integer total = TErpHotelDAO.selectHotelShopCount(param);
+		page.setTotal(total);
+//		page.setPages((total + s -1) / s);
+		page.setRecords(list);
+		return page;
+	}
 	
 	
 	

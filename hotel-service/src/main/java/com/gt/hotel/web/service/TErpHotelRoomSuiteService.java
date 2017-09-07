@@ -18,5 +18,7 @@ import com.gt.hotel.base.BaseService;
 public interface TErpHotelRoomSuiteService extends BaseService<TErpHotelRoomSuite> {
 
 	List<TErpHotelRoomSuiteFloorVer> selectFloorVerList(Integer roomId);
+
+	boolean insertAll(Integer roomId, List<TErpHotelRoomSuite> suiteList);
 	
 }

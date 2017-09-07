@@ -1,7 +1,12 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
+import com.gt.hotel.entity.TCommonStaff;
 import com.gt.hotel.entity.TErpHotelAuthorization;
+import com.gt.hotel.entity.TErpHotelFunction;
 
 /**
  * <p>
@@ -12,5 +17,9 @@ import com.gt.hotel.entity.TErpHotelAuthorization;
  * @since 2017-08-10
  */
 public interface TErpHotelAuthorizationService extends BaseService<TErpHotelAuthorization> {
+
+	Page<TCommonStaff> selectShopAccountPage(Page<TCommonStaff> page, Integer shopId);
+
+	List<TErpHotelFunction> selectAuthorFunction();
 	
 }

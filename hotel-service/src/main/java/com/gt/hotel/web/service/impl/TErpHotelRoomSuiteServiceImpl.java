@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -46,6 +47,21 @@ public class TErpHotelRoomSuiteServiceImpl extends BaseServiceImpl<TErpHotelRoom
 			fv.settErpHotelRoomSuites(_suites);
 		}
 		return list;
+	}
+
+	@Transactional
+	@Override
+	public boolean insertAll(Integer roomId, List<TErpHotelRoomSuite> suiteList) {
+		boolean flag = false;
+		if(suiteList != null && suiteList.size() > 0){
+			for(TErpHotelRoomSuite rs : suiteList) rs.setRoomId(roomId);
+			Wrapper<TErpHotelRoomSuite> wrapper = new EntityWrapper<TErpHotelRoomSuite>();
+			wrapper.eq("room_id", roomId);
+			this.delete(wrapper);
+			this.insertBatch(suiteList);
+			flag = true;
+		}
+		return flag;
 	}
 	
 }

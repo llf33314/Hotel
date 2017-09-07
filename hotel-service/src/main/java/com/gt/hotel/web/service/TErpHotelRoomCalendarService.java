@@ -1,7 +1,10 @@
 package com.gt.hotel.web.service;
 
-import com.gt.hotel.entity.TErpHotelRoomCalendar;
+import java.util.Map;
+
 import com.gt.hotel.base.BaseService;
+import com.gt.hotel.entity.TErpHotelRoomCalendar;
+import com.gt.hotel.entity.TErpHotelRoomCalendarVO;
 
 /**
  * <p>
@@ -12,5 +15,7 @@ import com.gt.hotel.base.BaseService;
  * @since 2017-08-14
  */
 public interface TErpHotelRoomCalendarService extends BaseService<TErpHotelRoomCalendar> {
+
+	TErpHotelRoomCalendarVO selectRoomCalendarAll(Map<String, Object> param);
 	
 }
