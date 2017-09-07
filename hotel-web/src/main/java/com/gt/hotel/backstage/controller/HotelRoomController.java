@@ -3,7 +3,9 @@ package com.gt.hotel.backstage.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,7 +25,9 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TErpHotelImage;
 import com.gt.hotel.entity.TErpHotelRoom;
+import com.gt.hotel.entity.TErpHotelRoomAndCount;
 import com.gt.hotel.entity.TErpHotelRoomCalendar;
+import com.gt.hotel.entity.TErpHotelRoomCalendarVO;
 import com.gt.hotel.entity.TErpHotelRoomSuite;
 import com.gt.hotel.entity.TErpHotelRoomSuiteFloorVer;
 import com.gt.hotel.enums.ResponseEnums;
@@ -32,11 +36,15 @@ import com.gt.hotel.web.service.TErpHotelRoomCalendarService;
 import com.gt.hotel.web.service.TErpHotelRoomService;
 import com.gt.hotel.web.service.TErpHotelRoomSuiteService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
+@Api(description = "酒店后台-房间管理")
 @RestController
 @RequestMapping("/backstage")
 public class HotelRoomController extends BaseController{
@@ -55,6 +63,7 @@ public class HotelRoomController extends BaseController{
 			@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "Integer", defaultValue = "1"),
 			@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = false, dataType = "Integer"),
 			@ApiImplicitParam(name = "id", value = "ID", paramType = "query", required = false, dataType = "Integer")})
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelRoomAndCount.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/room")
 	public ResponseDTO queryHotelroom(@RequestParam(name = "id", required = false) Integer id,
@@ -62,12 +71,12 @@ public class HotelRoomController extends BaseController{
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "1") Integer pageIndex){
 		boolean flag = false;
-		Page<TErpHotelRoom> page = new Page<>(pageIndex, pageSize);
+		Page<TErpHotelRoomAndCount> page = new Page<>(pageIndex, pageSize);
 		try {
-			Wrapper<TErpHotelRoom> wrapper = new EntityWrapper<TErpHotelRoom>();
-			wrapper.eq(id != null, "id", id);
-			wrapper.eq(hotelId != null, "hotel_id", hotelId);
-			page = tErpHotelRoomService.selectPage(page, wrapper);
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("hotel_id", hotelId);
+			param.put("id", id);
+			page = tErpHotelRoomService.selectHotelRoom(page, param);
 			flag = true;
 		} catch (Exception e) {
 			logger.error("backstage hotel room get error",e);
@@ -79,7 +88,7 @@ public class HotelRoomController extends BaseController{
 	
 	@ApiOperation(value = "酒店后台-房间管理-添加 or 更新", notes = "酒店 房间 添加")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID(更新时需要)", paramType = "query", required = false, dataType = "Integer"), 
-		@ApiImplicitParam(name = "hotelId", value = "酒店ID", required = true, dataType = "Integer", defaultValue = "null"), 
+		/*@ApiImplicitParam(name = "hotelId", value = "酒店ID", required = true, dataType = "Integer", defaultValue = "null"), 
 		@ApiImplicitParam(name = "type", value = "房间类型", required = false, dataType = "String", defaultValue = "null"), 
 		@ApiImplicitParam(name = "total", value = "房型总数", required = false, dataType = "Integer", defaultValue = "null"), 
 		@ApiImplicitParam(name = "introduction", value = "简介", required = false, dataType = "String", defaultValue = "null"), 
@@ -90,22 +99,25 @@ public class HotelRoomController extends BaseController{
 		@ApiImplicitParam(name = "ifWeekendPrice", value = "是否启用周末价", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "weekendPrice", value = "周末价(其他以此类推)", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "teamPrice", value = "团队价", required = false, dataType = "Integer"), 
-		@ApiImplicitParam(name = "teamPriceEffective", value = "团队价生效数量", required = false, dataType = "Integer"), 
+		@ApiImplicitParam(name = "teamPriceEffective", value = "团队价生效数量", required = false, dataType = "Integer"),*/ 
 		@ApiImplicitParam(name = "images", value = "图片数组(形如: '[{name:'啊', url:'a.jpg'}, {name:'吧', url:'b.jpg'}]')", required = false, dataType = "String", defaultValue = "null")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/room")
-	public ResponseDTO insertHotelRoom(@ApiParam(hidden = true) TErpHotelRoom room, String images, HttpSession session){
+	public ResponseDTO insertHotelRoom(TErpHotelRoom room, String images, HttpSession session){
 		boolean flag = false;
+		Map<String, Object> p = new HashMap<String, Object>();
 		try {
 			room.setCreator(getUser(session).getName());
 			room.setCreateTime(new Date());
 			List<TErpHotelImage> imageList = JSON.parseArray(images, TErpHotelImage.class);
-			flag = tErpHotelRoomService.roomInsertOrUpdate(room, imageList);
+			Integer id = tErpHotelRoomService.roomInsertOrUpdate(room, imageList);
+			p.put("roomId", id);
+			flag = true;
 		} catch (Exception e) {
 			logger.error("backstage hotel room post error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ResponseDTO.createBySuccess();
+		if(flag) return ResponseDTO.createBySuccess(p);
 		else return ResponseDTO.createByError();
 	}
 
@@ -127,39 +139,34 @@ public class HotelRoomController extends BaseController{
 	}
 	
 	@ApiOperation(value = "酒店后台-房间管理-日历改价", notes = "查询")
-	@ApiImplicitParams({/*@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "Integer", defaultValue = "10"),
-			@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "Integer", defaultValue = "1"),*/
-			@ApiImplicitParam(name = "roomId", value = "房型ID", paramType = "query", required = true, dataType = "Integer") })
+	@ApiImplicitParams({@ApiImplicitParam(name = "roomId", value = "房型ID", paramType = "query", required = true, dataType = "Integer") })
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelRoomCalendarVO.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/room/calendar")
-	public ResponseDTO hotelRoomCalQquery(@RequestParam(name = "roomId") Integer roomId/*,
-			@RequestParam Integer pageSize,
-			@RequestParam Integer pageIndex*/){
+	public ResponseDTO hotelRoomCalQquery(@RequestParam(name = "roomId") Integer roomId){
 		boolean flag = false;
-//		Page<TErpHotelRoomCalendar> page = new Page<>(pageIndex, pageSize);
-		List<TErpHotelRoomCalendar> list = new ArrayList<TErpHotelRoomCalendar>();
+		TErpHotelRoomCalendarVO rc = null;
 		try {
-			Wrapper<TErpHotelRoomCalendar> wrapper = new EntityWrapper<TErpHotelRoomCalendar>();
-			wrapper.eq(roomId != null, "room_id", roomId);
-//			page = tErpHotelRoomCalendarService.selectPage(page, wrapper);
-			list = tErpHotelRoomCalendarService.selectList(wrapper);
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("room_id", roomId);
+			rc = tErpHotelRoomCalendarService.selectRoomCalendarAll(param);
 			flag = true;
 		} catch (Exception e) {
 			logger.error("backstage hotel room get error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
-		if(flag) return ResponseDTO.createBySuccess(list);
+		if(flag) return ResponseDTO.createBySuccess(rc);
 		else return ResponseDTO.createByError();
 	}
 	
 	@ApiOperation(value = "酒店后台-房间管理-日历改价", notes = "添加 or 更新 or 删除(价格-1, 有ID)")
-	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID(更新时需要)", paramType = "query", required = false, dataType = "Integer"), 
+	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID(更新或删除时需要)", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "roomId", value = "房间ID", paramType = "query", required = true, dataType = "Integer"), 
 		@ApiImplicitParam(name = "price", value = "价格", paramType = "query", required = true, dataType = "Integer"), 
 		@ApiImplicitParam(name = "time", value = "时间日期", paramType = "query", required = false, dataType = "datetime") })
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/room/calendar")
-	public ResponseDTO hotelRoomCalQquery(@ApiParam(hidden = true) TErpHotelRoomCalendar roomCal){
+	public ResponseDTO hotelRoomCalEdit(@ApiParam(hidden = true) TErpHotelRoomCalendar roomCal){
 		boolean flag = false;
 		try {
 			if(roomCal.getPrice() != null && roomCal.getPrice() != -1){
@@ -177,6 +184,7 @@ public class HotelRoomController extends BaseController{
 	
 	@ApiOperation(value = "酒店后台-房间管理-房间", notes = "查询")
 	@ApiImplicitParams({@ApiImplicitParam(name = "roomId", value = "房型ID", paramType = "query", required = true, dataType = "Integer") })
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelRoomSuiteFloorVer.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/room/suite")
 	public ResponseDTO hotelRoomSuiteQquery(@RequestParam(name = "roomId") Integer roomId){
@@ -190,6 +198,24 @@ public class HotelRoomController extends BaseController{
 			throw new ResponseEntityException(ResponseEnums.ERROR);
 		}
 		if(flag) return ResponseDTO.createBySuccess(list);
+		else return ResponseDTO.createByError();
+	}
+	
+	@ApiOperation(value = "酒店后台-房间管理-房间ALL", notes = "新增ALL")
+	@ApiImplicitParams({@ApiImplicitParam(name = "roomId", value = "房型ID", paramType = "query", required = true, dataType = "Integer"), 
+		@ApiImplicitParam(name = "suites", value = "房间数组字符串([{floor:2, number:3}, {floor:5, number:6}])", paramType = "query", required = true, dataType = "String") })
+	@SuppressWarnings("rawtypes")
+	@PostMapping("/hotel/room/suiteALL")
+	public ResponseDTO hotelRoomSuiteInsertALL(Integer roomId, String suites){
+		boolean flag = false;
+		try {
+			List<TErpHotelRoomSuite> suiteList = JSON.parseArray(suites, TErpHotelRoomSuite.class);
+			flag = tErpHotelRoomSuiteService.insertAll(roomId, suiteList);
+		} catch (Exception e) {
+			logger.error("backstage hotel room post error",e);
+			throw new ResponseEntityException(ResponseEnums.ERROR);
+		}
+		if(flag) return ResponseDTO.createBySuccess();
 		else return ResponseDTO.createByError();
 	}
 	
@@ -218,7 +244,7 @@ public class HotelRoomController extends BaseController{
 		@ApiImplicitParam(name = "newFloor", value = "新楼层", paramType = "query", required = true, dataType = "String") })
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/room/suite/floor")
-	public ResponseDTO hotelRoomSuiteInsert(Integer roomId, String oldFloor, String newFloor){
+	public ResponseDTO hotelRoomSuiteFloorInsert(Integer roomId, String oldFloor, String newFloor){
 		boolean flag = false;
 		try {
 			Wrapper<TErpHotelRoomSuite> wrapper = new EntityWrapper<TErpHotelRoomSuite>();

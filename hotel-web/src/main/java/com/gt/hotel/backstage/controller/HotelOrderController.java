@@ -23,29 +23,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.TErpHotelCashPledgeVB;
 import com.gt.hotel.entity.TErpHotelFoodOrder;
 import com.gt.hotel.entity.TErpHotelFoodOrderVO;
 import com.gt.hotel.entity.TErpHotelRoomOrder;
 import com.gt.hotel.entity.TErpHotelRoomOrderEx;
-import com.gt.hotel.entity.TErpHotelRoomOrderGuest;
-import com.gt.hotel.entity.TErpHotelRoomOrderVO;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.util.ExcelUtil;
 import com.gt.hotel.util.ExportUtil;
+import com.gt.hotel.web.service.TErpHotelCashPledgeService;
 import com.gt.hotel.web.service.TErpHotelFoodOrderService;
 import com.gt.hotel.web.service.TErpHotelRoomOrderService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
+@Api(description = "酒店后台-订单管理")
 @RestController
 @RequestMapping("/backstage")
 public class HotelOrderController extends BaseController{
@@ -56,6 +58,9 @@ public class HotelOrderController extends BaseController{
 	@Autowired
 	TErpHotelFoodOrderService TErpHotelFoodOrderService;
 	
+	@Autowired
+	TErpHotelCashPledgeService TErpHotelCashPledgeService;
+	
 	@ApiOperation(value = "酒店后台-订单管理-房间订单", notes = "查询")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = false, dataType = "Integer"), 
@@ -63,27 +68,31 @@ public class HotelOrderController extends BaseController{
 		@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "Integer", defaultValue = "1"), 
 		@ApiImplicitParam(name = "orderStatus", value = "订单状态", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "payStatus", value = "支付状态", paramType = "query", required = false, dataType = "Integer"), 
+		@ApiImplicitParam(name = "checkInTime", value = "入住时间", paramType = "query", required = false, dataType = "String"), 
+		@ApiImplicitParam(name = "checkOutTime", value = "离店时间", paramType = "query", required = false, dataType = "String"), 
 		@ApiImplicitParam(name = "keyword", value = "关键字", paramType = "query", required = false, dataType = "String", defaultValue = "") })
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelRoomOrderEx.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/order/room")
 	public ResponseDTO hotelOrderRoomR(@RequestParam(name = "hotelId", required = false) Integer hotelId, 
 			@RequestParam(name = "id", required = false) String id,
 			@RequestParam(defaultValue = "10") Integer pageSize,
-			@RequestParam(defaultValue = "1") Integer pageIndex, 
+			@RequestParam(defaultValue = "1") Integer pageIndex,
+			String checkInTime, String checkOutTime,
 			String keyword, Integer orderStatus, Integer payStatus, HttpSession session){
 		boolean flag = false;
-		Page<TErpHotelRoomOrderVO> page = new Page<>(pageIndex, pageSize);
+		Page<TErpHotelRoomOrderEx> page = new Page<>(pageIndex, pageSize);
 		try {
-			Wrapper<TErpHotelRoomOrder> wrapper = new EntityWrapper<TErpHotelRoomOrder>();
-			wrapper.eq("bus_id", getUser(session).getId());
-			wrapper.eq(id != null, "id", id);
-			wrapper.eq(hotelId != null, "hotel_id", hotelId);
-			wrapper.eq(orderStatus != null, "order_status", orderStatus);
-			wrapper.eq(payStatus != null, "pay_status", payStatus);
-			Wrapper<TErpHotelRoomOrderGuest> wrapperg = new EntityWrapper<TErpHotelRoomOrderGuest>();
-			wrapperg.like(keyword != null, "book_name", keyword);
-			wrapperg.like(keyword != null, "book_phone", keyword);
-			page = TErpHotelRoomOrderService.selectRoomOrderPage(page, wrapper, wrapperg);
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("bus_id", getUser(session).getId());
+			param.put("id", id);
+			param.put("hotelId", hotelId);
+			param.put("orderStatus", orderStatus);
+			param.put("payStatus", payStatus);
+			param.put("check_in_time", checkInTime);
+			param.put("check_out_time", checkOutTime);
+			if(keyword != null && !"".equals(keyword.trim())) param.put("keyword", "%"+keyword+"%");
+			page = TErpHotelRoomOrderService.selectRoomOrderPageEx(page, param);
 			flag = true;
 		} catch (Exception e) {
 			logger.error("backstage hotel order room get error",e);
@@ -123,13 +132,13 @@ public class HotelOrderController extends BaseController{
 			TErpHotelRoomOrder order = TErpHotelRoomOrderService.selectById(po.getId());
 			Integer status = order.getOrderStatus();
 			Integer newstatus = po.getOrderStatus();
-			if( !(status == 0 && (newstatus == 1 || newstatus == 2)) ){
+			if( !(status == TErpHotelRoomOrder.PROCESS && (newstatus == TErpHotelRoomOrder.CONFIRM || newstatus == TErpHotelRoomOrder.CANCEL)) ){
 				//暂无操作
-			}else if( !(status == 1 && newstatus == 3) ){
+			}else if( !(status == TErpHotelRoomOrder.CONFIRM && newstatus == TErpHotelRoomOrder.CHECK_IN) ){
 				//暂无操作
-			}else if( !(status == 3 && newstatus == 4) ){
+			}else if( !(status == TErpHotelRoomOrder.CHECK_IN && newstatus == TErpHotelRoomOrder.END) ){
 				//暂无操作
-			}else if( status == 2 && newstatus == -1 ){
+			}else if( status == TErpHotelRoomOrder.CANCEL && newstatus == -1 ){
 				//TODO 退款
 			}else{
 				TErpHotelRoomOrderService.updateStatus(po);
@@ -172,15 +181,15 @@ public class HotelOrderController extends BaseController{
 				public String fieldPprocessing(Object value, String contentName) {
 					String v = value.toString();
 					if("check_in_standard".equals(contentName) ){
-						v = "0".equals(v)?"全天房":("1".equals(v)?"钟点房":"长包房");
+						v = TErpHotelRoomOrder.DAY_ROOM.equals(v)?"全天房":(TErpHotelRoomOrder.HOUR_ROOM.equals(v)?"钟点房":"长包房");
 					}else if("order_status".equals(contentName) ){
-						v = "0".equals(v)?"处理中":("1".equals(v)?"已确认":("2".equals(v)?"已取消":
-							("3".equals(v)?"已入住":("4".equals(v)?"已完成":""))));
+						v = TErpHotelRoomOrder.PROCESS.equals(v)?"处理中":(TErpHotelRoomOrder.CONFIRM.equals(v)?"已确认":(TErpHotelRoomOrder.CANCEL.equals(v)?"已取消":
+							(TErpHotelRoomOrder.CHECK_IN.equals(v)?"已入住":(TErpHotelRoomOrder.END.equals(v)?"已完成":""))));
 					}else if("pay_status".equals(contentName) ){
-						v = "0".equals(v)?"未支付":("1".equals(v)?"已支付":("2".equals(v)?"挂账":"已退款"));
+						v = TErpHotelRoomOrder.UNPAID.equals(v)?"未支付":(TErpHotelRoomOrder.PAID.equals(v)?"已支付":(TErpHotelRoomOrder.DEBTS.equals(v)?"挂账":"已退款"));
 					}else if("pay_type".equals(contentName) ){
-						v = "1".equals(v)?"在线支付":("2".equals(v)?"到店支付":
-							("3".equals(v)?"储值卡支付":("4".equals(v)?"支付宝":("5".equals(v)?"银行卡":"现金"))));
+						v = TErpHotelRoomOrder.ONLINE_PAY.equals(v)?"在线支付":(TErpHotelRoomOrder.OFFLINE_PAY.equals(v)?"到店支付":
+							(TErpHotelRoomOrder.VALUE_PAY.equals(v)?"储值卡支付":(TErpHotelRoomOrder.ALI_PAY.equals(v)?"支付宝":(TErpHotelRoomOrder.CARD_PAY.equals(v)?"银行卡":"现金"))));
 					}
 					return v;
 				}
@@ -217,6 +226,7 @@ public class HotelOrderController extends BaseController{
 		@ApiImplicitParam(name = "orderStatus", value = "订单状态", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "payStatus", value = "支付状态", paramType = "query", required = false, dataType = "Integer"), 
 		@ApiImplicitParam(name = "keyword", value = "关键字", paramType = "query", required = false, dataType = "String", defaultValue = "") })
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelFoodOrderVO.class)})
 	@GetMapping("/hotel/order/food")
 	public ResponseDTO hotelOrderFoodR(@RequestParam(name = "hotelId", required = false) Integer hotelId, 
 			@RequestParam(name = "id", required = false) String id,
@@ -275,13 +285,13 @@ public class HotelOrderController extends BaseController{
 				public String fieldPprocessing(Object value, String contentName) {
 					String v = value.toString();
 					if("orderStatus".equals(contentName) ){
-						v = "0".equals(v)?"处理中":("1".equals(v)?"已确认":("2".equals(v)?"已取消":
-							("3".equals(v)?"":("4".equals(v)?"已完成":""))));
+						v = TErpHotelFoodOrder.PROCESS.equals(v)?"处理中":(TErpHotelFoodOrder.CONFIRM.equals(v)?"已确认":(TErpHotelFoodOrder.CANCEL.equals(v)?"已取消":
+							(TErpHotelFoodOrder.CHECK_IN.equals(v)?"":(TErpHotelFoodOrder.END.equals(v)?"已完成":""))));
 					}else if("payStatus".equals(contentName) ){
-						v = "0".equals(v)?"未支付":("1".equals(v)?"已支付":("2".equals(v)?"挂账":"已退款"));
+						v = TErpHotelFoodOrder.UNPAID.equals(v)?"未支付":(TErpHotelFoodOrder.PAID.equals(v)?"已支付":(TErpHotelFoodOrder.DEBTS.equals(v)?"挂账":"已退款"));
 					}else if("payType".equals(contentName) ){
-						v = "1".equals(v)?"在线支付":("2".equals(v)?"到店支付":
-							("3".equals(v)?"储值卡支付":("4".equals(v)?"支付宝":("5".equals(v)?"银行卡":"现金"))));
+						v = TErpHotelFoodOrder.ONLINE_PAY.equals(v)?"在线支付":(TErpHotelFoodOrder.OFFLINE_PAY.equals(v)?"到店支付":
+							(TErpHotelFoodOrder.VALUE_PAY.equals(v)?"储值卡支付":(TErpHotelFoodOrder.ALI_PAY.equals(v)?"支付宝":(TErpHotelFoodOrder.CARD_PAY.equals(v)?"银行卡":"现金"))));
 					}
 					return v;
 				}
@@ -338,11 +348,11 @@ public class HotelOrderController extends BaseController{
 			TErpHotelFoodOrder order = TErpHotelFoodOrderService.selectById(po.getId());
 			Integer status = order.getOrderStatus();
 			Integer newstatus = po.getOrderStatus();
-			if( !(status == 0 && (newstatus == 1 || newstatus == 2)) ){
+			if( !(status == TErpHotelFoodOrder.PROCESS && (newstatus == TErpHotelFoodOrder.CONFIRM || newstatus == TErpHotelFoodOrder.CANCEL)) ){
 				//暂无操作
-			}else if( !(status == 1 && newstatus == 4) ){
+			}else if( !(status == TErpHotelFoodOrder.CONFIRM && newstatus == TErpHotelFoodOrder.END) ){
 				//暂无操作
-			}else if( status == 2 && newstatus == -1 ){
+			}else if( status == TErpHotelFoodOrder.CANCEL && newstatus == -1 ){
 				//TODO 退款
 			}else{
 				TErpHotelFoodOrderService.updateStatus(po);
@@ -356,5 +366,59 @@ public class HotelOrderController extends BaseController{
 		else return ResponseDTO.createByError();
 	}
 	
+	@ApiOperation(value = "酒店后台-订单管理-押金管理", notes = "查询")
+	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID", paramType = "query", required = false, dataType = "Integer"), 
+		@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = false, dataType = "Integer"), 
+		@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "Integer", defaultValue = "10"),
+		@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "Integer", defaultValue = "1"),
+		@ApiImplicitParam(name = "keyword", value = "关键字", paramType = "query", required = false, dataType = "String", defaultValue = "") })
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelCashPledgeVB.class)})
+	@SuppressWarnings("rawtypes")
+	@GetMapping("/hotel/order/cashPledge")
+	public ResponseDTO cashPledgeR(@RequestParam(name = "hotelId", required = false) Integer hotelId, 
+			@RequestParam(name = "id", required = false) String id,
+			@RequestParam(defaultValue = "10") Integer pageSize,
+			@RequestParam(defaultValue = "1") Integer pageIndex, 
+			String keyword, HttpSession session){
+		boolean flag = false;
+		Page<TErpHotelCashPledgeVB> page = new Page<>(pageIndex, pageSize);
+		try {
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("bus_id", getUser(session).getId());
+			param.put("id", id);
+			param.put("hotel_id", hotelId);
+			if(keyword != null && !"".equals(keyword.trim())) param.put("keyword", "%"+keyword+"%");
+			page = TErpHotelCashPledgeService.selectCPVBPage(page, param);
+			flag = true;
+		} catch (Exception e) {
+			logger.error("backstage hotel order cashPledge get error",e);
+			throw new ResponseEntityException(ResponseEnums.ERROR);
+		}
+		if(flag) return ResponseDTO.createBySuccess(page);
+		else return ResponseDTO.createByError();
+	}
+	
+	@ApiOperation(value = "酒店后台-订单管理-押金退换(暂时没有退款功能)", notes = "退款")
+	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID", required = false, dataType = "Integer"), 
+		@ApiImplicitParam(name = "refunds", value = "退款金额", required = false, dataType = "Integer"),
+		@ApiImplicitParam(name = "refundsExplain", value = "退款说明", required = false, dataType = "String") })
+	@SuppressWarnings("rawtypes")
+	@PostMapping("/hotel/order/cashPledgeRefunds")
+	public ResponseDTO cashPledgeRefunds(@RequestParam(name = "id", required = false) String id,
+			String refunds, String refundsExplain, HttpSession session){
+		boolean flag = false;
+		try {
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("id", id);
+			param.put("refunds", refunds);
+			param.put("refunds_explain", refundsExplain);
+			flag = TErpHotelCashPledgeService.refundsUpdate(param);
+		} catch (Exception e) {
+			logger.error("backstage hotel order cashPledgeRefunds post error",e);
+			throw new ResponseEntityException(ResponseEnums.ERROR);
+		}
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
+	}
 	
 }

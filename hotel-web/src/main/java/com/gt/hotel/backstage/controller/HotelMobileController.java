@@ -24,17 +24,22 @@ import com.gt.hotel.entity.TErpHotel;
 import com.gt.hotel.entity.TErpHotelFood;
 import com.gt.hotel.entity.TErpHotelFoodVO;
 import com.gt.hotel.entity.TErpHotelImage;
+import com.gt.hotel.entity.TErpHotelInvoiceRelation;
 import com.gt.hotel.entity.TErpHotelMobileSet;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.web.service.TErpHotelFoodService;
 import com.gt.hotel.web.service.TErpHotelService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
+@Api(description = "酒店后台-移动端设置")
 @RestController
 @RequestMapping("/backstage")
 public class HotelMobileController extends BaseController{
@@ -47,6 +52,7 @@ public class HotelMobileController extends BaseController{
 	
 	@ApiOperation(value = "酒店后台-移动端设置-手机页面设置", notes = "查询")
 	@ApiImplicitParams({@ApiImplicitParam(name = "hotelId", value = "酒店ID", paramType = "query", required = true, dataType = "Integer", defaultValue = "0")})
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelMobileSet.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/mobile")
 	public ResponseDTO hotelMobileQuery(@RequestParam(name = "hotelId", required = true) Integer hotelId){
@@ -75,23 +81,37 @@ public class HotelMobileController extends BaseController{
 		@ApiImplicitParam(name = "smsPhone", value = "接受信息手机号", required = true, dataType = "String"),
 		@ApiImplicitParam(name = "ifCheckOut", value = "是否开启一键退房", required = true, dataType = "Integer"),
 		@ApiImplicitParam(name = "ifFood", value = "是否开启餐饮", required = true, dataType = "Integer"),
+		@ApiImplicitParam(name = "ifFood", value = "是否开启餐饮", required = true, dataType = "Integer"),
 		@ApiImplicitParam(name = "ifBulletin", value = "是否开启公告", required = true, dataType = "Integer"),
+		@ApiImplicitParam(name = "ifGroupBuy", value = "是否开启团购", required = true, dataType = "Integer"),
+		@ApiImplicitParam(name = "ifSpike", value = "是否开启秒杀房", required = true, dataType = "Integer"),
+		@ApiImplicitParam(name = "ifHour", value = "是否开启钟点房", required = true, dataType = "Integer"),
+		@ApiImplicitParam(name = "ifSpecial", value = "是否开启特价房", required = true, dataType = "Integer"),
 		@ApiImplicitParam(name = "bulletin", value = "公告", required = true, dataType = "String"),
 		@ApiImplicitParam(name = "ifRemnantRoom", value = "是否显示剩余房型", required = true, dataType = "Integer"),
 		@ApiImplicitParam(name = "ifContinue", value = "是否开启一键续住", required = true, dataType = "Integer"),
 		@ApiImplicitParam(name = "ifConfirmInfo", value = "是否确认订单信息功能", required = true, dataType = "Integer"),
+		
+		@ApiImplicitParam(name = "foodPayMode", value = "餐饮支付方式(1：在线支付 | 2：到店支付 | 3：1&2)", required = true, dataType = "Integer"),
+		@ApiImplicitParam(name = "checkOutPhone", value = "退房接受信息手机号", dataType = "String"),
+		@ApiImplicitParam(name = "ifInvoice", value = "是否开启预约发票", dataType = "Integer"),
+		@ApiImplicitParam(name = "neekPrompt", value = "需发票退房成功提示", dataType = "String"),
+		@ApiImplicitParam(name = "unneekPrompt", value = "无需发票退房成功提示", dataType = "String"),
+		@ApiImplicitParam(name = "invoiceList", value = "发票类目数组(形如: '[{hotelId:1, invoiceId:1, invoiceName:'asdfghjkl'}, {hotelId:1, invoiceId:2, invoiceName:'zxcvbnm'}]')", required = false, dataType = "String", defaultValue = "null"), 
+		
 		@ApiImplicitParam(name = "imageList", value = "图片数组(形如: '[{name:'啊', url:'a.jpg'}, {name:'吧', url:'b.jpg'}]')", required = false, dataType = "String", defaultValue = "null"), 
 		@ApiImplicitParam(name = "installationList", value = "基础设施ID数组(形如: '[1, 2, 3]')", required = false, dataType = "String")})
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/hotel/mobile")
-	public ResponseDTO hotelMobileIU(Integer hotelId, @ApiParam(hidden = true) TErpHotelMobileSet erpHotelMobileSet, 
-			String imageList, String installationList){
+	public ResponseDTO hotelMobileCU(Integer hotelId, @ApiParam(hidden = true) TErpHotelMobileSet erpHotelMobileSet, 
+			String imageList, String installationList, String invoiceList){
 		boolean flag = false;
 		try {
 			erpHotelMobileSet.setId(hotelId);
 			List<TErpHotelImage> images = JSON.parseArray(imageList, TErpHotelImage.class);
 			List<Integer> idList = JSON.parseArray(installationList, Integer.class);
-			flag = TErpHotelService.mobileInfoUpdate(erpHotelMobileSet, images, idList);	
+			List<TErpHotelInvoiceRelation> invoices = JSON.parseArray(invoiceList, TErpHotelInvoiceRelation.class);
+			flag = TErpHotelService.mobileInfoUpdate(erpHotelMobileSet, images, idList, invoices);	
 		} catch (Exception e) {
 			logger.error("backstage hotel mobile post error",e);
 			throw new ResponseEntityException(ResponseEnums.ERROR);
@@ -106,6 +126,7 @@ public class HotelMobileController extends BaseController{
 		@ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10"),
 		@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1"),
 		@ApiImplicitParam(name = "keyword", value = "关键字", paramType = "query", required = false, dataType = "String", defaultValue = "") })
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelFood.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/food")
 	public ResponseDTO hotelMobileFoodQuery(@RequestParam(name = "id", required = false) String id,
@@ -134,6 +155,7 @@ public class HotelMobileController extends BaseController{
 	
 	@ApiOperation(value = "酒店后台-移动端设置-客房订餐设置", notes = "编辑显示数据")
 	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "ID", paramType = "query", required = false, dataType = "Integer")})
+	@ApiResponses({@ApiResponse(code = 999, message = "", response = TErpHotelFoodVO.class)})
 	@SuppressWarnings("rawtypes")
 	@GetMapping("/hotel/food/edit")
 	public ResponseDTO hotelMobileFoodQuery(@RequestParam(name = "id", required = false) Integer id){
