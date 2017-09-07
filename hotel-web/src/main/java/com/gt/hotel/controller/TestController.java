@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * API 参考类
@@ -42,9 +43,10 @@ public class TestController extends BaseController {
      */
     @ResponseBody
     @GetMapping( value = { "/", "" } )
-    public String hello( @RequestParam( defaultValue = " world,zhangmz!" ) String name, HttpSession session ) {
-	System.out.println( session.getId() );
-	return "hello " + name;
+    public ModelAndView hello( @RequestParam( defaultValue = " world,zhangmz!" ) String name, HttpSession session, ModelAndView mav ) {
+    	System.out.println( session.getId() );
+    	mav.setViewName("/dist/views/nav/nav.html");
+    	return mav;
     }
 
     /**
@@ -101,7 +103,7 @@ public class TestController extends BaseController {
      * @param pageIndex      页码
      * @param searchKeyWords 关键字搜索 匹配 name & phone
      *
-     * @return ServerResponse
+     * @return ResponseDTO
      */
     @ApiOperation( value = "手机号、姓名模糊查询", notes = "手机号、姓名模糊查询" )
     @ApiImplicitParams( { @ApiImplicitParam( name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10" ),
@@ -125,7 +127,7 @@ public class TestController extends BaseController {
      *
      * @param uid 用户ID
      *
-     * @return ServerResponse
+     * @return ResponseDTO
      */
     @ApiOperation( value = "用户ID 查询用户信息", notes = "查询用户信息" )
     @ApiImplicitParam( name = "uid", value = "用户ID", paramType = "path", required = true, dataType = "Integer" )

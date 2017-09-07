@@ -39,4 +39,45 @@
 		</where>
 	</select>
 	
+	<select id="selectAuthorPage" resultType="com.gt.hotel.entity.TErpHotelAuthorizationVS" parameterType="Map">
+		SELECT a.id, a.shop_id AS shopId, a.account_id AS accountId, 
+			c.business_name shopName, b.`name` accountName, b.phone accountPhone, GROUP_CONCAT(d.function_name) funcs 
+		FROM t_erp_hotel_authorization a 
+		JOIN t_common_staff b ON a.account_id=b.id 
+		JOIN t_wx_shop c ON a.shop_id=c.id 
+		LEFT JOIN t_erp_hotel_function d ON a.function_id=d.id 
+		<where>
+			<if test="shop_id != null">
+				AND a.shop_id IN  
+				<foreach collection="shop_id" item="sid" open="(" close=")" index="index" separator=",">
+					#{sid} 
+				</foreach>
+			</if>
+		</where> 
+		GROUP BY b.id 
+		<if test="page != null">
+			LIMIT #{page},#{pageSize} 
+		</if>
+	</select>
+	
+	<select id="selectAuthorPageCount" resultType="Integer" parameterType="Map">
+		SELECT COUNT(z.id) 
+		FROM (
+		SELECT b.id 
+		FROM t_erp_hotel_authorization a 
+		JOIN t_common_staff b ON a.account_id=b.id 
+		JOIN t_wx_shop c ON a.shop_id=c.id 
+		LEFT JOIN t_erp_hotel_function d ON a.function_id=d.id 
+		<where>
+			<if test="shop_id != null">
+				AND a.shop_id IN  
+				<foreach collection="shop_id" item="sid" open="(" close=")" index="index" separator=",">
+					#{sid} 
+				</foreach>
+			</if>
+		</where> 
+		GROUP BY b.id
+		) z 
+	</select>
+	
 </mapper>

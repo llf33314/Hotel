@@ -6,6 +6,7 @@ import java.util.Map;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.gt.hotel.entity.TCommonStaff;
 import com.gt.hotel.entity.TErpHotelAuthorization;
+import com.gt.hotel.entity.TErpHotelAuthorizationVS;
 
 /**
  * <p>
@@ -20,5 +21,9 @@ public interface TErpHotelAuthorizationDAO extends BaseMapper<TErpHotelAuthoriza
 	List<TCommonStaff> selectShopAccountPage(Map<String, Object> param);
 
 	Integer selectShopAccountPageCount(Map<String, Object> param);
+
+	List<TErpHotelAuthorizationVS> selectAuthorPage(Map<String, Object> param);
+
+	Integer selectAuthorPageCount(Map<String, Object> param);
 
 }

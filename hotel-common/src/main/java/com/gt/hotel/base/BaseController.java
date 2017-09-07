@@ -1,26 +1,40 @@
 package com.gt.hotel.base;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpSession;
+import com.gt.hotel.entity.BusUser;
 
 /**
- * Controller 抽象类
+ * BaseController
  *
  * @author zhangmz
- * @create 2017/6/20
+ * @create 2017/7/10
  */
 public abstract class BaseController {
-    /** 日志 */
-    protected static final Logger logger = LoggerFactory.getLogger( BaseController.class );
+    /**
+     * 日志
+     */
+    protected Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     /**
      * 获取Sessionid
      *
-     * @return sessionid
+     * @param session HttpSession
+     *
+     * @return
      */
     public String getSessionId( HttpSession session ) {
 	return session.getId();
+    }
+    
+    public BusUser getUser( HttpSession session ) {
+    	BusUser bu = new BusUser();
+    	bu.setId(33);
+    	bu.setName("test user");
+    	bu.setPhone(15012345678L);
+    	return bu;
     }
 }

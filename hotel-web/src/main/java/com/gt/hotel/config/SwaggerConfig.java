@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
     // 扫描包
-    private static final String  BASEPACKAGE         = "com.gt.hotel.controller";
+    private static final String  BASEPACKAGE         = "com.gt.hotel";
     // 标题
     private static final String  TITLE               = "Hotel-ERP API";
     // 描述
@@ -32,9 +32,9 @@ public class SwaggerConfig {
     // 作者信息
     private static final Contact CONTACT             = new Contact( "zhangmz", "http://www.zhangmz.me", "3001417980@qq.com" );
     //
-    private static final String  LICENSE             = "";
+    private static final String  LICENSE             = "swagger-ui";
     //
-    private static final String  LICENSE_URL         = "";
+    private static final String  LICENSE_URL         = "swagger-ui.html#/";
 
     /**
      * 开发API
