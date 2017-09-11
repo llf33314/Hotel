@@ -1,6 +1,3 @@
 ${AnsiColor.BRIGHT_YELLOW}
-////////////////////////////////////////////////////////////////////
-//                          _ooOoo_                               //
-
 
 SpringBootVersion:${spring-boot.formatted-version}
