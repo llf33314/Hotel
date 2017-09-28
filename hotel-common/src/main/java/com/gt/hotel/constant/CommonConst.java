@@ -7,7 +7,18 @@ package com.gt.hotel.constant;
  * @version 1.0.0
  * @date 2017/09/07
  */
-public class HotelCommonConst {
+public final class CommonConst {
+
+    ////////////////////////// 模块类型 /////////////////////////
+
+    /**
+     * 酒店
+     */
+    public static final String MODULE_HOTEL = "hotel";
+    /**
+     * 客房
+     */
+    public static final String MODULE_ROOM  = "room";
 
     ////////////////////////// 活动状态 /////////////////////////
 
