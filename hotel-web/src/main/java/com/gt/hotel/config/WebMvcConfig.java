@@ -1,11 +1,10 @@
 package com.gt.hotel.config;
 
-import com.gt.hotel.filter.RepeatedlyReadFilter;
-import com.gt.hotel.interceptor.RepeatedlyReadInterceptor;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  * SpringMVC 配置类
@@ -41,7 +40,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	super.addCorsMappings(registry);
     }
 
-    @Override
+    /*@Override
     public void addInterceptors(InterceptorRegistry registry) {
 	registry.addInterceptor(new RepeatedlyReadInterceptor()).addPathPatterns("/**");
 	super.addInterceptors(registry);
@@ -54,5 +53,5 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	registration.setFilter(repeatedlyReadFilter);
 	registration.addUrlPatterns("/*");
 	return registration;
-    }
+    }*/
 }

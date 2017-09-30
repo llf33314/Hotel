@@ -27,7 +27,7 @@ public class RepeatedlyReadFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-	logger.debug("复制request.getInputStream流");
+	//logger.debug("复制request.getInputStream流");
 	ServletRequest requestWrapper = null;
 	if (request instanceof HttpServletRequest) {
 	    requestWrapper = new RepeatedlyReadRequestWrapper((HttpServletRequest) request);

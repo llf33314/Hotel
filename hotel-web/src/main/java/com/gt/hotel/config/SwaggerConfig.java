@@ -8,7 +8,6 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
-import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -39,7 +38,7 @@ public class SwaggerConfig {
     //
     private static final String  TERMS_OF_SERVICEURL = "NO terms of service";
     // 作者信息
-    private static final Contact CONTACT             = new Contact("zhangmz", "http://www.zhangmz.me", "3001417980@qq.com");
+    private static final Contact CONTACT             = null;
     //
     private static final String  LICENSE             = "swagger-ui";
     //
@@ -58,19 +57,7 @@ public class SwaggerConfig {
     @Bean
     public Docket appletRestApi() {
 	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("applet").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-			.forCodeGeneration(true).apiInfo(apiInfo()).tags(new Tag("Hotel-Applet", "小译 - Hotel-Applet-API"), getAppletTags()).select()
-			.apis(RequestHandlerSelectors.basePackage(APPLET_PACKAGE)).paths(PathSelectors.any()).build();
-    }
-
-    /**
-     * 定义标签
-     * 标签等于模块：分组管理API接口
-     *
-     * @return Tag[]
-     */
-    private Tag[] getAppletTags() {
-	Tag[] tags = {new Tag("客房管理", "客房管理相关接口"), new Tag("酒店管理", "酒店管理相关接口")};
-	return tags;
+			.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(APPLET_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -81,19 +68,7 @@ public class SwaggerConfig {
     @Bean
     public Docket erpRestApi() {
 	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("erp").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-			.forCodeGeneration(true).apiInfo(apiInfo()).tags(new Tag("Hotel-ERP", "小译 - Hotel-ERP-API"), getAppletTags()).select()
-			.apis(RequestHandlerSelectors.basePackage(ERP_PACKAGE)).paths(PathSelectors.any()).build();
-    }
-
-    /**
-     * 定义标签
-     * 标签等于模块：分组管理API接口
-     *
-     * @return Tag[]
-     */
-    private Tag[] getERPTags() {
-	Tag[] tags = {new Tag("客房管理", "客房管理相关接口"), new Tag("酒店管理", "酒店管理相关接口")};
-	return tags;
+			.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(ERP_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -104,19 +79,7 @@ public class SwaggerConfig {
     @Bean
     public Docket backRestApi() {
 	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("back").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-			.forCodeGeneration(true).apiInfo(apiInfo()).tags(new Tag("Hotel-Back", "小译 - Hotel-Back-API"), getBackTags()).select()
-			.apis(RequestHandlerSelectors.basePackage(BACK_PACKAGE)).paths(PathSelectors.any()).build();
-    }
-
-    /**
-     * 定义标签
-     * 标签等于模块：分组管理API接口
-     *
-     * @return Tag[]
-     */
-    private Tag[] getBackTags() {
-	Tag[] tags = {new Tag("客房管理", "客房管理相关接口"), new Tag("酒店管理", "酒店管理相关接口")};
-	return tags;
+			.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(BACK_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -127,19 +90,7 @@ public class SwaggerConfig {
     @Bean
     public Docket mobileRestApi() {
 	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("mobile").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-			.forCodeGeneration(true).apiInfo(apiInfo()).tags(new Tag("Hotel-Mobile", "小译 - Hotel-Mobile-API"), getMobileTags()).select()
-			.apis(RequestHandlerSelectors.basePackage(MOBILE_PACKAGE)).paths(PathSelectors.any()).build();
-    }
-
-    /**
-     * 定义标签
-     * 标签等于模块：分组管理API接口
-     *
-     * @return Tag[]
-     */
-    private Tag[] getMobileTags() {
-	Tag[] tags = {new Tag("客房管理", "客房管理相关接口"), new Tag("酒店管理", "酒店管理相关接口")};
-	return tags;
+			.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(MOBILE_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {
@@ -151,21 +102,5 @@ public class SwaggerConfig {
 			LICENSE_URL// 网站链接
 	);
     }
-
-
-   /* @Bean
-    public Docket testApi() {
-	return new Docket(DocumentationType.SWAGGER_2)
-			.enable(this.swaggerShow)
-			.groupName("test")
-			.genericModelSubstitutes(DeferredResult.class)
-			.useDefaultResponseMessages(false)
-			.forCodeGeneration(true)
-			.pathMapping("/")// base，最终调用接口后会和paths拼接在一起
-			.select()
-			.paths(or(regex("/test/.*")))//过滤的接口
-			.build()
-			.apiInfo(apiInfo());
-    }*/
 
 }
