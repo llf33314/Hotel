@@ -48,7 +48,7 @@
         <dev.lib.fastjson>1.2.33</dev.lib.fastjson>
         <dev.lib.jjwt>0.7.0</dev.lib.jjwt>
         <dev.lib.lombok>1.16.18</dev.lib.lombok>
-        <dev.lib.cxf>3.1.12</dev.lib.cxf>
+        <dev.lib.joda-time>2.9.9</dev.lib.joda-time>
     </properties>
 
     <parent>
@@ -207,15 +207,55 @@
             <version>${dev.lib.lombok}</version>
         </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi</artifactId>
-		    <version>3.16</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${dev.lib.joda-time}</version>
+        </dependency>
 
     </dependencies>
 
+    <!-- 打包环境工具 -->
+    <profiles>
+        <!-- 默认 开发环境：打包指令 mvn clean package -Dmaven.test.skip=true -P dev -e  -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <!-- 测试环境：打包指令 mvn clean package -Dmaven.test.skip=true -P test -e  -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <activatedProperties>test</activatedProperties>
+            </properties>
+        </profile>
+        <!-- 堡垒环境：打包指令 mvn clean package -Dmaven.test.skip=true -P fort -e  -->
+        <profile>
+            <id>fort</id>
+            <properties>
+                <activatedProperties>fort</activatedProperties>
+            </properties>
+        </profile>
+        <!-- 正式环境：打包指令 mvn clean package -Dmaven.test.skip=true -P prod -e  -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activatedProperties>prod</activatedProperties>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <defaultGoal>package</defaultGoal>
@@ -223,16 +263,27 @@
             <!-- 导入的资源文件，该目录下的文件会copy到classpath根目录下 -->
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>rebel.xml</exclude>
+                    <exclude>application.yml</exclude>
+                    <exclude>application-dev.yml</exclude>
+                    <exclude>application-test.yml</exclude>
+                    <exclude>application-fort.yml</exclude>
+                    <exclude>application-prod.yml</exclude>
+                </excludes>
             </resource>
             <resource>
-                <directory>src/main/java</directory>
+                <directory>src/main/resources</directory>
+                <!-- 是否替换资源中的属性 -->
+                <filtering>true</filtering>
                 <includes>
-                    <include>*.properties</include>
-                    <include>*.xml</include>
-                    <include>*.dtd</include>
-                    <include>*.yml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.dtd</include>
+                    <include>application.yml</include>
+                    <include>application-${activatedProperties}.yml</include>
+                    <include>**/*.ftl</include>
                 </includes>
-                <filtering>false</filtering>
             </resource>
         </resources>
 
@@ -277,10 +328,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <rebelXmlDirectory>${basedir}/out/production</rebelXmlDirectory>
-                    <!-- 指定生成的jrebel.xml放在哪里， 要求放在web应用的 classpath下 -->
-                </configuration>
             </plugin>
         </plugins>
     </build>

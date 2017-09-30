@@ -8,17 +8,9 @@ server:
 ######################## Spring 全局设置 ########################
 spring:
  application:
-  name: zhangmz-SpringBoot
+  name: Hotel
  profiles:
-  active: dev
-#  active: test
-#  active: prod
-# security:
-#  jwt:
-#    tokenExpirationTime: 15 # Number of minutes
-#    refreshTokenExpTime: 60 # Minutes
-#    tokenIssuer: zhangmz
-#    tokenSigningKey: xm8EV6Hy5RMFK4EEACIDAwQus
+  active: @activatedProperties@
  http:
   encoding:
     force: true
