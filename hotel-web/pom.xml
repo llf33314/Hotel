@@ -22,34 +22,24 @@
 
     <build>
         <finalName>hotel</finalName>
-        <resources>
-            <!-- 导入的资源文件，该目录下的文件会copy到classpath根目录下 -->
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>*.properties</include>
-                    <include>*.xml</include>
-                    <include>*.dtd</include>
-                    <include>*.yml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-            <!-- 一定要声明如下配置-->
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
             <!--<plugin>
                 &lt;!&ndash; 合并多个web项目 &ndash;&gt;
                 <groupId>org.apache.maven.plugins</groupId>

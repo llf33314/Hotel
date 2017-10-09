@@ -1,16 +1,16 @@
 package com.gt.hotel.web.service;
 
-import com.gt.hotel.entity.TActivityRoom;
 import com.gt.hotel.base.BaseService;
+import com.gt.hotel.entity.TActivityRoom;
 
 /**
  * <p>
  * 活动与房间关系表 服务类
  * </p>
  *
- * @author 
+ * @author
  * @since 2017-10-09
  */
-public interface TActivityRoomService extends BaseService<TActivityRoom> {
-	
+public interface TActivityRoomService extends BaseService< TActivityRoom > {
+
 }

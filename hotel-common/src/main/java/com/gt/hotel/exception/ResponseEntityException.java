@@ -13,16 +13,16 @@ import com.gt.hotel.enums.ResponseEnums;
  */
 public class ResponseEntityException extends BaseException {
 
-    public ResponseEntityException( String message ) {
-	super( message );
+    public ResponseEntityException(String message) {
+	super(message);
     }
 
-    public ResponseEntityException( int code, String message ) {
-	super( code, message );
+    public ResponseEntityException(int code, String message) {
+	super(code, message);
     }
 
-    public ResponseEntityException( ResponseEnums responseEnums ) {
-	super( responseEnums );
+    public ResponseEntityException(ResponseEnums responseEnums) {
+	super(responseEnums);
     }
 
 }

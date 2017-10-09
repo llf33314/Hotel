@@ -4,11 +4,10 @@
 server:
  port: 8080
  context-path: /
-
 ######################## Spring 全局设置 ########################
 spring:
  application:
-  name: Hotel
+  name: hotel
  profiles:
   active: @activatedProperties@
  http:

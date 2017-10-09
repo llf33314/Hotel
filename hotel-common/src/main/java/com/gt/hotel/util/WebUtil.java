@@ -16,8 +16,8 @@ public class WebUtil {
     private static final String CONTENT_TYPE      = "Content-type";
     private static final String CONTENT_TYPE_JSON = "application/json";
 
-    public static boolean isAjax( HttpServletRequest request ) {
-	return XML_HTTP_REQUEST.equals( request.getHeader( X_REQUESTED_WITH ) );
+    public static boolean isAjax(HttpServletRequest request) {
+	return XML_HTTP_REQUEST.equals(request.getHeader(X_REQUESTED_WITH));
     }
 
     //    public static boolean isAjax(SavedRequest request) {

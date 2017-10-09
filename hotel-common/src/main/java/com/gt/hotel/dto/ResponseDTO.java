@@ -30,21 +30,21 @@ public class ResponseDTO< T > implements Serializable {
     /*泛型数据*/
     private T data;
 
-    protected ResponseDTO( int code ) {
+    protected ResponseDTO(int code) {
 	this.code = code;
     }
 
-    protected ResponseDTO( int code, T data ) {
+    protected ResponseDTO(int code, T data) {
 	this.code = code;
 	this.data = data;
     }
 
-    protected ResponseDTO( int code, String msg ) {
+    protected ResponseDTO(int code, String msg) {
 	this.code = code;
 	this.msg = msg;
     }
 
-    protected ResponseDTO( int code, String msg, T data ) {
+    protected ResponseDTO(int code, String msg, T data) {
 	this.code = code;
 	this.msg = msg;
 	this.data = data;
@@ -56,7 +56,7 @@ public class ResponseDTO< T > implements Serializable {
      * @return ResponseDTO
      */
     public static < T > ResponseDTO< T > createBySuccess() {
-	return createBySuccessMessage( ResponseEnums.SUCCESS.getMsg() );
+	return createBySuccessMessage(ResponseEnums.SUCCESS.getMsg());
     }
 
     /**
@@ -66,8 +66,8 @@ public class ResponseDTO< T > implements Serializable {
      *
      * @return ResponseDTO
      */
-    public static < T > ResponseDTO< T > createBySuccess( T data ) {
-	return createBySuccess( null, data );
+    public static < T > ResponseDTO< T > createBySuccess(T data) {
+	return createBySuccess(null, data);
     }
 
     /**
@@ -77,8 +77,8 @@ public class ResponseDTO< T > implements Serializable {
      *
      * @return ResponseDTO
      */
-    public static < T > ResponseDTO< T > createBySuccessMessage( String msg ) {
-	return createBySuccess( msg, null );
+    public static < T > ResponseDTO< T > createBySuccessMessage(String msg) {
+	return createBySuccess(msg, null);
     }
 
     /**
@@ -89,8 +89,8 @@ public class ResponseDTO< T > implements Serializable {
      *
      * @return ResponseDTO
      */
-    public static < T > ResponseDTO< T > createBySuccess( String msg, T data ) {
-	return createBySuccessCodeMessage( ResponseEnums.SUCCESS.getCode(), msg, data );
+    public static < T > ResponseDTO< T > createBySuccess(String msg, T data) {
+	return createBySuccessCodeMessage(ResponseEnums.SUCCESS.getCode(), msg, data);
     }
 
     /**
@@ -102,8 +102,8 @@ public class ResponseDTO< T > implements Serializable {
      *
      * @return ResponseDTO
      */
-    public static < T > ResponseDTO< T > createBySuccessCodeMessage( int code, String msg, T data ) {
-	return new ResponseDTO<>( code, msg, data );
+    public static < T > ResponseDTO< T > createBySuccessCodeMessage(int code, String msg, T data) {
+	return new ResponseDTO<>(code, msg, data);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ResponseDTO< T > implements Serializable {
      * @return ResponseDTO
      */
     public static < T > ResponseDTO< T > createByError() {
-	return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getMsg() );
+	return createByErrorCodeMessage(ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getMsg());
     }
 
     /**
@@ -122,8 +122,8 @@ public class ResponseDTO< T > implements Serializable {
      *
      * @return ResponseDTO
      */
-    public static < T > ResponseDTO< T > createByErrorMessage( String errorMessage ) {
-	return createByErrorCodeMessage( ResponseEnums.ERROR.getCode(), errorMessage );
+    public static < T > ResponseDTO< T > createByErrorMessage(String errorMessage) {
+	return createByErrorCodeMessage(ResponseEnums.ERROR.getCode(), errorMessage);
     }
 
     /**
@@ -134,8 +134,8 @@ public class ResponseDTO< T > implements Serializable {
      *
      * @return ResponseDTO
      */
-    public static < T > ResponseDTO< T > createByErrorCodeMessage( int errorCode, String errorMessage ) {
-	return new ResponseDTO<>( errorCode, errorMessage );
+    public static < T > ResponseDTO< T > createByErrorCodeMessage(int errorCode, String errorMessage) {
+	return new ResponseDTO<>(errorCode, errorMessage);
     }
 
     //使之不在json序列化结果当中，作用用于判断

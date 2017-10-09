@@ -28,8 +28,8 @@ public abstract class BaseController {
      *
      * @return
      */
-    public String getSessionId( HttpSession session ) {
-	return session.getId();
+    public String getSessionId(HttpSession session) {
+        return session.getId();
     }
 
     /**
@@ -50,12 +50,12 @@ public abstract class BaseController {
      *
      * @param result BindingResult
      */
-    protected void InvalidParameter( BindingResult result ) {
-        if ( result.hasErrors() ) {
+    protected void InvalidParameter(BindingResult result) {
+        if (result.hasErrors()) {
             List< ObjectError > errorList = result.getAllErrors();
-            for ( ObjectError error : errorList ) {
-                logger.warn( error.getDefaultMessage() );
-                throw new ResponseEntityException( error.getDefaultMessage() );
+            for (ObjectError error : errorList) {
+                logger.warn(error.getDefaultMessage());
+                throw new ResponseEntityException(error.getDefaultMessage());
             }
         }
     }
