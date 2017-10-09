@@ -1,4 +1,4 @@
-package com.gt.hotel.config;
+package com.gt.hotel.config.redis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +9,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 import org.springframework.session.web.http.DefaultCookieSerializer;
 
 /**
- * RedisSession配置Config
- * 默认session超时时间 1小时 3600秒
+ * RedisSession配置Config 默认session超时时间 1小时 3600秒
  *
  * @author zhangmz
  * @version 1.0.0
@@ -20,8 +19,10 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 @EnableRedisHttpSession( maxInactiveIntervalInSeconds = 3600 )
 public class RedisSessionConfig {
 
-    /** 日志 */
-    private static final Logger LOG = LoggerFactory.getLogger( RedisSessionConfig.class );
+    /**
+     * 日志
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(RedisSessionConfig.class);
     // 注入配置属性 根据环境配置切换
     @Value( "${redisSession.cookieName}" )
     private String cookieName;
@@ -37,11 +38,11 @@ public class RedisSessionConfig {
      */
     @Bean( name = "defaultCookieSerializer" )
     public DefaultCookieSerializer defaultCookieSerializer() {
-	LOG.debug( "domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath );
+	LOG.debug("domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath);
 	DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
-	cookieSerializer.setDomainName( domainName );
-	cookieSerializer.setCookieName( cookieName );
-	cookieSerializer.setCookiePath( cookiePath );
+	//	cookieSerializer.setDomainName( domainName );
+	cookieSerializer.setCookieName(cookieName);
+	cookieSerializer.setCookiePath(cookiePath);
 	return cookieSerializer;
     }
 

@@ -205,25 +205,11 @@ public class TErpHotelFoodOrder extends Model<TErpHotelFoodOrder> {
 
 	@Override
 	public String toString() {
-		return "TErpHotelFoodOrder{" +
-			"id=" + id +
-			", hotelId=" + hotelId +
-			", busId=" + busId +
-			", number=" + number +
-			", price=" + price +
-			", orderNumber=" + orderNumber +
-			", bookName=" + bookName +
-			", bookPhone=" + bookPhone +
-			", createTime=" + createTime +
-			", arrivalTime=" + arrivalTime +
-			", payType=" + payType +
-			", payTime=" + payTime +
-			", payStatus=" + payStatus +
-			", orderStatus=" + orderStatus +
-			", remark=" + remark +
-			", source=" + source +
-			", available=" + available +
-			"}";
+		return "TErpHotelFoodOrder [id=" + id + ", hotelId=" + hotelId + ", busId=" + busId + ", number=" + number
+				+ ", price=" + price + ", orderNumber=" + orderNumber + ", bookName=" + bookName + ", bookPhone="
+				+ bookPhone + ", createTime=" + createTime + ", arrivalTime=" + arrivalTime + ", payType=" + payType
+				+ ", payTime=" + payTime + ", payStatus=" + payStatus + ", orderStatus=" + orderStatus + ", remark="
+				+ remark + ", source=" + source + ", available=" + available + "]";
 	}
 
 	public Integer getId() {
@@ -361,4 +347,5 @@ public class TErpHotelFoodOrder extends Model<TErpHotelFoodOrder> {
 	public void setSource(String source) {
 		this.source = source;
 	}
+	
 }

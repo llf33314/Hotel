@@ -23,13 +23,13 @@ public class TErpHotelRoomOrderEx {
 	String name;
 	
 	@ApiModelProperty("预定人")
-	String book_name;
+	String bookName;
 	
 	@ApiModelProperty("预订电话")
 	String book_phone;
 	
 	@ApiModelProperty("入住时间")
-	String check_in_time;
+	String checkInTime;
 
 	@ApiModelProperty("离店时间")
 	String check_out_time;
@@ -52,6 +52,14 @@ public class TErpHotelRoomOrderEx {
 	@ApiModelProperty("支付类型")
 	Integer pay_type;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -60,12 +68,12 @@ public class TErpHotelRoomOrderEx {
 		this.name = name;
 	}
 
-	public String getBook_name() {
-		return book_name;
+	public String getBookName() {
+		return bookName;
 	}
 
-	public void setBook_name(String book_name) {
-		this.book_name = book_name;
+	public void setBookName(String bookName) {
+		this.bookName = bookName;
 	}
 
 	public String getBook_phone() {
@@ -76,12 +84,12 @@ public class TErpHotelRoomOrderEx {
 		this.book_phone = book_phone;
 	}
 
-	public String getCheck_in_time() {
-		return check_in_time;
+	public String getCheckInTime() {
+		return checkInTime;
 	}
 
-	public void setCheck_in_time(String check_in_time) {
-		this.check_in_time = check_in_time;
+	public void setCheckInTime(String checkInTime) {
+		this.checkInTime = checkInTime;
 	}
 
 	public String getCheck_out_time() {
@@ -140,21 +148,14 @@ public class TErpHotelRoomOrderEx {
 		this.pay_type = pay_type;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	@Override
 	public String toString() {
-		return "TErpHotelRoomOrderEx [id=" + id + ", name=" + name + ", book_name=" + book_name + ", book_phone="
-				+ book_phone + ", check_in_time=" + check_in_time + ", check_out_time=" + check_out_time
+		return "TErpHotelRoomOrderEx [id=" + id + ", name=" + name + ", bookName=" + bookName + ", book_phone="
+				+ book_phone + ", checkInTime=" + checkInTime + ", check_out_time=" + check_out_time
 				+ ", check_in_standard=" + check_in_standard + ", price=" + price + ", quantity=" + quantity
 				+ ", order_status=" + order_status + ", pay_status=" + pay_status + ", pay_type=" + pay_type + "]";
 	}
 
+	
 	
 }

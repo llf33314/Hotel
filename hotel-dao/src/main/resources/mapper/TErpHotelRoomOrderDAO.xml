@@ -32,7 +32,7 @@
     </sql>
 
 	<select id="selectRoomOrderExport" parameterType="Map" resultType="com.gt.hotel.entity.TErpHotelRoomOrderEx">
-		SELECT a.id, c.`name`, b.book_name, b.book_phone, a.check_in_time, a.check_out_time, a.check_in_standard, a.price, a.quantity, a.order_status, a.pay_status, a.pay_type 
+		SELECT a.id, c.`name`, b.book_name bookName, b.book_phone, a.check_in_time checkInTime, a.check_out_time, a.check_in_standard, a.price, a.quantity, a.order_status, a.pay_status, a.pay_type 
 		FROM t_erp_hotel_room_order a 
 		LEFT JOIN t_erp_hotel_room_order_guest b ON a.id = b.order_id 
 		LEFT JOIN t_erp_hotel c ON a.hotel_id = c.id 

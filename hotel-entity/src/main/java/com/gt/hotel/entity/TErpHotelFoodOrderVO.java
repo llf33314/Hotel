@@ -53,7 +53,7 @@ public class TErpHotelFoodOrderVO extends TErpHotelFoodOrder {
 
 	@Override
 	public String toString() {
-		return "TErpHotelFoodOrderVO [hotelName=" + hotelName + ", companyName=" + companyName + "]";
+		return super.toString() + "TErpHotelFoodOrderVO [hotelName=" + hotelName + ", companyName=" + companyName + "]";
 	}
     
 }

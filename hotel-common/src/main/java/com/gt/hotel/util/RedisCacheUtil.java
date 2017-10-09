@@ -82,6 +82,7 @@ public class RedisCacheUtil {
 
     /**
      * 写入缓存
+     * 默认缓存：7200秒 2小时
      *
      * @param key   key
      * @param value value

@@ -1,5 +1,8 @@
-package com.gt.hotel.config;
+package com.gt.hotel.config.redis;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -10,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,14 +28,24 @@ import java.util.concurrent.ConcurrentHashMap;
 @Configuration
 @EnableCaching
 public class RedisCacheConfig extends CachingConfigurerSupport {
-    /** 日志 */
-    private static final Logger LOG = LoggerFactory.getLogger( RedisCacheConfig.class );
+
+    /**
+     * 日志
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(RedisCacheConfig.class);
 
     @Bean
-    public RedisTemplate< String,String > redisTemplate( RedisConnectionFactory cf ) {
-	LOG.debug( "注入StringRedisTemplate" );
-	RedisTemplate< String,String > redisTemplate = new RedisTemplate<>();
-	redisTemplate.setConnectionFactory( cf );
+    public RedisTemplate< String, String > redisTemplate(RedisConnectionFactory cf) {
+	LOG.debug("注入StringRedisTemplate");
+	RedisTemplate< String, String > redisTemplate = new RedisTemplate<>();
+	redisTemplate.setConnectionFactory(cf);
+	Jackson2JsonRedisSerializer< Object > jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+	ObjectMapper om = new ObjectMapper();
+	om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+	om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+	jackson2JsonRedisSerializer.setObjectMapper(om);
+	redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);//如果key是String 需要配置一下StringSerializer,不然key会乱码 /XX/XX
+	redisTemplate.afterPropertiesSet();
 	return redisTemplate;
     }
 

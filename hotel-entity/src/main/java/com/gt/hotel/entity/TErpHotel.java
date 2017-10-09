@@ -3,6 +3,8 @@ package com.gt.hotel.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -57,6 +59,7 @@ public class TErpHotel extends Model<TErpHotel> {
     /**
      * 门店ID
      */
+	@NotNull(message = "门店ID不能为空")
 	@ApiModelProperty(value = "门店ID")
 	@TableField("shop_id")
 	private Integer shopId;

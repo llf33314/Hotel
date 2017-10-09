@@ -10,7 +10,7 @@ import com.gt.hotel.enums.ResponseEnums;
  * @date 2017/08/03
  * @since 1.0.0
  */
-public class BusinessException extends SystemException {
+public class BusinessException extends BaseException {
 
     public BusinessException( String message ) {
         super( message );

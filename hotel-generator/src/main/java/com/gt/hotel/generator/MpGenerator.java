@@ -26,11 +26,11 @@ public class MpGenerator {
     // 生成*.java 的文件路径
     public static final  String   outPutJavaModel    = outPutBaseDir + "src/main/java";
     // 需要生成的表
-    public static final  String[] generatorTableName = new String[] { "Bus_User" };
+    public static final  String[] generatorTableName = new String[] {"t_hotel_file"};
     // 作者
     private static final String   author             = "zhangmz";
     // 去除表前缀 例如：bus_user 填入bus 生成的 user
-    public static final  String[] tablePrefix        = new String[] {};
+    public static final  String[] tablePrefix        = new String[] {"t"};
     // 生成的包路径
     public static final  String   packagePath        = "com.gt.hotel.generator";
     public static final  String   moduleName         = "";
@@ -41,7 +41,7 @@ public class MpGenerator {
     // Mapper.xml Mapper 后缀修改 DAO
     public static final  String   setXmlName         = "%sDAO";
     // Service.java
-    public static final  String   setServiceName     = "%sService";
+    public static final  String   setServiceName     = "I%sService";
     // ServiceImpl.java
     public static final  String   setServiceImplName = "%sServiceImpl";
     // 数据库方言
@@ -49,11 +49,11 @@ public class MpGenerator {
     // 驱动
     public static final  String   driverName         = "com.mysql.jdbc.Driver";
     // url
-    public static final  String   url                = "jdbc:mysql://127.0.0.1:3306/springbootdemo?characterEncoding=utf8";
+    public static final  String   url                = "jdbc:mysql://113.106.202.51:3306/gt_hotel?characterEncoding=utf8";
     // 数据库用户名
-    public static final  String   username           = "zhangmz";
+    public static final  String   username           = "gt_hotel";
     // 密码
-    public static final  String   password           = "zhangmz123";
+    public static final  String   password           = "gt123456";
 
     public static final String baseService = "com.gt.hotel.base.BaseService";
 
@@ -167,6 +167,6 @@ public class MpGenerator {
 	mpg.execute();
 
 	// 打印注入设置，这里演示模板里面怎么获取注入内容【可无】
-	System.err.println( mpg.getCfg().getMap().get( "abc" ) );
+	logger.info("输出：{}", mpg.getCfg().getMap().get("abc"));
     }
 }
