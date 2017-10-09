@@ -1,22 +1,33 @@
 package com.gt.hotel.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
+import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
+import com.gt.hotel.entity.HotelWsWxShopInfoExtend;
 
+@Component
 public class WXMPApiUtil {
 	
-	private static final String SIGN_KEY = "WXMP2017";
+	@Value("${wxmp.api.sign}")
+	private String SIGN_KEY;
 	
 	/**
 	 * 会员签名 参考 https://member.deeptel.com.cn/swagger-ui.html#/
 	 */
-	private static final String MEMBER_SIGN_KEY = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
+	@Value("${wxmp.api.membersign}")
+	private String MEMBER_SIGN_KEY;
 	
-	private static final String SERVER_URL = "https://deeptel.com.cn";
+	@Value("${wxmp.api.serverurl}")
+	private String SERVER_URL;
 	
 	/**
 	 * 获取字典信息
@@ -29,6 +40,19 @@ public class WXMPApiUtil {
 		paramObj.put("style", style);
 		String url = SERVER_URL + "/8A5DA52E/dictApi/getDictApi.do";
 		String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
+		return result;
+	}
+	
+	/**
+	 * 对照李逢喜的接口文档
+	 * @param param 参数
+	 * @param _url 路径
+	 * @return
+	 * @throws SignException
+	 */
+	private JSONObject getLApi(JSONObject param, String _url) throws SignException{
+		String url = SERVER_URL + _url;
+		JSONObject result = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(param), url, JSONObject.class, SIGN_KEY);
 		return result;
 	}
 	
@@ -171,6 +195,23 @@ public class WXMPApiUtil {
 		}
 		return json;
 	}
+
+	/**
+	 * 根据商家ID获取所有门店
+	 * @param busid 商家ID
+	 * @return
+	 * @throws SignException 
+	 */
+	public List<HotelWsWxShopInfoExtend> queryWxShopByBusId(Integer busid) throws SignException {
+		JSONObject param = new JSONObject();
+		List<HotelWsWxShopInfoExtend> shops = null;
+		param.put("reqdata", busid);
+		JSONObject json = getLApi(param, "/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do");
+		if(json.getBoolean("success")){
+			shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(), HotelWsWxShopInfoExtend.class);
+		}
+		return shops;
+	}
 	
 	/**
 	 * 查询会员
@@ -216,6 +257,7 @@ public class WXMPApiUtil {
 		return json;
 	}
 	
+	
 	public static void main(String[] args) {
 		try {
 			WXMPApiUtil u = new WXMPApiUtil();
@@ -224,7 +266,7 @@ public class WXMPApiUtil {
 //			System.err.println(socketPush("night", "test"));
 //			System.err.println(socketPush("night", "test"));
 //			System.err.println(u.getShopById(45));
-			System.err.println(u.findCardByMembeId(1, 126));
+			System.err.println(u.queryWxShopByBusId(33));
 		} catch (SignException e) {
 			e.printStackTrace();
 		}

@@ -22,20 +22,32 @@ import java.util.*;
 public class MpGenerator {
 
     // 项目的绝对路径
-    public static final  String   outPutBaseDir      = "/Users/zhangmz/work/GT/duofee/hotel/hotel-generator/";
+    public static final  String   outPutBaseDir      = "C:\\Users\\Administrator\\Desktop\\";
     // 生成*.java 的文件路径
     public static final  String   outPutJavaModel    = outPutBaseDir + "src/main/java";
     // 需要生成的表
-    public static final  String[] generatorTableName = new String[] {"t_hotel_file"};
+    public static final  String[] generatorTableName = new String[] { 
+    		"sys_dictionary",
+    		"sys_dictionary_type",
+    		"t_activity",
+    		"t_activity_detail",
+    		"t_activity_room",
+    		"t_file_record",
+    		"t_hotel",
+    		"t_hotel_setting",
+    		"t_infrastructure",
+    		"t_infrastructure_relation",
+    		"t_room",
+    		"t_room_category",};
     // 作者
-    private static final String   author             = "zhangmz";
+    private static final String   author             = "";
     // 去除表前缀 例如：bus_user 填入bus 生成的 user
     public static final  String[] tablePrefix        = new String[] {"t"};
     // 生成的包路径
-    public static final  String   packagePath        = "com.gt.hotel.generator";
+    public static final  String   packagePath        = "com.gt.hotel";
     public static final  String   moduleName         = "";
     // 生成mapper.xml 文件路径
-    public static final  String   generatorXmlPath   = outPutBaseDir + "src/main/java/com/gt/hotel/generator/xml/";
+    public static final  String   generatorXmlPath   = outPutBaseDir + "src/main/java/com/gt/hotel/mapper/";
     // Mapper.java Mapper 后缀修改 DAO
     public static final  String   setMapperName      = "%sDAO";
     // Mapper.xml Mapper 后缀修改 DAO
@@ -49,17 +61,11 @@ public class MpGenerator {
     // 驱动
     public static final  String   driverName         = "com.mysql.jdbc.Driver";
     // url
-    public static final  String   url                = "jdbc:mysql://113.106.202.51:3306/gt_hotel?characterEncoding=utf8";
+    public static final  String   url                = "jdbc:mysql://127.0.0.1:3306/gt_hotel?characterEncoding=utf8";
     // 数据库用户名
-    public static final  String   username           = "gt_hotel";
+    public static final  String   username           = "root";
     // 密码
-    public static final  String   password           = "gt123456";
-
-    public static final String baseService = "com.gt.hotel.base.BaseService";
-
-    public static final String baseServiceImpl = "com.gt.hotel.base.BaseServiceImpl";
-
-    public static final String baseController = "com.gt.hotel.base.BaseController";
+    public static final  String   password           = "123456";
 
     private static Logger logger = LoggerFactory.getLogger( MpGenerator.class );
 
@@ -92,7 +98,7 @@ public class MpGenerator {
 					    // 自定义数据库表字段类型转换【可选】
 					    @Override
 					    public DbColumnType processTypeConvert( String fieldType ) {
-						//						logger.info( "转换类型：{}", fieldType );
+						logger.info( "转换类型：{}", fieldType );
 						// if ( fieldType.toLowerCase().contains( "tinyint" ) ) {
 						//    return DbColumnType.BOOLEAN;
 						// }
@@ -102,7 +108,7 @@ public class MpGenerator {
 			// 策略配置
 			new StrategyConfig()
 					// .setCapitalMode(true)// 全局大写命名
-					.setDbColumnUnderline( true )//全局下划线命名
+					// .setDbColumnUnderline(true)//全局下划线命名
 					.setTablePrefix( tablePrefix )// 此处可以修改为您的表前缀
 					.setNaming( NamingStrategy.underline_to_camel )// 表名生成策略
 					.setInclude( generatorTableName ) // 需要生成的表
@@ -112,19 +118,19 @@ public class MpGenerator {
 					// 自定义实体，公共字段
 					.setSuperEntityColumns( new String[] {} ).setTableFillList( tableFillList )
 					// 自定义 mapper 父类
-					//					.setSuperMapperClass( "com.baomidou.mybatisplus.mapper.BaseMapper" )
+					.setSuperMapperClass( "com.baomidou.mybatisplus.mapper.BaseMapper" )
 					// 自定义 service 父类
-					.setSuperServiceClass( baseService )
+					.setSuperServiceClass( "com.gt.hotel.base.BaseService" )
 					// 自定义 service 实现类父类
-					.setSuperServiceImplClass( baseServiceImpl )
+					.setSuperServiceImplClass( "com.gt.hotel.base.BaseServiceImpl" )
 					// 自定义 controller 父类
-					.setSuperControllerClass( baseController )
+					.setSuperControllerClass( "com.gt.hotel.base.BaseController" )
 					// 【实体】是否生成字段常量（默认 false）
 					// public static final String ID = "test_id";
 					// .setEntityColumnConstant(true)
 					// 【实体】是否为构建者模型（默认 false）
 					// public User setName(String name) {this.name = name; return this;}
-					//					.setEntityBuilderModel( true )
+					//                        .setEntityBuilderModel(true)
 					// 【实体】是否为lombok模型（默认 false）<a href="https://projectlombok.org/">document</a>
 					.setEntityLombokModel( true )
 			// Boolean类型字段是否移除is前缀处理

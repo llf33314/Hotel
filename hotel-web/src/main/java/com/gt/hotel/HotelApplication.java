@@ -26,5 +26,5 @@ public class HotelApplication extends SpringBootServletInitializer {
     public static void main( String[] args ) {
     	SpringApplication.run( HotelApplication.class, args );
     }
-    
+
 }

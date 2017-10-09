@@ -35,9 +35,29 @@ public class ExportUtil {
         styleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         for (int i=0;i<data.size();i++) {
         	_class = (Class) data.get(i).getClass();
+        	Field[] field = _class.getDeclaredFields();
             HSSFRow row = sheet.createRow(i + 1);
             for(int j=0;j<titles.length;j++){
-            	String c = RecursivelyClass(new ExportUtil().new TempClass("", _class, contentName[j], data.get(i), fieldPprocessing));
+            	String c = new String();
+            	for(Field f : field){
+            		f.setAccessible(true);
+            		if(contentName[j].equals(f.getName()) ){
+            			c = f.get(data.get(i)) != null ? f.get(data.get(i)).toString() : "";
+            			c = fieldPprocessing.fieldPprocessing(c, f.getName());
+            		}else{
+            			//
+            			Class _superClass = _class.getSuperclass();
+            			Field[] hyperField = _superClass.getDeclaredFields();
+            			for(Field hf : hyperField){
+                    		hf.setAccessible(true);
+                    		if(contentName[j].equals(hf.getName()) ){
+                    			c = hf.get(data.get(i)) != null ? hf.get(data.get(i)).toString() : "";
+                    			c = fieldPprocessing.fieldPprocessing(c, hf.getName());
+                    		}
+                    	}
+            			//
+            		}
+            	}
             	HSSFCell cell = row.createCell(j);
             	cell.setCellValue(c);
             	cell.setCellStyle(styleCenter);
@@ -47,107 +67,4 @@ public class ExportUtil {
 		return wb;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unused" })
-	private static String RecursivelyClass(String motono, Class cls, String colName, Object colValue, ExcelUtil fieldPprocessing) throws IllegalArgumentException, IllegalAccessException{
-		Field[] field = cls.getDeclaredFields();
-		for(Field f : field){
-    		f.setAccessible(true);
-    		if(colName.equals(f.getName())){
-    			motono = f.get(colValue) != null ? f.get(colValue).toString() : "";
-    			motono = fieldPprocessing.fieldPprocessing(motono, f.getName());
-    		}else{
-    			Class superClass = cls.getSuperclass();
-    			if(superClass != null) motono = RecursivelyClass(new ExportUtil().new TempClass(motono, superClass, colName, colValue, fieldPprocessing));
-    		}
-    	}
-		return motono;
-	}
-	
-	@SuppressWarnings({ "rawtypes" })
-	private static String RecursivelyClass(TempClass tempClass) throws IllegalArgumentException, IllegalAccessException{
-		String c = tempClass.getMotono();
-		Field[] field = tempClass.getCls().getDeclaredFields();
-		for(Field f : field){
-			f.setAccessible(true);
-			if(tempClass.getColName().equals(f.getName())){
-				c = f.get(tempClass.getColValue()) != null ? f.get(tempClass.getColValue()).toString() : "";
-				c = tempClass.getFieldPprocessing().fieldPprocessing(c, f.getName());
-			}else{
-				if(tempClass.getCls() != null){
-					Class superClass = tempClass.getCls().getSuperclass();
-					tempClass.setCls(superClass);
-					if(superClass != null) c = RecursivelyClass(tempClass);
-				}
-			}
-		}
-		return c;
-	}
-	
-	
-	class TempClass {
-		String motono;
-		@SuppressWarnings("rawtypes")
-		Class cls;
-		String colName;
-		Object colValue;
-		ExcelUtil fieldPprocessing;
-		
-		public TempClass() {
-		}
-
-		public TempClass(String motono, @SuppressWarnings("rawtypes") Class cls, String colName, Object colValue, ExcelUtil fieldPprocessing) {
-			super();
-			this.motono = motono;
-			this.cls = cls;
-			this.colName = colName;
-			this.colValue = colValue;
-			this.fieldPprocessing = fieldPprocessing;
-		}
-
-		@SuppressWarnings("rawtypes")
-		public Class getCls() {
-			return cls;
-		}
-
-		@SuppressWarnings("rawtypes")
-		public void setCls(Class cls) {
-			this.cls = cls;
-		}
-
-		public String getColName() {
-			return colName;
-		}
-
-		public void setColName(String colName) {
-			this.colName = colName;
-		}
-
-		public Object getColValue() {
-			return colValue;
-		}
-
-		public void setColValue(Object colValue) {
-			this.colValue = colValue;
-		}
-
-		public ExcelUtil getFieldPprocessing() {
-			return fieldPprocessing;
-		}
-
-		public void setFieldPprocessing(ExcelUtil fieldPprocessing) {
-			this.fieldPprocessing = fieldPprocessing;
-		}
-
-		public String getMotono() {
-			return motono;
-		}
-
-		public void setMotono(String motono) {
-			this.motono = motono;
-		}
-	}
-	
 }
-
-
-

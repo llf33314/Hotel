@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TActivityDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TActivity">
+		<id column="id" property="id" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="external_number" property="externalNumber" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="available_time" property="availableTime" />
+		<result column="restriction_enable" property="restrictionEnable" />
+		<result column="restriction_number" property="restrictionNumber" />
+		<result column="show_room_enable" property="showRoomEnable" />
+		<result column="number_threshold" property="numberThreshold" />
+		<result column="activity_rules" property="activityRules" />
+		<result column="publish_status" property="publishStatus" />
+		<result column="mark_modified" property="markModified" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, hotel_id AS hotelId, external_number AS externalNumber, begin_time AS beginTime, end_time AS endTime, available_time AS availableTime, restriction_enable AS restrictionEnable, restriction_number AS restrictionNumber, show_room_enable AS showRoomEnable, number_threshold AS numberThreshold, activity_rules AS activityRules, publish_status AS publishStatus, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
+    </sql>
+
+</mapper>
