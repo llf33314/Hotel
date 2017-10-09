@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.async.DeferredResult;
+
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -58,16 +59,6 @@ public class SwaggerConfig {
 	public Docket appletRestApi() {
 		return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("applet").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
 				.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(APPLET_PACKAGE)).paths(PathSelectors.any()).build();
-	}
-	
-	@Bean
-	public Docket mobileApi() {
-		return createDocket("酒店移动端", MOBILE);
-	}
-	
-	@Bean
-	public Docket backstageApi() {
-		return createDocket("酒店后台", BASEPACKAGE);
 	}
 	
 	/**

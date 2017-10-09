@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.HotelWsWxShopInfoExtend;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.requestEntity.HotelInsertOb;
 import com.gt.hotel.requestEntity.HotelPage;
 import com.gt.hotel.responseEntity.HotelList;
 import com.gt.hotel.responseEntity.HotelShopInfo;
@@ -50,7 +52,7 @@ public class HotelController extends BaseController{
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO shopR(HttpSession session) {
 		try {
-			Integer busid = getUser(session).getId();
+			Integer busid = getLoginUserId(session);
 			List<HotelWsWxShopInfoExtend> shops = WXMPApiUtil.queryWxShopByBusId(busid);
 			List<HotelShopInfo> s = new ArrayList<>();
 			for(HotelWsWxShopInfoExtend shop: shops){
@@ -77,7 +79,7 @@ public class HotelController extends BaseController{
 	public ResponseDTO hotelR(@RequestBody @ApiParam(value = "分页请求对象") HotelPage hpage, HttpSession session) {
 		Page<HotelList> page = new Page<>(hpage.getPage(), hpage.getPageSize());
 		try {
-			Integer busid = getUser(session).getId();
+			Integer busid = getLoginUserId(session);
 			page = hotelService.queryHotelHome(busid, page);
 			return ResponseDTO.createBySuccess(page);
 		} catch (Exception e) {
@@ -86,7 +88,22 @@ public class HotelController extends BaseController{
 		}
 	}
 	
-	
+	@ApiOperation(value = "新增or更新酒店", notes = "新增or更新酒店")
+	@ApiResponses({@ApiResponse(code = 0, message = "", response = HotelList.class)})
+	@PostMapping("editHotel")
+	@SuppressWarnings("rawtypes")
+	public ResponseDTO hotelCU(@RequestBody @ApiParam(value = "新增or更新酒店请求对象") HotelInsertOb hotel, HttpSession session, BindingResult bindingResult) {
+		InvalidParameter(bindingResult);
+		try {
+			Integer busid = getLoginUserId(session);
+			boolean i = hotelService.editHotel(busid, hotel);
+			if(i) return ResponseDTO.createBySuccess();
+			else return ResponseDTO.createByError();
+		} catch (Exception e) {
+			logger.error("backstage hotel queryHotel error", e);
+		    throw new ResponseEntityException(ResponseEnums.ERROR);
+		}
+	}
 	
 	
 	

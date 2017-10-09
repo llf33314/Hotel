@@ -1,5 +1,6 @@
 package com.gt.hotel.web.serviceVO.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.dao.THotelDAO;
+import com.gt.hotel.entity.THotel;
+import com.gt.hotel.requestEntity.HotelInsertOb;
 import com.gt.hotel.responseEntity.HotelList;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.serviceVO.HotelService;
@@ -40,6 +43,24 @@ public class HotelServiceImpl implements HotelService{
 		page.setTotal(total);
 		page.setRecords(list);
 		return page;
+	}
+
+	@Override
+	public boolean editHotel(Integer busid, HotelInsertOb hotel) {
+		THotel e = new THotel();
+		e.setId(hotel.getHotelId());
+		e.setName(hotel.getName());
+		e.setPhone(hotel.getTel());
+		e.setAddress(hotel.getAddr());
+		e.setLongitude(hotel.getLongitude());
+		e.setLatitude(hotel.getLatitude());
+		e.setDesc(hotel.getDesc());
+		e.setStoreId(hotel.getShopid());
+		e.setCreatedBy(busid);
+		e.setCreatedAt(new Date());
+		e.setUpdatedBy(busid);
+		e.setUpdatedAt(new Date());
+		return tHotelService.insertOrUpdate(e);
 	}
 	
 }

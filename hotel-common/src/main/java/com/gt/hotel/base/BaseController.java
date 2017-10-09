@@ -1,11 +1,15 @@
 package com.gt.hotel.base;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
-import com.gt.hotel.entity.BusUser;
+import com.gt.hotel.exception.ResponseEntityException;
 
 /**
  * BaseController
@@ -17,7 +21,7 @@ public abstract class BaseController {
     /**
      * 日志
      */
-    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     /**
      * 获取Sessionid
@@ -50,4 +54,20 @@ public abstract class BaseController {
 	//       Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
 	return 33;
     }
+    
+    /**
+     * 参数校验
+     *
+     * @param result BindingResult
+     */
+    protected void InvalidParameter( BindingResult result ) {
+        if ( result.hasErrors() ) {
+            List< ObjectError > errorList = result.getAllErrors();
+            for ( ObjectError error : errorList ) {
+                logger.warn( error.getDefaultMessage() );
+                throw new ResponseEntityException( error.getDefaultMessage() );
+            }
+        }
+    }
+    
 }

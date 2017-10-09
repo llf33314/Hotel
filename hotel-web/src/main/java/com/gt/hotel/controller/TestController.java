@@ -1,16 +1,7 @@
 package com.gt.hotel.controller;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.gt.hotel.base.BaseController;
-import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.entity.BusUser;
-import com.gt.hotel.web.service.BusUserService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +10,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.hotel.base.BaseController;
+import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.BusUser;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * API 参考类
@@ -31,8 +30,8 @@ import java.util.List;
 @Controller
 public class TestController extends BaseController {
 
-    @Autowired
-    private BusUserService busUserService;
+//    @Autowired
+//    private BusUserService busUserService;
 
     /**
      * json
@@ -92,7 +91,7 @@ public class TestController extends BaseController {
 	    busUserWrapper = new EntityWrapper<>();
 	    busUserWrapper.like( "phone", phone.toString() );
 	}
-	Integer count = this.busUserService.selectCount( busUserWrapper );
+	Integer count = /*this.busUserService.selectCount( busUserWrapper )*/0;
 	return ResponseDTO.createBySuccess( count );
     }
 
@@ -119,7 +118,7 @@ public class TestController extends BaseController {
 	Wrapper< BusUser > busUserWrapper = new EntityWrapper<>();
 	busUserWrapper.like( "phone", searchKeyWords );
 	busUserWrapper.like( "name", searchKeyWords );
-	return ResponseDTO.createBySuccess( this.busUserService.selectPage( page, busUserWrapper ) );
+	return ResponseDTO.createBySuccess( /*this.busUserService.selectPage( page, busUserWrapper )*/ );
     }
 
     /**
@@ -134,7 +133,7 @@ public class TestController extends BaseController {
     @ResponseBody
     @GetMapping( "/user/{uid}" )
     public ResponseDTO findUser( @PathVariable Integer uid ) {
-	return ResponseDTO.createBySuccess( this.busUserService.findUser( uid ) );
+	return ResponseDTO.createBySuccess( /*this.busUserService.findUser( uid )*/ );
     }
 
 }

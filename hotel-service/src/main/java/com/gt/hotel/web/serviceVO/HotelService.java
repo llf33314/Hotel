@@ -1,6 +1,7 @@
 package com.gt.hotel.web.serviceVO;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.hotel.requestEntity.HotelInsertOb;
 import com.gt.hotel.responseEntity.HotelList;
 
 /**
@@ -17,5 +18,13 @@ public interface HotelService {
 	 * @return 酒店列表
 	 */
 	Page<HotelList> queryHotelHome(Integer busid, Page<HotelList> page);
+
+	/**
+	 * 新增 or 更新 酒店
+	 * @param busid 用户ID
+	 * @param hotel 新增酒店or更新请求对象
+	 * @return
+	 */
+	boolean editHotel(Integer busid, HotelInsertOb hotel);
 
 }
