@@ -35,17 +35,12 @@ public class HotelList {
 	@ApiModelProperty("地址")
 	private String addr;
 	
+	@ApiModelProperty("图片地址")
+	private String imageurl;
+	
 	public HotelList() {
 	}
 	
-	public HotelList(Integer hotelId, String name, String tel, String addr) {
-		super();
-		this.hotelId = hotelId;
-		this.name = name;
-		this.tel = tel;
-		this.addr = addr;
-	}
-
 	public Integer getHotelId() {
 		return hotelId;
 	}
@@ -78,9 +73,18 @@ public class HotelList {
 		this.addr = addr;
 	}
 
+	public String getImageurl() {
+		return imageurl;
+	}
+
+	public void setImageurl(String imageurl) {
+		this.imageurl = imageurl;
+	}
+
 	@Override
 	public String toString() {
-		return "HotelList [hotelId=" + hotelId + ", name=" + name + ", tel=" + tel + ", addr=" + addr + "]";
+		return "HotelList [hotelId=" + hotelId + ", name=" + name + ", tel=" + tel + ", addr=" + addr + ", imageurl="
+				+ imageurl + "]";
 	}
-	
+
 }

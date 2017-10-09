@@ -20,7 +20,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
     // 扫描包
-    private static final String  BASEPACKAGE         = "com.gt.hotel";
+    private static final String  ALL                 = "com.gt.hotel";
+    private static final String  BASEPACKAGE         = "com.gt.hotel.backstage.controller";
+    private static final String  MOBILE              = "com.gt.hotel.mobile.controller";
     // 标题
     private static final String  TITLE               = "Hotel-ERP API";
     // 描述
@@ -36,23 +38,43 @@ public class SwaggerConfig {
     //
     private static final String  LICENSE_URL         = "swagger-ui.html#/";
 
+    @Bean
+    public Docket mobileApi() {
+    	return createDocket("酒店移动端", MOBILE);
+    }
+    
+    @Bean
+    public Docket backstageApi() {
+    	return createDocket("酒店后台", BASEPACKAGE);
+    }
+    
     /**
      * 开发API
      */
     @Bean
     public Docket devApi() {
-	return new Docket( DocumentationType.SWAGGER_2 ).apiInfo( apiInfo() ).select()
-			// 获取接口的Package包
-			.apis( RequestHandlerSelectors.basePackage( BASEPACKAGE ) ).paths( PathSelectors.any() ).build();
+    	return new Docket( DocumentationType.SWAGGER_2 ).apiInfo( apiInfo() ).select()
+    			// 获取接口的Package包
+    			.apis( RequestHandlerSelectors.basePackage( ALL ) ).paths( PathSelectors.any() ).build();
     }
-
+    
     private ApiInfo apiInfo() {
-	return new ApiInfo( TITLE, // 大标题
-			DESC, // 小标题
-			VERSION, // 版本
-			TERMS_OF_SERVICEURL, CONTACT, // 作者
-			LICENSE, // 链接显示文字
-			LICENSE_URL// 网站链接
-	);
+    	return new ApiInfo( TITLE, // 大标题
+    			DESC, // 小标题
+    			VERSION, // 版本
+    			TERMS_OF_SERVICEURL, CONTACT, // 作者
+    			LICENSE, // 链接显示文字
+    			LICENSE_URL// 网站链接
+    			);
+    }
+    
+    private Docket createDocket(String groupName, String basePackage){
+    	return new Docket(DocumentationType.SWAGGER_2)
+    			.groupName(groupName)
+    			.select()
+    			.apis(RequestHandlerSelectors.basePackage(basePackage))
+    			.paths(PathSelectors.any())
+    			.build()
+    			.apiInfo(apiInfo());
     }
 }

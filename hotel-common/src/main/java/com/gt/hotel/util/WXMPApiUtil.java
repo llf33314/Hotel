@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONArray;
@@ -16,14 +17,17 @@ import com.gt.hotel.entity.HotelWsWxShopInfoExtend;
 @Component
 public class WXMPApiUtil {
 	
-	private static final String SIGN_KEY = "WXMP2017";
+	@Value("${wxmp.api.sign}")
+	private String SIGN_KEY;
 	
 	/**
 	 * 会员签名 参考 https://member.deeptel.com.cn/swagger-ui.html#/
 	 */
-	private static final String MEMBER_SIGN_KEY = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
+	@Value("${wxmp.api.membersign}")
+	private String MEMBER_SIGN_KEY;
 	
-	private static final String SERVER_URL = "https://deeptel.com.cn";
+	@Value("${wxmp.api.serverurl}")
+	private String SERVER_URL;
 	
 	/**
 	 * 获取字典信息

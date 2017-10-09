@@ -68,7 +68,15 @@ redisSession:
 #cxf:
 #  path: /webservice
 
-
+### WXMP 配置属性 ###
+wxmp:
+  imageurl:
+    prefixurl: http://maint.duofriend.com/upload
+  api:
+    sign: WXMP2017
+    membersign: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
+    serverurl: https://deeptel.com.cn
+  
 
 
 

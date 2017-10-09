@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,9 @@ public class HotelController extends BaseController{
 	@Autowired
 	private WXMPApiUtil WXMPApiUtil;
 	
+	@Value("${wxmp.imageurl.prefixurl}")
+	private String IMAGE_PREFIX;
+	
 	@ApiOperation(value = "第一页门店列表", notes = "第一页门店列表")
 	@ApiResponses({@ApiResponse(code = 0, message = "门店列表", response = HotelShopInfo.class)})
 	@PostMapping("queryShop")
@@ -55,7 +59,7 @@ public class HotelController extends BaseController{
 				_s.setName(shop.getBusinessName());
 				_s.setTel(shop.getTelephone());
 				_s.setAddr(shop.getAddress());
-				_s.setImage(shop.getImageUrl());
+				_s.setImage(IMAGE_PREFIX + shop.getImageUrl());
 				s.add(_s);
 			}
 			return ResponseDTO.createBySuccess(s);

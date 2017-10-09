@@ -28,7 +28,7 @@
     </sql>
 
 	<select id="queryHotelHome" parameterType="Map" resultType="com.gt.hotel.responseEntity.HotelList">
-		SELECT id hotelId, name, phone tel, address addr 
+		SELECT id hotelId, name, phone tel, address addr, logo imageurl 
 		FROM t_hotel 
 		<where>
 			<if test="bus_id != null">
