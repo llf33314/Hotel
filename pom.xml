@@ -35,21 +35,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.7</java.version>
-        <dev.lib.swagger2>2.6.0</dev.lib.swagger2>
+        <dev.lib.swagger2>2.6.1</dev.lib.swagger2>
         <dev.lib.mybatis>1.1.1</dev.lib.mybatis>
-        <dev.lib.druid>1.0.31</dev.lib.druid>
-        <dev.lib.mysql>5.0.5</dev.lib.mysql>
-        <dev.lib.mybatis-plus>2.1-gamma</dev.lib.mybatis-plus>
+        <dev.lib.druid-spring-boot-starter>1.1.2</dev.lib.druid-spring-boot-starter>
+        <dev.lib.mysql>5.1.39</dev.lib.mysql>
+        <dev.lib.mybatis-plus>2.1.0</dev.lib.mybatis-plus>
+        <dev.lib.mybatisplus-spring-boot-starter>1.0.4</dev.lib.mybatisplus-spring-boot-starter>
         <dev.lib.velocity>1.7</dev.lib.velocity>
         <dev.lib.commons-lang3>3.5</dev.lib.commons-lang3>
         <dev.lib.nekohtml>1.9.22</dev.lib.nekohtml>
         <dev.lib.vue>2.1.3</dev.lib.vue>
         <dev.lib.fastjson>1.2.33</dev.lib.fastjson>
         <dev.lib.jjwt>0.7.0</dev.lib.jjwt>
-        <!-- Mybatis Generator -->
-        <!--<entity.target.dir>src/main/java/</entity.target.dir>-->
-        <!--<com.gt.hotel.dao.resources.dir>src/main/resources/</com.gt.hotel.dao.resources.dir>-->
         <dev.lib.lombok>1.16.18</dev.lib.lombok>
+        <dev.lib.joda-time>2.9.9</dev.lib.joda-time>
     </properties>
 
     <parent>
@@ -65,7 +64,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
 
         <dependency>
@@ -111,7 +110,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Springboot 热部署 -->
+        <!-- SpringBoot 热部署 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -130,21 +129,6 @@
             <version>${dev.lib.swagger2}</version>
         </dependency>
         <!-- Mybatis -->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${dev.lib.mybatis}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>mybatis-spring</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- mybatisPlus代码生成模板引擎 -->
         <dependency>
@@ -160,12 +144,19 @@
             <version>${dev.lib.mybatis-plus}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatisplus-spring-boot-starter</artifactId>
+            <version>${dev.lib.mybatisplus-spring-boot-starter}</version>
+        </dependency>
+
         <!-- druid阿里巴巴数据库连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${dev.lib.druid}</version>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${dev.lib.druid-spring-boot-starter}</version>
         </dependency>
+
         <!-- MySql数据库驱动 -->
         <dependency>
             <groupId>mysql</groupId>
@@ -179,26 +170,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>${dev.lib.commons-lang3}</version>
         </dependency>
-        <!-- thymeleaf&Vue 模板 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sourceforge.nekohtml</groupId>
-            <artifactId>nekohtml</artifactId>
-            <version>${dev.lib.nekohtml}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>vue</artifactId>
-            <version>${dev.lib.vue}</version>
-        </dependency>
         <!-- 单元测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <!--<scope>test</scope>-->
+            <scope>test</scope>
         </dependency>
 
         <!-- Spring Boot Reids 依赖 -->
@@ -236,13 +212,6 @@
             <scope>test</scope>
         </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi</artifactId>
-		    <version>3.16</version>
-		</dependency>
-		
 		<dependency>
 		  <groupId>com.gt.api</groupId>
 		  <artifactId>gt_api</artifactId>
@@ -251,6 +220,55 @@
 
     </dependencies>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${dev.lib.joda-time}</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- 打包环境工具 -->
+    <profiles>
+        <!-- 默认 开发环境：打包指令 mvn clean package -Dmaven.test.skip=true -P dev -e  -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <!-- 测试环境：打包指令 mvn clean package -Dmaven.test.skip=true -P test -e  -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <activatedProperties>test</activatedProperties>
+            </properties>
+        </profile>
+        <!-- 堡垒环境：打包指令 mvn clean package -Dmaven.test.skip=true -P fort -e  -->
+        <profile>
+            <id>fort</id>
+            <properties>
+                <activatedProperties>fort</activatedProperties>
+            </properties>
+        </profile>
+        <!-- 正式环境：打包指令 mvn clean package -Dmaven.test.skip=true -P prod -e  -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activatedProperties>prod</activatedProperties>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <defaultGoal>package</defaultGoal>
@@ -258,16 +276,27 @@
             <!-- 导入的资源文件，该目录下的文件会copy到classpath根目录下 -->
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>rebel.xml</exclude>
+                    <exclude>application.yml</exclude>
+                    <exclude>application-dev.yml</exclude>
+                    <exclude>application-test.yml</exclude>
+                    <exclude>application-fort.yml</exclude>
+                    <exclude>application-prod.yml</exclude>
+                </excludes>
             </resource>
             <resource>
-                <directory>src/main/java</directory>
+                <directory>src/main/resources</directory>
+                <!-- 是否替换资源中的属性 -->
+                <filtering>true</filtering>
                 <includes>
-                    <include>*.properties</include>
-                    <include>*.xml</include>
-                    <include>*.dtd</include>
-                    <include>*.yml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.dtd</include>
+                    <include>application.yml</include>
+                    <include>application-${activatedProperties}.yml</include>
+                    <include>**/*.ftl</include>
                 </includes>
-                <filtering>false</filtering>
             </resource>
         </resources>
 
@@ -312,10 +341,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <rebelXmlDirectory>${basedir}/out/production</rebelXmlDirectory>
-                    <!-- 指定生成的jrebel.xml放在哪里， 要求放在web应用的 classpath下 -->
-                </configuration>
             </plugin>
         </plugins>
     </build>

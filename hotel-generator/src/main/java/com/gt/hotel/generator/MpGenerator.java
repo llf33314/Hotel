@@ -42,7 +42,7 @@ public class MpGenerator {
     // 作者
     private static final String   author             = "";
     // 去除表前缀 例如：bus_user 填入bus 生成的 user
-    public static final  String[] tablePrefix        = new String[] {};
+    public static final  String[] tablePrefix        = new String[] {"t"};
     // 生成的包路径
     public static final  String   packagePath        = "com.gt.hotel";
     public static final  String   moduleName         = "";
@@ -53,7 +53,7 @@ public class MpGenerator {
     // Mapper.xml Mapper 后缀修改 DAO
     public static final  String   setXmlName         = "%sDAO";
     // Service.java
-    public static final  String   setServiceName     = "%sService";
+    public static final  String   setServiceName     = "I%sService";
     // ServiceImpl.java
     public static final  String   setServiceImplName = "%sServiceImpl";
     // 数据库方言
@@ -173,6 +173,6 @@ public class MpGenerator {
 	mpg.execute();
 
 	// 打印注入设置，这里演示模板里面怎么获取注入内容【可无】
-	System.err.println( mpg.getCfg().getMap().get( "abc" ) );
+	logger.info("输出：{}", mpg.getCfg().getMap().get("abc"));
     }
 }
