@@ -14,17 +14,17 @@ spring:
  thymeleaf:
    cache: false
  redis:
-   host: 113.106.202.51
+   host: 127.0.0.1
    port: 6379
-   password: gt@123456
+#   password: gt@123456
  session:
    store-type: redis
 
 datasource:
  druid:
-  url: jdbc:mysql://113.106.202.51:3306/gt_aliyuan?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+  url: jdbc:mysql://127.0.0.1:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
   username: root
-  password: gt123456
+  password: 123456
   driver-class-name: com.mysql.jdbc.Driver
   platform: mysql
   type: com.alibaba.druid.pool.DruidDataSource

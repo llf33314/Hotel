@@ -45,7 +45,7 @@ public class TestController extends BaseController {
     @GetMapping( value = { "/", "" } )
     public ModelAndView hello( @RequestParam( defaultValue = " world,zhangmz!" ) String name, HttpSession session, ModelAndView mav ) {
     	System.out.println( session.getId() );
-    	mav.setViewName("/dist/views/nav/nav.html");
+    	mav.setViewName("/nav.html");
     	return mav;
     }
 
