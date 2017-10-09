@@ -1,9 +1,15 @@
 package com.gt.hotel.base;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
+import com.gt.hotel.exception.ResponseEntityException;
 
 /**
  * BaseController
@@ -15,7 +21,7 @@ public abstract class BaseController {
     /**
      * 日志
      */
-    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     /**
      * 获取Sessionid
@@ -24,28 +30,25 @@ public abstract class BaseController {
      *
      * @return
      */
-    public String getSessionId(HttpSession session) {
+    public String getSessionId( HttpSession session ) {
 	return session.getId();
     }
     
-   /* public BusUser getUser( HttpSession session ) {
-    	BusUser bu = new BusUser();
-    	bu.setId(33);
-    	bu.setName("test user");
-    	bu.setPhone(15012345678L);
-    	return bu;
-    }*/
+
 
     /**
-     * 暂时写死一个 id
-     * TODO: 待完善 登录流程
+     * 参数校验
      *
-     * @param session HttpSession
-     *
-     * @return int
+     * @param result BindingResult
      */
-    public Integer getLoginUserId(HttpSession session) {
-	//       Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
-	return 33;
+    protected void InvalidParameter( BindingResult result ) {
+        if ( result.hasErrors() ) {
+            List< ObjectError > errorList = result.getAllErrors();
+            for ( ObjectError error : errorList ) {
+                logger.warn( error.getDefaultMessage() );
+                throw new ResponseEntityException( error.getDefaultMessage() );
+            }
+        }
     }
+
 }

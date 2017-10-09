@@ -26,11 +26,23 @@ public class MpGenerator {
     // 生成*.java 的文件路径
     public static final  String   outPutJavaModel    = outPutBaseDir + "src/main/java";
     // 需要生成的表
-    public static final  String[] generatorTableName = new String[] {"t_hotel_file"};
+    public static final  String[] generatorTableName = new String[] {
+    		"sys_dictionary",
+    		"sys_dictionary_type",
+    		"t_activity",
+    		"t_activity_detail",
+    		"t_activity_room",
+    		"t_file_record",
+    		"t_hotel",
+    		"t_hotel_setting",
+    		"t_infrastructure",
+    		"t_infrastructure_relation",
+    		"t_room",
+    		"t_room_category",};
     // 作者
-    private static final String   author             = "zhangmz";
+    private static final String   author             = "";
     // 去除表前缀 例如：bus_user 填入bus 生成的 user
-    public static final  String[] tablePrefix        = new String[] {"t"};
+    public static final  String[] tablePrefix        = new String[] {};
     // 生成的包路径
     public static final  String   packagePath        = "com.gt.hotel.generator";
     public static final  String   moduleName         = "";
