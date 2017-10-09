@@ -1,15 +1,13 @@
 package com.gt.hotel.base;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
+import com.gt.hotel.exception.ResponseEntityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
-import com.gt.hotel.exception.ResponseEntityException;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * BaseController
@@ -33,8 +31,19 @@ public abstract class BaseController {
     public String getSessionId( HttpSession session ) {
 	return session.getId();
     }
-    
 
+    /**
+     * 暂时写死一个 id
+     * TODO: 待完善 登录流程
+     *
+     * @param session HttpSession
+     *
+     * @return int
+     */
+    public Integer getLoginUserId(HttpSession session) {
+	//       Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
+	return 33;
+    }
 
     /**
      * 参数校验
