@@ -29,8 +29,8 @@ import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.requestEntity.HotelPage;
 import com.gt.hotel.requestEntity.HotelParameter;
-import com.gt.hotel.responseEntity.HotelList;
-import com.gt.hotel.responseEntity.HotelShopInfo;
+import com.gt.hotel.responseEntity.ResHotel.HotelList;
+import com.gt.hotel.responseEntity.ResHotel.HotelShopInfo;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
 

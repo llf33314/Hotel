@@ -3,7 +3,7 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.responseEntity.HotelList;
+import com.gt.hotel.responseEntity.ResHotel.HotelList;
 
 /**
  * <p>
