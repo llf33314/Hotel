@@ -21,9 +21,23 @@ public class ResRoomCatepory {
 		@ApiModelProperty("房型ID")
 		private Integer roomCategoryId;
 		
+		@ApiModelProperty("房间类型")
 		private String name;
 		
+		@ApiModelProperty("门市价")
 		private Integer rackRate;
+		
+		@ApiModelProperty("折扣率")
+		private Integer discount;
+		
+		@ApiModelProperty("周末价")
+		private Integer weekendFare;
+		
+		@ApiModelProperty("押金")
+		private Integer deposit;
+		
+		@ApiModelProperty("房间总数")
+		private Integer roomCount;
 	}
 	
 	

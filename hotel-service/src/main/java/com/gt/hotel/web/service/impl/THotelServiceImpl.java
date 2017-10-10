@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.THotelDAO;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.responseEntity.HotelList;
+import com.gt.hotel.responseEntity.ResHotel.HotelList;
 import com.gt.hotel.web.service.THotelService;
 
 /**
