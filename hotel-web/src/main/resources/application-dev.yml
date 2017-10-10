@@ -12,15 +12,15 @@ spring:
   restart:
    enabled: true
  redis:
-   host: 127.0.0.1
+   host: localhost
    port: 6379
  session:
    store-type: redis
  datasource:
    druid:
-     url: jdbc:mysql://127.0.0.1:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+     url: jdbc:mysql://localhost:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
      username: root
-     password: 123456
+     password: gt123456
      # 下面为连接池的补充设置，应用到上面所有数据源中
      # 初始化大小，最小，最大
      initial-size: 5
@@ -56,7 +56,43 @@ spring:
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
      aop-patterns: com.gt.hotel.*.service.*
 
+datasource:
+ druid:
+  url: jdbc:mysql://127.0.0.1:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+  username: root
+  password: 123456
+  driver-class-name: com.mysql.jdbc.Driver
+  platform: mysql
+  type: com.alibaba.druid.pool.DruidDataSource
+  # 下面为连接池的补充设置，应用到上面所有数据源中
+  # 初始化大小，最小，最大
+  initialSize: 5
+  minIdle: 5
+  maxActive: 20
+  # 配置获取连接等待超时的时间
+  maxWait: 60000
+  # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+  timeBetweenEvictionRunsMillis: 60000
+  # 配置一个连接在池中最小生存的时间，单位是毫秒
+  minEvictableIdleTimeMillis: 30000
+  validationQuery: select 'x'
+  testWhileIdle: true
+  testOnBorrow: false
+  testOnReturn: false
+  # 打开PSCache，并且指定每个连接上PSCache的大小
+  poolPreparedStatements: true
+  maxPoolPreparedStatementPerConnectionSize: 20
+  # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+  filters: stat,wall,slf4j
+  # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+  connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  # 合并多个DruidDataSource的监控数据
+  #useGlobalDataSourceStat: true
 
+### 会员CXF项目接口地址
+#project:
+# member:
+#  cxf-url: http://jiaoyu.yifriend.net/memberWS?wsdl
 ############################# 开发环境配置 #############################
 
 
@@ -80,6 +116,4 @@ wxmp:
     membersign: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
     serverurl: https://deeptel.com.cn
   
-
-
 

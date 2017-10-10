@@ -2,6 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.THotelDAO">
 
+<<<<<<< HEAD
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotel">
+		<id column="id" property="id" />
+		<result column="bus_id" property="busId" />
+		<result column="store_id" property="storeId" />
+		<result column="name" property="name" />
+		<result column="desc" property="desc" />
+		<result column="phone" property="phone" />
+		<result column="address" property="address" />
+		<result column="thumbnail" property="thumbnail" />
+		<result column="logo" property="logo" />
+		<result column="longitude" property="longitude" />
+		<result column="latitude" property="latitude" />
+		<result column="mark_modified" property="markModified" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+	</resultMap>
+=======
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotel">
         <id column="id" property="id"/>
@@ -21,12 +42,38 @@
         <result column="updated_by" property="updatedBy"/>
         <result column="updated_at" property="updatedAt"/>
     </resultMap>
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, bus_id AS busId, store_id AS storeId, name, desc, phone, address, thumbnail, logo, longitude, latitude, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
     </sql>
 
+<<<<<<< HEAD
+	<select id="queryHotelHome" parameterType="Map" resultType="com.gt.hotel.responseEntity.HotelList">
+		SELECT id hotelId, name, phone tel, address addr, logo imageurl 
+		FROM t_hotel 
+		<where>
+			<if test="bus_id != null">
+				bus_id = #{bus_id} 
+			</if>
+		</where>
+		<if test="page != null">
+			LIMIT #{page}, #{pageSize}
+		</if>
+	</select>
+	
+	<select id="queryHotelHomeCount" parameterType="Map" resultType="Integer">
+		SELECT COUNT(id) 
+		FROM t_hotel 
+		<where>
+			<if test="bus_id != null">
+				bus_id = #{bus_id} 
+			</if>
+		</where>
+	</select>
+	
+=======
     <select id="queryHotelHome" parameterType="Map" resultType="com.gt.hotel.responseEntity.HotelList">
         SELECT id hotelId, name, phone tel, address addr, logo imageurl
         FROM t_hotel
@@ -50,4 +97,5 @@
         </where>
     </select>
 
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
 </mapper>

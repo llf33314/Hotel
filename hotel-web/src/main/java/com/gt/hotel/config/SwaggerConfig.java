@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.async.DeferredResult;
+
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -26,9 +27,9 @@ public class SwaggerConfig {
 	
 	// 扫描包
 	private static final String  APPLET_PACKAGE      = "com.gt.hotel.controller.applet";
-	private static final String  ERP_PACKAGE         = "com.gt.hotel.erp.controller";
-	private static final String  BACK_PACKAGE        = "com.gt.hotel.backstage.controller";
-	private static final String  MOBILE_PACKAGE      = "com.gt.hotel.mobile.controller";
+	private static final String  ERP_PACKAGE         = "com.gt.hotel.controller.erp";
+	private static final String  BACK_PACKAGE        = "com.gt.hotel.controller.back";
+	private static final String  MOBILE_PACKAGE      = "com.gt.hotel.controller.mobile";
 	// 标题
 	private static final String  TITLE               = "Hotel - API";
 	// 描述

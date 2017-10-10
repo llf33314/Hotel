@@ -2,6 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.TInfrastructureRelationDAO">
 
+<<<<<<< HEAD
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TInfrastructureRelation">
+		<id column="id" property="id" />
+		<result column="infrastructure_id" property="infrastructureId" />
+		<result column="module" property="module" />
+		<result column="reference_id" property="referenceId" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, infrastructure_id AS infrastructureId, module, reference_id AS referenceId, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
+=======
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TInfrastructureRelation">
         <id column="id" property="id"/>
@@ -18,6 +35,7 @@
     <sql id="Base_Column_List">
         id, infrastructure_id AS infrastructureId, module, reference_id AS referenceId, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS
         updatedAt
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
     </sql>
 
 </mapper>

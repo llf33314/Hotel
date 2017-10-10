@@ -13,7 +13,7 @@ public enum ResponseEnums {
     AUTHENTICATION(10, "非法认证"),
     JWT_TOKEN_EXPIRED(11, "TOKEN失效"),
 
-    // 1000-1999 定义常见错误信息载体
+    // 1000-1999 定义常见业务错误信息载体
     NEED_LOGIN(1001, "需要登录"),
 
     // 30000-39999 为集成第三方API错误信息 例如gt_api

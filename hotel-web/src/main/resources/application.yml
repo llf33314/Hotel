@@ -4,12 +4,13 @@
 server:
  port: 8080
  context-path: /
+
 ######################## Spring 全局设置 ########################
 spring:
  application:
-  name: hotel
+  name: Hotel
  profiles:
-  active: dev
+  active: @activatedProperties@
  http:
   encoding:
     force: true
@@ -53,7 +54,6 @@ mybatis-plus:
  configuration:
    map-underscore-to-camel-case: true
    cache-enabled: false
-
 
 
 ######################## Logback ########################
