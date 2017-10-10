@@ -18,20 +18,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class BasicTest {
 
-    protected Logger logger = LoggerFactory.getLogger( BasicTest.class );
+    protected Logger logger = LoggerFactory.getLogger(BasicTest.class);
     // 开始时间
     private Long start_time;
 
     @Before
     public void start() {
 	start_time = System.currentTimeMillis();
-	this.logger.info( "=======================================  单元测试Start =======================================" );
+	this.logger.info("=======================================  单元测试Start =======================================");
     }
 
     @After
     public void end() {
-	this.logger.info( "执行结束，方法执行 {} 毫秒", ( System.currentTimeMillis() - start_time ) );
-	this.logger.info( "=======================================  单元测试End =======================================" );
+	this.logger.info("执行结束，方法执行 {} 毫秒", (System.currentTimeMillis() - start_time));
+	this.logger.info("=======================================  单元测试End =======================================");
     }
 
 }

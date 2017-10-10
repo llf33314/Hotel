@@ -1,15 +1,24 @@
 package com.gt.hotel.base;
 
+<<<<<<< HEAD
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+=======
+import com.gt.hotel.exception.ResponseEntityException;
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+<<<<<<< HEAD
 import com.gt.hotel.exception.ResponseEntityException;
+=======
+import javax.servlet.http.HttpSession;
+import java.util.List;
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
 
 /**
  * BaseController
@@ -31,16 +40,8 @@ public abstract class BaseController {
      * @return
      */
     public String getSessionId(HttpSession session) {
-	return session.getId();
+        return session.getId();
     }
-    
-   /* public BusUser getUser( HttpSession session ) {
-    	BusUser bu = new BusUser();
-    	bu.setId(33);
-    	bu.setName("test user");
-    	bu.setPhone(15012345678L);
-    	return bu;
-    }*/
 
     /**
      * 暂时写死一个 id
@@ -54,12 +55,17 @@ public abstract class BaseController {
 	//       Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
 	return 33;
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
     /**
      * 参数校验
      *
      * @param result BindingResult
      */
+<<<<<<< HEAD
     protected void InvalidParameter( BindingResult result ) {
         if ( result.hasErrors() ) {
             List< ObjectError > errorList = result.getAllErrors();
@@ -70,4 +76,16 @@ public abstract class BaseController {
         }
     }
     
+=======
+    protected void InvalidParameter(BindingResult result) {
+        if (result.hasErrors()) {
+            List< ObjectError > errorList = result.getAllErrors();
+            for (ObjectError error : errorList) {
+                logger.warn(error.getDefaultMessage());
+                throw new ResponseEntityException(error.getDefaultMessage());
+            }
+        }
+    }
+
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
 }
