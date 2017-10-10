@@ -7,10 +7,10 @@ import com.gt.hotel.requestEntity.HotelParameter;
 import com.gt.hotel.responseEntity.HotelList;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.serviceVO.HotelService;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,29 +37,16 @@ public class HotelServiceImpl implements HotelService {
 	param.put("bus_id", busid);
 	param.put("page", (c - 1) * s);
 	param.put("pageSize", s);
-	List< HotelList > list = tHotelDAO.queryHotelHome(param);
-	Integer total = tHotelDAO.queryHotelHomeCount(param);
-	page.setTotal(total);
-	page.setRecords(list);
+	List< THotel > hotelList = tHotelDAO.selectPage(new RowBounds(1, 10), null);
+	page.setTotal(0);
+	page.setRecords(null);
 	return page;
     }
 
     @Override
     public boolean editHotel(Integer busid, HotelParameter.SaveOrUpdate hotel) {
-	THotel e = new THotel();
-	e.setId(hotel.getHotelId());
-	e.setName(hotel.getName());
-	e.setPhone(hotel.getTel());
-	e.setAddress(hotel.getAddr());
-	e.setLongitude(hotel.getLongitude());
-	e.setLatitude(hotel.getLatitude());
-	e.setDesc(hotel.getDesc());
-	e.setStoreId(hotel.getShopid());
-	e.setCreatedBy(busid);
-	e.setCreatedAt(new Date());
-	e.setUpdatedBy(busid);
-	e.setUpdatedAt(new Date());
-	return tHotelService.insertOrUpdate(e);
+
+	return false;
     }
 
 }

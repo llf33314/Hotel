@@ -1,6 +1,5 @@
 package com.gt.hotel.requestEntity;
 
-import com.gt.hotel.util.RequestBeanUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,13 +21,12 @@ public class HotelParameter {
     @Data
     @Api( "保存或更新实体" )
     public static class SaveOrUpdate {
-	@ApiModelProperty( "门店ID" + RequestBeanUtil.OPTIONAL )
+	@ApiModelProperty( value = "门店ID" )
 	private Integer hotelId;
 
 	@ApiModelProperty( "门店ID" )
 	@NotNull( message = "门店ID不能为空" )
-	@Length( max = 11, message = "门店ID长度过长" )
-	private Integer shopid;
+	private Integer shopId;
 
 	@ApiModelProperty( "酒店名称" )
 	@NotNull( message = "酒店名称不能为空" )
