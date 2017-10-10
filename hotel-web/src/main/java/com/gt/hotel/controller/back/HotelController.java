@@ -1,5 +1,24 @@
 package com.gt.hotel.controller.back;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
@@ -13,22 +32,12 @@ import com.gt.hotel.requestEntity.HotelParameter;
 import com.gt.hotel.responseEntity.HotelList;
 import com.gt.hotel.responseEntity.HotelShopInfo;
 import com.gt.hotel.util.WXMPApiUtil;
-import com.gt.hotel.web.serviceVO.HotelService;
-import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import com.gt.hotel.web.service.THotelService;
 
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Api( tags = "酒店管理相关接口" )
 @RestController
@@ -38,7 +47,7 @@ public class HotelController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(HotelController.class);
 	
 	@Autowired
-	private HotelService hotelService;
+	private THotelService tHotelService;
 	
 	@Autowired
 	private WXMPApiUtil WXMPApiUtil;
@@ -73,19 +82,20 @@ public class HotelController extends BaseController {
 	}
 	
 	@ApiOperation( value = "酒店列表", notes = "酒店列表" )
-	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), @ApiResponse( code = 1, message = "酒店列表", response = HotelList.class )} )
-	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
+		@ApiResponse( code = 1, message = "酒店列表", response = HotelList.class )} )
+	@GetMapping( value = "queryHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO hotelR(@RequestBody @ApiParam( value = "分页请求对象" ) HotelPage hpage, HttpSession session) {
+	public ResponseDTO hotelR(HotelPage hpage, HttpSession session) {
 		Page< HotelList > page = new Page<>(hpage.getPage(), hpage.getPageSize());
 		Integer busid = getLoginUserId(session);
-		page = hotelService.queryHotelHome(busid, page);
+		page = tHotelService.queryHotelHome(busid, page);
 		return ResponseDTO.createBySuccess(page);
 	}
 	
 	@ApiOperation( value = "新增或更新酒店", notes = "新增或更新酒店" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "", response = HotelList.class )} )
-	@PostMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO hotelCU(@Validated HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);
@@ -100,7 +110,7 @@ public class HotelController extends BaseController {
 		e.setCreatedAt(new Date());
 		e.setUpdatedBy(busid);
 		e.setUpdatedAt(new Date());
-		if (e.insert()) return ResponseDTO.createBySuccess();
+		if (e.insertOrUpdate()) return ResponseDTO.createBySuccess();
 		else return ResponseDTO.createByError();
 	}
 	
