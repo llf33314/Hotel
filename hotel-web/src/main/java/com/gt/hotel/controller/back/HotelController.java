@@ -5,6 +5,7 @@ import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.HotelWsWxShopInfoExtend;
+import com.gt.hotel.entity.THotel;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.requestEntity.HotelPage;
@@ -16,14 +17,17 @@ import com.gt.hotel.web.serviceVO.HotelService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Api( tags = "酒店管理相关接口" )
@@ -83,11 +87,20 @@ public class HotelController extends BaseController {
     @ApiResponses( {@ApiResponse( code = 0, message = "", response = HotelList.class )} )
     @PostMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
     @SuppressWarnings( "rawtypes" )
-    public ResponseDTO hotelCU(@RequestBody @ApiParam( value = "新增或更新酒店-对象" ) HotelParameter.SaveOrUpdate hotel, HttpSession session, BindingResult bindingResult) {
+    public ResponseDTO hotelCU(@Validated HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 	InvalidParameter(bindingResult);
 	Integer busid = getLoginUserId(session);
-	boolean i = hotelService.editHotel(busid, hotel);
-	if (i) return ResponseDTO.createBySuccess();
+	THotel e = new THotel();
+	BeanUtils.copyProperties(hotel, e);
+	e.setId(hotel.getHotelId());
+	e.setPhone(hotel.getTel());
+	e.setAddress(hotel.getAddr());
+	e.setStoreId(hotel.getShopId());
+	e.setCreatedBy(busid);
+	e.setCreatedAt(new Date());
+	e.setUpdatedBy(busid);
+	e.setUpdatedAt(new Date());
+	if (e.insert()) return ResponseDTO.createBySuccess();
 	else return ResponseDTO.createByError();
     }
 
