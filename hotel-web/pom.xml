@@ -1,3 +1,85 @@
+<<<<<<< HEAD
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>com.gt.hotel</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>hotel-web</artifactId>
+    <packaging>war</packaging>
+    <name>hotel-web</name>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gt.hotel</groupId>
+            <artifactId>hotel-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>hotel</finalName>
+        <resources>
+            <!-- 导入的资源文件，该目录下的文件会copy到classpath根目录下 -->
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>*.properties</include>
+                    <include>*.xml</include>
+                    <include>*.dtd</include>
+                    <include>*.yml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <!-- 一定要声明如下配置-->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!--<plugin>
+                &lt;!&ndash; 合并多个web项目 &ndash;&gt;
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    &lt;!&ndash; 打包时,去除 的部分文件 &ndash;&gt;
+                    <packagingExcludes>
+                        WEB-INF/web.xml,
+                        regex[WEB-INF/lib/*.jar]
+                    </packagingExcludes>
+                    <overlays>
+                        &lt;!&ndash; 覆盖时去除部分文件 &ndash;&gt;
+                        <overlay>
+                            <groupId>com.gt.hotel</groupId>
+                            <artifactId>hotel-cxf-server</artifactId>
+                            <excludes>
+                                <exclude>WEB-INF/classes/rebel.xml</exclude>
+                                <exclude>WEB-INF/lib/*.jar</exclude>
+                            </excludes>
+                        </overlay>
+
+
+                    </overlays>
+                </configuration>
+            </plugin>-->
+        </plugins>
+    </build>
+</project>
+=======
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
@@ -68,3 +150,4 @@
         </plugins>
     </build>
 </project>
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6

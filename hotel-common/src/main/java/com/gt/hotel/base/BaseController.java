@@ -1,0 +1,91 @@
+package com.gt.hotel.base;
+
+<<<<<<< HEAD
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+=======
+import com.gt.hotel.exception.ResponseEntityException;
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
+<<<<<<< HEAD
+import com.gt.hotel.exception.ResponseEntityException;
+=======
+import javax.servlet.http.HttpSession;
+import java.util.List;
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
+
+/**
+ * BaseController
+ *
+ * @author zhangmz
+ * @create 2017/7/10
+ */
+public abstract class BaseController {
+    /**
+     * 日志
+     */
+    protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+
+    /**
+     * 获取Sessionid
+     *
+     * @param session HttpSession
+     *
+     * @return
+     */
+    public String getSessionId(HttpSession session) {
+        return session.getId();
+    }
+
+    /**
+     * 暂时写死一个 id
+     * TODO: 待完善 登录流程
+     *
+     * @param session HttpSession
+     *
+     * @return int
+     */
+    public Integer getLoginUserId(HttpSession session) {
+	//       Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
+	return 33;
+    }
+<<<<<<< HEAD
+    
+=======
+
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
+    /**
+     * 参数校验
+     *
+     * @param result BindingResult
+     */
+<<<<<<< HEAD
+    protected void InvalidParameter( BindingResult result ) {
+        if ( result.hasErrors() ) {
+            List< ObjectError > errorList = result.getAllErrors();
+            for ( ObjectError error : errorList ) {
+                logger.warn( error.getDefaultMessage() );
+                throw new ResponseEntityException( error.getDefaultMessage() );
+            }
+        }
+    }
+    
+=======
+    protected void InvalidParameter(BindingResult result) {
+        if (result.hasErrors()) {
+            List< ObjectError > errorList = result.getAllErrors();
+            for (ObjectError error : errorList) {
+                logger.warn(error.getDefaultMessage());
+                throw new ResponseEntityException(error.getDefaultMessage());
+            }
+        }
+    }
+
+>>>>>>> e84f7e20e010edce8c294c517de8dd968a5742c6
+}

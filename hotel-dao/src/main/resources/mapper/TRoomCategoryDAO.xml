@@ -55,27 +55,4 @@
         id, name, room_count AS roomCount, hotel_id AS hotelId, store_id AS storeId, desc, rack_rate AS rackRate, deposit, discount_enable AS discountEnable, discount, weekend_fare_enable AS weekendFareEnable, weekend_fare AS weekendFare, mark_modified AS markModified, breakfast_enable AS breakfastEnable, breakfast_quantity AS breakfastQuantity, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
     </sql>
 
-	<select id="queryHotelHome" parameterType="Map" resultType="com.gt.hotel.responseEntity.ResRoomCategory">
-		SELECT id roomCategoryId, name, rack_rate rackRate, discount, room_count count, weekend_fare weekendFare, deposit 
-		FROM t_room_category 
-		<where>
-			<if test="hotel_id != null">
-				hotel_id = #{hotel_id} 
-			</if>
-		</where>
-		<if test="page != null">
-			LIMIT #{page}, #{pageSize}
-		</if>
-	</select>
-	
-	<select id="queryHotelHomeCount" parameterType="Map" resultType="Integer">
-		SELECT COUNT(id) 
-		FROM t_room_category 
-		<where>
-			<if test="hotel_id != null">
-				hotel_id = #{hotel_id} 
-			</if>
-		</where>
-	</select>
-	
 </mapper>
