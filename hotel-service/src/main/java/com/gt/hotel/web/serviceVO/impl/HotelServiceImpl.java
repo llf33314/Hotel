@@ -22,44 +22,44 @@ import java.util.Map;
  */
 @Service
 public class HotelServiceImpl implements HotelService {
-
-    @Autowired
-    THotelService tHotelService;
-
-    @Autowired
-    THotelDAO tHotelDAO;
-
-    @Override
-    public Page< HotelList > queryHotelHome(Integer busid, Page< HotelList > page) {
-	Integer c = page.getCurrent();
-	Integer s = page.getSize();
-	Map< String, Object > param = new HashMap<>();
-	param.put("bus_id", busid);
-	param.put("page", (c - 1) * s);
-	param.put("pageSize", s);
-	List< HotelList > list = tHotelDAO.queryHotelHome(param);
-	Integer total = tHotelDAO.queryHotelHomeCount(param);
-	page.setTotal(total);
-	page.setRecords(list);
-	return page;
-    }
-
-    @Override
-    public boolean editHotel(Integer busid, HotelParameter.SaveOrUpdate hotel) {
-	THotel e = new THotel();
-	e.setId(hotel.getHotelId());
-	e.setName(hotel.getName());
-	e.setPhone(hotel.getTel());
-	e.setAddress(hotel.getAddr());
-	e.setLongitude(hotel.getLongitude());
-	e.setLatitude(hotel.getLatitude());
-	e.setDesc(hotel.getDesc());
-	e.setStoreId(hotel.getShopid());
-	e.setCreatedBy(busid);
-	e.setCreatedAt(new Date());
-	e.setUpdatedBy(busid);
-	e.setUpdatedAt(new Date());
-	return tHotelService.insertOrUpdate(e);
-    }
-
+	
+	@Autowired
+	THotelService tHotelService;
+	
+	@Autowired
+	THotelDAO tHotelDAO;
+	
+	@Override
+	public Page< HotelList > queryHotelHome(Integer busid, Page< HotelList > page) {
+		Integer c = page.getCurrent();
+		Integer s = page.getSize();
+		Map< String, Object > param = new HashMap<>();
+		param.put("bus_id", busid);
+		param.put("page", (c - 1) * s);
+		param.put("pageSize", s);
+		List< HotelList > list = tHotelDAO.queryHotelHome(param);
+		Integer total = tHotelDAO.queryHotelHomeCount(param);
+		page.setTotal(total);
+		page.setRecords(list);
+		return page;
+	}
+	
+	@Override
+	public boolean editHotel(Integer busid, HotelParameter.SaveOrUpdate hotel) {
+		THotel e = new THotel();
+		e.setId(hotel.getHotelId());
+		e.setName(hotel.getName());
+		e.setPhone(hotel.getTel());
+		e.setAddress(hotel.getAddr());
+		e.setLongitude(hotel.getLongitude());
+		e.setLatitude(hotel.getLatitude());
+		e.setDesc(hotel.getDesc());
+		e.setStoreId(hotel.getShopid());
+		e.setCreatedBy(busid);
+		e.setCreatedAt(new Date());
+		e.setUpdatedBy(busid);
+		e.setUpdatedAt(new Date());
+		return tHotelService.insertOrUpdate(e);
+	}
+	
 }
