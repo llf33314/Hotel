@@ -52,8 +52,6 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		Date date = new Date();
 		TRoomCategory tRoomCategory = new TRoomCategory();
 		BeanUtils.copyProperties(roomCategory, tRoomCategory);
-		System.err.println(roomCategory);
-		System.err.println(tRoomCategory);
 		tRoomCategory.setId(roomCategory.getRoomCategoryId());
 		tRoomCategory.setStoreId(roomCategory.getShopId());
 		tRoomCategory.setCreatedAt(date);
