@@ -1,11 +1,13 @@
 package com.gt.hotel.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.responseEntity.HotelList;
+import com.gt.hotel.param.HotelParameter;
+import com.gt.hotel.vo.HotelVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -19,20 +21,10 @@ public interface THotelDAO extends BaseMapper< THotel > {
 
     /**
      * 查询 新增酒店 首页 酒店列表
-     *
-     * @param param
-     *
+     * @param page
+     * @param busid 用户ID
      * @return
      */
-    List< HotelList > queryHotelHome(Map< String, Object > param);
-
-    /**
-     * 查询 新增酒店 首页 酒店列表 统计
-     *
-     * @param param
-     *
-     * @return
-     */
-    Integer queryHotelHomeCount(Map< String, Object > param);
+    List< HotelVo > queryHotelHome(@Param( "page" ) Pagination page, @Param( "req" ) HotelParameter.HotelQueryParam hpage, @Param( "busId" ) Integer busid);
 
 }

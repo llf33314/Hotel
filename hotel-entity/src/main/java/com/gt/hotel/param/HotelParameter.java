@@ -1,6 +1,7 @@
-package com.gt.hotel.requestEntity;
+package com.gt.hotel.param;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -12,16 +13,14 @@ import javax.validation.constraints.NotNull;
  *
  * @author ReverieNight@Foxmail.com
  */
-
-@Api( description = "酒店实体参数" )
 public class HotelParameter {
     /**
      * 新增或更新实体参数
      */
     @Data
-    @Api( "保存或更新实体" )
+    @ApiModel
     public static class SaveOrUpdate {
-	@ApiModelProperty( value = "门店ID" )
+	@ApiModelProperty( value = "酒店ID" )
 	private Integer hotelId;
 
 	@ApiModelProperty( "门店ID" )
@@ -51,11 +50,18 @@ public class HotelParameter {
 	@NotNull( message = "纬度不能为空" )
 	private Double latitude;
 
-	@ApiModelProperty( "酒店介绍" )
+	@ApiModelProperty( value = "酒店介绍" )
 	@NotNull( message = "酒店介绍不能为空" )
 	@Length( max = 200, message = "酒店介绍长度过长" )
 	private String desc;
 
+    }
+
+    @Api( "酒店查询参数" )
+    @Data
+    public static class HotelQueryParam extends HotelPage {
+	@ApiModelProperty( "酒店ID" )
+	private Integer hotelId;
     }
 
 }

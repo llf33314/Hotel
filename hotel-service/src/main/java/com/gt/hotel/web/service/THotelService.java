@@ -1,7 +1,10 @@
 package com.gt.hotel.web.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotel;
+import com.gt.hotel.param.HotelParameter;
+import com.gt.hotel.vo.HotelVo;
 
 /**
  * <p>
@@ -12,5 +15,15 @@ import com.gt.hotel.entity.THotel;
  * @since 2017-10-09
  */
 public interface THotelService extends BaseService< THotel > {
+
+    /**
+     * 查询 新增酒店 首页 酒店列表
+     *
+     * @param busid 用户ID
+     * @param page  分页对象
+     *
+     * @return 酒店列表
+     */
+    Page< HotelVo > queryHotelHome(Integer busid, HotelParameter.HotelQueryParam hpage, Page< HotelVo > page);
 
 }

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
-import com.gt.hotel.entity.HotelWsWxShopInfoExtend;
+import com.gt.hotel.entity.TRoomCategory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -221,13 +221,13 @@ public class WXMPApiUtil {
      * @return
      * @throws SignException
      */
-    public List< HotelWsWxShopInfoExtend > queryWxShopByBusId(Integer busid) throws SignException {
+    public List< TRoomCategory.HotelWsWxShopInfoExtend > queryWxShopByBusId(Integer busid) throws SignException {
 	JSONObject param = new JSONObject();
-	List< HotelWsWxShopInfoExtend > shops = null;
+	List< TRoomCategory.HotelWsWxShopInfoExtend > shops = null;
 	param.put("reqdata", busid);
 	JSONObject json = getLApi(param, "/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do");
 	if (json.getBoolean("success")) {
-	    shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(), HotelWsWxShopInfoExtend.class);
+	    shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(), TRoomCategory.HotelWsWxShopInfoExtend.class);
 	}
 	return shops;
     }

@@ -1,9 +1,13 @@
 package com.gt.hotel.web.service.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.THotelDAO;
 import com.gt.hotel.entity.THotel;
+import com.gt.hotel.param.HotelParameter;
+import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.web.service.THotelService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +20,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > implements THotelService {
+
+    @Autowired
+    THotelDAO tHotelDAO;
+
+    @Override
+    public Page< HotelVo > queryHotelHome(Integer busid, HotelParameter.HotelQueryParam hpage, Page< HotelVo > page) {
+	page.setRecords(tHotelDAO.queryHotelHome(page, hpage, busid));
+	return page;
+    }
 
 }

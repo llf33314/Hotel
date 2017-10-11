@@ -4,17 +4,19 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.entity.HotelWsWxShopInfoExtend;
 import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.requestEntity.HotelPage;
-import com.gt.hotel.requestEntity.HotelParameter;
-import com.gt.hotel.responseEntity.HotelList;
-import com.gt.hotel.responseEntity.HotelShopInfo;
+import com.gt.hotel.param.HotelParameter;
+import com.gt.hotel.vo.HotelVo;
+import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.util.WXMPApiUtil;
-import com.gt.hotel.web.serviceVO.HotelService;
-import io.swagger.annotations.*;
+import com.gt.hotel.web.service.THotelService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -38,7 +40,7 @@ public class HotelController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(HotelController.class);
 
     @Autowired
-    private HotelService hotelService;
+    private THotelService tHotelService;
 
     @Autowired
     private WXMPApiUtil WXMPApiUtil;
@@ -52,11 +54,11 @@ public class HotelController extends BaseController {
     @SuppressWarnings( "rawtypes" )
     public ResponseDTO shopR(HttpSession session) {
 	Integer busid = getLoginUserId(session);
-	List< HotelWsWxShopInfoExtend > shops = null;
+	List< TRoomCategory.HotelWsWxShopInfoExtend > shops = null;
 	try {
 	    shops = WXMPApiUtil.queryWxShopByBusId(busid);
 	    List< HotelShopInfo > s = new ArrayList<>();
-	    for (HotelWsWxShopInfoExtend shop : shops) {
+	    for (TRoomCategory.HotelWsWxShopInfoExtend shop : shops) {
 		HotelShopInfo _s = new HotelShopInfo();
 		_s.setShopid(shop.getId());
 		_s.setName(shop.getBusinessName());
@@ -73,21 +75,20 @@ public class HotelController extends BaseController {
     }
 
     @ApiOperation( value = "酒店列表", notes = "酒店列表" )
-    @ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), @ApiResponse( code = 1, message = "酒店列表", response = HotelList.class )} )
-    @GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+    @ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), @ApiResponse( code = 1, message = "酒店列表", response = HotelVo.class )} )
+    @GetMapping( value = "queryHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
     @SuppressWarnings( "rawtypes" )
-    public ResponseDTO hotelR(@RequestBody @ApiParam( value = "分页请求对象" ) HotelPage hpage, HttpSession session) {
-	Page< HotelList > page = new Page<>(hpage.getPage(), hpage.getPageSize());
+    public ResponseDTO hotelR(HotelParameter.HotelQueryParam hpage, HttpSession session) {
+	Page< HotelVo > page = new Page<>(hpage.getPage(), hpage.getPageSize());
 	Integer busid = getLoginUserId(session);
-	page = hotelService.queryHotelHome(busid, page);
+	page = tHotelService.queryHotelHome(busid, hpage, page);
 	return ResponseDTO.createBySuccess(page);
     }
 
     @ApiOperation( value = "新增或更新酒店", notes = "新增或更新酒店" )
-    @ApiResponses( {@ApiResponse( code = 0, message = "", response = HotelList.class )} )
-    @PostMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+    @PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
     @SuppressWarnings( "rawtypes" )
-    public ResponseDTO hotelCU(@Validated HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
+    public ResponseDTO hotelCU(@Validated @ModelAttribute HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 	InvalidParameter(bindingResult);
 	Integer busid = getLoginUserId(session);
 	THotel e = new THotel();
@@ -100,8 +101,8 @@ public class HotelController extends BaseController {
 	e.setCreatedAt(new Date());
 	e.setUpdatedBy(busid);
 	e.setUpdatedAt(new Date());
-	if (e.insert()) return ResponseDTO.createBySuccess();
+	if (e.insertOrUpdate()) return ResponseDTO.createBySuccess();
 	else return ResponseDTO.createByError();
     }
-
+	
 }

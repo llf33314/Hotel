@@ -1,4 +1,4 @@
-package com.gt.hotel.responseEntity;
+package com.gt.hotel.other;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
