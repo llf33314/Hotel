@@ -47,11 +47,13 @@ public class HotelRoomController extends BaseController {
 	@PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO roomCategoryCU(@Validated RoomCategoryParameter.SaveOrUpdate roomCategory, BindingResult bindingResult, HttpSession session) {
+//		for(String s : roomCategory.getImages())
+//			System.err.println(s);
 		InvalidParameter(bindingResult);
 		Integer busid = getLoginUserId(session);
-		
-		
-		return ResponseDTO.createByError();
+		boolean flag = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
 	}
 	
 }

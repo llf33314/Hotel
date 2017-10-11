@@ -100,6 +100,7 @@ public class HotelController extends BaseController {
 	public ResponseDTO hotelCU(@Validated HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);
 		Integer busid = getLoginUserId(session);
+		Date date = new Date();
 		THotel e = new THotel();
 		BeanUtils.copyProperties(hotel, e);
 		e.setId(hotel.getHotelId());
@@ -107,9 +108,9 @@ public class HotelController extends BaseController {
 		e.setAddress(hotel.getAddr());
 		e.setStoreId(hotel.getShopId());
 		e.setCreatedBy(busid);
-		e.setCreatedAt(new Date());
+		e.setCreatedAt(date);
 		e.setUpdatedBy(busid);
-		e.setUpdatedAt(new Date());
+		e.setUpdatedAt(date);
 		if (e.insertOrUpdate()) return ResponseDTO.createBySuccess();
 		else return ResponseDTO.createByError();
 	}

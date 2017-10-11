@@ -28,7 +28,7 @@
     </sql>
 
     <select id="queryHotelHome" resultType="com.gt.hotel.responseEntity.HotelList">
-        SELECT id hotelId, name, phone tel, address addr, logo imageurl 
+        SELECT id hotelId, name, phone tel, address addr, logo imageurl, store_id storeId 
         FROM t_hotel 
         <where>
             <if test="req.hotelId != null">
