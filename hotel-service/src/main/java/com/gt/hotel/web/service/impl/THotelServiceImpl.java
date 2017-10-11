@@ -7,7 +7,8 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.THotelDAO;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.responseEntity.ResHotel.HotelList;
+import com.gt.hotel.requestEntity.HotelParameter.ReqQuery;
+import com.gt.hotel.responseEntity.HotelList;
 import com.gt.hotel.web.service.THotelService;
 
 /**
@@ -25,8 +26,8 @@ public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > impl
 	THotelDAO tHotelDAO;
 	
 	@Override
-	public Page<HotelList> queryHotelHome(Integer busid, Page<HotelList> page) {
-		page.setRecords(tHotelDAO.queryHotelHome(page, busid));
+	public Page<HotelList> queryHotelHome(Integer busid, ReqQuery hpage, Page<HotelList> page) {
+		page.setRecords(tHotelDAO.queryHotelHome(page, hpage, busid));
 		return page;
 	}
 

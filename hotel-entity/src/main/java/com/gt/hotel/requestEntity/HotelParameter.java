@@ -58,4 +58,11 @@ public class HotelParameter {
 		
 	}
 	
+	@Api("酒店查询参数")
+	@Data
+	public static class ReqQuery extends HotelPage{
+		@ApiModelProperty("酒店ID")
+		private Integer hotelId;
+	}
+	
 }

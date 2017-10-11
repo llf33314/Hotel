@@ -27,10 +27,10 @@ import com.gt.hotel.entity.HotelWsWxShopInfoExtend;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.requestEntity.HotelPage;
 import com.gt.hotel.requestEntity.HotelParameter;
-import com.gt.hotel.responseEntity.ResHotel.HotelList;
-import com.gt.hotel.responseEntity.ResHotel.HotelShopInfo;
+import com.gt.hotel.requestEntity.HotelParameter.ReqQuery;
+import com.gt.hotel.responseEntity.HotelList;
+import com.gt.hotel.responseEntity.HotelShopInfo;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
 
@@ -86,15 +86,15 @@ public class HotelController extends BaseController {
 		@ApiResponse( code = 1, message = "酒店列表", response = HotelList.class )} )
 	@GetMapping( value = "queryHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO hotelR(HotelPage hpage, HttpSession session) {
+	public ResponseDTO hotelR(ReqQuery hpage, HttpSession session) {
 		Page< HotelList > page = new Page<>(hpage.getPage(), hpage.getPageSize());
 		Integer busid = getLoginUserId(session);
-		page = tHotelService.queryHotelHome(busid, page);
+		page = tHotelService.queryHotelHome(busid, hpage, page);
 		return ResponseDTO.createBySuccess(page);
 	}
 	
 	@ApiOperation( value = "新增或更新酒店", notes = "新增或更新酒店" )
-	@ApiResponses( {@ApiResponse( code = 0, message = "", response = HotelList.class )} )
+	@ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
 	@PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO hotelCU(@Validated HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {

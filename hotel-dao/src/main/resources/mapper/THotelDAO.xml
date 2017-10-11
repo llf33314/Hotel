@@ -27,12 +27,15 @@
         id, bus_id AS busId, store_id AS storeId, name, desc, phone, address, thumbnail, logo, longitude, latitude, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
     </sql>
 
-    <select id="queryHotelHome" parameterType="Map" resultType="com.gt.hotel.responseEntity.HotelList">
+    <select id="queryHotelHome" resultType="com.gt.hotel.responseEntity.HotelList">
         SELECT id hotelId, name, phone tel, address addr, logo imageurl 
         FROM t_hotel 
         <where>
-            <if test="bus_id != null">
-                bus_id = #{bus_id} 
+            <if test="req.hotelId != null">
+                AND id = #{req.hotelId} 
+            </if>
+            <if test="busId != null">
+                AND bus_id = #{busId} 
             </if>
         </where>
     </select>

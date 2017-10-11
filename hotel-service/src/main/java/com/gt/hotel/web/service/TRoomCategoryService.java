@@ -3,7 +3,8 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoomCategory;
-import com.gt.hotel.responseEntity.ResRoomCatepory.RoomCategoryList;
+import com.gt.hotel.requestEntity.RoomCategoryParameter.queryRoomCategory;
+import com.gt.hotel.responseEntity.RoomCategoryList;
 
 /**
  * <p>
@@ -21,6 +22,6 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param page
 	 * @return
 	 */
-	Page<RoomCategoryList> queryRoomCategory(Integer hotelId, Page<RoomCategoryList> page);
+	Page<RoomCategoryList> queryRoomCategory(queryRoomCategory param, Page<RoomCategoryList> page);
 
 }

@@ -24,6 +24,26 @@ public class RoomCategoryParameter {
 		@ApiModelProperty( value = "酒店ID" )
 		@NotNull(message = "酒店ID不能为空")
 		private Integer hotelId;
+		
+		@ApiModelProperty( value = "房型ID" )
+		private Integer roomCategoryId;
+	}
+	
+	/**
+	 * 新增 或 更新 参数
+	 */
+	@Data
+	@Api( "保存 或 更新 参数" )
+	public static class SaveOrUpdate {
+		@ApiModelProperty( value = "酒店ID" )
+		private Integer hotelId;
+		
+		@ApiModelProperty( "门店ID" )
+		@NotNull( message = "门店ID不能为空" )
+		private Integer shopId;
+		
+		
+		
 	}
 	
 }
