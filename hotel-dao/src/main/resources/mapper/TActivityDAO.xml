@@ -25,7 +25,9 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, hotel_id AS hotelId, external_number AS externalNumber, begin_time AS beginTime, end_time AS endTime, available_time AS availableTime, restriction_enable AS restrictionEnable, restriction_number AS restrictionNumber, show_room_enable AS showRoomEnable, number_threshold AS numberThreshold, activity_rules AS activityRules, publish_status AS publishStatus, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
+        id, hotel_id AS hotelId, external_number AS externalNumber, begin_time AS beginTime, end_time AS endTime, available_time AS availableTime, restriction_enable AS
+        restrictionEnable, restriction_number AS restrictionNumber, show_room_enable AS showRoomEnable, number_threshold AS numberThreshold, activity_rules AS activityRules,
+        publish_status AS publishStatus, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
     </sql>
 
 </mapper>

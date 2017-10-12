@@ -1,7 +1,6 @@
 package com.gt.hotel.param;
 
 import com.baomidou.mybatisplus.plugins.Page;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,12 +26,12 @@ public class HotelPage {
 
     @ApiModelProperty( "排序字段(asc or desc)" )
     private String orderByField;
-	
-	@ApiModelProperty( "查询条件参数" )
+
+    @ApiModelProperty( "查询条件参数" )
     private String keyword;
-	
-	@SuppressWarnings("rawtypes")
-	public Page initPage() {
-		return new Page(page, pageSize, orderByField);
-	}
+
+    @SuppressWarnings( "rawtypes" )
+    public Page initPage() {
+	return new Page(page, pageSize, orderByField);
+    }
 }

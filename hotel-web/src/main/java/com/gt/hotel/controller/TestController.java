@@ -1,7 +1,14 @@
 package com.gt.hotel.controller;
 
-import javax.servlet.http.HttpSession;
-
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.hotel.base.BaseController;
+import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.BusUser;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,16 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.gt.hotel.base.BaseController;
-import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.entity.BusUser;
-
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpSession;
 
 /**
  * API 参考类
@@ -30,8 +28,8 @@ import io.swagger.annotations.ApiOperation;
 @Controller
 public class TestController extends BaseController {
 
-//    @Autowired
-//    private BusUserService busUserService;
+    //    @Autowired
+    //    private BusUserService busUserService;
 
     /**
      * json
@@ -41,11 +39,11 @@ public class TestController extends BaseController {
      * @return
      */
     @ResponseBody
-    @GetMapping( value = { "/", "" } )
-    public ModelAndView hello( @RequestParam( defaultValue = " world,zhangmz!" ) String name, HttpSession session, ModelAndView mav ) {
-    	System.out.println( session.getId() );
-    	mav.setViewName("/nav.html");
-    	return mav;
+    @GetMapping( value = {"/", ""} )
+    public ModelAndView hello(@RequestParam( defaultValue = " world,zhangmz!" ) String name, HttpSession session, ModelAndView mav) {
+	System.out.println(session.getId());
+	mav.setViewName("/nav.html");
+	return mav;
     }
 
     /**
@@ -57,21 +55,21 @@ public class TestController extends BaseController {
      */
     @ApiOperation( value = "首页", notes = "首页" )
     @GetMapping( "/index" )
-    public ModelAndView index( ModelAndView map ) {
-	map.addObject( "test", "hello zhangmz!" );
-	map.setViewName( "index" );
-	this.logger.info( "hahahah" );
+    public ModelAndView index(ModelAndView map) {
+	map.addObject("test", "hello zhangmz!");
+	map.setViewName("index");
+	this.logger.info("hahahah");
 	//	this.logger.info( "你好嘛" );
-	this.logger.info( "不是吧" );
+	this.logger.info("不是吧");
 	return map;
     }
 
     @GetMapping( "/test" )
     @ResponseBody
     public String haha() {
-	this.logger.info( "测试热部署" );
-	this.logger.info( "22333" );
-	this.logger.info( "230000000" );
+	this.logger.info("测试热部署");
+	this.logger.info("22333");
+	this.logger.info("230000000");
 	return "你好嘛";
     }
 
@@ -84,15 +82,15 @@ public class TestController extends BaseController {
     @ApiImplicitParam( name = "phone", value = "手机号码", paramType = "query", dataType = "long" )
     @ResponseBody
     @GetMapping( value = "/user/count", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-    public ResponseDTO userCount( Long phone ) {
-	this.logger.debug( "phone is {}", phone );
+    public ResponseDTO userCount(Long phone) {
+	this.logger.debug("phone is {}", phone);
 	Wrapper< BusUser > busUserWrapper = null;
-	if ( phone != null ) {
+	if (phone != null) {
 	    busUserWrapper = new EntityWrapper<>();
-	    busUserWrapper.like( "phone", phone.toString() );
+	    busUserWrapper.like("phone", phone.toString());
 	}
 	Integer count = /*this.busUserService.selectCount( busUserWrapper )*/0;
-	return ResponseDTO.createBySuccess( count );
+	return ResponseDTO.createBySuccess(count);
     }
 
     /**
@@ -105,20 +103,20 @@ public class TestController extends BaseController {
      * @return ResponseDTO
      */
     @ApiOperation( value = "手机号、姓名模糊查询", notes = "手机号、姓名模糊查询" )
-    @ApiImplicitParams( { @ApiImplicitParam( name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10" ),
+    @ApiImplicitParams( {@ApiImplicitParam( name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10" ),
 		    @ApiImplicitParam( name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1" ),
-		    @ApiImplicitParam( name = "searchKeyWords", value = "用户姓名或手机号", paramType = "query", required = true, dataType = "String" ) } )
+		    @ApiImplicitParam( name = "searchKeyWords", value = "用户姓名或手机号", paramType = "query", required = true, dataType = "String" )} )
     @ResponseBody
     @GetMapping( "/user" )
-    public ResponseDTO findUsers( @RequestParam( defaultValue = "10" ) Integer pageSize, @RequestParam( defaultValue = "1" ) Integer pageIndex, String searchKeyWords ) {
-	this.logger.debug( "searchKeyWords is {}", searchKeyWords );
-	this.logger.debug( "pageIndex is {}", pageIndex );
-	this.logger.debug( "pageSize is {}", pageSize );
-	Page< BusUser > page = new Page<>( pageIndex, pageSize );
+    public ResponseDTO findUsers(@RequestParam( defaultValue = "10" ) Integer pageSize, @RequestParam( defaultValue = "1" ) Integer pageIndex, String searchKeyWords) {
+	this.logger.debug("searchKeyWords is {}", searchKeyWords);
+	this.logger.debug("pageIndex is {}", pageIndex);
+	this.logger.debug("pageSize is {}", pageSize);
+	Page< BusUser > page = new Page<>(pageIndex, pageSize);
 	Wrapper< BusUser > busUserWrapper = new EntityWrapper<>();
-	busUserWrapper.like( "phone", searchKeyWords );
-	busUserWrapper.like( "name", searchKeyWords );
-	return ResponseDTO.createBySuccess( /*this.busUserService.selectPage( page, busUserWrapper )*/ );
+	busUserWrapper.like("phone", searchKeyWords);
+	busUserWrapper.like("name", searchKeyWords);
+	return ResponseDTO.createBySuccess( /*this.busUserService.selectPage( page, busUserWrapper )*/);
     }
 
     /**
@@ -132,8 +130,8 @@ public class TestController extends BaseController {
     @ApiImplicitParam( name = "uid", value = "用户ID", paramType = "path", required = true, dataType = "Integer" )
     @ResponseBody
     @GetMapping( "/user/{uid}" )
-    public ResponseDTO findUser( @PathVariable Integer uid ) {
-	return ResponseDTO.createBySuccess( /*this.busUserService.findUser( uid )*/ );
+    public ResponseDTO findUser(@PathVariable Integer uid) {
+	return ResponseDTO.createBySuccess( /*this.busUserService.findUser( uid )*/);
     }
 
 }

@@ -102,7 +102,7 @@ public class THotelSetting extends Model< THotelSetting > {
 
     @Override
     protected Serializable pkVal() {
-        return this.hotelId;
+	return this.hotelId;
     }
 
 }

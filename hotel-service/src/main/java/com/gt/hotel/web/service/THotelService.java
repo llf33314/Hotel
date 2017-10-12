@@ -16,7 +16,7 @@ import com.gt.hotel.vo.HotelVo;
  */
 public interface THotelService extends BaseService< THotel > {
 
-	/**
+    /**
      * 查询 新增酒店 首页 酒店列表
      *
      * @param busid 用户ID
@@ -24,6 +24,6 @@ public interface THotelService extends BaseService< THotel > {
      *
      * @return 酒店列表
      */
-	Page<HotelVo> queryHotelHome(Integer busid, HotelParameter.Query hpage, Page<HotelVo> page);
+    Page< HotelVo > queryHotelHome(Integer busid, HotelParameter.Query hpage, Page< HotelVo > page);
 
 }

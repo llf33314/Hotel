@@ -73,6 +73,6 @@ public class TActivityDetail extends Model< TActivityDetail > {
 
     @Override
     protected Serializable pkVal() {
-        return this.activityId;
+	return this.activityId;
     }
 }
