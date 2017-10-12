@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.param.RoomCategoryParameter;
+import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
@@ -35,9 +37,9 @@ public class HotelRoomController extends BaseController {
 	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
 		@ApiResponse( code = 1, message = "房型列表对象", response = RoomCategoryVo.class )} )
 	@GetMapping( value = "queryRoomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO roomCategoryR(RoomCategoryParameter.queryRoomCategory param) {
-		Page< RoomCategoryVo > page = new Page<>(param.getPage(), param.getPageSize());
+	@SuppressWarnings( { "rawtypes", "unchecked" } )
+	public ResponseDTO roomCategoryR(@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param) {
+		Page< RoomCategoryVo > page = param.initPage();
 		page = tRoomCategoryService.queryRoomCategory(param, page);
 		return ResponseDTO.createBySuccess(page);
 	}
@@ -46,7 +48,7 @@ public class HotelRoomController extends BaseController {
 	@ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
 	@PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO roomCategoryCU(@Validated RoomCategoryParameter.SaveOrUpdate roomCategory, BindingResult bindingResult, HttpSession session) {
+	public ResponseDTO roomCategoryCU(@Validated @ModelAttribute SaveOrUpdate roomCategory, BindingResult bindingResult, HttpSession session) {
 //		for(String s : roomCategory.getImages())
 //			System.err.println(s);
 		InvalidParameter(bindingResult);

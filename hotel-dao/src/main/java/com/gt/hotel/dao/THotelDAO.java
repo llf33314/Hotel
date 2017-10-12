@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.param.HotelParameter.ReqQuery;
+import com.gt.hotel.param.HotelParameter;
 import com.gt.hotel.vo.HotelVo;
 
 /**
@@ -26,6 +26,6 @@ public interface THotelDAO extends BaseMapper< THotel > {
      * @param busid 用户ID
      * @return
      */
-	List<HotelVo> queryHotelHome(@Param("page") Pagination page, @Param("req") ReqQuery hpage, @Param("busId") Integer busid);
+	List<HotelVo> queryHotelHome(@Param("page") Pagination page, @Param("req") HotelParameter.Query hpage, @Param("busId") Integer busid);
 
 }

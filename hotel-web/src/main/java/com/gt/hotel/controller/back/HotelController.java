@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 import com.gt.hotel.param.HotelParameter;
-import com.gt.hotel.param.HotelParameter.ReqQuery;
+import com.gt.hotel.param.HotelParameter.Query;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.web.service.THotelService;
@@ -86,7 +87,7 @@ public class HotelController extends BaseController {
 		@ApiResponse( code = 1, message = "酒店列表", response = HotelVo.class )} )
 	@GetMapping( value = "queryHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO hotelR(ReqQuery hpage, HttpSession session) {
+	public ResponseDTO hotelR(Query hpage, HttpSession session) {
 		Page< HotelVo > page = new Page<>(hpage.getPage(), hpage.getPageSize());
 		Integer busid = getLoginUserId(session);
 		page = tHotelService.queryHotelHome(busid, hpage, page);
@@ -97,7 +98,7 @@ public class HotelController extends BaseController {
 	@ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
 	@PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO hotelCU(@Validated HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
+	public ResponseDTO hotelCU(@Validated @ModelAttribute HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);
 		Integer busid = getLoginUserId(session);
 		Date date = new Date();

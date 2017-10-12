@@ -23,9 +23,9 @@ public class RoomCategoryParameter {
 	 * 房型列表查询参数
 	 */
 	@Data
-	@Api( "房型列表查询参数" )
-	public static class queryRoomCategory extends HotelPage{
-		@ApiModelProperty( value = "酒店ID" )
+	@Api(tags = "房型列表查询参数" )
+	public static class QueryRoomCategory extends HotelPage{
+		@ApiModelProperty( value = "酒店ID", required = true)
 		@NotNull(message = "酒店ID不能为空")
 		private Integer hotelId;
 		

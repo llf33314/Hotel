@@ -3,7 +3,7 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.param.HotelParameter.ReqQuery;
+import com.gt.hotel.param.HotelParameter;
 import com.gt.hotel.vo.HotelVo;
 
 /**
@@ -24,6 +24,6 @@ public interface THotelService extends BaseService< THotel > {
      *
      * @return 酒店列表
      */
-	Page<HotelVo> queryHotelHome(Integer busid, ReqQuery hpage, Page<HotelVo> page);
+	Page<HotelVo> queryHotelHome(Integer busid, HotelParameter.Query hpage, Page<HotelVo> page);
 
 }

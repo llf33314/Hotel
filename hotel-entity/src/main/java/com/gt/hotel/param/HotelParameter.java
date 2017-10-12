@@ -3,6 +3,7 @@ package com.gt.hotel.param;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,17 +29,17 @@ public class HotelParameter {
 		private Integer shopId;
 		
 		@ApiModelProperty( "酒店名称" )
-		@NotNull( message = "酒店名称不能为空" )
+		@NotEmpty( message = "酒店名称不能为空" )
 		@Length( max = 60, message = "酒店名称长度过长" )
 		private String name;
 		
 		@ApiModelProperty( "酒店电话" )
-		@NotNull( message = "酒店电话不能为空" )
+		@NotEmpty( message = "酒店电话不能为空" )
 		@Length( max = 12, message = "酒店电话长度过长" )
 		private String tel;
 		
 		@ApiModelProperty( "酒店地址" )
-		@NotNull( message = "酒店地址不能为空" )
+		@NotEmpty( message = "酒店地址不能为空" )
 		@Length( max = 200, message = "酒店地址长度过长" )
 		private String addr;
 		
@@ -51,7 +52,7 @@ public class HotelParameter {
 		private Double latitude;
 		
 		@ApiModelProperty( "酒店介绍" )
-		@NotNull( message = "酒店介绍不能为空" )
+		@NotEmpty( message = "酒店介绍不能为空" )
 		@Length( max = 200, message = "酒店介绍长度过长" )
 		private String desc;
 		
@@ -59,7 +60,7 @@ public class HotelParameter {
 	
 	@Api("酒店查询参数")
 	@Data
-	public static class ReqQuery extends HotelPage{
+	public static class Query extends HotelPage{
 		@ApiModelProperty("酒店ID")
 		private Integer hotelId;
 	}

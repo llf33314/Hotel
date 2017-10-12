@@ -3,8 +3,8 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoomCategory;
+import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
-import com.gt.hotel.param.RoomCategoryParameter.queryRoomCategory;
 import com.gt.hotel.vo.RoomCategoryVo;
 
 /**
@@ -23,7 +23,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param page
 	 * @return
 	 */
-	Page<RoomCategoryVo> queryRoomCategory(queryRoomCategory param, Page<RoomCategoryVo> page);
+	Page<RoomCategoryVo> queryRoomCategory(QueryRoomCategory param, Page<RoomCategoryVo> page);
 
 	/**
 	 * 保存 or 更新 房型
