@@ -9,9 +9,7 @@ import com.gt.hotel.entity.TRoomCategory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class WXMPApiUtil {
@@ -282,14 +280,28 @@ public class WXMPApiUtil {
 
     public static void main(String[] args) {
 	try {
-	    WXMPApiUtil u = new WXMPApiUtil();
+	    //	    WXMPApiUtil u = new WXMPApiUtil();
 	    //			System.err.println(getDictKey("1180"));
 	    //			System.err.println(isErpCount(33));
 	    //			System.err.println(socketPush("night", "test"));
 	    //			System.err.println(socketPush("night", "test"));
 	    //			System.err.println(u.getShopById(45));
-	    System.err.println(u.queryWxShopByBusId(33));
-	} catch (SignException e) {
+	    //	    System.err.println(u.queryWxShopByBusId(33));
+	    TreeMap< String, String > treeMap = new TreeMap<>();
+	    treeMap.put("dlogin_name", "aaa");
+	    treeMap.put("apwd", "1234");
+	    treeMap.entrySet();
+	    Set es = treeMap.entrySet();//所有参与传参的参数按照accsii排序（升序）
+	    for (Object e : es) {
+		Map.Entry entry = (Map.Entry) e;
+		String k = (String) entry.getKey();
+		Object v = entry.getValue();
+		if (null != v && !"".equals(v) && null != k && !"".equals(k)) {
+		    System.out.println(((Map.Entry) e).getKey() + " : " + ((Map.Entry) e).getValue());
+		}
+	    }
+
+	} catch (Exception e) {
 	    e.printStackTrace();
 	}
     }
