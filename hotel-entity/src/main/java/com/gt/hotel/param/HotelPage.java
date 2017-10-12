@@ -1,6 +1,5 @@
-package com.gt.hotel.requestEntity;
+package com.gt.hotel.param;
 
-import com.gt.hotel.util.RequestBeanUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,12 +15,12 @@ public class HotelPage {
     /**
      * 当前页数
      */
-    @ApiModelProperty( "当前页数" + RequestBeanUtil.OPTIONAL )
+    @ApiModelProperty( "当前页数" )
     private Integer page     = 1;
     /**
      * 当前页条目数
      */
-    @ApiModelProperty( "当前页条目数" + RequestBeanUtil.OPTIONAL )
+    @ApiModelProperty( "当前页条目数" )
     private Integer pageSize = 10;
 
 }

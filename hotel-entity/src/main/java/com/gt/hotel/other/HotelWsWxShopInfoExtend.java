@@ -1,4 +1,4 @@
-package com.gt.hotel.entity;
+package com.gt.hotel.other;
 
 import io.swagger.annotations.Api;
 

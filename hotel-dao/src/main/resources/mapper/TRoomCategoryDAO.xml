@@ -30,7 +30,7 @@
         id, name, room_count AS roomCount, hotel_id AS hotelId, store_id AS storeId, desc, rack_rate AS rackRate, deposit, discount_enable AS discountEnable, discount, weekend_fare_enable AS weekendFareEnable, weekend_fare AS weekendFare, mark_modified AS markModified, breakfast_enable AS breakfastEnable, breakfast_quantity AS breakfastQuantity, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
     </sql>
 
-	<select id="queryRoomCategory" resultType="com.gt.hotel.responseEntity.RoomCategoryList">
+	<select id="queryRoomCategory" resultType="com.gt.hotel.vo.RoomCategoryVo">
 		SELECT hotel_id hotelId, id roomCategoryId, name, room_count roomCount, rack_rate rackRate, deposit, discount discount, weekend_fare weekendFare 
 		FROM t_room_category 
 		<where>

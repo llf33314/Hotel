@@ -7,7 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TRoomCategory;
-import com.gt.hotel.responseEntity.RoomCategoryList;
+import com.gt.hotel.param.RoomCategoryParameter.queryRoomCategory;
+import com.gt.hotel.vo.RoomCategoryVo;
 
 /**
  * <p>
@@ -25,6 +26,6 @@ public interface TRoomCategoryDAO extends BaseMapper< TRoomCategory > {
 	 * @param page
 	 * @return
 	 */
-	List<RoomCategoryList> queryRoomCategory(@Param("queryRoomCategory") com.gt.hotel.requestEntity.RoomCategoryParameter.queryRoomCategory param, @Param("page") Pagination page);
+	List<RoomCategoryVo> queryRoomCategory(@Param("queryRoomCategory") queryRoomCategory param, @Param("page") Pagination page);
 
 }

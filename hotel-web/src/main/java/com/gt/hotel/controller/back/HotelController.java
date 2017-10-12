@@ -23,15 +23,15 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.entity.HotelWsWxShopInfoExtend;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.requestEntity.HotelParameter;
-import com.gt.hotel.requestEntity.HotelParameter.ReqQuery;
-import com.gt.hotel.responseEntity.HotelList;
-import com.gt.hotel.responseEntity.HotelShopInfo;
+import com.gt.hotel.other.HotelShopInfo;
+import com.gt.hotel.other.HotelWsWxShopInfoExtend;
+import com.gt.hotel.param.HotelParameter;
+import com.gt.hotel.param.HotelParameter.ReqQuery;
 import com.gt.hotel.util.WXMPApiUtil;
+import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.web.service.THotelService;
 
 import io.swagger.annotations.Api;
@@ -83,11 +83,11 @@ public class HotelController extends BaseController {
 	
 	@ApiOperation( value = "酒店列表", notes = "酒店列表" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
-		@ApiResponse( code = 1, message = "酒店列表", response = HotelList.class )} )
+		@ApiResponse( code = 1, message = "酒店列表", response = HotelVo.class )} )
 	@GetMapping( value = "queryHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO hotelR(ReqQuery hpage, HttpSession session) {
-		Page< HotelList > page = new Page<>(hpage.getPage(), hpage.getPageSize());
+		Page< HotelVo > page = new Page<>(hpage.getPage(), hpage.getPageSize());
 		Integer busid = getLoginUserId(session);
 		page = tHotelService.queryHotelHome(busid, hpage, page);
 		return ResponseDTO.createBySuccess(page);

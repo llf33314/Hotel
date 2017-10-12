@@ -1,4 +1,4 @@
-package com.gt.hotel.requestEntity;
+package com.gt.hotel.param;
 
 import java.util.List;
 
@@ -89,3 +89,4 @@ public class RoomCategoryParameter {
 	}
 	
 }
+

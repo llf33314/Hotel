@@ -1,19 +1,18 @@
-package com.gt.hotel.requestEntity;
+package com.gt.hotel.param;
+
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 新增or更新酒店请求对象
  *
  * @author ReverieNight@Foxmail.com
  */
-
-@Api( description = "酒店实体参数" )
 public class HotelParameter {
 	/**
 	 * 新增或更新实体参数

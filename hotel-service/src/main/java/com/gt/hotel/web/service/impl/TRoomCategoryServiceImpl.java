@@ -16,8 +16,9 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TRoomCategoryDAO;
 import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.entity.TRoomCategory;
-import com.gt.hotel.requestEntity.RoomCategoryParameter.SaveOrUpdate;
-import com.gt.hotel.responseEntity.RoomCategoryList;
+import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.param.RoomCategoryParameter.queryRoomCategory;
+import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.TFileRecordService;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
@@ -39,8 +40,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	TFileRecordService tFileRecordService;
 
 	@Override
-	public Page<RoomCategoryList> queryRoomCategory(
-			com.gt.hotel.requestEntity.RoomCategoryParameter.queryRoomCategory param, Page<RoomCategoryList> page) {
+	public Page<RoomCategoryVo> queryRoomCategory(queryRoomCategory param, Page<RoomCategoryVo> page) {
 		page.setRecords(tRoomCategoryDAO.queryRoomCategory(param, page));
 		return page;
 	}

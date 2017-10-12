@@ -1,4 +1,4 @@
-package com.gt.hotel.responseEntity;
+package com.gt.hotel.vo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Api( description = "新增酒店 - 酒店列表" )
-public class HotelList {
+public class HotelVo {
 	@ApiModelProperty( "门店ID" )
     private Integer storeId;
 	

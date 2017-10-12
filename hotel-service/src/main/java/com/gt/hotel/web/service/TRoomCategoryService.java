@@ -1,13 +1,11 @@
 package com.gt.hotel.web.service;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoomCategory;
-import com.gt.hotel.requestEntity.RoomCategoryParameter.SaveOrUpdate;
-import com.gt.hotel.requestEntity.RoomCategoryParameter.queryRoomCategory;
-import com.gt.hotel.responseEntity.RoomCategoryList;
+import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.param.RoomCategoryParameter.queryRoomCategory;
+import com.gt.hotel.vo.RoomCategoryVo;
 
 /**
  * <p>
@@ -25,7 +23,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param page
 	 * @return
 	 */
-	Page<RoomCategoryList> queryRoomCategory(queryRoomCategory param, Page<RoomCategoryList> page);
+	Page<RoomCategoryVo> queryRoomCategory(queryRoomCategory param, Page<RoomCategoryVo> page);
 
 	/**
 	 * 保存 or 更新 房型

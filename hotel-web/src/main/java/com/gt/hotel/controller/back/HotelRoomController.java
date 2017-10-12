@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.requestEntity.RoomCategoryParameter;
-import com.gt.hotel.responseEntity.RoomCategoryList;
+import com.gt.hotel.param.RoomCategoryParameter;
+import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
 import io.swagger.annotations.Api;
@@ -33,11 +33,11 @@ public class HotelRoomController extends BaseController {
 	
 	@ApiOperation( value = "房型列表", notes = "房型列表" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
-		@ApiResponse( code = 1, message = "房型列表对象", response = RoomCategoryList.class )} )
+		@ApiResponse( code = 1, message = "房型列表对象", response = RoomCategoryVo.class )} )
 	@GetMapping( value = "queryRoomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO roomCategoryR(RoomCategoryParameter.queryRoomCategory param) {
-		Page< RoomCategoryList > page = new Page<>(param.getPage(), param.getPageSize());
+		Page< RoomCategoryVo > page = new Page<>(param.getPage(), param.getPageSize());
 		page = tRoomCategoryService.queryRoomCategory(param, page);
 		return ResponseDTO.createBySuccess(page);
 	}
