@@ -12,17 +12,15 @@ spring:
   restart:
    enabled: true
  redis:
-#   host: 113.106.202.51
    host: localhost
    port: 6379
-#   password: gt@123456
  session:
    store-type: redis
  datasource:
    druid:
-     url: jdbc:mysql://113.106.202.51:3306/gt_aliyuan?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+     url: jdbc:mysql://localhost:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
      username: root
-     password: gt123456
+     password: 123456
      # 下面为连接池的补充设置，应用到上面所有数据源中
      # 初始化大小，最小，最大
      initial-size: 5

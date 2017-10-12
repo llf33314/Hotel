@@ -22,12 +22,11 @@ import java.util.*;
 public class MpGenerator {
 
     // 项目的绝对路径
-    public static final  String   outPutBaseDir      = "/Users/zhangmz/work/GT/duofee/hotel/hotel-generator/";
+    public static final  String   outPutBaseDir      = "C:\\Users\\Administrator\\Desktop";
     // 生成*.java 的文件路径
     public static final  String   outPutJavaModel    = outPutBaseDir + "src/main/java";
     // 需要生成的表
-    public static final  String[] generatorTableName = new String[] {"sys_dictionary", "sys_dictionary_type", "t_activity", "t_activity_detail", "t_activity_room", "t_file_record",
-		    "t_hotel", "t_hotel_setting", "t_infrastructure", "t_infrastructure_relation", "t_room", "t_room_category",};
+    public static final  String[] generatorTableName = new String[] {"t_infrastructure_relation"};
     // 作者
     private static final String   author             = "";
     // 去除表前缀 例如：bus_user 填入bus 生成的 user
@@ -50,11 +49,11 @@ public class MpGenerator {
     // 驱动
     public static final  String   driverName         = "com.mysql.jdbc.Driver";
     // url
-    public static final  String   url                = "jdbc:mysql://113.106.202.51:3306/gt_hotel?characterEncoding=utf8";
+    public static final  String   url                = "jdbc:mysql://localhost:3306/gt_hotel?characterEncoding=utf8";
     // 数据库用户名
-    public static final  String   username           = "gt_hotel";
+    public static final  String   username           = "root";
     // 密码
-    public static final  String   password           = "gt123456";
+    public static final  String   password           = "123456";
 
     public static final String baseService = "com.gt.hotel.base.BaseService";
 

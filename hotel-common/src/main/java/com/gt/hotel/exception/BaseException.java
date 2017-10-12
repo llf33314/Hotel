@@ -48,4 +48,8 @@ public class BaseException extends RuntimeException {
 	this.code = code;
     }
 
+	public int getCode() {
+		return this.code;
+	}
+
 }

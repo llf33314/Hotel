@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TRoomCategory;
+import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.vo.RoomCategoryVo;
 
 /**
@@ -19,14 +20,12 @@ import com.gt.hotel.vo.RoomCategoryVo;
  */
 public interface TRoomCategoryDAO extends BaseMapper< TRoomCategory > {
 
-    /**
-     * 查询 房型列表
-     *
-     * @param hotelId 酒店ID
-     * @param page
-     *
-     * @return
-     */
-    List< RoomCategoryVo > queryRoomCategory(@Param( "queryRoomCategory" ) com.gt.hotel.param.RoomCategoryParameter.queryRoomCategory param, @Param( "page" ) Pagination page);
+	/**
+	 * 查询 房型列表
+	 * @param hotelId 酒店ID
+	 * @param page
+	 * @return
+	 */
+	List<RoomCategoryVo> queryRoomCategory(@Param("queryRoomCategory") QueryRoomCategory param, @Param("page") Pagination page);
 
 }
