@@ -1,6 +1,7 @@
 package com.gt.hotel.controller.back;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.param.RoomCategoryParameter;
+import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.TRoomCategoryService;
@@ -38,7 +40,8 @@ public class HotelRoomController extends BaseController {
 		@ApiResponse( code = 1, message = "房型列表对象", response = RoomCategoryVo.class )} )
 	@GetMapping( value = "queryRoomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( { "rawtypes", "unchecked" } )
-	public ResponseDTO roomCategoryR(@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param) {
+	public ResponseDTO roomCategoryR(@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param, BindingResult bindingResult) {
+		InvalidParameter(bindingResult);
 		Page< RoomCategoryVo > page = param.initPage();
 		page = tRoomCategoryService.queryRoomCategory(param, page);
 		return ResponseDTO.createBySuccess(page);
@@ -56,6 +59,18 @@ public class HotelRoomController extends BaseController {
 		boolean flag = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
 		if(flag) return ResponseDTO.createBySuccess();
 		else return ResponseDTO.createByError();
+	}
+	
+	@ApiOperation( value = "房型更新对象", notes = "房型更新对象" )
+	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
+		@ApiResponse( code = 1, message = "房型列表对象", response = RoomCategoryVo.class )} )
+	@GetMapping( value = "queryRoomCategoryOne", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@SuppressWarnings( { "rawtypes" } )
+	public ResponseDTO roomCategoryROne(@Validated @ModelAttribute QueryRoomCategoryOne param, BindingResult bindingResult) {
+		InvalidParameter(bindingResult);
+		RoomCategoryVo roomCategoryVo = null;
+		roomCategoryVo = tRoomCategoryService.queryRoomCategoryOne(param.getRoomCategoryId());
+		return ResponseDTO.createBySuccess(roomCategoryVo);
 	}
 	
 }

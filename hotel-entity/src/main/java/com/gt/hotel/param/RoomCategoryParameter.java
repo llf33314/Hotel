@@ -34,6 +34,17 @@ public class RoomCategoryParameter {
 	}
 	
 	/**
+	 * 房型对象查询参数
+	 */
+	@Data
+	@Api(tags = "房型对象查询参数" )
+	public static class QueryRoomCategoryOne{
+		@ApiModelProperty( value = "房型ID" )
+		@NotNull(message = "房型ID不能为空")
+		private Integer roomCategoryId;
+	}
+	
+	/**
 	 * 新增 或 更新 参数
 	 */
 	@Data
@@ -86,6 +97,22 @@ public class RoomCategoryParameter {
 		@ApiModelProperty("押金")
 		@NotNull(message = "押金不能为空")
 		private Integer deposit;
+		
+		@ApiModelProperty("房型设施集合 ")
+		private List<InfrastructureRelation> infrastructureRelations;
+	}
+	
+	@Data
+	@Api( "房间设施关系ID" )
+	public static class InfrastructureRelation{
+		@ApiModelProperty("设施ID")
+		private Integer infrastructureId;
+		
+		@ApiModelProperty("房型ID")
+		private Integer referenceId;
+		
+		@ApiModelProperty("数值")
+		private String displayValue;
 	}
 	
 }

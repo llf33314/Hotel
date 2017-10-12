@@ -33,4 +33,12 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 */
 	boolean roomCategoryCU(Integer busid, SaveOrUpdate roomCategory);
 
+	/**
+	 * 查询 房型对象
+	 * @param roomCategoryId 房型ID
+	 * @param page
+	 * @return
+	 */
+	RoomCategoryVo queryRoomCategoryOne(Integer roomCategoryId);
+
 }
