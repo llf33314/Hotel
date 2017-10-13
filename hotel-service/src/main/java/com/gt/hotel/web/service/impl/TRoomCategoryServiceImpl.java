@@ -16,6 +16,7 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TRoomCategoryDAO;
 import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.entity.TInfrastructureRelation;
+import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.InfrastructureRelation;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
@@ -26,6 +27,7 @@ import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.TFileRecordService;
 import com.gt.hotel.web.service.TInfrastructureRelationService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+import com.gt.hotel.web.service.TRoomService;
 
 /**
  * <p>
@@ -47,6 +49,9 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	@Autowired
 	TInfrastructureRelationService tInfrastructureRelationService;
 
+	@Autowired
+	TRoomService tRoomService;
+	
 	@Override
 	public Page<RoomCategoryVo> queryRoomCategory(QueryRoomCategory param, Page<RoomCategoryVo> page) {
 		page.setRecords(tRoomCategoryDAO.queryRoomCategory(param, page));
@@ -150,6 +155,22 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		roomCategoryVo.setImages(fileRecordVos);
 		roomCategoryVo.setInfrastructureRelations(infrastructureRelationVos);
 		return roomCategoryVo;
+	}
+
+	@Override
+	public boolean editRooms(Integer busid, com.gt.hotel.param.RoomParameter.SaveOrUpdate[] rooms) {
+		boolean flag = false;
+		Date date = new Date();
+		List<TRoom> entityList = new ArrayList<>();
+		for(com.gt.hotel.param.RoomParameter.SaveOrUpdate r : rooms){
+			TRoom _r = new TRoom();
+			BeanUtils.copyProperties(r, _r);
+			_r.setCreatedAt(date);
+			_r.setCreatedBy(busid);
+			_r.setUpdatedBy(busid);
+		}
+		flag = tRoomService.insertOrUpdateBatch(entityList);
+		return flag;
 	}
 
 }

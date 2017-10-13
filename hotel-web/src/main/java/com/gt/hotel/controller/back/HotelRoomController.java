@@ -1,7 +1,6 @@
 package com.gt.hotel.controller.back;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,6 +18,7 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.param.RoomCategoryParameter;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.param.RoomParameter;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
@@ -34,7 +34,7 @@ public class HotelRoomController extends BaseController {
 	
 	@Autowired
 	TRoomCategoryService tRoomCategoryService;
-	
+
 	@ApiOperation( value = "房型列表", notes = "房型列表" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
 		@ApiResponse( code = 1, message = "房型列表对象", response = RoomCategoryVo.class )} )
@@ -49,7 +49,7 @@ public class HotelRoomController extends BaseController {
 	
 	@ApiOperation( value = "新增 或 更新 房型", notes = "新增 或 更新 房型" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
-	@PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@PostMapping( value = "editRoomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO roomCategoryCU(@Validated @ModelAttribute SaveOrUpdate roomCategory, BindingResult bindingResult, HttpSession session) {
 //		for(String s : roomCategory.getImages())
@@ -73,4 +73,15 @@ public class HotelRoomController extends BaseController {
 		return ResponseDTO.createBySuccess(roomCategoryVo);
 	}
 	
+	@ApiOperation( value = "编辑 房间", notes = "编辑 房间" )
+	@ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
+	@PostMapping( value = "editRoom", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@SuppressWarnings( "rawtypes" )
+	public ResponseDTO roomCU(@Validated @ModelAttribute RoomParameter.SaveOrUpdate[] rooms, BindingResult bindingResult, HttpSession session) {
+		InvalidParameter(bindingResult);
+		Integer busid = getLoginUserId(session);
+		boolean flag = tRoomCategoryService.editRooms(busid, rooms);
+		if(flag) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
+	}
 }

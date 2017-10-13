@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 新增or更新酒店请求对象
+ * 新增or更新房型请求对象
  *
  * @author ReverieNight@Foxmail.com
  */

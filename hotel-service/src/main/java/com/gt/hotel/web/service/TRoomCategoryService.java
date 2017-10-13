@@ -41,4 +41,12 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 */
 	RoomCategoryVo queryRoomCategoryOne(Integer roomCategoryId);
 
+	/**
+	 * 保存 or 更新 房间
+	 * @param busid 用户ID
+	 * @param rooms 房间对象数组
+	 * @return
+	 */
+	boolean editRooms(Integer busid, com.gt.hotel.param.RoomParameter.SaveOrUpdate[] rooms);
+
 }

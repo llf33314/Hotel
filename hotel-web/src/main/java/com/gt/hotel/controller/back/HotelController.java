@@ -96,7 +96,7 @@ public class HotelController extends BaseController {
 	
 	@ApiOperation( value = "新增或更新酒店", notes = "新增或更新酒店" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
-	@PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@PostMapping( value = "editHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO hotelCU(@Validated @ModelAttribute HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);
