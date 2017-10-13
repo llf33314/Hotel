@@ -85,7 +85,7 @@ public class HotelController extends BaseController {
 	@ApiOperation( value = "酒店列表", notes = "酒店列表" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
 		@ApiResponse( code = 1, message = "酒店列表", response = HotelVo.class )} )
-	@GetMapping( value = "queryHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO hotelR(Query hpage, HttpSession session) {
 		Page< HotelVo > page = new Page<>(hpage.getPage(), hpage.getPageSize());
@@ -96,7 +96,7 @@ public class HotelController extends BaseController {
 	
 	@ApiOperation( value = "新增或更新酒店", notes = "新增或更新酒店" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
-	@PostMapping( value = "editHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@PostMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO hotelCU(@Validated @ModelAttribute HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);

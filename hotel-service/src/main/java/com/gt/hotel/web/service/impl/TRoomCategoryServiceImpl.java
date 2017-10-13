@@ -13,16 +13,17 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TRoomCategoryDAO;
 import com.gt.hotel.dao.TRoomDAO;
 import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.entity.TInfrastructureRelation;
 import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.entity.TRoomCategory;
+import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.RoomCategoryParameter.InfrastructureRelation;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
-import com.gt.hotel.param.RoomParameter.QueryParam;
 import com.gt.hotel.vo.FileRecordVo;
 import com.gt.hotel.vo.InfrastructureRelationVo;
 import com.gt.hotel.vo.RoomCategoryVo;
@@ -66,10 +67,8 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 
 	@Transactional
 	@Override
-	public boolean roomCategoryCU(Integer busid, SaveOrUpdate roomCategory) {
-		boolean flag = false;
+	public void roomCategoryCU(Integer busid, SaveOrUpdate roomCategory) {
 		Date date = new Date();
-		String module = "roomCategory";
 		TRoomCategory tRoomCategory = new TRoomCategory();
 		BeanUtils.copyProperties(roomCategory, tRoomCategory);
 		tRoomCategory.setId(roomCategory.getRoomCategoryId());
@@ -78,15 +77,19 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		tRoomCategory.setCreatedBy(busid);
 		tRoomCategory.setUpdatedAt(date);
 		tRoomCategory.setUpdatedBy(busid);
-		flag = tRoomCategory.insertOrUpdate();
+		if(!tRoomCategory.insertOrUpdate()){
+			throw new ResponseEntityException(9991, "房型保存失败");
+		}
 		
 		Wrapper<TFileRecord> filewrapper = new EntityWrapper<>();
 		filewrapper.eq("reference_id", tRoomCategory.getId());
-		filewrapper.eq("module", module);
+		filewrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 //		TFileRecord _file = new TFileRecord();
-//		_file.setMarkModified(2);
+//		_file.setMarkModified(CommonConst.DELETED);
 //		tFileRecordService.update(_file , filewrapper);
-		tFileRecordService.delete(filewrapper);
+		if(!tFileRecordService.delete(filewrapper)){
+			throw new ResponseEntityException(9992, "图片保存失败");
+		}
 		
 		List<TFileRecord> imgs = new ArrayList<>();
 		for(String imgurl : roomCategory.getImages()){
@@ -95,7 +98,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			file.setCreatedBy(busid);
 			file.setUpdatedAt(date);
 			file.setUpdatedBy(busid);
-			file.setModule(module);
+			file.setModule(CommonConst.MODULE_ROOM_CATEGORY);
 			file.setReferenceId(tRoomCategory.getId());
 			file.setPath(imgurl);
 			int index = imgurl.lastIndexOf("/");
@@ -105,12 +108,16 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			file.setOriginalName(name);
 			imgs.add(file);
 		}
-		flag = flag && tFileRecordService.insertBatch(imgs);
+		if(!tFileRecordService.insertBatch(imgs)){
+			throw new ResponseEntityException(9992, "图片保存失败");
+		}
 		
 		Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
 		rwrapper.eq("reference_id", tRoomCategory.getId());
-		rwrapper.eq("module", module);
-		tInfrastructureRelationService.delete(rwrapper);
+		rwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
+		if(!tInfrastructureRelationService.delete(rwrapper)){
+			throw new ResponseEntityException(9993, "设施保存失败");
+		}
 		
 		List<TInfrastructureRelation> irs = new ArrayList<>();
 		for(InfrastructureRelation ir : roomCategory.getInfrastructureRelations()){
@@ -119,15 +126,16 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			_ir.setCreatedBy(busid);
 			_ir.setUpdatedAt(date);
 			_ir.setUpdatedBy(busid);
-			_ir.setModule(module);
+			_ir.setModule(CommonConst.MODULE_ROOM_CATEGORY);
 			_ir.setReferenceId(tRoomCategory.getId());
 			_ir.setDisplayValue(ir.getDisplayValue());
 			_ir.setInfrastructureId(ir.getInfrastructureId());
 			irs.add(_ir);
 		}
-		flag = flag && tInfrastructureRelationService.insertBatch(irs);
+		if(!tInfrastructureRelationService.insertBatch(irs)){
+			throw new ResponseEntityException(9993, "设施保存失败");
+		}
 		
-		return flag;
 	}
 
 	@Override
@@ -162,10 +170,23 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		roomCategoryVo.setInfrastructureRelations(infrastructureRelationVos);
 		return roomCategoryVo;
 	}
+	
+	@Override
+	public void delRoomCategory(Integer busid, List<Integer> ids) {
+		Date date = new Date();
+		Wrapper<TRoomCategory> wrapper = new EntityWrapper<>();
+		wrapper.in("id", ids);
+		TRoomCategory entity = new TRoomCategory();
+		entity.setMarkModified(CommonConst.DELETED);
+		entity.setUpdatedAt(date);
+		entity.setUpdatedBy(busid);
+		if(!this.update(entity, wrapper)){
+			throw new ResponseEntityException(999, "删除失败");
+		}
+	}
 
 	@Override
-	public boolean editRooms(Integer busid, com.gt.hotel.param.RoomParameter.SaveOrUpdate[] rooms) {
-		boolean flag = false;
+	public void editRooms(Integer busid, List<com.gt.hotel.param.RoomParameter.SaveOrUpdate> rooms) {
 		Date date = new Date();
 		List<TRoom> entityList = new ArrayList<>();
 		for(com.gt.hotel.param.RoomParameter.SaveOrUpdate r : rooms){
@@ -175,14 +196,15 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			_r.setCreatedBy(busid);
 			_r.setUpdatedBy(busid);
 		}
-		flag = tRoomService.insertOrUpdateBatch(entityList);
-		return flag;
+		if(!tRoomService.insertOrUpdateBatch(entityList)){
+			throw new ResponseEntityException(999, "保存失败");
+		}
 	}
 
 	@Override
-	public Page<RoomVo> queryRoomList(QueryParam param, Page<RoomVo> page) {
-		page.setRecords(tRoomDAO.queryRoomList(param, page));
-		return null;
+	public Page<RoomVo> queryRoomList(Integer roomCategoryId, Page<RoomVo> page) {
+		page.setRecords(tRoomDAO.queryRoomList(roomCategoryId, page));
+		return page;
 	}
 
 }

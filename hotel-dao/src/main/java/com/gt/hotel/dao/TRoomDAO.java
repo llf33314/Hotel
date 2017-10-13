@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TRoom;
-import com.gt.hotel.param.RoomParameter.QueryParam;
 import com.gt.hotel.vo.RoomVo;
 
 /**
@@ -27,6 +26,6 @@ public interface TRoomDAO extends BaseMapper< TRoom > {
 	 * @param page 
 	 * @return
 	 */
-	List<RoomVo> queryRoomList(@Param("param") QueryParam param, @Param("page") Pagination page);
+	List<RoomVo> queryRoomList(@Param("roomCategoryId") Integer roomCategoryId, @Param("page") Pagination page);
 
 }

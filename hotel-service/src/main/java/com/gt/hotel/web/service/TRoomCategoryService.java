@@ -1,11 +1,12 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
-import com.gt.hotel.param.RoomParameter.QueryParam;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomVo;
 
@@ -33,7 +34,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param roomCategory 房型请求对象
 	 * @return
 	 */
-	boolean roomCategoryCU(Integer busid, SaveOrUpdate roomCategory);
+	void roomCategoryCU(Integer busid, SaveOrUpdate roomCategory);
 
 	/**
 	 * 查询 房型对象
@@ -49,7 +50,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param rooms 房间对象数组
 	 * @return
 	 */
-	boolean editRooms(Integer busid, com.gt.hotel.param.RoomParameter.SaveOrUpdate[] rooms);
+	void editRooms(Integer busid, List<com.gt.hotel.param.RoomParameter.SaveOrUpdate> rooms);
 
 	/**
 	 * 查询 房间列表
@@ -57,6 +58,15 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param page 
 	 * @return
 	 */
-	Page<RoomVo> queryRoomList(QueryParam param, Page<RoomVo> page);
+	Page<RoomVo> queryRoomList(Integer roomCategoryId, Page<RoomVo> page);
+
+	/**
+	 * 删除 房型(伪)
+	 * @param busid 用户ID
+	 * @param ids 房型ID 数组
+	 * @return
+	 */
+	void delRoomCategory(Integer busid, List<Integer> ids);
+
 
 }

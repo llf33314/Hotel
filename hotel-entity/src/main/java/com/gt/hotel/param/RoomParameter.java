@@ -18,14 +18,6 @@ import lombok.Data;
 public class RoomParameter {
 	
 	@Data
-	@Api( "房间请求对象" )
-	public static class QueryParam extends HotelPage{
-		@ApiModelProperty( value = "房型ID", required = true )
-		@NotNull(message = "房型ID不能为空")
-		private Integer roomCategoryId;
-	}
-	
-	@Data
 	@Api( "保存 或 更新 参数" )
 	public static class SaveOrUpdate {
 		@ApiModelProperty( value = "房间ID(更新时需要)" )
@@ -44,7 +36,7 @@ public class RoomParameter {
 		private String floor;
 		
 		@ApiModelProperty( value = "房间状态" )
-		private String status = "在住";
+		private String status = /*RoomStatusConst.VACANT_ROOM*/"空房";
 	}
 	
 }

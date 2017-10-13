@@ -27,8 +27,8 @@
 		<include refid="Base_Column_List" /> 
 		FROM t_room 
 		<where>
-			<if test="param.roomCategoryId != null">
-				AND room_category_id = #{param.roomCategoryId} 
+			<if test="roomCategoryId != null">
+				AND room_category_id = #{roomCategoryId} 
 			</if>
 		</where>
 	</select>
