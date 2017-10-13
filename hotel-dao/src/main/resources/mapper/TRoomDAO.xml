@@ -22,4 +22,15 @@
         updated_at AS updatedAt
     </sql>
 
+	<select id="queryRoomList" resultType="com.gt.hotel.vo.RoomVo">
+		SELECT 
+		<include refid="Base_Column_List" /> 
+		FROM t_room 
+		<where>
+			<if test="param.roomCategoryId != null">
+				AND room_category_id = #{param.roomCategoryId} 
+			</if>
+		</where>
+	</select>
+	
 </mapper>

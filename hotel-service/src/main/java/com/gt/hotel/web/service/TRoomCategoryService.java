@@ -5,7 +5,9 @@ import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.param.RoomParameter.QueryParam;
 import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.vo.RoomVo;
 
 /**
  * <p>
@@ -48,5 +50,13 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @return
 	 */
 	boolean editRooms(Integer busid, com.gt.hotel.param.RoomParameter.SaveOrUpdate[] rooms);
+
+	/**
+	 * 查询 房间列表
+	 * @param param 房间请求对象
+	 * @param page 
+	 * @return
+	 */
+	Page<RoomVo> queryRoomList(QueryParam param, Page<RoomVo> page);
 
 }

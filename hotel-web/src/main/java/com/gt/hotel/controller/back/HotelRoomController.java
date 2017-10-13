@@ -20,6 +20,7 @@ import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
 import com.gt.hotel.param.RoomParameter;
 import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.vo.RoomVo;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
 import io.swagger.annotations.Api;
@@ -84,4 +85,17 @@ public class HotelRoomController extends BaseController {
 		if(flag) return ResponseDTO.createBySuccess();
 		else return ResponseDTO.createByError();
 	}
+	
+	@ApiOperation( value = "房间 集合", notes = "房间 集合" )
+	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
+		@ApiResponse( code = 1, message = "房型列表对象", response = RoomVo.class )} )
+	@GetMapping( value = "queryRoomList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
+	@SuppressWarnings( { "rawtypes", "unchecked" } )
+	public ResponseDTO roomRList(@Validated @ModelAttribute RoomParameter.QueryParam param, BindingResult bindingResult) {
+		InvalidParameter(bindingResult);
+		Page<RoomVo> page = param.initPage();
+		page = tRoomCategoryService.queryRoomList(param, page);
+		return ResponseDTO.createBySuccess(page);
+	}
+	
 }

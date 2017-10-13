@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TRoomCategoryDAO;
+import com.gt.hotel.dao.TRoomDAO;
 import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.entity.TInfrastructureRelation;
 import com.gt.hotel.entity.TRoom;
@@ -21,9 +22,11 @@ import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.InfrastructureRelation;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.param.RoomParameter.QueryParam;
 import com.gt.hotel.vo.FileRecordVo;
 import com.gt.hotel.vo.InfrastructureRelationVo;
 import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.vo.RoomVo;
 import com.gt.hotel.web.service.TFileRecordService;
 import com.gt.hotel.web.service.TInfrastructureRelationService;
 import com.gt.hotel.web.service.TRoomCategoryService;
@@ -42,6 +45,9 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 
 	@Autowired
 	TRoomCategoryDAO tRoomCategoryDAO;
+	
+	@Autowired
+	TRoomDAO tRoomDAO;
 	
 	@Autowired
 	TFileRecordService tFileRecordService;
@@ -171,6 +177,12 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		}
 		flag = tRoomService.insertOrUpdateBatch(entityList);
 		return flag;
+	}
+
+	@Override
+	public Page<RoomVo> queryRoomList(QueryParam param, Page<RoomVo> page) {
+		page.setRecords(tRoomDAO.queryRoomList(param, page));
+		return null;
 	}
 
 }

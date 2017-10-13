@@ -14,8 +14,16 @@ import lombok.Data;
  * @author ReverieNight@Foxmail.com
  */
 
-@Api( description = "房间 实体参数" )
+@Api( tags = "房间 实体参数" )
 public class RoomParameter {
+	
+	@Data
+	@Api( "房间请求对象" )
+	public static class QueryParam extends HotelPage{
+		@ApiModelProperty( value = "房型ID", required = true )
+		@NotNull(message = "房型ID不能为空")
+		private Integer roomCategoryId;
+	}
 	
 	@Data
 	@Api( "保存 或 更新 参数" )
