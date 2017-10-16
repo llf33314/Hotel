@@ -18,12 +18,12 @@ import java.util.Date;
  * @since 2017-10-11
  */
 @Data
-@Accessors( chain = true )
+@Accessors(chain = true)
 public class TInfrastructureRelation extends Model< TInfrastructureRelation > {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId( value = "id", type = IdType.AUTO )
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
      * 基础设施表
@@ -58,8 +58,7 @@ public class TInfrastructureRelation extends Model< TInfrastructureRelation > {
      */
     private String  displayValue;
 
-    @Override
-    protected Serializable pkVal() {
+    @Override protected Serializable pkVal() {
 	return this.id;
     }
 

@@ -24,8 +24,7 @@ public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > impl
     @Autowired
     THotelDAO tHotelDAO;
 
-    @Override
-    public Page< HotelVo > queryHotelHome(Integer busid, HotelParameter.Query hpage, Page< HotelVo > page) {
+    @Override public Page< HotelVo > queryHotelHome(Integer busid, HotelParameter.Query hpage, Page< HotelVo > page) {
 	page.setRecords(tHotelDAO.queryHotelHome(page, hpage, busid));
 	return page;
     }

@@ -27,6 +27,6 @@ public interface TRoomCategoryDAO extends BaseMapper< TRoomCategory > {
      *
      * @return
      */
-    List< RoomCategoryVo > queryRoomCategory(@Param( "queryRoomCategory" ) QueryRoomCategory param, @Param( "page" ) Pagination page);
+    List< RoomCategoryVo > queryRoomCategory(@Param("queryRoomCategory") QueryRoomCategory param, @Param("page") Pagination page);
 
 }

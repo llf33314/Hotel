@@ -24,7 +24,9 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, bus_id AS busId, store_id AS storeId, name, desc, phone, address, thumbnail, logo, longitude, latitude, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
+        id, bus_id AS busId, store_id AS storeId, name, desc, phone, address, thumbnail, logo, longitude, latitude,
+        mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy,
+        updated_at AS updatedAt
     </sql>
 
     <select id="queryHotelHome" resultType="com.gt.hotel.vo.HotelVo">

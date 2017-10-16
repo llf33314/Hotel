@@ -7,9 +7,9 @@ import java.util.List;
 
 public class ExportUtil {
 
-    @SuppressWarnings( {"rawtypes", "deprecation"} )
+    @SuppressWarnings({ "rawtypes", "deprecation" })
     public static HSSFWorkbook getExcel(String fileName, String[] titles, String[] contentName, List data, Class _class, ExcelUtil fieldPprocessing)
-		    throws IllegalArgumentException, IllegalAccessException {
+	throws IllegalArgumentException, IllegalAccessException {
 	HSSFWorkbook wb = new HSSFWorkbook();
 	HSSFSheet sheet = wb.createSheet(fileName);
 	HSSFRow rowTitle = sheet.createRow(0);

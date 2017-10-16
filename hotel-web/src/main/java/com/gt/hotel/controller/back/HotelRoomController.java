@@ -19,36 +19,35 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
-@Api( tags = "酒店后台-房间管理" )
+@Api(tags = "酒店后台-房间管理")
 @RestController
-@RequestMapping( "/back/room" )
+@RequestMapping("/back/room")
 public class HotelRoomController extends BaseController {
 
     @Autowired
     TRoomCategoryService tRoomCategoryService;
 
-    @ApiOperation( value = "房型列表", notes = "房型列表" )
-    @ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), @ApiResponse( code = 1, message = "房型列表对象", response = RoomCategoryVo.class )} )
-    @GetMapping( value = "queryRoomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-    @SuppressWarnings( {"rawtypes", "unchecked"} )
+    @ApiOperation(value = "房型列表", notes = "房型列表")
+    @ApiResponses({ @ApiResponse(code = 0, message = "分页对象", response = ResponseDTO.class), @ApiResponse(code = 1, message = "房型列表对象", response = RoomCategoryVo.class) })
+    @GetMapping(value = "queryRoomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE) @SuppressWarnings({ "rawtypes", "unchecked" })
     public ResponseDTO roomCategoryR(@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param) {
 	Page< RoomCategoryVo > page = param.initPage();
 	page = tRoomCategoryService.queryRoomCategory(param, page);
 	return ResponseDTO.createBySuccess(page);
     }
 
-    @ApiOperation( value = "新增 或 更新 房型", notes = "新增 或 更新 房型" )
-    @ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
-    @PostMapping( value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-    @SuppressWarnings( "rawtypes" )
+    @ApiOperation(value = "新增 或 更新 房型", notes = "新增 或 更新 房型") @ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
+    @PostMapping(value = "insertHotel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE) @SuppressWarnings("rawtypes")
     public ResponseDTO roomCategoryCU(@Validated @ModelAttribute SaveOrUpdate roomCategory, BindingResult bindingResult, HttpSession session) {
 	//		for(String s : roomCategory.getImages())
 	//			System.err.println(s);
 	InvalidParameter(bindingResult);
 	Integer busid = getLoginUserId(session);
 	boolean flag = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
-	if (flag) return ResponseDTO.createBySuccess();
-	else return ResponseDTO.createByError();
+	if (flag)
+	    return ResponseDTO.createBySuccess();
+	else
+	    return ResponseDTO.createByError();
     }
 
 }

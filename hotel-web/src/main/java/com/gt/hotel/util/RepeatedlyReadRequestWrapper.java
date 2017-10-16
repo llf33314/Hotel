@@ -25,33 +25,27 @@ public class RepeatedlyReadRequestWrapper extends HttpServletRequestWrapper {
 	body = readBytes(request.getReader(), "utf-8");
     }
 
-    @Override
-    public BufferedReader getReader() throws IOException {
+    @Override public BufferedReader getReader() throws IOException {
 	return new BufferedReader(new InputStreamReader(getInputStream()));
     }
 
-    @Override
-    public ServletInputStream getInputStream() throws IOException {
+    @Override public ServletInputStream getInputStream() throws IOException {
 	final ByteArrayInputStream bais = new ByteArrayInputStream(body);
 	return new ServletInputStream() {
 
-	    @Override
-	    public boolean isFinished() {
+	    @Override public boolean isFinished() {
 		return false;
 	    }
 
-	    @Override
-	    public boolean isReady() {
+	    @Override public boolean isReady() {
 		return false;
 	    }
 
-	    @Override
-	    public void setReadListener(ReadListener listener) {
+	    @Override public void setReadListener(ReadListener listener) {
 
 	    }
 
-	    @Override
-	    public int read() throws IOException {
+	    @Override public int read() throws IOException {
 		return bais.read();
 	    }
 	};

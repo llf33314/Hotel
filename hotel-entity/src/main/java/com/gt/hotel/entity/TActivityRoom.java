@@ -20,77 +20,76 @@ import java.util.Date;
  * @since 2017-10-09
  */
 @Data
-@Accessors( chain = true )
-@TableName( "t_activity_room" )
+@Accessors(chain = true)
+@TableName("t_activity_room")
 public class TActivityRoom extends Model< TActivityRoom > {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId( value = "id", type = IdType.AUTO )
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
      * 酒店ID
      */
-    @TableField( "hotel_id" )
+    @TableField("hotel_id")
     private Integer hotelId;
     /**
      * 房型ID
      */
-    @TableField( "room_category_id" )
+    @TableField("room_category_id")
     private Integer roomCategoryId;
     /**
      * 房型名称 冗余参数
      */
-    @TableField( "room_category_name" )
+    @TableField("room_category_name")
     private String  roomCategoryName;
     /**
      * 客房ID
      */
-    @TableField( "room_id" )
+    @TableField("room_id")
     private Integer roomId;
     /**
      * 客房编号
      */
-    @TableField( "room_number" )
+    @TableField("room_number")
     private String  roomNumber;
     /**
      * 门市价
      */
-    @TableField( "rack_rate" )
+    @TableField("rack_rate")
     private Integer rackRate;
     /**
      * 活动价 单位分 记录
      */
-    @TableField( "activity_price" )
+    @TableField("activity_price")
     private Integer activityPrice;
     /**
      * 状态标记
      */
-    @TableField( "mark_modified" )
+    @TableField("mark_modified")
     private Integer markModified;
     /**
      * 创建者ID
      */
-    @TableField( "created_by" )
+    @TableField("created_by")
     private Integer createdBy;
     /**
      * 创建时间
      */
-    @TableField( "created_at" )
+    @TableField("created_at")
     private Date    createdAt;
     /**
      * 最后修改人 ID
      */
-    @TableField( "updated_by" )
+    @TableField("updated_by")
     private Integer updatedBy;
     /**
      * 最后修改时间
      */
-    @TableField( "updated_at" )
+    @TableField("updated_at")
     private Date    updatedAt;
 
-    @Override
-    protected Serializable pkVal() {
+    @Override protected Serializable pkVal() {
 	return this.id;
     }
 

@@ -34,8 +34,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
      */
     private static final Logger LOG = LoggerFactory.getLogger(RedisCacheConfig.class);
 
-    @Bean
-    public RedisTemplate< String, String > redisTemplate(RedisConnectionFactory cf) {
+    @Bean public RedisTemplate< String, String > redisTemplate(RedisConnectionFactory cf) {
 	LOG.debug("注入RedisTemplate");
 	RedisTemplate< String, String > redisTemplate = new RedisTemplate<>();
 	redisTemplate.setConnectionFactory(cf);
@@ -49,8 +48,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
 	return redisTemplate;
     }
 
-    @Bean
-    public CacheManager cacheManager(RedisTemplate redisTemplate) {
+    @Bean public CacheManager cacheManager(RedisTemplate redisTemplate) {
 	RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
 	//默认超时时间,单位秒
 	cacheManager.setDefaultExpiration(3000);

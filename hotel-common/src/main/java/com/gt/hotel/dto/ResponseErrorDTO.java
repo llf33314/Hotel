@@ -14,7 +14,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  * @author zhangmz
  * @create 2017/6/21
  */
-@JsonSerialize( typing = DEFAULT_TYPING )
+@JsonSerialize(typing = DEFAULT_TYPING)
 public class ResponseErrorDTO< T > extends ResponseDTO< T > implements Serializable {
 
     private String url;

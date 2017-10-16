@@ -21,7 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-    @Value( "${swagger.show}" )
+    @Value("${swagger.show}")
     private boolean swaggerShow;
 
     // 扫描包
@@ -54,10 +54,9 @@ public class SwaggerConfig {
      *
      * @return
      */
-    @Bean
-    public Docket appletRestApi() {
+    @Bean public Docket appletRestApi() {
 	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("applet").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-			.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(APPLET_PACKAGE)).paths(PathSelectors.any()).build();
+	    .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(APPLET_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -65,10 +64,9 @@ public class SwaggerConfig {
      *
      * @return
      */
-    @Bean
-    public Docket erpRestApi() {
+    @Bean public Docket erpRestApi() {
 	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("erp").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-			.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(ERP_PACKAGE)).paths(PathSelectors.any()).build();
+	    .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(ERP_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -76,10 +74,9 @@ public class SwaggerConfig {
      *
      * @return
      */
-    @Bean
-    public Docket backRestApi() {
+    @Bean public Docket backRestApi() {
 	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("back").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-			.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(BACK_PACKAGE)).paths(PathSelectors.any()).build();
+	    .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(BACK_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -87,19 +84,18 @@ public class SwaggerConfig {
      *
      * @return
      */
-    @Bean
-    public Docket mobileRestApi() {
+    @Bean public Docket mobileRestApi() {
 	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("mobile").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-			.forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(MOBILE_PACKAGE)).paths(PathSelectors.any()).build();
+	    .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(MOBILE_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {
 	return new ApiInfo(TITLE, // 大标题
-			DESC, // 小标题
-			VERSION, // 版本
-			TERMS_OF_SERVICEURL, CONTACT, // 作者
-			LICENSE, // 链接显示文字
-			LICENSE_URL// 网站链接
+	    DESC, // 小标题
+	    VERSION, // 版本
+	    TERMS_OF_SERVICEURL, CONTACT, // 作者
+	    LICENSE, // 链接显示文字
+	    LICENSE_URL// 网站链接
 	);
     }
 

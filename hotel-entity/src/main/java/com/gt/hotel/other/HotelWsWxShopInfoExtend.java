@@ -8,7 +8,7 @@ import io.swagger.annotations.Api;
  * @author ReverieNight@Foxmail.com
  * @date 2017年10月9日 上午11:46:26
  */
-@Api( description = "门店对象" )
+@Api(description = "门店对象")
 public class HotelWsWxShopInfoExtend {
     private Integer id;
     /**
@@ -372,14 +372,13 @@ public class HotelWsWxShopInfoExtend {
 	return introduction;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
 	return "HotelWsWxShopInfoExtend [id=" + id + ", sid=" + sid + ", poiid=" + poiid + ", busId=" + busId + ", businessName=" + businessName + ", branchName=" + branchName
-			+ ", categories=" + categories + ", twoCategories=" + twoCategories + ", threeCategories=" + threeCategories + ", telephone=" + telephone + ", avgPrice="
-			+ avgPrice + ", startTime=" + startTime + ", endTime=" + endTime + ", special=" + special + ", introduction=" + introduction + ", recommend=" + recommend
-			+ ", province=" + province + ", city=" + city + ", district=" + district + ", address=" + address + ", offsetType=" + offsetType + ", longitude="
-			+ longitude + ", latitude=" + latitude + ", status=" + status + ", detail=" + detail + ", mainShop=" + mainShop + ", imageUrl=" + imageUrl + ", createTime="
-			+ createTime + ", availableState=" + availableState + ", updateStatus=" + updateStatus + ", adder=" + adder + "]";
+	    + ", categories=" + categories + ", twoCategories=" + twoCategories + ", threeCategories=" + threeCategories + ", telephone=" + telephone + ", avgPrice=" + avgPrice
+	    + ", startTime=" + startTime + ", endTime=" + endTime + ", special=" + special + ", introduction=" + introduction + ", recommend=" + recommend + ", province="
+	    + province + ", city=" + city + ", district=" + district + ", address=" + address + ", offsetType=" + offsetType + ", longitude=" + longitude + ", latitude=" + latitude
+	    + ", status=" + status + ", detail=" + detail + ", mainShop=" + mainShop + ", imageUrl=" + imageUrl + ", createTime=" + createTime + ", availableState="
+	    + availableState + ", updateStatus=" + updateStatus + ", adder=" + adder + "]";
     }
 
 }

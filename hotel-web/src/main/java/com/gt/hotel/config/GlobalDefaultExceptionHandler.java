@@ -35,9 +35,7 @@ public class GlobalDefaultExceptionHandler {
      *
      * @return ResponseErrorDTO
      */
-    @ResponseBody
-    @ExceptionHandler( value = Exception.class )
-    public ResponseErrorDTO defaultErrorHandler(HttpServletRequest request, Exception e) {
+    @ResponseBody @ExceptionHandler(value = Exception.class) public ResponseErrorDTO defaultErrorHandler(HttpServletRequest request, Exception e) {
 	logger.error("请求地址：{} , 系统异常详细：", request.getRequestURL(), e);
 	return ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.SYSTEM_ERROR.getCode(), ResponseEnums.SYSTEM_ERROR.getMsg());
     }
@@ -50,9 +48,7 @@ public class GlobalDefaultExceptionHandler {
      *
      * @return ResponseErrorDTO
      */
-    @ResponseBody
-    @ExceptionHandler( value = BaseException.class )
-    public ResponseErrorDTO defaultCustomErrorHandler(HttpServletRequest request, BaseException e) {
+    @ResponseBody @ExceptionHandler(value = BaseException.class) public ResponseErrorDTO defaultCustomErrorHandler(HttpServletRequest request, BaseException e) {
 	logger.error("异常原因：{} , 异常信息：{} , 请求地址：{}", e.getCause(), e.getMessage(), request.getRequestURL(), e);
 	if (e instanceof ResponseEntityException || e instanceof BusinessException) {
 	    return ResponseErrorDTO.createByErrorCodeMessage(e.getCode(), e.getMessage(), null);

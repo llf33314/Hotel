@@ -16,16 +16,16 @@ import java.util.Map;
 @Component
 public class WXMPApiUtil {
 
-    @Value( "${wxmp.api.sign}" )
+    @Value("${wxmp.api.sign}")
     private String SIGN_KEY;
 
     /**
      * 会员签名 参考 https://member.deeptel.com.cn/swagger-ui.html#/
      */
-    @Value( "${wxmp.api.membersign}" )
+    @Value("${wxmp.api.membersign}")
     private String MEMBER_SIGN_KEY;
 
-    @Value( "${wxmp.api.serverurl}" )
+    @Value("${wxmp.api.serverurl}")
     private String SERVER_URL;
 
     /**
@@ -187,9 +187,12 @@ public class WXMPApiUtil {
 	System.err.println(result);
 	if (result != null) {
 	    JSONObject json = JSONObject.parseObject(result);
-	    if (json.getInteger("code") != null && json.getInteger("code") == 0) return true;
-	    else return false;
-	} else return false;
+	    if (json.getInteger("code") != null && json.getInteger("code") == 0)
+		return true;
+	    else
+		return false;
+	} else
+	    return false;
     }
 
     /**

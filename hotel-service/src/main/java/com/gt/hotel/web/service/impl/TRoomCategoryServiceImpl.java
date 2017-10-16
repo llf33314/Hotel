@@ -38,15 +38,12 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
     @Autowired
     TFileRecordService tFileRecordService;
 
-    @Override
-    public Page< RoomCategoryVo > queryRoomCategory(QueryRoomCategory param, Page< RoomCategoryVo > page) {
+    @Override public Page< RoomCategoryVo > queryRoomCategory(QueryRoomCategory param, Page< RoomCategoryVo > page) {
 	page.setRecords(tRoomCategoryDAO.queryRoomCategory(param, page));
 	return page;
     }
 
-    @Transactional
-    @Override
-    public boolean roomCategoryCU(Integer busid, SaveOrUpdate roomCategory) {
+    @Transactional @Override public boolean roomCategoryCU(Integer busid, SaveOrUpdate roomCategory) {
 	boolean flag = false;
 	Date date = new Date();
 	TRoomCategory tRoomCategory = new TRoomCategory();
@@ -77,7 +74,8 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	    file.setReferenceId(tRoomCategory.getId());
 	    file.setPath(imgurl);
 	    int index = imgurl.lastIndexOf("/");
-	    if (index == -1) index = 0;
+	    if (index == -1)
+		index = 0;
 	    String name = imgurl.substring(index);
 	    file.setName(name);
 	    file.setOriginalName(name);

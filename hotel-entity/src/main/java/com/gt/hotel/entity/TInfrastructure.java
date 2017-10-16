@@ -19,13 +19,13 @@ import java.io.Serializable;
  * @since 2017-10-09
  */
 @Data
-@Accessors( chain = true )
-@TableName( "t_infrastructure" )
+@Accessors(chain = true)
+@TableName("t_infrastructure")
 public class TInfrastructure extends Model< TInfrastructure > {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId( value = "id", type = IdType.AUTO )
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
      * 名称
@@ -34,15 +34,14 @@ public class TInfrastructure extends Model< TInfrastructure > {
     /**
      * 图标地址
      */
-    @TableField( "icon_url" )
+    @TableField("icon_url")
     private String  iconUrl;
     /**
      * 模块 hotel 酒店基础设施 room 客房基础设施
      */
     private String  module;
 
-    @Override
-    protected Serializable pkVal() {
+    @Override protected Serializable pkVal() {
 	return this.id;
     }
 

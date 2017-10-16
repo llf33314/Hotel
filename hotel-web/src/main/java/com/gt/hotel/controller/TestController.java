@@ -38,9 +38,7 @@ public class TestController extends BaseController {
      *
      * @return
      */
-    @ResponseBody
-    @GetMapping( value = {"/", ""} )
-    public ModelAndView hello(@RequestParam( defaultValue = " world,zhangmz!" ) String name, HttpSession session, ModelAndView mav) {
+    @ResponseBody @GetMapping(value = { "/", "" }) public ModelAndView hello(@RequestParam(defaultValue = " world,zhangmz!") String name, HttpSession session, ModelAndView mav) {
 	System.out.println(session.getId());
 	mav.setViewName("/nav.html");
 	return mav;
@@ -53,9 +51,7 @@ public class TestController extends BaseController {
      *
      * @return
      */
-    @ApiOperation( value = "首页", notes = "首页" )
-    @GetMapping( "/index" )
-    public ModelAndView index(ModelAndView map) {
+    @ApiOperation(value = "首页", notes = "首页") @GetMapping("/index") public ModelAndView index(ModelAndView map) {
 	map.addObject("test", "hello zhangmz!");
 	map.setViewName("index");
 	this.logger.info("hahahah");
@@ -64,9 +60,7 @@ public class TestController extends BaseController {
 	return map;
     }
 
-    @GetMapping( "/test" )
-    @ResponseBody
-    public String haha() {
+    @GetMapping("/test") @ResponseBody public String haha() {
 	this.logger.info("测试热部署");
 	this.logger.info("22333");
 	this.logger.info("230000000");
@@ -78,11 +72,8 @@ public class TestController extends BaseController {
      *
      * @return String
      */
-    @ApiOperation( value = "获取用户数量", notes = "模糊匹配手机号" )
-    @ApiImplicitParam( name = "phone", value = "手机号码", paramType = "query", dataType = "long" )
-    @ResponseBody
-    @GetMapping( value = "/user/count", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-    public ResponseDTO userCount(Long phone) {
+    @ApiOperation(value = "获取用户数量", notes = "模糊匹配手机号") @ApiImplicitParam(name = "phone", value = "手机号码", paramType = "query", dataType = "long") @ResponseBody
+    @GetMapping(value = "/user/count", produces = MediaType.APPLICATION_JSON_UTF8_VALUE) public ResponseDTO userCount(Long phone) {
 	this.logger.debug("phone is {}", phone);
 	Wrapper< BusUser > busUserWrapper = null;
 	if (phone != null) {
@@ -102,13 +93,11 @@ public class TestController extends BaseController {
      *
      * @return ResponseDTO
      */
-    @ApiOperation( value = "手机号、姓名模糊查询", notes = "手机号、姓名模糊查询" )
-    @ApiImplicitParams( {@ApiImplicitParam( name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10" ),
-		    @ApiImplicitParam( name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1" ),
-		    @ApiImplicitParam( name = "searchKeyWords", value = "用户姓名或手机号", paramType = "query", required = true, dataType = "String" )} )
-    @ResponseBody
-    @GetMapping( "/user" )
-    public ResponseDTO findUsers(@RequestParam( defaultValue = "10" ) Integer pageSize, @RequestParam( defaultValue = "1" ) Integer pageIndex, String searchKeyWords) {
+    @ApiOperation(value = "手机号、姓名模糊查询", notes = "手机号、姓名模糊查询")
+    @ApiImplicitParams({ @ApiImplicitParam(name = "pageSize", value = "每页显示多少条数据", paramType = "query", required = false, dataType = "int", defaultValue = "10"),
+	@ApiImplicitParam(name = "pageIndex", value = "当前页码", paramType = "query", required = false, dataType = "int", defaultValue = "1"),
+	@ApiImplicitParam(name = "searchKeyWords", value = "用户姓名或手机号", paramType = "query", required = true, dataType = "String") }) @ResponseBody @GetMapping("/user")
+    public ResponseDTO findUsers(@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "1") Integer pageIndex, String searchKeyWords) {
 	this.logger.debug("searchKeyWords is {}", searchKeyWords);
 	this.logger.debug("pageIndex is {}", pageIndex);
 	this.logger.debug("pageSize is {}", pageSize);
@@ -126,11 +115,8 @@ public class TestController extends BaseController {
      *
      * @return ResponseDTO
      */
-    @ApiOperation( value = "用户ID 查询用户信息", notes = "查询用户信息" )
-    @ApiImplicitParam( name = "uid", value = "用户ID", paramType = "path", required = true, dataType = "Integer" )
-    @ResponseBody
-    @GetMapping( "/user/{uid}" )
-    public ResponseDTO findUser(@PathVariable Integer uid) {
+    @ApiOperation(value = "用户ID 查询用户信息", notes = "查询用户信息") @ApiImplicitParam(name = "uid", value = "用户ID", paramType = "path", required = true, dataType = "Integer") @ResponseBody
+    @GetMapping("/user/{uid}") public ResponseDTO findUser(@PathVariable Integer uid) {
 	return ResponseDTO.createBySuccess( /*this.busUserService.findUser( uid )*/);
     }
 

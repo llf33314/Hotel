@@ -20,8 +20,8 @@ import java.util.Date;
  * @since 2017-10-09
  */
 @Data
-@Accessors( chain = true )
-@TableName( "t_file_record" )
+@Accessors(chain = true)
+@TableName("t_file_record")
 public class TFileRecord extends Model< TFileRecord > {
 
     private static final long serialVersionUID = 1L;
@@ -29,7 +29,7 @@ public class TFileRecord extends Model< TFileRecord > {
     /**
      * 文件ID
      */
-    @TableId( value = "id", type = IdType.AUTO )
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
      * 显示文件名称
@@ -38,7 +38,7 @@ public class TFileRecord extends Model< TFileRecord > {
     /**
      * 文件上传时的原始名称
      */
-    @TableField( "original_name" )
+    @TableField("original_name")
     private String  originalName;
     /**
      * 文件路径 例如：/aa/bb/cc/f.txt
@@ -51,36 +51,35 @@ public class TFileRecord extends Model< TFileRecord > {
     /**
      * 引用ID，如果 module_type = room 即保存 room_id 具体 按业务模块类型 定义 如果，module_type = hotel_thumbnail 即对应酒店的缩略图
      */
-    @TableField( "reference_id" )
+    @TableField("reference_id")
     private Integer referenceId;
     /**
      * 是否启用 0 默认开启 1 关闭 2 删除标记
      */
-    @TableField( "mark_modified" )
+    @TableField("mark_modified")
     private Integer markModified;
     /**
      * 创建者ID
      */
-    @TableField( "created_by" )
+    @TableField("created_by")
     private Integer createdBy;
     /**
      * 创建时间
      */
-    @TableField( "created_at" )
+    @TableField("created_at")
     private Date    createdAt;
     /**
      * 最后修改人 ID
      */
-    @TableField( "updated_by" )
+    @TableField("updated_by")
     private Integer updatedBy;
     /**
      * 最后修改时间
      */
-    @TableField( "updated_at" )
+    @TableField("updated_at")
     private Date    updatedAt;
 
-    @Override
-    protected Serializable pkVal() {
+    @Override protected Serializable pkVal() {
 	return this.id;
     }
 
