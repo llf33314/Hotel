@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 活动与房间关系表
+ * 客房日历价 — 优先级 第三方协议 > 活动价 > 
  * </p>
  *
  * @author 
@@ -23,48 +23,29 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class TActivityRoom extends Model<TActivityRoom> {
+public class TRoomCalendar extends Model<TRoomCalendar> {
 
     private static final long serialVersionUID = 1L;
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
-    /**
-     * 酒店ID
-     */
 	private Integer hotelId;
-    /**
-     * 活动ID
-     */
-	private Integer activityId;
     /**
      * 房型ID
      */
 	private Integer roomCategoryId;
     /**
-     * 房型名称 冗余参数
+     * 开始日期
      */
-	private String roomCategoryName;
+	private Date beginTime;
     /**
-     * 客房ID
+     * 结束日期
      */
-	private Integer roomId;
+	private Date endTime;
     /**
-     * 客房编号
+     * 日历价
      */
-	private String roomNumber;
-    /**
-     * 门市价
-     */
-	private Integer rackRate;
-    /**
-     * 活动价 单位分 记录
-     */
-	private Integer activityPrice;
-    /**
-     * 状态标记
-     */
-	private Integer markModified;
+	private Integer price;
     /**
      * 创建者ID
      */

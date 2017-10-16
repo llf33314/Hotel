@@ -14,18 +14,22 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
+import com.gt.hotel.dao.TRoomCalendarDAO;
 import com.gt.hotel.dao.TRoomCategoryDAO;
 import com.gt.hotel.dao.TRoomDAO;
 import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.entity.TInfrastructureRelation;
 import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.entity.TRoomCategory;
+import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.param.RoomCalendarParamter.Query;
 import com.gt.hotel.param.RoomCategoryParameter.InfrastructureRelation;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
 import com.gt.hotel.vo.FileRecordVo;
 import com.gt.hotel.vo.InfrastructureRelationVo;
+import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomVo;
 import com.gt.hotel.web.service.TFileRecordService;
@@ -59,6 +63,9 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	@Autowired
 	TRoomService tRoomService;
 	
+	@Autowired
+	TRoomCalendarDAO tRoomCalendarDAO;
+	
 	@Override
 	public Page<RoomCategoryVo> queryRoomCategory(QueryRoomCategory param, Page<RoomCategoryVo> page) {
 		page.setRecords(tRoomCategoryDAO.queryRoomCategory(param, page));
@@ -73,12 +80,14 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		BeanUtils.copyProperties(roomCategory, tRoomCategory);
 		tRoomCategory.setId(roomCategory.getRoomCategoryId());
 		tRoomCategory.setStoreId(roomCategory.getShopId());
-		tRoomCategory.setCreatedAt(date);
-		tRoomCategory.setCreatedBy(busid);
+		if(tRoomCategory.getId() == null){
+			tRoomCategory.setCreatedAt(date);
+			tRoomCategory.setCreatedBy(busid);
+		}
 		tRoomCategory.setUpdatedAt(date);
 		tRoomCategory.setUpdatedBy(busid);
 		if(!tRoomCategory.insertOrUpdate()){
-			throw new ResponseEntityException(9991, "房型保存失败");
+			throw new ResponseEntityException("房型保存失败");
 		}
 		
 		Wrapper<TFileRecord> filewrapper = new EntityWrapper<>();
@@ -88,7 +97,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 //		_file.setMarkModified(CommonConst.DELETED);
 //		tFileRecordService.update(_file , filewrapper);
 		if(!tFileRecordService.delete(filewrapper)){
-			throw new ResponseEntityException(9992, "图片保存失败");
+			throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
 		}
 		
 		List<TFileRecord> imgs = new ArrayList<>();
@@ -109,14 +118,14 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			imgs.add(file);
 		}
 		if(!tFileRecordService.insertBatch(imgs)){
-			throw new ResponseEntityException(9992, "图片保存失败");
+			throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
 		}
 		
 		Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
 		rwrapper.eq("reference_id", tRoomCategory.getId());
 		rwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		if(!tInfrastructureRelationService.delete(rwrapper)){
-			throw new ResponseEntityException(9993, "设施保存失败");
+			throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
 		}
 		
 		List<TInfrastructureRelation> irs = new ArrayList<>();
@@ -133,7 +142,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			irs.add(_ir);
 		}
 		if(!tInfrastructureRelationService.insertBatch(irs)){
-			throw new ResponseEntityException(9993, "设施保存失败");
+			throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
 		}
 		
 	}
@@ -205,6 +214,12 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	public Page<RoomVo> queryRoomList(Integer roomCategoryId, Page<RoomVo> page) {
 		page.setRecords(tRoomDAO.queryRoomList(roomCategoryId, page));
 		return page;
+	}
+
+	@Override
+	public Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, Query param, Page<RoomCalendarVo> page) {
+		page.setRecords(tRoomCalendarDAO.queryRoomCalendarList(roomCategoryId, param, page));
+		return null;
 	}
 
 }

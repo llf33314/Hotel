@@ -1,9 +1,11 @@
 package com.gt.hotel.controller.back;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
@@ -20,17 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.TRoomCalendar;
 import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.param.RoomCalendarParamter;
 import com.gt.hotel.param.RoomCategoryParameter;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
 import com.gt.hotel.param.RoomParameter;
+import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomVo;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -92,6 +95,8 @@ public class HotelRoomController extends BaseController {
 		return ResponseDTO.createBySuccess();
 	}
 
+	////////////////////////////////////////// ↓房间↓ ////////////////////////////////////////
+	
 	@ApiOperation(value = "房间 集合", notes = "房间 集合")
 	@ApiResponses({ @ApiResponse(code = 0, message = "分页对象", response = ResponseDTO.class),
 			@ApiResponse(code = 1, message = "房型列表对象", response = RoomVo.class) })
@@ -105,7 +110,6 @@ public class HotelRoomController extends BaseController {
 	}
 
 	@ApiOperation(value = "编辑 房间", notes = "编辑 房间")
-	@ApiImplicitParams({ @ApiImplicitParam(value = "房型对象", required = true, paramType = "query") })
 	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "editRoom", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
@@ -116,4 +120,37 @@ public class HotelRoomController extends BaseController {
 		return ResponseDTO.createBySuccess();
 	}
 
+	////////////////////////////////////////// ↓日历↓ ////////////////////////////////////////
+	
+	@ApiOperation(value = "查询日历-房型 价格信息", notes = "查询日历-房型 价格信息")
+	@ApiResponses({ @ApiResponse(code = 0, message = "分页对象", response = ResponseDTO.class),
+			@ApiResponse(code = 1, message = "", response = RoomCalendarVo.class) })
+	@GetMapping(value = "{roomCategoryId}-calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public ResponseDTO calendarRList(@PathVariable("roomCategoryId") @ApiParam("房型ID") Integer roomCategoryId,
+			RoomCalendarParamter.Query param) {
+		Page<RoomCalendarVo> page = param.initPage();
+		page = tRoomCategoryService.queryRoomCalendarList(roomCategoryId, param, page);
+		return ResponseDTO.createBySuccess(page);
+	}
+	
+	@ApiOperation(value = "编辑 房型 价格信息", notes = "编辑 房型 价格信息")
+	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
+	@PostMapping(value = "{roomCategoryId}-calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings("rawtypes")
+	public ResponseDTO roomCalendarCU(@PathVariable("roomCategoryId") @ApiParam("房型ID") Integer roomCategoryId, RoomCalendarParamter.SaveOrUpdate cal, HttpSession session) {
+		Integer busid = getLoginUserId(session);
+		Date date = new Date();
+		TRoomCalendar calendar = new TRoomCalendar();
+		BeanUtils.copyProperties(cal, calendar);
+		if(cal.getId() == null){
+			calendar.setCreatedBy(busid);
+			calendar.setCreatedAt(date);
+		}
+		calendar.setUpdatedAt(date);
+		calendar.setUpdatedBy(busid);
+		if(calendar.insertOrUpdate()) return ResponseDTO.createBySuccess();
+		else return ResponseDTO.createByError();
+	}
+	
 }

@@ -5,8 +5,10 @@ import java.util.List;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoomCategory;
+import com.gt.hotel.param.RoomCalendarParamter.Query;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomVo;
 
@@ -67,6 +69,15 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @return
 	 */
 	void delRoomCategory(Integer busid, List<Integer> ids);
+
+	/**
+	 * 查询房型 日历价格 
+	 * @param roomCategoryId 房型ID
+	 * @param param 请求对象 
+	 * @param page 分页对象
+	 * @return
+	 */
+	Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, Query param, Page<RoomCalendarVo> page);
 
 
 }
