@@ -8,8 +8,11 @@ import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.RoomCalendarParamter.Query;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.param.RoomParameter.RoomPermanent;
+import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
 import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.vo.RoomPermanentVo;
 import com.gt.hotel.vo.RoomVo;
 
 /**
@@ -28,7 +31,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param page
 	 * @return
 	 */
-	Page<RoomCategoryVo> queryRoomCategory(QueryRoomCategory param, Page<RoomCategoryVo> page);
+	Page<RoomCategoryVo> queryRoomCategory(QueryRoomCategory param);
 
 	/**
 	 * 保存 or 更新 房型
@@ -77,7 +80,28 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param page 分页对象
 	 * @return
 	 */
-	Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, Query param, Page<RoomCalendarVo> page);
+	Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, Query param);
+
+	/**
+	 * 保存 长包房设置
+	 * @param busId 用户ID
+	 * @param per
+	 */
+	void SaveRoomPermanent(Integer busId, RoomPermanent per);
+
+	/**
+	 * 查询 长包房设置
+	 * @param param
+	 * @return
+	 */
+	Page<RoomPermanentVo> queryRoomPermanent(RoomPermanentQuery param);
+
+	/**
+	 * 删除 长包房设置
+	 * @param busId
+	 * @param id 长包房ID
+	 */
+	void delRoomPermanent(Integer busId, List<Integer> ids);
 
 
 }

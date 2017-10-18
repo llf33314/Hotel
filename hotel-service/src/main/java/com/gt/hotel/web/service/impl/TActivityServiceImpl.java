@@ -48,8 +48,10 @@ public class TActivityServiceImpl extends BaseServiceImpl< TActivityDAO, TActivi
 	@Autowired
 	TActivityDetailService tActivityDetailService;
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Page<ActivityVo> queryActivity(Query param, Page<ActivityVo> page) {
+	public Page<ActivityVo> queryActivity(Query param) {
+		Page<ActivityVo> page = param.initPage();
 		page.setRecords(tActivityDAO.queryActivity(param, page));
 		return page;
 	}

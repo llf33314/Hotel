@@ -44,10 +44,9 @@ public class HotelActivityController extends BaseController {
 	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
 		@ApiResponse( code = 1, message = "", response = ActivityVo.class )} )
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	@SuppressWarnings( { "rawtypes", "unchecked" } )
+	@SuppressWarnings( { "rawtypes" } )
 	public ResponseDTO activityR(ActivityParamter.Query param) {
-		Page<ActivityVo> page = param.initPage();
-		page = tActivityService.queryActivity(param, page);
+		Page<ActivityVo> page = tActivityService.queryActivity(param);
 		return ResponseDTO.createBySuccess(page);
 	}
 	

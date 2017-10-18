@@ -17,24 +17,30 @@ import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TRoomCalendarDAO;
 import com.gt.hotel.dao.TRoomCategoryDAO;
 import com.gt.hotel.dao.TRoomDAO;
+import com.gt.hotel.dao.TRoomPermanentDAO;
 import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.entity.TInfrastructureRelation;
 import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.entity.TRoomCategory;
+import com.gt.hotel.entity.TRoomPermanent;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.InfrastructureRelationParamter;
 import com.gt.hotel.param.RoomCalendarParamter.Query;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.param.RoomParameter.RoomPermanent;
+import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
 import com.gt.hotel.vo.FileRecordVo;
 import com.gt.hotel.vo.InfrastructureRelationVo;
 import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.vo.RoomPermanentVo;
 import com.gt.hotel.vo.RoomVo;
 import com.gt.hotel.web.service.TFileRecordService;
 import com.gt.hotel.web.service.TInfrastructureRelationService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+import com.gt.hotel.web.service.TRoomPermanentService;
 import com.gt.hotel.web.service.TRoomService;
 
 /**
@@ -66,8 +72,16 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	@Autowired
 	TRoomCalendarDAO tRoomCalendarDAO;
 	
+	@Autowired
+	TRoomPermanentDAO tRoomPermanentDAO;
+
+	@Autowired
+	TRoomPermanentService tRoomPermanentService;
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Page<RoomCategoryVo> queryRoomCategory(QueryRoomCategory param, Page<RoomCategoryVo> page) {
+	public Page<RoomCategoryVo> queryRoomCategory(QueryRoomCategory param) {
+		Page<RoomCategoryVo> page = param.initPage();
 		page.setRecords(tRoomCategoryDAO.queryRoomCategory(param, page));
 		return page;
 	}
@@ -191,7 +205,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		entity.setUpdatedAt(date);
 		entity.setUpdatedBy(busid);
 		if(!this.update(entity, wrapper)){
-			throw new ResponseEntityException(999, "删除失败");
+			throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
 		}
 	}
 
@@ -207,7 +221,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			_r.setUpdatedBy(busid);
 		}
 		if(!tRoomService.insertOrUpdateBatch(entityList)){
-			throw new ResponseEntityException(999, "保存失败");
+			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
 		}
 	}
 
@@ -217,10 +231,48 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		return page;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, Query param, Page<RoomCalendarVo> page) {
+	public Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, Query param) {
+		Page<RoomCalendarVo> page = param.initPage();
 		page.setRecords(tRoomCalendarDAO.queryRoomCalendarList(roomCategoryId, param, page));
-		return null;
+		return page;
+	}
+
+	@Override
+	public void SaveRoomPermanent(Integer busId, RoomPermanent per) {
+		TRoomPermanent rp = new TRoomPermanent();
+		Date date = new Date();
+		BeanUtils.copyProperties(per, rp);
+		if(rp.getId() == null){
+			rp.setCreatedAt(date);
+			rp.setCreatedBy(busId);
+		}
+		rp.setUpdatedAt(date);
+		rp.setUpdatedBy(busId);
+		if(rp.insertOrUpdate()) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<RoomPermanentVo> queryRoomPermanent(RoomPermanentQuery param) {
+		Page<RoomPermanentVo> page = param.initPage();
+		page.setRecords(tRoomPermanentDAO.queryRoomPermanent(param, page));
+		return page;
+	}
+
+	@Override
+	public void delRoomPermanent(Integer busId, List<Integer> ids) {
+		List<TRoomPermanent> entityList = new ArrayList<>();
+		Date date = new Date();
+		for(Integer id : ids){
+			TRoomPermanent rp = new TRoomPermanent();
+			rp.setId(id);
+			rp.setMarkModified(CommonConst.DELETED);
+			rp.setUpdatedBy(busId);
+			rp.setUpdatedAt(date);
+		}
+		if(tRoomPermanentService.updateBatchById(entityList)) throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
 	}
 
 }

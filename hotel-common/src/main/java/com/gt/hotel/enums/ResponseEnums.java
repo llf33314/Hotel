@@ -16,6 +16,7 @@ public enum ResponseEnums {
     // 1000-1999 定义常见业务错误信息载体
     NEED_LOGIN(1001, "需要登录"),
     SAVE_ERROR(1002, "保存失败"),
+    DELETE_ERROR(1003, "删除失败"),
     
     INFRASTRUCTRUE_ERROR(1998, "设施保存失败"),
     IMAGE_ERROR(1999, "图片保存失败"),

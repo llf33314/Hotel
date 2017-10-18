@@ -1,7 +1,14 @@
 package com.gt.hotel.dao;
 
-import com.gt.hotel.entity.TRoomPermanent;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.gt.hotel.entity.TRoomPermanent;
+import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
+import com.gt.hotel.vo.RoomPermanentVo;
 
 /**
  * <p>
@@ -12,5 +19,13 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-10-18
  */
 public interface TRoomPermanentDAO extends BaseMapper<TRoomPermanent> {
+
+	/**
+	 * 查询 长包房设置
+	 * @param param
+	 * @param page
+	 * @return
+	 */
+	List<RoomPermanentVo> queryRoomPermanent(@Param("param") RoomPermanentQuery param, @Param("page") Pagination page);
 
 }

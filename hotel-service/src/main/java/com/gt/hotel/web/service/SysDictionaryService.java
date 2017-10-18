@@ -3,6 +3,7 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.SysDictionary;
+import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.SysDictionaryVo;
 
 /**
@@ -20,6 +21,7 @@ public interface SysDictionaryService extends BaseService< SysDictionary > {
 	 * @param page
 	 * @return
 	 */
-	Page<SysDictionaryVo> queryInvoice(Page<SysDictionaryVo> page);
+	Page<SysDictionaryVo> queryInvoice(HotelPage param);
+
 
 }

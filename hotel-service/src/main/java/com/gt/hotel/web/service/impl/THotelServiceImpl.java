@@ -19,7 +19,7 @@ import com.gt.hotel.entity.THotelMemberSetting;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.ERPParameter.Save;
-import com.gt.hotel.param.HotelParameter;
+import com.gt.hotel.param.HotelParameter.Query;
 import com.gt.hotel.vo.HotelMemberSettingVo;
 import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
@@ -42,8 +42,10 @@ public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > impl
     @Autowired
     THotelMemberSettingService tHotelMemberSettingService;
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Page<HotelVo> queryHotelHome(Integer busid, HotelParameter.Query hpage, Page<HotelVo> page) {
+	public Page<HotelVo> queryHotelHome(Integer busid, Query hpage) {
+		Page<HotelVo> page = hpage.initPage();
 		page.setRecords(tHotelDAO.queryHotelHome(page, hpage, busid));
 		return page;
 	}

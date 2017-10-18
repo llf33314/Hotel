@@ -39,5 +39,43 @@ public class RoomParameter {
 		private String status = /*RoomStatusConst.VACANT_ROOM*/"空房";
 	}
 	
+	@Data
+	@Api(description = "长包房 保存参数")
+	public static class RoomPermanent {
+		@ApiModelProperty(value = "长包房ID")
+		private Integer id;
+		
+		@ApiModelProperty(value = "房型ID", required = true)
+		@NotNull(message = "房型ID不能为空")
+		private Integer categoryId;
+
+		@ApiModelProperty(value = "酒店ID", required = true)
+		@NotNull(message = "酒店ID不能为空")
+		private Integer hotelId;
+		
+		@ApiModelProperty(value = "规则名称", required = true)
+		@NotEmpty(message = "规则名称不能为空")
+		private String ruleName;
+
+		@ApiModelProperty(value = "入住天数", required = true)
+		@NotNull(message = "入住天数不能为空")
+		private Integer checkInDay;
+
+		@ApiModelProperty(value = "折扣 默认：1 无折扣", required = true)
+		@NotNull(message = "折扣不能为空")
+		private Integer discount;
+
+		@ApiModelProperty(value = "押金", required = true)
+		@NotNull(message = "押不能为空")
+		private Integer deposit;
+
+	}
+	
+	@Data
+	@Api(description = "长包房 查询参数")
+	public static class RoomPermanentQuery extends HotelPage {
+		@ApiModelProperty(value = "长包房ID")
+		private Integer id;
+	}
 }
 

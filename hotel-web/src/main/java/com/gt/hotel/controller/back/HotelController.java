@@ -88,9 +88,8 @@ public class HotelController extends BaseController {
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
 	public ResponseDTO hotelR(Query hpage, HttpSession session) {
-		Page< HotelVo > page = new Page<>(hpage.getPage(), hpage.getPageSize());
 		Integer busid = getLoginUserId(session);
-		page = tHotelService.queryHotelHome(busid, hpage, page);
+		Page< HotelVo > page = tHotelService.queryHotelHome(busid, hpage);
 		return ResponseDTO.createBySuccess(page);
 	}
 	

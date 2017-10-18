@@ -62,10 +62,9 @@ public class HotelMobileController extends BaseController {
 	@ApiResponses( {@ApiResponse( code = 0, message = "响应对象", response = ResponseDTO.class ), 
 		@ApiResponse( code = 1, message = "", response = SysDictionaryVo.class )} )
 	@GetMapping( value = "invoice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	@SuppressWarnings( { "rawtypes", "unchecked" } )
+	@SuppressWarnings( { "rawtypes" } )
 	public ResponseDTO invoiceR(HotelPage param) {
-		Page<SysDictionaryVo> page = param.initPage();
-		page = sysDictionaryService.queryInvoice(page);
+		Page<SysDictionaryVo> page = sysDictionaryService.queryInvoice(param);
 		return ResponseDTO.createBySuccess(page);
 	}
 	

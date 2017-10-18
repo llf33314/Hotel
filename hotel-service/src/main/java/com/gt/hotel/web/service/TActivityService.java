@@ -23,7 +23,7 @@ public interface TActivityService extends BaseService< TActivity > {
 	 * @param page 
 	 * @return
 	 */
-	Page<ActivityVo> queryActivity(Query param, Page<ActivityVo> page);
+	Page<ActivityVo> queryActivity(Query param);
 
 	/**
 	 * 编辑 活动房 信息 
@@ -38,5 +38,6 @@ public interface TActivityService extends BaseService< TActivity > {
 	 * @return
 	 */
 	ActivityVo queryActivityOne(Integer id);
+
 
 }

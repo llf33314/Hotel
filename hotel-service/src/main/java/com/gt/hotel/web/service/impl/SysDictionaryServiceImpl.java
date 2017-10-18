@@ -5,6 +5,7 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.SysDictionaryDAO;
 import com.gt.hotel.entity.SysDictionary;
+import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.SysDictionaryVo;
 import com.gt.hotel.web.service.SysDictionaryService;
 
@@ -25,8 +26,10 @@ public class SysDictionaryServiceImpl extends BaseServiceImpl< SysDictionaryDAO,
 	@Autowired
 	SysDictionaryDAO sysDictionaryDAO;
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Page<SysDictionaryVo> queryInvoice(Page<SysDictionaryVo> page) {
+	public Page<SysDictionaryVo> queryInvoice(HotelPage param) {
+		Page<SysDictionaryVo> page = param.initPage();
 		page.setRecords(sysDictionaryDAO.queryInvoice(CommonConst.DICT_INVOICE, page));
 		return page;
 	}

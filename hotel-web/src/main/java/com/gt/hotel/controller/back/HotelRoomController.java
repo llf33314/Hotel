@@ -51,12 +51,11 @@ public class HotelRoomController extends BaseController {
 	@ApiResponses({ @ApiResponse(code = 0, message = "分页对象", response = ResponseDTO.class),
 			@ApiResponse(code = 1, message = "房型列表对象", response = RoomCategoryVo.class) })
 	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public ResponseDTO roomCategoryR(@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param,
 			BindingResult bindingResult) {
 		InvalidParameter(bindingResult);
-		Page<RoomCategoryVo> page = param.initPage();
-		page = tRoomCategoryService.queryRoomCategory(param, page);
+		Page<RoomCategoryVo> page = tRoomCategoryService.queryRoomCategory(param);
 		return ResponseDTO.createBySuccess(page);
 	}
 
@@ -126,11 +125,10 @@ public class HotelRoomController extends BaseController {
 	@ApiResponses({ @ApiResponse(code = 0, message = "分页对象", response = ResponseDTO.class),
 			@ApiResponse(code = 1, message = "", response = RoomCalendarVo.class) })
 	@GetMapping(value = "{roomCategoryId}-calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public ResponseDTO calendarRList(@PathVariable("roomCategoryId") @ApiParam("房型ID") Integer roomCategoryId,
 			RoomCalendarParamter.Query param) {
-		Page<RoomCalendarVo> page = param.initPage();
-		page = tRoomCategoryService.queryRoomCalendarList(roomCategoryId, param, page);
+		Page<RoomCalendarVo> page = tRoomCategoryService.queryRoomCalendarList(roomCategoryId, param);
 		return ResponseDTO.createBySuccess(page);
 	}
 	
