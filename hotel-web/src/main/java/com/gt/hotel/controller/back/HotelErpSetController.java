@@ -7,6 +7,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gt.hotel.base.BaseController;
+import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.vo.HotelVo;
+import com.gt.hotel.web.service.THotelService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @Api(description = "酒店后台-ERP设置")
 @RestController
 @RequestMapping("/back")
