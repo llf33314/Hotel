@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 文件记录表 — 文件实际存储在 素材库。此表仅做记录
+ * 客房长包房
  * </p>
  *
  * @author 
@@ -23,37 +23,32 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class TFileRecord extends Model<TFileRecord> {
+public class TRoomPermanent extends Model<TRoomPermanent> {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 文件ID
-     */
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
+	private Integer categoryId;
     /**
-     * 显示文件名称
+     * 酒店ID t_hotel.id
      */
-	private String name;
+	private Integer hotelId;
+	private String ruleName;
     /**
-     * 文件上传时的原始名称
+     * 入住天数
      */
-	private String originalName;
+	private Integer checkInDay;
     /**
-     * 文件路径 例如：/aa/bb/cc/f.txt
+     * 折扣 默认：1 无折扣
      */
-	private String path;
+	private Integer discount;
     /**
-     * 模块类型 常量类型定义在后台文件里 — 酒店 客房 ….
+     * 押金
      */
-	private String module;
+	private Integer deposit;
     /**
-     * 引用ID，如果 module_type = room 即保存 room_id 具体 按业务模块类型 定义 如果，module_type = hotel_thumbnail 即对应酒店的缩略图
-     */
-	private Integer referenceId;
-    /**
-     * 是否启用 0 默认开启 1 关闭 2 删除标记
+     * 0 正常 1 禁用 2 删除
      */
 	private Integer markModified;
     /**
@@ -72,10 +67,6 @@ public class TFileRecord extends Model<TFileRecord> {
      * 最后修改时间
      */
 	private Date updatedAt;
-    /**
-     * 子模块
-     */
-	private String subModule;
 
 
 	@Override

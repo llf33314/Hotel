@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.THotelMemberSettingDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotelMemberSetting">
+		<id column="hotel_id" property="hotelId" />
+		<result column="vip_level" property="vipLevel" />
+		<result column="vip_check_out" property="vipCheckOut" />
+		<result column="free_deposit_enable" property="freeDepositEnable" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        hotel_id, vip_level, vip_check_out, free_deposit_enable
+    </sql>
+
+</mapper>

@@ -15,13 +15,14 @@
         <result column="created_at" property="createdAt"/>
         <result column="updated_by" property="updatedBy"/>
         <result column="updated_at" property="updatedAt"/>
+        <result column="sub_module" property="subModule" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, name, original_name AS originalName, path, module, reference_id AS referenceId, mark_modified AS
         markModified, created_by AS createdBy, created_at AS createdAt,
-        updated_by AS updatedBy, updated_at AS updatedAt
+        updated_by AS updatedBy, updated_at AS updatedAt, sub_module AS subModule 
     </sql>
 
 </mapper>

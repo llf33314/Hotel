@@ -1,5 +1,7 @@
 package com.gt.hotel.vo;
 
+import java.util.List;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,4 +27,6 @@ public class HotelVo {
     @ApiModelProperty( "图片地址" )
     private String logo;
     
+    @ApiModelProperty( "ERP 会员设置" )
+    private List<HotelMemberSettingVo> memberSetting;
 }

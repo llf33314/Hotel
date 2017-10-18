@@ -31,6 +31,6 @@ public class HotelPage {
     private String keyword;
 
     @SuppressWarnings("rawtypes") public Page initPage() {
-	return new Page(page, pageSize, orderByField);
+    	return new Page(page, pageSize, orderByField);
     }
 }

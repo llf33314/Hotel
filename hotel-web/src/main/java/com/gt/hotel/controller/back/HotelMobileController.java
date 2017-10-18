@@ -73,7 +73,7 @@ public class HotelMobileController extends BaseController {
 	
 	@ApiOperation(value = "保存 订餐设置", notes = "保存 订餐设置")
 	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
-	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PostMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO foodCU(@RequestBody HotelMobileParameter.SaveOrUpdate setting, HttpSession session) {
 		//TODO 尚未有表

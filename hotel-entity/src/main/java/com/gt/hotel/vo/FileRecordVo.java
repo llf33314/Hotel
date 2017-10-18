@@ -71,5 +71,8 @@ public class FileRecordVo {
      */
     @ApiModelProperty("最后修改时间")
     private Date    updatedAt;
+    
+    @ApiModelProperty("子模块")
+	private String subModule;
 
 }
