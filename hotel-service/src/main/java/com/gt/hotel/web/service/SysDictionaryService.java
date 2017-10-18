@@ -1,7 +1,9 @@
 package com.gt.hotel.web.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.SysDictionary;
+import com.gt.hotel.vo.SysDictionaryVo;
 
 /**
  * <p>
@@ -12,5 +14,12 @@ import com.gt.hotel.entity.SysDictionary;
  * @since 2017-10-09
  */
 public interface SysDictionaryService extends BaseService< SysDictionary > {
+
+	/**
+	 * 查询 发票列表
+	 * @param page
+	 * @return
+	 */
+	Page<SysDictionaryVo> queryInvoice(Page<SysDictionaryVo> page);
 
 }

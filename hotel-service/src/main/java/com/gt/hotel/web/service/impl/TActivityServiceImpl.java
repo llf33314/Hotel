@@ -21,7 +21,10 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.ActivityParamter.ActivityRoomParam;
 import com.gt.hotel.param.ActivityParamter.Query;
 import com.gt.hotel.param.ActivityParamter.SaveOrUpdate;
+import com.gt.hotel.vo.ActivityDetailVo;
+import com.gt.hotel.vo.ActivityRoomVo;
 import com.gt.hotel.vo.ActivityVo;
+import com.gt.hotel.web.service.TActivityDetailService;
 import com.gt.hotel.web.service.TActivityRoomService;
 import com.gt.hotel.web.service.TActivityService;
 
@@ -41,6 +44,9 @@ public class TActivityServiceImpl extends BaseServiceImpl< TActivityDAO, TActivi
 	
 	@Autowired
 	TActivityRoomService tActivityRoomService;
+	
+	@Autowired
+	TActivityDetailService tActivityDetailService;
 	
 	@Override
 	public Page<ActivityVo> queryActivity(Query param, Page<ActivityVo> page) {
@@ -103,7 +109,26 @@ public class TActivityServiceImpl extends BaseServiceImpl< TActivityDAO, TActivi
 	@Override
 	public ActivityVo queryActivityOne(Integer id) {
 		ActivityVo av = new ActivityVo();
-		//TODO ^^^
+		TActivity a = this.selectById(id);
+		BeanUtils.copyProperties(a, av);
+		
+		Wrapper<TActivityDetail> dw = new EntityWrapper<>();
+		dw.eq("activity_id", id);
+		TActivityDetail ad = tActivityDetailService.selectOne(dw);
+		ActivityDetailVo adv = new ActivityDetailVo();
+		BeanUtils.copyProperties(ad, adv);
+		av.setDetail(adv);
+		
+		Wrapper<TActivityRoom> rw = new EntityWrapper<>();
+		rw.eq("activity_id", id);
+		List<TActivityRoom> ars = tActivityRoomService.selectList(rw);
+		List<ActivityRoomVo> arvs = new ArrayList<>();
+		for(TActivityRoom ar : ars){
+			ActivityRoomVo arv = new ActivityRoomVo();
+			BeanUtils.copyProperties(ar, arv);
+			arvs.add(arv);
+		}
+		
 		return av;
 	}
 

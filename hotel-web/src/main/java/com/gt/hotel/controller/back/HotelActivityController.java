@@ -1,9 +1,13 @@
 package com.gt.hotel.controller.back;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,9 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.vo.ActivityVo;
 import com.gt.hotel.web.service.TActivityService;
@@ -57,10 +65,44 @@ public class HotelActivityController extends BaseController {
 	@ApiResponses( {@ApiResponse( code = 0, message = "响应对象", response = ResponseDTO.class ), 
 		@ApiResponse( code = 1, message = "", response = ActivityVo.class )} )
 	@GetMapping( value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	@SuppressWarnings( { "rawtypes", "unchecked" } )
+	@SuppressWarnings( { "rawtypes" } )
 	public ResponseDTO activityR(@PathVariable("id") @ApiParam("活动ID") Integer id) {
 		ActivityVo a = tActivityService.queryActivityOne(id);
 		return ResponseDTO.createBySuccess(a);
+	}
+	
+	@ApiOperation(value = "删除 活动", notes = "删除 活动")
+	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
+	@DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings("rawtypes")
+	public ResponseDTO activityD(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
+		Wrapper<TActivity> wrapper = new EntityWrapper<>();
+		TActivity entity = new TActivity();
+		entity.setMarkModified(CommonConst.DELETED);
+		entity.setUpdatedAt(new Date());
+		entity.setUpdatedBy(getLoginUserId(session));
+		wrapper.in("id", ids);
+		if(tActivityService.update(entity, wrapper))
+			return ResponseDTO.createBySuccess();
+		else
+			return ResponseDTO.createByError();
+	}
+	
+	@ApiOperation(value = "停止 活动", notes = "停止 活动")
+	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
+	@PostMapping(value = "stop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings("rawtypes")
+	public ResponseDTO activitySTOP(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
+		Wrapper<TActivity> wrapper = new EntityWrapper<>();
+		TActivity entity = new TActivity();
+		entity.setPublishStatus(CommonConst.STOP);
+		entity.setUpdatedAt(new Date());
+		entity.setUpdatedBy(getLoginUserId(session));
+		wrapper.in("id", ids);
+		if(tActivityService.update(entity, wrapper))
+			return ResponseDTO.createBySuccess();
+		else
+			return ResponseDTO.createByError();
 	}
 	
 }

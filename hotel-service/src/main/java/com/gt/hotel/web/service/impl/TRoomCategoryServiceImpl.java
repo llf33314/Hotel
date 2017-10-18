@@ -23,8 +23,8 @@ import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.param.InfrastructureRelationParamter;
 import com.gt.hotel.param.RoomCalendarParamter.Query;
-import com.gt.hotel.param.RoomCategoryParameter.InfrastructureRelation;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
 import com.gt.hotel.vo.FileRecordVo;
@@ -90,6 +90,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			throw new ResponseEntityException("房型保存失败");
 		}
 		
+		//删除图片
 		Wrapper<TFileRecord> filewrapper = new EntityWrapper<>();
 		filewrapper.eq("reference_id", tRoomCategory.getId());
 		filewrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
@@ -99,7 +100,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		if(!tFileRecordService.delete(filewrapper)){
 			throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
 		}
-		
+		//保存图片
 		List<TFileRecord> imgs = new ArrayList<>();
 		for(String imgurl : roomCategory.getImages()){
 			TFileRecord file = new TFileRecord();
@@ -120,16 +121,16 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		if(!tFileRecordService.insertBatch(imgs)){
 			throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
 		}
-		
+		//删除设施关系
 		Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
 		rwrapper.eq("reference_id", tRoomCategory.getId());
 		rwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		if(!tInfrastructureRelationService.delete(rwrapper)){
 			throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
 		}
-		
+		//保存设施关系
 		List<TInfrastructureRelation> irs = new ArrayList<>();
-		for(InfrastructureRelation ir : roomCategory.getInfrastructureRelations()){
+		for(InfrastructureRelationParamter ir : roomCategory.getInfrastructureRelations()){
 			TInfrastructureRelation _ir = new TInfrastructureRelation();
 			_ir.setCreatedAt(date);
 			_ir.setCreatedBy(busid);

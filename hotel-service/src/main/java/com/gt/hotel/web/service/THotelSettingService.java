@@ -2,6 +2,8 @@ package com.gt.hotel.web.service;
 
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotelSetting;
+import com.gt.hotel.param.HotelMobileParameter.SaveOrUpdate;
+import com.gt.hotel.vo.HotelSettingVo;
 
 /**
  * <p>
@@ -12,5 +14,19 @@ import com.gt.hotel.entity.THotelSetting;
  * @since 2017-10-09
  */
 public interface THotelSettingService extends BaseService< THotelSetting > {
+
+	/**
+	 * 查询 移动端设置 对象
+	 * @param hotelId 酒店ID
+	 * @return
+	 */
+	HotelSettingVo queryHotelSettingOne(Integer hotelId);
+
+	/**
+	 * 保存 移动端设置
+	 * @param busid 用户ID
+	 * @param setting 
+	 */ 
+	void saveSetting(Integer busid, SaveOrUpdate setting);
 
 }

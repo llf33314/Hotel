@@ -24,4 +24,5 @@ public class HotelVo {
 
     @ApiModelProperty( "图片地址" )
     private String imageurl;
+    
 }

@@ -30,14 +30,13 @@
     <select id="queryHotelHome" resultType="com.gt.hotel.vo.HotelVo">
         SELECT id hotelId, name, phone tel, address addr, logo imageurl, store_id storeId 
         FROM t_hotel 
-        <where>
-            <if test="req.hotelId != null">
-                AND id = #{req.hotelId} 
-            </if>
-            <if test="busId != null">
-                AND bus_id = #{busId} 
-            </if>
-        </where>
+        WHERE mark_modified = 0 
+        <if test="req.hotelId != null">
+            AND id = #{req.hotelId} 
+        </if>
+        <if test="busId != null">
+            AND bus_id = #{busId} 
+        </if>
     </select>
 
 </mapper>

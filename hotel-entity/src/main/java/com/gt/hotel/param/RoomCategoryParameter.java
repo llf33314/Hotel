@@ -99,20 +99,7 @@ public class RoomCategoryParameter {
 		private Integer deposit;
 		
 		@ApiModelProperty("房型设施集合 ")
-		private List<InfrastructureRelation> infrastructureRelations;
-	}
-	
-	@Data
-	@Api( "房间设施关系ID" )
-	public static class InfrastructureRelation{
-		@ApiModelProperty("设施ID")
-		private Integer infrastructureId;
-		
-		@ApiModelProperty("房型ID")
-		private Integer referenceId;
-		
-		@ApiModelProperty("数值")
-		private String displayValue;
+		private List<InfrastructureRelationParamter> infrastructureRelations;
 	}
 	
 }

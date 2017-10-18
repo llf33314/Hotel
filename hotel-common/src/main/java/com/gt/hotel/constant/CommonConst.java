@@ -38,6 +38,10 @@ public final class CommonConst {
      * 已结束
      */
     public static final Integer OVER       = 2;
+    /**
+     * 停止
+     */
+    public static final Integer STOP       = 3;
 
     ////////////////////////// 活动类型 /////////////////////////
 
@@ -90,4 +94,12 @@ public final class CommonConst {
      * 2 删除标记
      */
     public static final Integer DELETED  = 2;
+    
+    //////////////////////////字典名 /////////////////////////
+    /**
+     * 发票
+     */
+    public static final String DICT_INVOICE  = "发票";
+    
+    
 }
