@@ -1,5 +1,6 @@
 package com.gt.hotel.web.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,15 @@ public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > impl
 	public Page<HotelVo> queryHotelHome(Integer busid, HotelParameter.Query hpage, Page<HotelVo> page) {
 		page.setRecords(tHotelDAO.queryHotelHome(page, hpage, busid));
 		return page;
+	}
+
+	@Override
+	public HotelVo queryERPHotel(Integer hotelId) {
+		//TODO 会员特权表未有
+		THotel th = tHotelDAO.selectById(hotelId);
+		HotelVo h = new HotelVo();
+		BeanUtils.copyProperties(th, h);
+		return h;
 	}
 	
 

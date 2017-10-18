@@ -17,12 +17,12 @@ public class HotelVo {
     private String name;
     
     @ApiModelProperty( "联系电话" )
-    private String tel;
+    private String phone;
 
     @ApiModelProperty( "地址" )
-    private String addr;
+    private String address;
 
     @ApiModelProperty( "图片地址" )
-    private String imageurl;
+    private String logo;
     
 }

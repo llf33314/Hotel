@@ -26,4 +26,11 @@ public interface THotelService extends BaseService< THotel > {
      */
 	Page<HotelVo> queryHotelHome(Integer busid, HotelParameter.Query hpage, Page<HotelVo> page);
 
+	/**
+	 * 查询酒店ERP对象
+	 * @param hotelId 酒店ID
+	 * @return
+	 */
+	HotelVo queryERPHotel(Integer hotelId);
+
 }

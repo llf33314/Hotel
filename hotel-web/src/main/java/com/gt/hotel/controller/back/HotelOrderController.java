@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api( tags = "酒店后台-订单管理" )
 @RestController
-@RequestMapping( "/back" )
+@RequestMapping( "/back/order" )
 public class HotelOrderController extends BaseController {
 	//TODO 尚未有表
 }

@@ -28,7 +28,7 @@
     </sql>
 
     <select id="queryHotelHome" resultType="com.gt.hotel.vo.HotelVo">
-        SELECT id hotelId, name, phone tel, address addr, logo imageurl, store_id storeId 
+        SELECT id hotelId, name, phone, address, logo, store_id storeId 
         FROM t_hotel 
         WHERE mark_modified = 0 
         <if test="req.hotelId != null">
