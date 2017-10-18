@@ -20,13 +20,11 @@ public class RepeatedlyReadFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(RepeatedlyReadFilter.class);
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    @Override public void init(FilterConfig filterConfig) throws ServletException {
 
     }
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    @Override public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 	//logger.debug("复制request.getInputStream流");
 	ServletRequest requestWrapper = null;
 	if (request instanceof HttpServletRequest) {
@@ -39,8 +37,7 @@ public class RepeatedlyReadFilter implements Filter {
 	}
     }
 
-    @Override
-    public void destroy() {
+    @Override public void destroy() {
 
     }
 }

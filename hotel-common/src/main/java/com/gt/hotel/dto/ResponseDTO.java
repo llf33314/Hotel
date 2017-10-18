@@ -18,7 +18,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  * @create 2017/6/16
  */
 //保证序列化json的时候,如果是null的对象,key也会消失
-@JsonSerialize( typing = DEFAULT_TYPING )
+@JsonSerialize(typing = DEFAULT_TYPING)
 public class ResponseDTO< T > implements Serializable {
 
     /*状态码*/
@@ -139,8 +139,7 @@ public class ResponseDTO< T > implements Serializable {
     }
 
     //使之不在json序列化结果当中，作用用于判断
-    @JsonIgnore
-    public boolean isSuccess() {
+    @JsonIgnore public boolean isSuccess() {
 	return this.code == ResponseEnums.SUCCESS.getCode();
     }
 

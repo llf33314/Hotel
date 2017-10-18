@@ -21,8 +21,8 @@ import java.util.Date;
  * @since 2017-10-09
  */
 @Data
-@Accessors( chain = true )
-@TableName( "t_room" )
+@Accessors(chain = true)
+@TableName("t_room")
 public class TRoom extends Model< TRoom > {
 
     private static final long serialVersionUID = 1L;
@@ -30,9 +30,9 @@ public class TRoom extends Model< TRoom > {
     /**
      * 客房ID
      */
-    @TableId( value = "id", type = IdType.AUTO )
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    @TableField( "room_category_id" )
+    @TableField("room_category_id")
     private Integer roomCategoryId;
     /**
      * 客房编号
@@ -49,32 +49,31 @@ public class TRoom extends Model< TRoom > {
     /**
      * 0 正常 1 禁用 2 删除
      */
-    @TableField( "mark_modified" )
+    @TableField("mark_modified")
     private Integer markModified;
     /**
      * 创建者ID
      */
-    @TableField( "created_by" )
+    @TableField("created_by")
     private Integer createdBy;
     /**
      * 创建时间
      */
-    @TableField( "created_at" )
+    @TableField("created_at")
     private Date    createdAt;
     /**
      * 最后修改人 ID
      */
-    @TableField( "updated_by" )
+    @TableField("updated_by")
     private Integer updatedBy;
     /**
      * 最后修改时间
      */
-    @TableField( "updated_at" )
+    @TableField("updated_at")
     private Date    updatedAt;
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
+    @Override protected Serializable pkVal() {
+	return this.id;
     }
 
 }

@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisCacheUtil {
 
     @Autowired
-    @Qualifier( "redisTemplate" )
+    @Qualifier("redisTemplate")
     private RedisTemplate redisTemplate;
 
     /**
@@ -43,7 +43,8 @@ public class RedisCacheUtil {
      */
     public void removePattern(final String pattern) {
 	Set< Serializable > keys = redisTemplate.keys(pattern);
-	if (keys.size() > 0) redisTemplate.delete(keys);
+	if (keys.size() > 0)
+	    redisTemplate.delete(keys);
     }
 
     /**

@@ -20,8 +20,7 @@ public class HotelServiceImplTest extends BasicTest {
     @Autowired
     private THotelService tHotelService;
 
-    @Test
-    public void queryHotelHome() throws Exception {
+    @Test public void queryHotelHome() throws Exception {
 	PageHelper.startPage(1, 10);
 
 	List< THotel > hotels = tHotelService.selectList(null);

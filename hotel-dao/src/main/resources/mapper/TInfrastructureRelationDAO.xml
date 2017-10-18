@@ -2,18 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.TInfrastructureRelationDAO">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TInfrastructureRelation">
-		<id column="id" property="id" />
-		<result column="infrastructure_id" property="infrastructureId" />
-		<result column="module" property="module" />
-		<result column="reference_id" property="referenceId" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_at" property="createdAt" />
-		<result column="updated_by" property="updatedBy" />
-		<result column="updated_at" property="updatedAt" />
-		<result column="display_value" property="displayValue" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TInfrastructureRelation">
+        <id column="id" property="id"/>
+        <result column="infrastructure_id" property="infrastructureId"/>
+        <result column="module" property="module"/>
+        <result column="reference_id" property="referenceId"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="display_value" property="displayValue"/>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">

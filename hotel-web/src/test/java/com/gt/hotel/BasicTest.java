@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @author zhangmz
  * @create 2017/6/16
  */
-@RunWith( SpringRunner.class )
+@RunWith(SpringRunner.class)
 @SpringBootTest
 public class BasicTest {
 
@@ -22,14 +22,12 @@ public class BasicTest {
     // 开始时间
     private Long start_time;
 
-    @Before
-    public void start() {
+    @Before public void start() {
 	start_time = System.currentTimeMillis();
 	this.logger.info("=======================================  单元测试Start =======================================");
     }
 
-    @After
-    public void end() {
+    @After public void end() {
 	this.logger.info("执行结束，方法执行 {} 毫秒", (System.currentTimeMillis() - start_time));
 	this.logger.info("=======================================  单元测试End =======================================");
     }

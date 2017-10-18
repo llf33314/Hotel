@@ -15,8 +15,7 @@ public class BusUserServiceWsTest extends BasicTest {
     //    @Autowired
     //    private BusUserServiceWs busUserServiceWs;
 
-    @Test
-    public void findByUid() throws Exception {
+    @Test public void findByUid() throws Exception {
 	//	JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
 	//	org.apache.cxf.endpoint.Client client = dcf.createClient( "http://localhost:8080/webservice/BusUserServiceWs?wsdl" );
 	//        client.getOutInterceptors().add( new CXFClientAuthorInterceptor("duofriend", "123456") );

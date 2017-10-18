@@ -18,7 +18,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, room_category_id AS roomCategoryId, number, floor, status, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy,
+        id, room_category_id AS roomCategoryId, number, floor, status, mark_modified AS markModified, created_by AS
+        createdBy, created_at AS createdAt, updated_by AS updatedBy,
         updated_at AS updatedAt
     </sql>
 

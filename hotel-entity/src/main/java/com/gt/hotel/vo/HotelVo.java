@@ -5,15 +5,15 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@Api( description = "新增酒店 - 酒店列表" )
+@Api(description = "新增酒店 - 酒店列表")
 public class HotelVo {
-	@ApiModelProperty( "门店ID" )
+    @ApiModelProperty("门店ID")
     private Integer storeId;
-	
-    @ApiModelProperty( "酒店ID" )
+
+    @ApiModelProperty("酒店ID")
     private Integer hotelId;
-    
-    @ApiModelProperty( "酒店名称" )
+
+    @ApiModelProperty("酒店名称")
     private String name;
     
     @ApiModelProperty( "联系电话" )

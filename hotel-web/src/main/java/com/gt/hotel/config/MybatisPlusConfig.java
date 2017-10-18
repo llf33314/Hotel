@@ -1,10 +1,9 @@
 package com.gt.hotel.config;
 
+import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
 
 /**
  * Mybatis-plus 配置类
@@ -12,7 +11,7 @@ import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
  * @author zhangmz
  * @create 2017/6/20
  */
-@MapperScan( "com.gt.hotel.dao" )
+@MapperScan("com.gt.hotel.dao")
 @Configuration
 public class MybatisPlusConfig {
 
@@ -21,8 +20,7 @@ public class MybatisPlusConfig {
      *
      * @return PaginationInterceptor
      */
-    @Bean
-    public PaginationInterceptor paginationInterceptor() {
+    @Bean public PaginationInterceptor paginationInterceptor() {
 	PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
 	// 开启 PageHelper 的支持
 	paginationInterceptor.setLocalPage(true);

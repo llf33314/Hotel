@@ -19,7 +19,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, original_name AS originalName, path, module, reference_id AS referenceId, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt,
+        id, name, original_name AS originalName, path, module, reference_id AS referenceId, mark_modified AS
+        markModified, created_by AS createdBy, created_at AS createdAt,
         updated_by AS updatedBy, updated_at AS updatedAt
     </sql>
 

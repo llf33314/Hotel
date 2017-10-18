@@ -23,8 +23,8 @@ import com.gt.hotel.web.service.THotelService;
 @Service
 public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > implements THotelService {
 
-	@Autowired
-	THotelDAO tHotelDAO;
+    @Autowired
+    THotelDAO tHotelDAO;
 
 	@Override
 	public Page<HotelVo> queryHotelHome(Integer busid, HotelParameter.Query hpage, Page<HotelVo> page) {
@@ -41,5 +41,4 @@ public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > impl
 		return h;
 	}
 	
-
 }

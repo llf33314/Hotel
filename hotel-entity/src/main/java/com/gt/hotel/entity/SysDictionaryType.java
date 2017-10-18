@@ -19,32 +19,31 @@ import java.io.Serializable;
  * @since 2017-10-09
  */
 @Data
-@Accessors( chain = true )
-@TableName( "sys_dictionary_type" )
+@Accessors(chain = true)
+@TableName("sys_dictionary_type")
 public class SysDictionaryType extends Model< SysDictionaryType > {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId( value = "id", type = IdType.AUTO )
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
      * 字典名称(例如：酒店设施)
      */
-    @TableField( "dict_name" )
+    @TableField("dict_name")
     private String  dictName;
     /**
      * 字典状态：0 使用中(默认) 1 不再使用
      */
-    @TableField( "dict_status" )
+    @TableField("dict_status")
     private Integer dictStatus;
     /**
      * 备注说明
      */
-    @TableField( "dict_remark" )
+    @TableField("dict_remark")
     private String  dictRemark;
 
-    @Override
-    protected Serializable pkVal() {
+    @Override protected Serializable pkVal() {
 	return this.id;
     }
 

@@ -22,8 +22,7 @@ public class RepeatedlyReadInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(RepeatedlyReadInterceptor.class);
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    @Override public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 	/**
 	 * 对来自后台的请求统一进行日志处理
 	 */
@@ -42,8 +41,7 @@ public class RepeatedlyReadInterceptor extends HandlerInterceptorAdapter {
 	return super.preHandle(request, response, handler);
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    @Override public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 	RepeatedlyReadRequestWrapper requestWrapper;
 	if (request instanceof RepeatedlyReadRequestWrapper) {
 	    // 签名获取
@@ -52,8 +50,7 @@ public class RepeatedlyReadInterceptor extends HandlerInterceptorAdapter {
 	}
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    @Override public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
     }
 

@@ -1,20 +1,15 @@
 package com.gt.hotel.util;
 
+import org.apache.poi.hssf.usermodel.*;
+
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
 public class ExportUtil {
 
-    @SuppressWarnings( {"rawtypes", "deprecation"} )
+    @SuppressWarnings({ "rawtypes", "deprecation" })
     public static HSSFWorkbook getExcel(String fileName, String[] titles, String[] contentName, List data, Class _class, ExcelUtil fieldPprocessing)
-		    throws IllegalArgumentException, IllegalAccessException {
+	throws IllegalArgumentException, IllegalAccessException {
 	HSSFWorkbook wb = new HSSFWorkbook();
 	HSSFSheet sheet = wb.createSheet(fileName);
 	HSSFRow rowTitle = sheet.createRow(0);
