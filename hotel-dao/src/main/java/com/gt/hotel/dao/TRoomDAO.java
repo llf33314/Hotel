@@ -1,7 +1,13 @@
 package com.gt.hotel.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TRoom;
+import com.gt.hotel.vo.RoomVo;
 
 /**
  * <p>
@@ -13,5 +19,13 @@ import com.gt.hotel.entity.TRoom;
  * @since 2017-10-09
  */
 public interface TRoomDAO extends BaseMapper< TRoom > {
+
+	/**
+	 * 查询 房间列表
+	 * @param param 房间请求对象
+	 * @param page 
+	 * @return
+	 */
+	List<RoomVo> queryRoomList(@Param("roomCategoryId") Integer roomCategoryId, @Param("page") Pagination page);
 
 }

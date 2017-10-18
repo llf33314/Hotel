@@ -32,5 +32,28 @@
         publish_status AS publishStatus, mark_modified AS markModified, created_by AS createdBy, created_at AS
         createdAt, updated_by AS updatedBy, updated_at AS updatedAt
     </sql>
+    
+    <sql id="Base_Column_List_VO">
+        id, hotel_id AS hotelId, external_number AS externalNumber, begin_time AS beginTime, end_time AS endTime, available_time AS availableTime, restriction_enable AS restrictionEnable, restriction_number AS restrictionNumber, show_room_enable AS showRoomEnable, number_threshold AS numberThreshold, activity_rules AS activityRules, publish_status AS publishStatus, mark_modified AS markModified, t_activity.created_by AS createdBy, t_activity.created_at AS createdAt, t_activity.updated_by AS updatedBy, t_activity.updated_at AS updatedAt
+    </sql>
 
+	<select id="queryActivity" resultType="com.gt.hotel.vo.ActivityVo">
+		SELECT <include refid="Base_Column_List_VO" /> 
+		FROM t_activity 
+		LEFT JOIN t_activity_detail ON t_activity.id = t_activity_detail.activity_id 
+		WHERE mark_modified = 0 
+		<if test="param.id != null">
+			AND id = #{param.id} 
+		</if>
+		<if test="param.hotelId != null">
+			AND hotel_id = #{param.hotelId} 
+		</if>
+		<if test="param.activityType != null">
+			AND activity_type = #{param.activityType} 
+		</if>
+		<if test="param.publishStatus != null">
+			AND publish_status = #{param.publishStatus} 
+		</if>
+	</select>
+	
 </mapper>

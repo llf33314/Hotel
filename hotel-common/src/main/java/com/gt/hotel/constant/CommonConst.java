@@ -16,6 +16,10 @@ public final class CommonConst {
      */
     public static final String MODULE_HOTEL = "hotel";
     /**
+     * 房型
+     */
+    public static final String MODULE_ROOM_CATEGORY = "roomCategory";
+    /**
      * 客房
      */
     public static final String MODULE_ROOM  = "room";
@@ -72,4 +76,18 @@ public final class CommonConst {
      */
     public static final Integer ALL_PAY     = 3;
 
+    //////////////////////////使用状态 /////////////////////////
+    
+    /**
+     * 0 默认开启
+     */
+    public static final Integer ENABLED  = 0;
+    /**
+     * 1 关闭
+     */
+    public static final Integer CLOSE = 1;
+    /**
+     * 2 删除标记
+     */
+    public static final Integer DELETED  = 2;
 }

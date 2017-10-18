@@ -15,6 +15,9 @@ public enum ResponseEnums {
 
     // 1000-1999 定义常见业务错误信息载体
     NEED_LOGIN(1001, "需要登录"),
+    
+    INFRASTRUCTRUE_ERROR(1998, "设施保存失败"),
+    IMAGE_ERROR(1999, "图片保存失败"),
 
     // 30000-39999 为集成第三方API错误信息 例如gt_api
     SIGNATURE_ERROR(3001, "签名错误"),
@@ -22,6 +25,7 @@ public enum ResponseEnums {
     // 9000 以上均为 非项目自定义异常错误
     UNKNOWN_ERROR(9998, "未知错误"),
     SYSTEM_ERROR(9999, "系统错误");
+	
 
     private final int    code;
     private final String msg;
