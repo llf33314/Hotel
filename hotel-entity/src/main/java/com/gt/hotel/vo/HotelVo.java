@@ -10,7 +10,7 @@ import lombok.Data;
 @Api(description = "新增酒店 - 酒店列表")
 public class HotelVo {
     @ApiModelProperty("门店ID")
-    private Integer storeId;
+    private Integer shopId;
 
     @ApiModelProperty("酒店ID")
     private Integer hotelId;

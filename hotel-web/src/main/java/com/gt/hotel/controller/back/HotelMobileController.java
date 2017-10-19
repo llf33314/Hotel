@@ -1,9 +1,12 @@
 package com.gt.hotel.controller.back;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.param.HotelMobileParameter;
 import com.gt.hotel.param.HotelPage;
@@ -27,29 +31,31 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Api( tags = "酒店后台-移动端设置" )
+@Api(tags = "酒店后台-移动端设置")
 @RestController
-@RequestMapping( "/back/mobile" )
+@RequestMapping("/back/mobile")
 public class HotelMobileController extends BaseController {
-	
-	@Autowired
-	THotelSettingService tHotelSettingService;
 
 	@Autowired
-	SysDictionaryService sysDictionaryService;
+	THotelSettingService	tHotelSettingService;
 
-	@ApiOperation( value = "查询 移动端设置 对象", notes = "查询 移动端设置 对象" )
-	@ApiResponses( {@ApiResponse( code = 0, message = "响应对象", response = ResponseDTO.class ), 
-		@ApiResponse( code = 1, message = "", response = HotelSettingVo.class )} )
-	@GetMapping( value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	@SuppressWarnings( { "rawtypes" } )
+	@Autowired
+	SysDictionaryService	sysDictionaryService;
+
+	@ApiOperation(value = "查询 移动端设置 对象", notes = "查询 移动端设置 对象")
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "响应对象", response = ResponseDTO.class),
+			@ApiResponse(code = 1, message = "", response = HotelSettingVo.class) })
+	@GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings({ "rawtypes" })
 	public ResponseDTO phoneSettingR(@PathVariable("hotelId") @ApiParam("酒店ID") Integer hotelId) {
 		HotelSettingVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
 		return ResponseDTO.createBySuccess(setting);
 	}
-	
+
 	@ApiOperation(value = "保存 移动端设置", notes = "保存 移动端设置")
-	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO phoneSettingCU(@RequestBody HotelMobileParameter.SaveOrUpdate setting, HttpSession session) {
@@ -57,29 +63,67 @@ public class HotelMobileController extends BaseController {
 		tHotelSettingService.saveSetting(busid, setting);
 		return ResponseDTO.createBySuccess();
 	}
-	
-	@ApiOperation( value = "查询 发票列表", notes = "查询 发票列表" )
-	@ApiResponses( {@ApiResponse( code = 0, message = "响应对象", response = ResponseDTO.class ), 
-		@ApiResponse( code = 1, message = "", response = SysDictionaryVo.class )} )
-	@GetMapping( value = "invoice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	@SuppressWarnings( { "rawtypes" } )
+
+	@ApiOperation(value = "查询 发票列表", notes = "查询 发票列表")
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "响应对象", response = ResponseDTO.class),
+			@ApiResponse(code = 1, message = "", response = SysDictionaryVo.class) })
+	@GetMapping(value = "invoice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings({ "rawtypes" })
 	public ResponseDTO invoiceR(HotelPage param) {
-		Page<SysDictionaryVo> page = sysDictionaryService.queryInvoice(param);
+		Page<SysDictionaryVo> page = sysDictionaryService.queryDictionary(CommonConst.DICT_INVOICE, param);
 		return ResponseDTO.createBySuccess(page);
 	}
-	
-	//////////////////////////////////////////////////////// 客房订餐 ////////////////////////////////////////////////////////////////
-	
+
+	//////////////////////////////////////////////////////// 客房订餐
+	//////////////////////////////////////////////////////// ////////////////////////////////////////////////////////////////
+
 	@ApiOperation(value = "保存 订餐设置", notes = "保存 订餐设置")
-	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO foodCU(@RequestBody HotelMobileParameter.SaveOrUpdate setting, HttpSession session) {
-		//TODO 尚未有表
+		// TODO 尚未有表
 		Integer busid = getLoginUserId(session);
 		tHotelSettingService.saveSetting(busid, setting);
 		return ResponseDTO.createBySuccess();
 	}
-	
-	
+
+	@ApiOperation(value = "查询 订餐设置 列表", notes = "查询 订餐设置 列表")
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "响应对象", response = ResponseDTO.class),
+			@ApiResponse(code = 1, message = "", response = HotelSettingVo.class) })
+	@GetMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings({ "rawtypes" })
+	public ResponseDTO foodR(@PathVariable("hotelId") @ApiParam("酒店ID") Integer hotelId) {
+		// TODO 尚未有表
+		HotelSettingVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
+		return ResponseDTO.createBySuccess(setting);
+	}
+
+	@ApiOperation(value = "查询 订餐设置 对象", notes = "查询 订餐设置 对象")
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "响应对象", response = ResponseDTO.class),
+			@ApiResponse(code = 1, message = "", response = HotelSettingVo.class) })
+	@GetMapping(value = "food/{foodId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings({ "rawtypes" })
+	public ResponseDTO foodROne(@PathVariable("foodId") @ApiParam("订餐ID") Integer foodId) {
+		// TODO 尚未有表
+		HotelSettingVo setting = tHotelSettingService.queryHotelSettingOne(foodId);
+		return ResponseDTO.createBySuccess(setting);
+	}
+
+	@ApiOperation(value = "删除 订餐设置", notes = "删除 订餐设置")
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
+	@DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings("rawtypes")
+	public ResponseDTO foodD(@RequestBody @ApiParam("订餐ID 数组") List<Integer> ids, HttpSession session) {
+		// TODO 尚未有表
+		Integer busid = getLoginUserId(session);
+//		tRoomCategoryService.delRoomCategory(busid, ids);
+		return ResponseDTO.createBySuccess();
+	}
+
 }

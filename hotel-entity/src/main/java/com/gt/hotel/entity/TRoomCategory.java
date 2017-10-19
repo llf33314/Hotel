@@ -46,8 +46,8 @@ public class TRoomCategory extends Model< TRoomCategory > {
     /**
      * 门店ID
      */
-    @TableField("store_id")
-    private Integer storeId;
+    @TableField("shop_id")
+    private Integer shopId;
     /**
      * 描述
      */

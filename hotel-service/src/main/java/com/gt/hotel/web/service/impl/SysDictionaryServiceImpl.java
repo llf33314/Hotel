@@ -1,16 +1,15 @@
 package com.gt.hotel.web.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
-import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.SysDictionaryDAO;
 import com.gt.hotel.entity.SysDictionary;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.SysDictionaryVo;
 import com.gt.hotel.web.service.SysDictionaryService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -28,9 +27,9 @@ public class SysDictionaryServiceImpl extends BaseServiceImpl< SysDictionaryDAO,
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<SysDictionaryVo> queryInvoice(HotelPage param) {
+	public Page<SysDictionaryVo> queryDictionary(String dictName, HotelPage param) {
 		Page<SysDictionaryVo> page = param.initPage();
-		page.setRecords(sysDictionaryDAO.queryInvoice(CommonConst.DICT_INVOICE, page));
+		page.setRecords(sysDictionaryDAO.queryInvoice(dictName, page));
 		return page;
 	}
 

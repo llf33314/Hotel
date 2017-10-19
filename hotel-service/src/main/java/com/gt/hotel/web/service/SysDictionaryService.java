@@ -17,11 +17,12 @@ import com.gt.hotel.vo.SysDictionaryVo;
 public interface SysDictionaryService extends BaseService< SysDictionary > {
 
 	/**
-	 * 查询 发票列表
-	 * @param page
+	 * 查询 字典 列表
+	 * @param dictName 字典名
+	 * @param param
 	 * @return
 	 */
-	Page<SysDictionaryVo> queryInvoice(HotelPage param);
+	Page<SysDictionaryVo> queryDictionary(String dictName, HotelPage param);
 
 
 }

@@ -106,7 +106,7 @@ public class HotelController extends BaseController {
 		e.setId(hotel.getHotelId());
 		e.setPhone(hotel.getTel());
 		e.setAddress(hotel.getAddr());
-		e.setStoreId(hotel.getShopId());
+		e.setShopId(hotel.getShopId());
 		e.setCreatedBy(busid);
 		e.setCreatedAt(date);
 		e.setUpdatedBy(busid);

@@ -19,11 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.other.Employee;
+import com.gt.hotel.other.EmployeeList;
 import com.gt.hotel.param.ERPParameter;
+import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomParameter;
+import com.gt.hotel.param.WXMPParameter;
+import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.vo.RoomPermanentVo;
+import com.gt.hotel.vo.SysDictionaryVo;
+import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
@@ -43,6 +51,12 @@ public class HotelErpSetController extends BaseController {
 	
 	@Autowired
 	TRoomCategoryService tRoomCategoryService;
+	
+	@Autowired
+	SysDictionaryService sysDictionaryService;
+	
+	@Autowired
+	WXMPApiUtil WXMPApiUtil;
 
 	@ApiOperation( value = "查询 酒店ERP对象", notes = "查询酒店ERP对象" )
 	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
@@ -97,5 +111,30 @@ public class HotelErpSetController extends BaseController {
 		tRoomCategoryService.delRoomPermanent(busId, ids);
 		return ResponseDTO.createBySuccess();
 	}
+	
+	////////////////////////////////////////////////////////////权限设置 //////////////////////////////////////////////////////////
+	
+	@ApiOperation( value = "查询 权限功能列表", notes = "查询 权限功能列表" )
+	@ApiResponses({@ApiResponse(code = 0, message = "响应对象", response = ResponseDTO.class),
+			@ApiResponse(code = 1, message = "", response = SysDictionaryVo.class) })
+	@GetMapping(value = "function", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings({ "rawtypes" })
+	public ResponseDTO functionR(HotelPage param) {
+		Page<SysDictionaryVo> page = sysDictionaryService.queryDictionary(CommonConst.DICT_FUNCTION, param);
+		return ResponseDTO.createBySuccess(page);
+	}
+	
+	@ApiOperation( value = "查询 员工列表", notes = "查询 员工列表" )
+	@ApiResponses({@ApiResponse(code = 0, message = "响应对象", response = ResponseDTO.class),
+			@ApiResponse(code = 1, message = "", response = EmployeeList.class),
+			@ApiResponse(code = 1, message = "", response = Employee.class)})
+	@GetMapping(value = "employee/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@SuppressWarnings({ "rawtypes" })
+	public ResponseDTO employeeR(@PathVariable("shopId") Integer shopId, WXMPParameter.queryEmployee qe) {
+		EmployeeList e = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone());
+		return ResponseDTO.createBySuccess(e);
+	}
+	
+	
 	
 }

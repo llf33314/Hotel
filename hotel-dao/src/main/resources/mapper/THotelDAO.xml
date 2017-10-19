@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotel">
         <id column="id" property="id"/>
         <result column="bus_id" property="busId"/>
-        <result column="store_id" property="storeId"/>
+        <result column="shop_id" property="shopId"/>
         <result column="name" property="name"/>
         <result column="desc" property="desc"/>
         <result column="phone" property="phone"/>
@@ -24,13 +24,13 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, bus_id AS busId, store_id AS storeId, name, desc, phone, address, thumbnail, logo, longitude, latitude,
+        id, bus_id AS busId, shop_id AS shopId, name, desc, phone, address, thumbnail, logo, longitude, latitude,
         mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy,
         updated_at AS updatedAt
     </sql>
 
     <select id="queryHotelHome" resultType="com.gt.hotel.vo.HotelVo">
-        SELECT id hotelId, name, phone, address, logo, store_id storeId 
+        SELECT id hotelId, name, phone, address, logo, shop_id shopId 
         FROM t_hotel 
         WHERE mark_modified = 0 
         <if test="req.hotelId != null">

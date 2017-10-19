@@ -100,6 +100,10 @@ public final class CommonConst {
      * 发票
      */
     public static final String DICT_INVOICE  = "发票";
+    /**
+     * 权限功能
+     */
+    public static final String DICT_FUNCTION  = "权限功能";
     
     
 }

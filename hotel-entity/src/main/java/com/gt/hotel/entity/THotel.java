@@ -36,8 +36,8 @@ public class THotel extends Model< THotel > {
     /**
      * 门店ID
      */
-    @TableField("store_id")
-    private Integer storeId;
+    @TableField("shop_id")
+    private Integer shopId;
     /**
      * 酒店名称
      */
