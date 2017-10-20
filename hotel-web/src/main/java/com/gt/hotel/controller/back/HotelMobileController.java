@@ -1,5 +1,6 @@
 package com.gt.hotel.controller.back;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -94,9 +97,16 @@ public class HotelMobileController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO foodCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.FoodSaveOrUpdate food, BindingResult result, HttpSession session) {
 		InvalidParameter(result);
-//		Integer busid = getLoginUserId(session);
+		Integer busid = getLoginUserId(session);
+		Date date = new Date();
 		TFood f = new TFood();
 		BeanUtils.copyProperties(food, f);
+		if(f.getId() == null) {
+			f.setCreatedAt(date);
+			f.setCreatedBy(busid);
+		}
+		f.setUpdatedAt(date);
+		f.setUpdatedBy(busid);
 		if(f.insertOrUpdate()) return ResponseDTO.createBySuccess();
 		else return ResponseDTO.createByError();
 	}
@@ -131,8 +141,14 @@ public class HotelMobileController extends BaseController {
 	@DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO foodD(@RequestBody @ApiParam("订餐ID 数组") List<Integer> ids, HttpSession session) {
-//		Integer busid = getLoginUserId(session);
-		if(tFoodService.deleteBatchIds(ids)) return ResponseDTO.createBySuccess();
+		Integer busid = getLoginUserId(session);
+		TFood f = new TFood();
+		Wrapper<TFood> wrapper = new EntityWrapper<>();
+		f.setUpdatedAt(new Date());
+		f.setUpdatedBy(busid);
+		f.setMarkModified(CommonConst.DELETED);
+		wrapper.in("id", ids);
+		if(tFoodService.update(f, wrapper)) return ResponseDTO.createBySuccess();
 		else return ResponseDTO.createByError();
 	}
 

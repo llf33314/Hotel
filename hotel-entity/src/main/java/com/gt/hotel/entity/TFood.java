@@ -29,9 +29,6 @@ public class TFood extends Model<TFood> {
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
-    /**
-     * 酒店ID
-     */
 	private Integer hotelId;
     /**
      * 菜品名称
@@ -109,6 +106,26 @@ public class TFood extends Model<TFood> {
      * 宵夜结束时间
      */
 	private Date supperEnd;
+    /**
+     * 标记备注 0 启用 1 禁用 2 删除 默认0  可查看 sys_dictionary.dict_type_id=2
+     */
+	private Integer markModified;
+    /**
+     * 创建者ID
+     */
+	private Integer createdBy;
+    /**
+     * 创建时间
+     */
+	private Date createdAt;
+    /**
+     * 最后修改人 ID
+     */
+	private Integer updatedBy;
+    /**
+     * 最后修改时间
+     */
+	private Date updatedAt;
 
 
 	@Override

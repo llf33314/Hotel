@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -109,36 +111,44 @@ public class HotelMobileParameter {
 		private Integer breakfastEnable;
 
 		@ApiModelProperty("早餐开始时间 (示例: 6:00-10:00)")
+		@JsonFormat(pattern = "HH:mm:ss")
 		private Date breakfastBegin;
 
 		@ApiModelProperty("早餐结束时间 (示例: 6:00-10:00)")
+		@JsonFormat(pattern = "HH:mm:ss")
 		private Date breakfastEnd;
 
 		@ApiModelProperty("午餐时段是否提供 0 提供 1 不提供")
 		private Integer lunchEnable;
 
 		@ApiModelProperty("午餐开始时间 (示例: 6:00-10:00)")
+		@JsonFormat(pattern = "HH:mm:ss")
 		private Date lunchBegin;
 
 		@ApiModelProperty("午餐结束时间 (示例: 6:00-10:00)")
+		@JsonFormat(pattern = "HH:mm:ss")
 		private Date lunchEnd;
 
 		@ApiModelProperty("晚餐是否提供 0 是 1 否")
 		private Integer dinnerEnable;
 
 		@ApiModelProperty("晚餐开始时间")
+		@JsonFormat(pattern = "HH:mm:ss")
 		private Date dinnerBegin;
 
 		@ApiModelProperty("晚餐结束时间")
+		@JsonFormat(pattern = "HH:mm:ss")
 		private Date dinnerEnd;
 
 		@ApiModelProperty("宵夜是否提供 0 是 1 否")
 		private Integer supperEnable;
 
 		@ApiModelProperty("宵夜开始时间")
+		@JsonFormat(pattern = "HH:mm:ss")
 		private Date supperBegin;
 
 		@ApiModelProperty("宵夜结束时间")
+		@JsonFormat(pattern = "HH:mm:ss")
 		private Date supperEnd;
 	}
 	
