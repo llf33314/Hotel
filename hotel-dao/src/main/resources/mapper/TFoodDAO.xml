@@ -31,5 +31,16 @@
     <sql id="Base_Column_List">
         id, hotel_id, name, price, delivery_time, food_provides, food_provides_name, new_order_receive, food_image, breakfast_enable, breakfast_begin, breakfast_end, lunch_enable, lunch_begin, lunch_end, dinner_enable, dinner_begin, dinner_end, supper_enable, supper_begin, supper_end
     </sql>
+    <sql id="Base_Column_List_VO">
+        t_food.id, t_food.hotel_id hotelId, t_food.name, t_food.price, t_food.delivery_time deliveryTime, t_food.food_provides foodProvides, 
+        t_food.food_provides_name foodProvidesName, t_food.new_order_receive newOrderReceive, t_food.food_image foodImage,t_food.breakfast_enable breakfastEnable, 
+        t_food.breakfast_begin breakfastBegin, t_food.breakfast_end breakfastEnd, t_food.lunch_enable lunchEnable, t_food.lunch_begin lunchBegin, 
+        t_food.lunch_end lunchEnd, t_food.dinner_enable dinnerEnable, t_food.dinner_begin dinnerBegin, t_food.dinner_end dinnerEnd, 
+        t_food.supper_enable supperEnable, t_food.supper_begin supperBegin, t_food.supper_end supperEnd 
+    </sql>
 
+	<select id="queryFood" resultType="com.gt.hotel.vo.FoodVo">
+		SELECT <include refid="Base_Column_List_VO" /> 
+		FROM t_food 
+	</select>
 </mapper>
