@@ -25,7 +25,7 @@ public class RoomParameter {
 		
 		@ApiModelProperty( value = "房型ID", required = true )
 		@NotNull(message = "房型ID不能为空")
-		private Integer roomCategoryId;
+		private Integer categoryId;
 		
 		@ApiModelProperty( value = "房间编号", required = true )
 		@NotEmpty(message = "房间编号不能为空")

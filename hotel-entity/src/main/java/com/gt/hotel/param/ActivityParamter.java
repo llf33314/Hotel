@@ -6,7 +6,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,15 +42,17 @@ public class ActivityParamter {
 		
 		@ApiModelProperty(value = "活动 开始时间")
 		@NotNull(message = "开始时间不能为空")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 		private Date beginTime;
 		
 		@ApiModelProperty(value = "结束时间")
 		@NotNull(message = "结束时间不能为空")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 		private Date endTime;
 		
 		@ApiModelProperty(value = "可入住最大时间 活动开始后，预订入住时间 最大有效期。")
 		@NotNull(message = "可入住最大时间不能为空")
-		@DateTimeFormat(pattern = "yyyy-MM-dd")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	    private Date availableTime;
 	    
 	    @ApiModelProperty(value = "是否开启限购 0 — 开启  1 不限制  默认1")
@@ -76,6 +79,7 @@ public class ActivityParamter {
 	    private Integer checkInTime;
 	    
 	    @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段")
+	    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	    private Date checkInPeriod;
 	    
 	    @ApiModelProperty(value = "如果 activity=4 团购房 规则 最少预订房间数量")

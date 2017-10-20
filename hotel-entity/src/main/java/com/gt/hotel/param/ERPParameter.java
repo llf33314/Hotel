@@ -34,5 +34,26 @@ public class ERPParameter {
 	    private List<HotelMemberSettingVo> memberSetting;
 	}
 	
+	@Data
+	@Api( "保存 参数" )
+	public static class AuthorSave {
+
+		@ApiModelProperty("账号ID")
+		@NotNull(message = "账号ID不能为空")
+		private Integer accountId;
+
+		@ApiModelProperty("酒店ID")
+		@NotNull(message = "酒店ID不能为空")
+		private Integer hotelId;
+
+		@ApiModelProperty("门店ID")
+		@NotNull(message = "门店ID不能为空")
+		private Integer shopId;
+
+		@ApiModelProperty("功能ID 复数 存储方式：1,2,3,4 代表功能 =1 体现 =2 免押金 =3 修改房价 =4 挂账 来自 sys_dictionary.dict_type_id=3")
+		@NotNull(message = "功能ID不能为空")
+		private String functionIds;
+	}
+	
 }
 

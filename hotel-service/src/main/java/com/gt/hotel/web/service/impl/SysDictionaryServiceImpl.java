@@ -27,9 +27,9 @@ public class SysDictionaryServiceImpl extends BaseServiceImpl< SysDictionaryDAO,
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<SysDictionaryVo> queryDictionary(String dictName, HotelPage param) {
+	public Page<SysDictionaryVo> queryDictionary(Integer dictId, HotelPage param) {
 		Page<SysDictionaryVo> page = param.initPage();
-		page.setRecords(sysDictionaryDAO.queryInvoice(dictName, page));
+		page.setRecords(sysDictionaryDAO.queryInvoice(dictId, page));
 		return page;
 	}
 

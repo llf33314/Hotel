@@ -10,8 +10,8 @@ public class InfrastructureRelationParamter{
 	@ApiModelProperty("设施ID")
 	private Integer infrastructureId;
 	
-	@ApiModelProperty("房型ID")
-	private Integer referenceId;
+//	@ApiModelProperty("房型ID")
+//	private Integer referenceId;
 	
 	@ApiModelProperty("数值")
 	private String displayValue;

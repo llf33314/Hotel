@@ -103,5 +103,4 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 */
 	void delRoomPermanent(Integer busId, List<Integer> ids);
 
-
 }

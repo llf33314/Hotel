@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TRoom">
         <id column="id" property="id"/>
-        <result column="room_category_id" property="roomCategoryId"/>
+        <result column="category_id" property="categoryId"/>
         <result column="number" property="number"/>
         <result column="floor" property="floor"/>
         <result column="status" property="status"/>
@@ -18,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, room_category_id AS roomCategoryId, number, floor, status, mark_modified AS markModified, created_by AS
+        id, category_id AS categoryId, number, floor, status, mark_modified AS markModified, created_by AS
         createdBy, created_at AS createdAt, updated_by AS updatedBy,
         updated_at AS updatedAt
     </sql>
@@ -27,11 +27,10 @@
 		SELECT 
 		<include refid="Base_Column_List" /> 
 		FROM t_room 
-		<where>
-			<if test="roomCategoryId != null">
-				AND room_category_id = #{roomCategoryId} 
-			</if>
-		</where>
+		WHERE mark_modified = 0 
+		<if test="categoryId != null">
+			AND category_id = #{categoryId} 
+		</if>
 	</select>
 	
 </mapper>

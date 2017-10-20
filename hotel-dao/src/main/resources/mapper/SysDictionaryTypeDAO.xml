@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gt.hotel.dao.SysDictionaryTypeDAO">
+<mapper namespace="com.gt.hotel.mapper.SysDictionaryTypeDAO">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.SysDictionaryType">
-        <id column="id" property="id"/>
-        <result column="dict_name" property="dictName"/>
-        <result column="dict_status" property="dictStatus"/>
-        <result column="dict_remark" property="dictRemark"/>
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.SysDictionaryType">
+		<id column="id" property="id" />
+		<result column="dict_type_cn_name" property="dictTypeCnName" />
+		<result column="dict_type_en_name" property="dictTypeEnName" />
+		<result column="dict_type_status" property="dictTypeStatus" />
+		<result column="dict_type_remark" property="dictTypeRemark" />
+	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, dict_name AS dictName, dict_status AS dictStatus, dict_remark AS dictRemark
+        id, dict_type_cn_name, dict_type_en_name, dict_type_status, dict_type_remark
     </sql>
 
 </mapper>

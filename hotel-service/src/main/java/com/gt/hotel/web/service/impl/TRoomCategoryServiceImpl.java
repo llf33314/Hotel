@@ -111,9 +111,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 //		TFileRecord _file = new TFileRecord();
 //		_file.setMarkModified(CommonConst.DELETED);
 //		tFileRecordService.update(_file , filewrapper);
-		if(!tFileRecordService.delete(filewrapper)){
-			throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
-		}
+		tFileRecordService.delete(filewrapper);
 		//保存图片
 		List<TFileRecord> imgs = new ArrayList<>();
 		for(String imgurl : roomCategory.getImages()){
@@ -139,9 +137,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
 		rwrapper.eq("reference_id", tRoomCategory.getId());
 		rwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
-		if(!tInfrastructureRelationService.delete(rwrapper)){
-			throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
-		}
+		tInfrastructureRelationService.delete(rwrapper);
 		//保存设施关系
 		List<TInfrastructureRelation> irs = new ArrayList<>();
 		for(InfrastructureRelationParamter ir : roomCategory.getInfrastructureRelations()){
@@ -219,6 +215,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			_r.setCreatedAt(date);
 			_r.setCreatedBy(busid);
 			_r.setUpdatedBy(busid);
+			entityList.add(_r);
 		}
 		if(!tRoomService.insertOrUpdateBatch(entityList)){
 			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);

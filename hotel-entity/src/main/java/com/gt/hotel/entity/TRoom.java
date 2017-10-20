@@ -32,8 +32,8 @@ public class TRoom extends Model< TRoom > {
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    @TableField("room_category_id")
-    private Integer roomCategoryId;
+    @TableField("category_id")
+    private Integer categoryId;
     /**
      * 客房编号
      */

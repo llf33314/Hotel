@@ -4,8 +4,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +51,7 @@ public class HotelMobileController extends BaseController {
 			@ApiResponse(code = 1, message = "", response = HotelSettingVo.class) })
 	@GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings({ "rawtypes" })
-	public ResponseDTO phoneSettingR(@PathVariable("hotelId") @ApiParam("酒店ID") Integer hotelId) {
+	public ResponseDTO phoneSettingR(@PathVariable("hotelId") Integer hotelId) {
 		HotelSettingVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
 		return ResponseDTO.createBySuccess(setting);
 	}
@@ -58,7 +61,8 @@ public class HotelMobileController extends BaseController {
 			@ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO phoneSettingCU(@RequestBody HotelMobileParameter.SaveOrUpdate setting, HttpSession session) {
+	public ResponseDTO phoneSettingCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.SaveOrUpdate setting, BindingResult result, HttpSession session) {
+		InvalidParameter(result);
 		Integer busid = getLoginUserId(session);
 		tHotelSettingService.saveSetting(busid, setting);
 		return ResponseDTO.createBySuccess();
@@ -70,20 +74,20 @@ public class HotelMobileController extends BaseController {
 			@ApiResponse(code = 1, message = "", response = SysDictionaryVo.class) })
 	@GetMapping(value = "invoice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings({ "rawtypes" })
-	public ResponseDTO invoiceR(HotelPage param) {
+	public ResponseDTO invoiceR(@Param("参数") HotelPage param) {
 		Page<SysDictionaryVo> page = sysDictionaryService.queryDictionary(CommonConst.DICT_INVOICE, param);
 		return ResponseDTO.createBySuccess(page);
 	}
 
-	//////////////////////////////////////////////////////// 客房订餐
-	//////////////////////////////////////////////////////// ////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////// 客房订餐 //////////////////////////////////////////////////////// 
 
+	// TODO 尚未有表
 	@ApiOperation(value = "保存 订餐设置", notes = "保存 订餐设置")
 	@ApiResponses({
 			@ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO foodCU(@RequestBody HotelMobileParameter.SaveOrUpdate setting, HttpSession session) {
+	public ResponseDTO foodCU(@RequestBody @Param("参数") HotelMobileParameter.SaveOrUpdate setting, HttpSession session) {
 		// TODO 尚未有表
 		Integer busid = getLoginUserId(session);
 		tHotelSettingService.saveSetting(busid, setting);

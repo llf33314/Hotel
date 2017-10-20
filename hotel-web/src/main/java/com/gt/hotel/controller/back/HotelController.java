@@ -37,6 +37,7 @@ import com.gt.hotel.web.service.THotelService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -87,7 +88,7 @@ public class HotelController extends BaseController {
 		@ApiResponse( code = 1, message = "酒店列表", response = HotelVo.class )} )
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO hotelR(Query hpage, HttpSession session) {
+	public ResponseDTO hotelR(@ApiParam("参数") Query hpage, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		Page< HotelVo > page = tHotelService.queryHotelHome(busid, hpage);
 		return ResponseDTO.createBySuccess(page);
@@ -97,12 +98,13 @@ public class HotelController extends BaseController {
 	@ApiResponses( {@ApiResponse( code = 0, message = "", response = ResponseDTO.class )} )
 	@PostMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO hotelCU(@Validated @ModelAttribute HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
+	public ResponseDTO hotelCU(@Validated @ModelAttribute @ApiParam("参数") HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);
 		Integer busid = getLoginUserId(session);
 		Date date = new Date();
 		THotel e = new THotel();
 		BeanUtils.copyProperties(hotel, e);
+		e.setBusId(busid);
 		e.setId(hotel.getHotelId());
 		e.setPhone(hotel.getTel());
 		e.setAddress(hotel.getAddr());

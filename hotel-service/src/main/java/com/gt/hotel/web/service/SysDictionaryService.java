@@ -22,7 +22,7 @@ public interface SysDictionaryService extends BaseService< SysDictionary > {
 	 * @param param
 	 * @return
 	 */
-	Page<SysDictionaryVo> queryDictionary(String dictName, HotelPage param);
+	Page<SysDictionaryVo> queryDictionary(Integer dictId, HotelPage param);
 
 
 }

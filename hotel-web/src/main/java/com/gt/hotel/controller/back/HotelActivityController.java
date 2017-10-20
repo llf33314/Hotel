@@ -5,8 +5,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +48,8 @@ public class HotelActivityController extends BaseController {
 		@ApiResponse( code = 1, message = "", response = ActivityVo.class )} )
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( { "rawtypes" } )
-	public ResponseDTO activityR(ActivityParamter.Query param) {
+	public ResponseDTO activityR(@Validated @Param("参数") ActivityParamter.Query param, BindingResult result) {
+		InvalidParameter(result);
 		Page<ActivityVo> page = tActivityService.queryActivity(param);
 		return ResponseDTO.createBySuccess(page);
 	}
@@ -54,7 +58,8 @@ public class HotelActivityController extends BaseController {
 	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO activityCU(@RequestBody ActivityParamter.SaveOrUpdate arooms, HttpSession session) {
+	public ResponseDTO activityCU(@Validated @Param("参数") @RequestBody ActivityParamter.SaveOrUpdate arooms, BindingResult bindingResult, HttpSession session) {
+		InvalidParameter(bindingResult);;
 		Integer busid = getLoginUserId(session);
 		tActivityService.editActivity(busid, arooms);
 		return ResponseDTO.createBySuccess();

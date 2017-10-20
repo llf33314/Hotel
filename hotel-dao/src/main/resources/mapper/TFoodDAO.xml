@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TFoodDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TFood">
+		<id column="id" property="id" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="name" property="name" />
+		<result column="price" property="price" />
+		<result column="delivery_time" property="deliveryTime" />
+		<result column="food_provides" property="foodProvides" />
+		<result column="food_provides_name" property="foodProvidesName" />
+		<result column="new_order_receive" property="newOrderReceive" />
+		<result column="food_image" property="foodImage" />
+		<result column="breakfast_enable" property="breakfastEnable" />
+		<result column="breakfast_begin" property="breakfastBegin" />
+		<result column="breakfast_end" property="breakfastEnd" />
+		<result column="lunch_enable" property="lunchEnable" />
+		<result column="lunch_begin" property="lunchBegin" />
+		<result column="lunch_end" property="lunchEnd" />
+		<result column="dinner_enable" property="dinnerEnable" />
+		<result column="dinner_begin" property="dinnerBegin" />
+		<result column="dinner_end" property="dinnerEnd" />
+		<result column="supper_enable" property="supperEnable" />
+		<result column="supper_begin" property="supperBegin" />
+		<result column="supper_end" property="supperEnd" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, hotel_id, name, price, delivery_time, food_provides, food_provides_name, new_order_receive, food_image, breakfast_enable, breakfast_begin, breakfast_end, lunch_enable, lunch_begin, lunch_end, dinner_enable, dinner_begin, dinner_end, supper_enable, supper_begin, supper_end
+    </sql>
+
+</mapper>

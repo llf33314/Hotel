@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,9 +21,11 @@ public class RoomCalendarParamter {
 		private Integer id;
 		
 		@ApiModelProperty(value = "开始日期")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 		private Date beginTime;
 		
 		@ApiModelProperty(value = "结束日期")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 		private Date endTime;
 	}
 	
@@ -32,19 +36,21 @@ public class RoomCalendarParamter {
 		@NotNull(message = "酒店ID不能为空")
 		private Integer hotelId;
 		
-		@ApiModelProperty(value = "房型ID")
-		@NotNull(message = "房型ID不能为空")
-		private Integer roomCategoryId;
+//		@ApiModelProperty(value = "房型ID")
+//		@NotNull(message = "房型ID不能为空")
+//		private Integer roomCategoryId;
 		
 		@ApiModelProperty(value = "日历ID(更新需要)")
 		private Integer id;
 		
 		@ApiModelProperty(value = "开始日期")
 		@NotNull(message = "开始日期不能为空")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 		private Date beginTime;
 		
 		@ApiModelProperty(value = "结束日期")
 		@NotNull(message = "结束日期不能为空")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 		private Date endTime;
 		
 		@ApiModelProperty(value = "日历价")

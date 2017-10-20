@@ -26,6 +26,6 @@ public interface TRoomDAO extends BaseMapper< TRoom > {
 	 * @param page 
 	 * @return
 	 */
-	List<RoomVo> queryRoomList(@Param("roomCategoryId") Integer roomCategoryId, @Param("page") Pagination page);
+	List<RoomVo> queryRoomList(@Param("categoryId") Integer categoryId, @Param("page") Pagination page);
 
 }
