@@ -1,4 +1,4 @@
-# SpringBoot Hotel Maven 多模块
+# SpringBoot Hotel Maven 多模块 
 
 项目基于[SpringBootDemo 项目](http://git.duofee.com/zhangmz/SpringBootDemo), 升级至多模块项目。
 
