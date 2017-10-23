@@ -3,8 +3,8 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.param.ERPParameter.Save;
-import com.gt.hotel.param.HotelParameter.Query;
+import com.gt.hotel.param.ERPParameter.ERPSave;
+import com.gt.hotel.param.HotelParameter.HotelQuery;
 import com.gt.hotel.vo.HotelVo;
 
 /**
@@ -25,7 +25,7 @@ public interface THotelService extends BaseService< THotel > {
      *
      * @return 酒店列表
      */
-    Page<HotelVo> queryHotelHome(Integer busid, Query hpage);
+    Page<HotelVo> queryHotelHome(Integer busid, HotelQuery hpage);
 
 	/**
 	 * 查询酒店ERP对象
@@ -39,7 +39,7 @@ public interface THotelService extends BaseService< THotel > {
      * @param busid 用户ID
      * @param save 
      */
-	void SaveHotelERP(Integer busid, Save save);
+	void SaveHotelERP(Integer busid, ERPSave save);
 
 
 

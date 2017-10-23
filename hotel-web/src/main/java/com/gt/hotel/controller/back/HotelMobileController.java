@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +64,7 @@ public class HotelMobileController extends BaseController {
 	@ApiOperation(value = "保存 移动端设置", notes = "保存 移动端设置")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO phoneSettingCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.SaveOrUpdate setting, BindingResult result, HttpSession session) {
+	public ResponseDTO phoneSettingCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.MobileSaveOrUpdate setting, BindingResult result, HttpSession session) {
 		InvalidParameter(result);
 		Integer busid = getLoginUserId(session);
 		tHotelSettingService.saveSetting(busid, setting);
@@ -72,7 +73,7 @@ public class HotelMobileController extends BaseController {
 
 	@ApiOperation(value = "查询 发票列表", notes = "查询 发票列表")
 	@GetMapping(value = "invoice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<Page<SysDictionaryVo>> invoiceR(@Param("参数") HotelPage param) {
+	public ResponseDTO<Page<SysDictionaryVo>> invoiceR(@Param("参数") @ModelAttribute HotelPage param) {
 		Page<SysDictionaryVo> page = sysDictionaryService.queryDictionary(CommonConst.DICT_INVOICE, param);
 		return ResponseDTO.createBySuccess(page);
 	}
@@ -100,7 +101,7 @@ public class HotelMobileController extends BaseController {
 
 	@ApiOperation(value = "查询 订餐设置 列表", notes = "查询 订餐设置 列表")
 	@GetMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<Page<FoodVo>> foodR(@Param("参数") HotelPage hpage) {
+	public ResponseDTO<Page<FoodVo>> foodR(@Param("参数") @ModelAttribute HotelPage hpage) {
 		Page<FoodVo> page = tFoodService.queryFood(hpage);
 		return ResponseDTO.createBySuccess(page);
 	}

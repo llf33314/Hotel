@@ -20,7 +20,7 @@ public class HotelParameter {
      */
     @Data
     @Api("保存或更新实体")
-    public static class SaveOrUpdate {
+    public static class HotelSaveOrUpdate {
 	@ApiModelProperty(value = "酒店ID")
 	private Integer hotelId;
 
@@ -60,7 +60,7 @@ public class HotelParameter {
 
     @Api("酒店查询参数")
     @Data
-    public static class Query extends HotelPage {
+    public static class HotelQuery extends HotelPage {
 	@ApiModelProperty("酒店ID")
 	private Integer hotelId;
     }

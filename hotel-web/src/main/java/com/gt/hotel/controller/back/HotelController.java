@@ -36,7 +36,7 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 import com.gt.hotel.param.HotelParameter;
-import com.gt.hotel.param.HotelParameter.Query;
+import com.gt.hotel.param.HotelParameter.HotelQuery;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.web.service.THotelService;
@@ -91,7 +91,7 @@ public class HotelController extends BaseController {
 	
 	@ApiOperation( value = "酒店列表", notes = "酒店列表" )
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	public ResponseDTO<Page<HotelVo>> hotelR(Query hpage, HttpSession session) {
+	public ResponseDTO<Page<HotelVo>> hotelR(HotelQuery hpage, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		Page< HotelVo > page = tHotelService.queryHotelHome(busid, hpage);
 		return ResponseDTO.createBySuccess(page);
@@ -100,7 +100,7 @@ public class HotelController extends BaseController {
 	@ApiOperation( value = "新增或更新酒店", notes = "新增或更新酒店" )
 	@PostMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( "rawtypes" )
-	public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.SaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
+	public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);
 		Integer busid = getLoginUserId(session);
 		Date date = new Date();

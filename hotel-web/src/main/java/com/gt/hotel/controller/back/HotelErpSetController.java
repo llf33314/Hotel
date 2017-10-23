@@ -73,7 +73,7 @@ public class HotelErpSetController extends BaseController {
 	@ApiOperation(value = "保存 ERP前台设置", notes = "保存 ERP前台设置")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO erpSettingCU(@Validated @Param("参数") @RequestBody ERPParameter.Save save, BindingResult bindingResult, HttpSession session) {
+	public ResponseDTO erpSettingCU(@Validated @Param("参数") @RequestBody ERPParameter.ERPSave save, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);
 		Integer busid = getLoginUserId(session);
 		tHotelService.SaveHotelERP(busid, save);
@@ -119,7 +119,7 @@ public class HotelErpSetController extends BaseController {
 	
 	@ApiOperation( value = "查询 员工列表", notes = "查询 员工列表" )
 	@GetMapping(value = "employee/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<EmployeeList> employeeR(@PathVariable("shopId") Integer shopId, @Param("门店ID") WXMPParameter.queryEmployee qe) {
+	public ResponseDTO<EmployeeList> employeeR(@PathVariable("shopId") Integer shopId, @Param("门店ID") @ModelAttribute WXMPParameter.queryEmployee qe) {
 		EmployeeList e = null;
 		JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone());
 		if("0".equals(result.getString("code"))) {

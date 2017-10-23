@@ -43,7 +43,7 @@ public class HotelActivityController extends BaseController {
 	
 	@ApiOperation( value = "查询 活动 列表", notes = "查询 活动 列表" )
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	public ResponseDTO<Page<ActivityVo>> activityR(@Validated @Param("参数") ActivityParamter.Query param, BindingResult result) {
+	public ResponseDTO<Page<ActivityVo>> activityR(@Validated @Param("参数") @RequestBody ActivityParamter.ActivityQuery param, BindingResult result) {
 		InvalidParameter(result);
 		Page<ActivityVo> page = tActivityService.queryActivity(param);
 		return ResponseDTO.createBySuccess(page);
@@ -52,7 +52,7 @@ public class HotelActivityController extends BaseController {
 	@ApiOperation(value = "编辑 活动", notes = "编辑 活动")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO activityCU(@Validated @Param("参数") @RequestBody ActivityParamter.SaveOrUpdate arooms, BindingResult bindingResult, HttpSession session) {
+	public ResponseDTO activityCU(@Validated @Param("参数") @RequestBody ActivityParamter.ActivitySaveOrUpdate arooms, BindingResult bindingResult, HttpSession session) {
 		InvalidParameter(bindingResult);;
 		Integer busid = getLoginUserId(session);
 		tActivityService.editActivity(busid, arooms);

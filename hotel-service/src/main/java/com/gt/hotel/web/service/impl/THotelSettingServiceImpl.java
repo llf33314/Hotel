@@ -19,7 +19,7 @@ import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.entity.TInfrastructureRelation;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.param.HotelMobileParameter.SaveOrUpdate;
+import com.gt.hotel.param.HotelMobileParameter.MobileSaveOrUpdate;
 import com.gt.hotel.param.InfrastructureRelationParamter;
 import com.gt.hotel.vo.FileRecordVo;
 import com.gt.hotel.vo.HotelSettingVo;
@@ -83,7 +83,7 @@ public class THotelSettingServiceImpl extends BaseServiceImpl< THotelSettingDAO,
 
 	@Transactional
 	@Override
-	public void saveSetting(Integer busid, SaveOrUpdate setting) {
+	public void saveSetting(Integer busid, MobileSaveOrUpdate setting) {
 		Date date = new Date();
 		//保存酒店手机设置信息
 		THotelSetting hs = new THotelSetting();

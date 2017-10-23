@@ -26,7 +26,7 @@ import com.gt.hotel.entity.TRoomCalendar;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCalendarParamter;
 import com.gt.hotel.param.RoomCategoryParameter;
-import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
+import com.gt.hotel.param.RoomCategoryParameter.CategorySaveOrUpdate;
 import com.gt.hotel.param.RoomParameter;
 import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
@@ -57,7 +57,7 @@ public class HotelRoomController extends BaseController {
 	@ApiOperation(value = "新增 或 更新 房型", notes = "新增 或 更新 房型")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO roomCategoryCU(@Validated @RequestBody @ApiParam("参数") SaveOrUpdate roomCategory, BindingResult bindingResult,
+	public ResponseDTO roomCategoryCU(@Validated @RequestBody @ApiParam("参数") CategorySaveOrUpdate roomCategory, BindingResult bindingResult,
 			HttpSession session) {
 		// for(String s : roomCategory.getImages())
 		System.err.println(roomCategory);
@@ -110,7 +110,7 @@ public class HotelRoomController extends BaseController {
 	@ApiOperation(value = "查询日历-房型 价格信息", notes = "查询日历-房型 价格信息")
 	@GetMapping(value = "{roomCategoryId}/calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<RoomCalendarVo>> calendarRList(@PathVariable("roomCategoryId") @ApiParam("房型ID") Integer roomCategoryId,
-			RoomCalendarParamter.Query param) {
+			RoomCalendarParamter.CalendarQuery param) {
 		Page<RoomCalendarVo> page = tRoomCategoryService.queryRoomCalendarList(roomCategoryId, param);
 		return ResponseDTO.createBySuccess(page);
 	}
@@ -118,7 +118,7 @@ public class HotelRoomController extends BaseController {
 	@ApiOperation(value = "编辑 房型 价格信息", notes = "编辑 房型 价格信息")
 	@PostMapping(value = "{roomCategoryId}/calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO roomCalendarCU(@PathVariable("roomCategoryId") Integer roomCategoryId, @RequestBody @ApiParam("参数") RoomCalendarParamter.SaveOrUpdate cal, HttpSession session) {
+	public ResponseDTO roomCalendarCU(@PathVariable("roomCategoryId") Integer roomCategoryId, @RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, HttpSession session) {
 		System.err.println(cal);
 		Integer busid = getLoginUserId(session);
 		Date date = new Date();

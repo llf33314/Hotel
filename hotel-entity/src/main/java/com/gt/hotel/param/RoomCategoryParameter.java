@@ -49,7 +49,7 @@ public class RoomCategoryParameter {
 	 */
 	@Data
 	@Api( "保存 或 更新 参数" )
-	public static class SaveOrUpdate {
+	public static class CategorySaveOrUpdate {
 		@ApiModelProperty( value = "房型ID" )
 		private Integer roomCategoryId;
 		

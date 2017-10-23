@@ -15,7 +15,7 @@ public class RoomCalendarParamter {
 
 	@Data
 	@Api("房型日历价格 查询 参数")
-	public static class Query extends HotelPage{
+	public static class CalendarQuery extends HotelPage{
 		
 		@ApiModelProperty(value = "日历ID")
 		private Integer id;
@@ -31,7 +31,7 @@ public class RoomCalendarParamter {
 	
 	@Data
 	@Api("房型日历价格 编辑 参数")
-	public static class SaveOrUpdate{
+	public static class CalendarSaveOrUpdate{
 		@ApiModelProperty(value = "酒店ID")
 		@NotNull(message = "酒店ID不能为空")
 		private Integer hotelId;

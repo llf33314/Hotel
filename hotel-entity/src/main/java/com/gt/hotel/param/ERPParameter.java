@@ -21,7 +21,7 @@ public class ERPParameter {
 	
 	@Data
 	@Api( "保存 参数" )
-	public static class Save {
+	public static class ERPSave {
 		@ApiModelProperty( value = "酒店ID", required = true )
 		@NotNull(message = "酒店ID不能为空")
 		private Integer hotelId;

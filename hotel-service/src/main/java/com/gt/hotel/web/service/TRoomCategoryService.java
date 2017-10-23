@@ -5,9 +5,9 @@ import java.util.List;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoomCategory;
-import com.gt.hotel.param.RoomCalendarParamter.Query;
+import com.gt.hotel.param.RoomCalendarParamter.CalendarQuery;
+import com.gt.hotel.param.RoomCategoryParameter.CategorySaveOrUpdate;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
-import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
 import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
 import com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate;
@@ -40,7 +40,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param roomCategory 房型请求对象
 	 * @return
 	 */
-	void roomCategoryCU(Integer busid, SaveOrUpdate roomCategory);
+	void roomCategoryCU(Integer busid, CategorySaveOrUpdate roomCategory);
 
 	/**
 	 * 查询 房型对象
@@ -81,7 +81,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param page 分页对象
 	 * @return
 	 */
-	Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, Query param);
+	Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, CalendarQuery param);
 
 	/**
 	 * 保存 长包房设置

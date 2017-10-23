@@ -18,7 +18,7 @@ public class ActivityParamter {
 
 	@Api(description = "酒店 活动 请求参数")
 	@Data
-	public static class Query extends HotelPage{
+	public static class ActivityQuery extends HotelPage{
 		@ApiModelProperty(value = "活动ID")
 		private Integer id;
 		
@@ -36,7 +36,7 @@ public class ActivityParamter {
 	
 	@Data
 	@Api("酒店 活动  编辑 参数")
-	public static class SaveOrUpdate{
+	public static class ActivitySaveOrUpdate{
 		@ApiModelProperty(value = "活动ID(更新需要)")
 		private Integer id;
 		
