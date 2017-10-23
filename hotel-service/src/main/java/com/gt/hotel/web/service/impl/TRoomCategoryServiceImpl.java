@@ -206,10 +206,17 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	}
 
 	@Override
-	public void editRooms(Integer busid, List<com.gt.hotel.param.RoomParameter.SaveOrUpdate> rooms) {
+	public void editRooms(Integer busid, Integer categoryId, List<com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate> rooms) {
 		Date date = new Date();
 		List<TRoom> entityList = new ArrayList<>();
-		for(com.gt.hotel.param.RoomParameter.SaveOrUpdate r : rooms){
+		Wrapper<TRoom> wrapper = new EntityWrapper<>();
+		TRoom room = new TRoom();
+		room.setMarkModified(CommonConst.DELETED);
+		room.setUpdatedAt(date);
+		room.setUpdatedBy(busid);
+		wrapper.eq("category_id", categoryId);
+		tRoomService.update(room, wrapper);
+		for(com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate r : rooms){
 			TRoom _r = new TRoom();
 			BeanUtils.copyProperties(r, _r);
 			_r.setCreatedAt(date);

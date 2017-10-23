@@ -30,7 +30,7 @@
     </sql>
 
     <select id="queryHotelHome" resultType="com.gt.hotel.vo.HotelVo">
-        SELECT id hotelId, name, phone, address, logo, shop_id shopId 
+        SELECT id hotelId, name, phone, address, logo, shop_id shopId, longitude, latitude, `desc` 
         FROM t_hotel 
         WHERE mark_modified = 0 
         <if test="req.hotelId != null">

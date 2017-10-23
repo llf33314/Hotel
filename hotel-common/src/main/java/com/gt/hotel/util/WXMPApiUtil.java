@@ -1,20 +1,15 @@
 package com.gt.hotel.util;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
-import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.other.EmployeeList;
-import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 
 @Component
 public class WXMPApiUtil {
@@ -204,22 +199,35 @@ public class WXMPApiUtil {
 //		}else throw new SignException(result.getString("msg"));
 //		return es;
 //	}
-	public EmployeeList getAllStaffShopId(Integer shopId, String name, String phone) {
+//	public EmployeeList getAllStaffShopId(Integer shopId, String name, String phone) {
+//		Map<String, Object> paramObj = new HashMap<String, Object>();
+//		EmployeeList es = null;
+//		paramObj.put("shopId", shopId);
+//		paramObj.put("name", name);
+//		paramObj.put("phone", phone);
+//		JSONObject result;
+//		try {
+//			result = getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
+//			if("0".equals(result.getString("code"))) {
+//				es = JSONObject.parseObject(result.getString("data"), EmployeeList.class);
+//			}else throw new ResponseEntityException(result.getString("msg"));
+//		} catch (SignException e) {
+//			e.printStackTrace();
+//		}
+//		return es;
+//	}
+	public JSONObject getAllStaffShopId(Integer shopId, String name, String phone) {
 		Map<String, Object> paramObj = new HashMap<String, Object>();
-		EmployeeList es = null;
 		paramObj.put("shopId", shopId);
 		paramObj.put("name", name);
 		paramObj.put("phone", phone);
-		JSONObject result;
+		JSONObject result = null;
 		try {
 			result = getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
-			if("0".equals(result.getString("code"))) {
-				es = JSONObject.parseObject(result.getString("data"), EmployeeList.class);
-			}else throw new ResponseEntityException(result.getString("msg"));
 		} catch (SignException e) {
 			e.printStackTrace();
 		}
-		return es;
+		return result;
 	}
 
 	/**
@@ -316,18 +324,26 @@ public class WXMPApiUtil {
 	 * @return
 	 * @throws SignException
 	 */
-	public List<HotelWsWxShopInfoExtend> queryWxShopByBusId(Integer busid)
+//	public List<HotelWsWxShopInfoExtend> queryWxShopByBusId(Integer busid)
+//			throws SignException {
+//		JSONObject param = new JSONObject();
+//		List<HotelWsWxShopInfoExtend> shops = null;
+//		param.put("reqdata", busid);
+//		JSONObject json = getLApi(param,
+//				"/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do");
+//		if (json.getBoolean("success")) {
+//			shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
+//					HotelWsWxShopInfoExtend.class);
+//		}
+//		return shops;
+//	}
+	public JSONObject queryWxShopByBusId(Integer busid)
 			throws SignException {
 		JSONObject param = new JSONObject();
-		List<HotelWsWxShopInfoExtend> shops = null;
 		param.put("reqdata", busid);
 		JSONObject json = getLApi(param,
 				"/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do");
-		if (json.getBoolean("success")) {
-			shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
-					HotelWsWxShopInfoExtend.class);
-		}
-		return shops;
+		return json;
 	}
 
 	/**

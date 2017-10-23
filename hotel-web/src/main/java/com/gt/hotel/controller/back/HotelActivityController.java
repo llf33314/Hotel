@@ -32,8 +32,6 @@ import com.gt.hotel.web.service.TActivityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @Api(tags = "酒店后台-活动设置")
 @RestController
@@ -44,18 +42,14 @@ public class HotelActivityController extends BaseController {
 	TActivityService tActivityService;
 	
 	@ApiOperation( value = "查询 活动 列表", notes = "查询 活动 列表" )
-	@ApiResponses( {@ApiResponse( code = 0, message = "分页对象", response = ResponseDTO.class ), 
-		@ApiResponse( code = 1, message = "", response = ActivityVo.class )} )
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	@SuppressWarnings( { "rawtypes" } )
-	public ResponseDTO activityR(@Validated @Param("参数") ActivityParamter.Query param, BindingResult result) {
+	public ResponseDTO<Page<ActivityVo>> activityR(@Validated @Param("参数") ActivityParamter.Query param, BindingResult result) {
 		InvalidParameter(result);
 		Page<ActivityVo> page = tActivityService.queryActivity(param);
 		return ResponseDTO.createBySuccess(page);
 	}
 	
 	@ApiOperation(value = "编辑 活动", notes = "编辑 活动")
-	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO activityCU(@Validated @Param("参数") @RequestBody ActivityParamter.SaveOrUpdate arooms, BindingResult bindingResult, HttpSession session) {
@@ -66,17 +60,13 @@ public class HotelActivityController extends BaseController {
 	}
 	
 	@ApiOperation( value = "查询 活动 对象", notes = "查询 活动 对象" )
-	@ApiResponses( {@ApiResponse( code = 0, message = "响应对象", response = ResponseDTO.class ), 
-		@ApiResponse( code = 1, message = "", response = ActivityVo.class )} )
 	@GetMapping( value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	@SuppressWarnings( { "rawtypes" } )
-	public ResponseDTO activityR(@PathVariable("id") @ApiParam("活动ID") Integer id) {
+	public ResponseDTO<ActivityVo> activityR(@PathVariable("id") @ApiParam("活动ID") Integer id) {
 		ActivityVo a = tActivityService.queryActivityOne(id);
 		return ResponseDTO.createBySuccess(a);
 	}
 	
 	@ApiOperation(value = "删除 活动", notes = "删除 活动")
-	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO activityD(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
@@ -93,7 +83,6 @@ public class HotelActivityController extends BaseController {
 	}
 	
 	@ApiOperation(value = "停止 活动", notes = "停止 活动")
-	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "stop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO activitySTOP(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
