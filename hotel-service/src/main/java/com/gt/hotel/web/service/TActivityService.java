@@ -3,8 +3,7 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TActivity;
-import com.gt.hotel.param.ActivityParamter.Query;
-import com.gt.hotel.param.ActivityParamter.SaveOrUpdate;
+import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.vo.ActivityVo;
 
 /**
@@ -23,14 +22,14 @@ public interface TActivityService extends BaseService< TActivity > {
 	 * @param page 
 	 * @return
 	 */
-	Page<ActivityVo> queryActivity(Query param);
+	Page<ActivityVo> queryActivity(ActivityParamter.ActivityQuery param);
 
 	/**
 	 * 编辑 活动房 信息 
 	 * @param busid 用户ID
 	 * @param arooms 酒店 活动 编辑 参数
 	 */
-	void editActivity(Integer busid, SaveOrUpdate arooms);
+	void editActivity(Integer busid, ActivityParamter.ActivitySaveOrUpdate arooms);
 
 	/**
 	 * 查询 活动 对象

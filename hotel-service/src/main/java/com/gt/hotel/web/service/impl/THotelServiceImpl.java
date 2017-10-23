@@ -18,8 +18,8 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.THotelMemberSetting;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.param.ERPParameter.Save;
-import com.gt.hotel.param.HotelParameter.Query;
+import com.gt.hotel.param.ERPParameter.ERPSave;
+import com.gt.hotel.param.HotelParameter.HotelQuery;
 import com.gt.hotel.vo.HotelMemberSettingVo;
 import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
@@ -44,7 +44,7 @@ public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > impl
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<HotelVo> queryHotelHome(Integer busid, Query hpage) {
+	public Page<HotelVo> queryHotelHome(Integer busid, HotelQuery hpage) {
 		Page<HotelVo> page = hpage.initPage();
 		page.setRecords(tHotelDAO.queryHotelHome(page, hpage, busid));
 		return page;
@@ -71,7 +71,7 @@ public class THotelServiceImpl extends BaseServiceImpl< THotelDAO, THotel > impl
 
 	@Transactional
 	@Override
-	public void SaveHotelERP(Integer busid, Save save) {
+	public void SaveHotelERP(Integer busid, ERPSave save) {
 		THotel h = new THotel();
 		h.setId(save.getHotelId());
 		h.setLogo(save.getLogo());

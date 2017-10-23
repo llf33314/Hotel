@@ -27,6 +27,15 @@ public class HotelVo {
     @ApiModelProperty( "图片地址" )
     private String logo;
     
+    @ApiModelProperty( "经度" )
+    private Double  longitude;
+    
+    @ApiModelProperty( "纬度" )
+    private Double  latitude;
+    
+    @ApiModelProperty("酒店描述")
+    private String  desc;
+    
     @ApiModelProperty( "ERP 会员设置" )
     private List<HotelMemberSettingVo> memberSetting;
 }

@@ -2,8 +2,6 @@ package com.gt.hotel.vo;
 
 import java.util.List;
 
-import com.gt.hotel.entity.TRoom;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,7 +34,7 @@ public class RoomCategoryVo {
     private Integer roomCount;
 
     @ApiModelProperty("房间集合")
-    private List< TRoom > tRoomList;
+    private List< RoomVo > tRoomList;
 
     @ApiModelProperty("图片集合")
     private List<FileRecordVo> images;

@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TActivity;
-import com.gt.hotel.param.ActivityParamter.Query;
+import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.vo.ActivityVo;
 
 /**
@@ -26,6 +26,6 @@ public interface TActivityDAO extends BaseMapper< TActivity > {
 	 * @param page
 	 * @return
 	 */
-	List<ActivityVo> queryActivity(@Param("param") Query param, @Param("page") Pagination page);
+	List<ActivityVo> queryActivity(@Param("param") ActivityParamter.ActivityQuery param, @Param("page") Pagination page);
 
 }

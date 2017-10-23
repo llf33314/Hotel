@@ -18,9 +18,8 @@ import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.entity.TActivityDetail;
 import com.gt.hotel.entity.TActivityRoom;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.param.ActivityParamter.ActivityRoomParam;
-import com.gt.hotel.param.ActivityParamter.Query;
-import com.gt.hotel.param.ActivityParamter.SaveOrUpdate;
 import com.gt.hotel.vo.ActivityDetailVo;
 import com.gt.hotel.vo.ActivityRoomVo;
 import com.gt.hotel.vo.ActivityVo;
@@ -50,7 +49,7 @@ public class TActivityServiceImpl extends BaseServiceImpl< TActivityDAO, TActivi
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<ActivityVo> queryActivity(Query param) {
+	public Page<ActivityVo> queryActivity(ActivityParamter.ActivityQuery param) {
 		Page<ActivityVo> page = param.initPage();
 		page.setRecords(tActivityDAO.queryActivity(param, page));
 		return page;
@@ -58,7 +57,7 @@ public class TActivityServiceImpl extends BaseServiceImpl< TActivityDAO, TActivi
 
 	@Transactional
 	@Override
-	public void editActivity(Integer busid, SaveOrUpdate arooms) {
+	public void editActivity(Integer busid, ActivityParamter.ActivitySaveOrUpdate arooms) {
 		Date date = new Date();
 		TActivity a = new TActivity();
 		TActivityDetail ad = new TActivityDetail();

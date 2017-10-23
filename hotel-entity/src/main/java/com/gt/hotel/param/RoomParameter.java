@@ -19,7 +19,7 @@ public class RoomParameter {
 	
 	@Data
 	@Api( "保存 或 更新 参数" )
-	public static class SaveOrUpdate {
+	public static class RoomSaveOrUpdate {
 		@ApiModelProperty( value = "房间ID(更新时需要)" )
 		private Integer id;
 		

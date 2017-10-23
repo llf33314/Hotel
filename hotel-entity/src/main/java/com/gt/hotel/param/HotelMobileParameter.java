@@ -26,7 +26,7 @@ public class HotelMobileParameter {
 	 */
 	@Data
 	@Api( "保存 实体参数" )
-	public static class SaveOrUpdate {
+	public static class MobileSaveOrUpdate {
 		@ApiModelProperty("酒店ID")
 		@NotNull(message = "酒店ID不能为空")
 	    private Integer hotelId;

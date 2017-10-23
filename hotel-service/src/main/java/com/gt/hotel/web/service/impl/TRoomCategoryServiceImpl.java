@@ -26,9 +26,9 @@ import com.gt.hotel.entity.TRoomPermanent;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.InfrastructureRelationParamter;
-import com.gt.hotel.param.RoomCalendarParamter.Query;
+import com.gt.hotel.param.RoomCalendarParamter.CalendarQuery;
+import com.gt.hotel.param.RoomCategoryParameter.CategorySaveOrUpdate;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
-import com.gt.hotel.param.RoomCategoryParameter.SaveOrUpdate;
 import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
 import com.gt.hotel.vo.FileRecordVo;
@@ -88,7 +88,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 
 	@Transactional
 	@Override
-	public void roomCategoryCU(Integer busid, SaveOrUpdate roomCategory) {
+	public void roomCategoryCU(Integer busid, CategorySaveOrUpdate roomCategory) {
 		Date date = new Date();
 		TRoomCategory tRoomCategory = new TRoomCategory();
 		BeanUtils.copyProperties(roomCategory, tRoomCategory);
@@ -206,10 +206,17 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	}
 
 	@Override
-	public void editRooms(Integer busid, List<com.gt.hotel.param.RoomParameter.SaveOrUpdate> rooms) {
+	public void editRooms(Integer busid, Integer categoryId, List<com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate> rooms) {
 		Date date = new Date();
 		List<TRoom> entityList = new ArrayList<>();
-		for(com.gt.hotel.param.RoomParameter.SaveOrUpdate r : rooms){
+		Wrapper<TRoom> wrapper = new EntityWrapper<>();
+		TRoom room = new TRoom();
+		room.setMarkModified(CommonConst.DELETED);
+		room.setUpdatedAt(date);
+		room.setUpdatedBy(busid);
+		wrapper.eq("category_id", categoryId);
+		tRoomService.update(room, wrapper);
+		for(com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate r : rooms){
 			TRoom _r = new TRoom();
 			BeanUtils.copyProperties(r, _r);
 			_r.setCreatedAt(date);
@@ -230,7 +237,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, Query param) {
+	public Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, CalendarQuery param) {
 		Page<RoomCalendarVo> page = param.initPage();
 		page.setRecords(tRoomCalendarDAO.queryRoomCalendarList(roomCategoryId, param, page));
 		return page;
