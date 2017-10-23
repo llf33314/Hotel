@@ -1,23 +1,5 @@
 package com.gt.hotel.controller.back;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -28,12 +10,17 @@ import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.vo.ActivityVo;
 import com.gt.hotel.web.service.TActivityService;
+import io.swagger.annotations.*;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
 
 @Api(tags = "酒店后台-活动设置")
 @RestController
@@ -48,7 +35,7 @@ public class HotelActivityController extends BaseController {
 		@ApiResponse( code = 1, message = "", response = ActivityVo.class )} )
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
 	@SuppressWarnings( { "rawtypes" } )
-	public ResponseDTO activityR(@Validated @Param("参数") ActivityParamter.Query param, BindingResult result) {
+	public ResponseDTO activityR(@ModelAttribute @Validated @Param("参数") ActivityParamter.Query param, BindingResult result) {
 		InvalidParameter(result);
 		Page<ActivityVo> page = tActivityService.queryActivity(param);
 		return ResponseDTO.createBySuccess(page);
@@ -58,8 +45,7 @@ public class HotelActivityController extends BaseController {
 	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO activityCU(@Validated @Param("参数") @RequestBody ActivityParamter.SaveOrUpdate arooms, BindingResult bindingResult, HttpSession session) {
-		InvalidParameter(bindingResult);;
+	public ResponseDTO activityCU(@RequestBody ActivityParamter.SaveOrUpdate arooms, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		tActivityService.editActivity(busid, arooms);
 		return ResponseDTO.createBySuccess();
@@ -91,7 +77,7 @@ public class HotelActivityController extends BaseController {
 		else
 			return ResponseDTO.createByError();
 	}
-	
+
 	@ApiOperation(value = "停止 活动", notes = "停止 活动")
 	@ApiResponses({ @ApiResponse(code = 0, message = "", response = ResponseDTO.class) })
 	@PostMapping(value = "stop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -108,5 +94,5 @@ public class HotelActivityController extends BaseController {
 		else
 			return ResponseDTO.createByError();
 	}
-	
+
 }

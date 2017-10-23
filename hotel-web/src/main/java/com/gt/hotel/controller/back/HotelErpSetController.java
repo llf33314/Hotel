@@ -1,23 +1,5 @@
 package com.gt.hotel.controller.back;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -37,12 +19,16 @@ import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TAuthorizationService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+import io.swagger.annotations.*;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Api(tags = "酒店后台-ERP设置")
 @RestController
@@ -136,7 +122,7 @@ public class HotelErpSetController extends BaseController {
 			@ApiResponse(code = 1, message = "", response = Employee.class)})
 	@GetMapping(value = "employee/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings({ "rawtypes" })
-	public ResponseDTO employeeR(@PathVariable("shopId") Integer shopId, @Param("门店ID") WXMPParameter.queryEmployee qe) {
+	public ResponseDTO employeeR(@PathVariable("shopId") Integer shopId, @ModelAttribute @Param("门店ID") WXMPParameter.queryEmployee qe) {
 		EmployeeList e = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone());
 		return ResponseDTO.createBySuccess(e);
 	}
