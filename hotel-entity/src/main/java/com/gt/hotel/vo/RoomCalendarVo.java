@@ -40,4 +40,9 @@ public class RoomCalendarVo {
 	@ApiModelProperty(value = "最后修改时间")
 	private Date updatedAt;
 
+	@ApiModelProperty(value = "是否开启周末价 0 开启 1 禁用，即显示门市价即可")
+    private Integer weekendFareEnable;
+
+	@ApiModelProperty(value = "周末价格")
+    private Integer weekendFare;
 }

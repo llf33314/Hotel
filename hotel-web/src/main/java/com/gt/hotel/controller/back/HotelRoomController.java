@@ -27,7 +27,9 @@ import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCalendarParamter;
 import com.gt.hotel.param.RoomCategoryParameter;
 import com.gt.hotel.param.RoomCategoryParameter.CategorySaveOrUpdate;
+import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
 import com.gt.hotel.param.RoomParameter;
+import com.gt.hotel.vo.InfrastructureVo;
 import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomVo;
@@ -56,15 +58,14 @@ public class HotelRoomController extends BaseController {
 
 	@ApiOperation(value = "新增 或 更新 房型", notes = "新增 或 更新 房型")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@SuppressWarnings("rawtypes")
-	public ResponseDTO roomCategoryCU(@Validated @RequestBody @ApiParam("参数") CategorySaveOrUpdate roomCategory, BindingResult bindingResult,
+	public ResponseDTO<QueryRoomCategoryOne> roomCategoryCU(@Validated @RequestBody @ApiParam("参数") CategorySaveOrUpdate roomCategory, BindingResult bindingResult,
 			HttpSession session) {
-		// for(String s : roomCategory.getImages())
-		System.err.println(roomCategory);
 		InvalidParameter(bindingResult);
 		Integer busid = getLoginUserId(session);
-		tRoomCategoryService.roomCategoryCU(busid, roomCategory);
-		return ResponseDTO.createBySuccess();
+		Integer id = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
+		QueryRoomCategoryOne q = new QueryRoomCategoryOne();
+		q.setRoomCategoryId(id);
+		return ResponseDTO.createBySuccess(q);
 	}
 
 	@ApiOperation(value = "房型更新对象", notes = "房型更新对象")
@@ -82,6 +83,15 @@ public class HotelRoomController extends BaseController {
 		Integer busid = getLoginUserId(session);
 		tRoomCategoryService.delRoomCategory(busid, ids);
 		return ResponseDTO.createBySuccess();
+	}
+	
+	//////////////////////////////////////////↓房型设备↓ ////////////////////////////////////////
+	
+	@ApiOperation(value = "房型设备列表", notes = "房型设备房型列表")
+	@GetMapping(value = "infrastructure", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<List<InfrastructureVo>> InfrastructureR() {
+		List<InfrastructureVo> page = tRoomCategoryService.queryRoomCategoryInfrastructure();
+		return ResponseDTO.createBySuccess(page);
 	}
 
 	////////////////////////////////////////// ↓房间↓ ////////////////////////////////////////

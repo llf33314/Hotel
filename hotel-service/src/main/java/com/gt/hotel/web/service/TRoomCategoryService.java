@@ -11,6 +11,7 @@ import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
 import com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate;
+import com.gt.hotel.vo.InfrastructureVo;
 import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomPermanentVo;
@@ -40,7 +41,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param roomCategory 房型请求对象
 	 * @return
 	 */
-	void roomCategoryCU(Integer busid, CategorySaveOrUpdate roomCategory);
+	Integer roomCategoryCU(Integer busid, CategorySaveOrUpdate roomCategory);
 
 	/**
 	 * 查询 房型对象
@@ -103,6 +104,12 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param id 长包房ID
 	 */
 	void delRoomPermanent(Integer busId, List<Integer> ids);
+
+	/**
+	 * 房型设备房型列表
+	 * @return
+	 */
+	List<InfrastructureVo> queryRoomCategoryInfrastructure();
 
 
 }

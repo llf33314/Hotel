@@ -53,26 +53,25 @@ public class RoomCategoryParameter {
 		@ApiModelProperty( value = "房型ID" )
 		private Integer roomCategoryId;
 		
-		@ApiModelProperty( value = "酒店ID" )
+		@ApiModelProperty( value = "酒店ID", required = true )
 		@NotNull( message = "酒店ID不能为空" )
 		private Integer hotelId;
 		
-		@ApiModelProperty( "门店ID" )
-		@NotNull( message = "门店ID不能为空" )
+		@ApiModelProperty( value = "门店ID" )
 		private Integer shopId;
 		
-		@ApiModelProperty("房间类型")
+		@ApiModelProperty(value = "房间类型", required = true)
 		@NotEmpty(message = "房间类型不能为空")
 		private String name;
 		
-		@ApiModelProperty("图片路径集合")
+		@ApiModelProperty(value = "图片路径集合")
 		private List<String> images;
 		
-		@ApiModelProperty("简要说明")
+		@ApiModelProperty(value = "简要说明", required = true)
 		@NotEmpty(message = "简要说明不能为空")
 		private String desc;
 		
-		@ApiModelProperty("门市价")
+		@ApiModelProperty(value = "门市价", required = true)
 		@NotNull(message = "门市价不能为空")
 		private Integer rackRate;
 		
@@ -94,7 +93,7 @@ public class RoomCategoryParameter {
 		@ApiModelProperty("早餐数量")
 		private Integer breakfastQuantity;
 		
-		@ApiModelProperty("押金")
+		@ApiModelProperty(value = "押金", required = true)
 		@NotNull(message = "押金不能为空")
 		private Integer deposit;
 		
