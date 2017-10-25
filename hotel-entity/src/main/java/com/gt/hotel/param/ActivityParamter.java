@@ -42,12 +42,12 @@ public class ActivityParamter {
 		
 		@ApiModelProperty(value = "活动 开始时间")
 		@NotNull(message = "开始时间不能为空")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date beginTime;
 		
 		@ApiModelProperty(value = "结束时间")
 		@NotNull(message = "结束时间不能为空")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date endTime;
 		
 		@ApiModelProperty(value = "可入住最大时间 活动开始后，预订入住时间 最大有效期。")

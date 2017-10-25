@@ -45,6 +45,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+/**
+ * 酒店管理-新增酒店
+ * @author Reverien9@gmail.com
+ * 2017年10月25日 下午12:03:49
+ */
 @Api( tags = "酒店管理-新增酒店" )
 @RestController
 @RequestMapping( "/back/hotel" )

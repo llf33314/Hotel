@@ -14,15 +14,15 @@ public final class CommonConst {
     /**
      * 酒店
      */
-    public static final String MODULE_HOTEL = "hotel";
+    public static final String MODULE_HOTEL = "HOTEL";
     /**
      * 房型
      */
-    public static final String MODULE_ROOM_CATEGORY = "roomCategory";
+    public static final String MODULE_ROOM_CATEGORY = "ROOM_CATEGORY";
     /**
      * 客房
      */
-    public static final String MODULE_ROOM  = "room";
+    public static final String MODULE_ROOM  = "ROOM";
 
     /****************************** 活动状态 ******************************/
 

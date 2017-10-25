@@ -21,11 +21,11 @@ public class RoomCalendarParamter {
 		private Integer id;
 		
 		@ApiModelProperty(value = "开始日期")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date beginTime;
 		
 		@ApiModelProperty(value = "结束日期")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date endTime;
 	}
 	
@@ -45,12 +45,12 @@ public class RoomCalendarParamter {
 		
 		@ApiModelProperty(value = "开始日期", required = true)
 		@NotNull(message = "开始日期不能为空")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date beginTime;
 		
 		@ApiModelProperty(value = "结束日期", required = true)
 		@NotNull(message = "结束日期不能为空")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date endTime;
 		
 		@ApiModelProperty(value = "日历价", required = true)

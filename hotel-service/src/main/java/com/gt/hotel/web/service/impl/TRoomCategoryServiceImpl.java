@@ -165,16 +165,15 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		RoomCategoryVo roomCategoryVo = new RoomCategoryVo();
 		List<FileRecordVo> fileRecordVos = new ArrayList<>();
 		List<InfrastructureRelationVo> infrastructureRelationVos = new ArrayList<>();
-		String module = "roomCategory";
 		
 		TRoomCategory tRoomCategory = tRoomCategoryDAO.selectById(roomCategoryId);
 		Wrapper<TFileRecord> fwrapper = new EntityWrapper<>();
 		fwrapper.eq("reference_id", roomCategoryId);
-		fwrapper.eq("module", module);
+		fwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		List<TFileRecord> tFileRecords = tFileRecordService.selectList(fwrapper);
 		Wrapper<TInfrastructureRelation> iwrapper = new EntityWrapper<>();
 		iwrapper.eq("reference_id", roomCategoryId);
-		iwrapper.eq("module", module);
+		iwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		List<TInfrastructureRelation> tInfrastructureRelations = tInfrastructureRelationService.selectList(iwrapper);
 		
 		BeanUtils.copyProperties(tRoomCategory, roomCategoryVo);

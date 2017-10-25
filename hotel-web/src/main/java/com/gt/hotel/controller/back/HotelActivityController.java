@@ -33,6 +33,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+/**
+ * 酒店后台-活动设置
+ * @author Reverien9@gmail.com
+ * 2017年10月25日 下午12:03:55
+ */
 @Api(tags = "酒店后台-活动设置")
 @RestController
 @RequestMapping("/back/activity")

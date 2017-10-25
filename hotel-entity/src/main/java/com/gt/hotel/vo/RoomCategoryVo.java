@@ -2,6 +2,8 @@ package com.gt.hotel.vo;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,6 +37,9 @@ public class RoomCategoryVo {
 
     @ApiModelProperty( "房间总数" )
     private Integer roomCount;
+    
+    @ApiModelProperty(value = "简要说明")
+	private String desc;
 
     @ApiModelProperty("房间集合")
     private List< RoomVo > tRoomList;
