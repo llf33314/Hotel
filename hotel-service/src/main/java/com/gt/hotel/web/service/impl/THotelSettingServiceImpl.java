@@ -76,8 +76,8 @@ public class THotelSettingServiceImpl extends BaseServiceImpl< THotelSettingDAO,
 		s.setImageurls(imageurls);
 		
 		Wrapper<TInfrastructureRelation> irw = new EntityWrapper<>();
-		rsw.eq("module", CommonConst.MODULE_HOTEL);
-		rsw.eq("reference_id", hotelId);
+		irw.eq("module", CommonConst.MODULE_HOTEL);
+		irw.eq("reference_id", hotelId);
 		List<TInfrastructureRelation> irs = tInfrastructureRelationService.selectList(irw);
 		List<InfrastructureRelationVo> installations = new ArrayList<>();
 		for(TInfrastructureRelation ir : irs){
@@ -97,18 +97,18 @@ public class THotelSettingServiceImpl extends BaseServiceImpl< THotelSettingDAO,
 		//保存酒店手机设置信息
 		THotelSetting hs = new THotelSetting();
 		BeanUtils.copyProperties(setting, hs);
-		if(hs.getUpdatedAt() == null){
-			hs.setCreatedAt(date);
-			hs.setCreatedBy(busid);
-		}
 		hs.setUpdatedAt(date);
 		hs.setUpdatedBy(busid);
-		if(this.insertOrUpdate(hs)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		Wrapper<THotelSetting> sw = new EntityWrapper<>();
+		sw.eq("hotel_id", hs.getHotelId());
+		if(!this.update(hs, sw)) {
+			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		}
 		//保存图片
 		Wrapper<TFileRecord> filewrapper = new EntityWrapper<>();
 		filewrapper.eq("reference_id", hs.getHotelId());
 		filewrapper.eq("module", CommonConst.MODULE_HOTEL);
-		if(!tFileRecordService.delete(filewrapper)) throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
+		tFileRecordService.delete(filewrapper);
 		List<TFileRecord> frs = new ArrayList<>();
 		for(String img : setting.getImageurls()){
 			TFileRecord fr = new TFileRecord();
@@ -126,12 +126,16 @@ public class THotelSettingServiceImpl extends BaseServiceImpl< THotelSettingDAO,
 			fr.setOriginalName(name);
 			frs.add(fr);
 		}
-		if(tFileRecordService.insertBatch(frs)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		if(frs.size() > 0) {
+			if(tFileRecordService.insertBatch(frs)) {
+				throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+			}
+		}
 		//保存设施关系
 		Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
 		rwrapper.eq("reference_id", hs.getHotelId());
 		rwrapper.eq("module", CommonConst.MODULE_HOTEL);
-		if(!tInfrastructureRelationService.delete(rwrapper)) throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
+		tInfrastructureRelationService.delete(rwrapper);
 		List<TInfrastructureRelation> irs = new ArrayList<>();
 		for(InfrastructureRelationParamter ir : setting.getInstallations()){
 			TInfrastructureRelation _ir = new TInfrastructureRelation();
@@ -145,7 +149,11 @@ public class THotelSettingServiceImpl extends BaseServiceImpl< THotelSettingDAO,
 			_ir.setInfrastructureId(ir.getInfrastructureId());
 			irs.add(_ir);
 		}
-		if(!tInfrastructureRelationService.insertBatch(irs)) throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
+		if(irs.size() > 0) {
+			if(!tInfrastructureRelationService.insertBatch(irs)) {
+				throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
+			}
+		}
 	}
 
 	@Override

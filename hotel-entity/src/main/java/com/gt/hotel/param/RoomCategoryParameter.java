@@ -1,10 +1,13 @@
 package com.gt.hotel.param;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,7 +26,7 @@ public class RoomCategoryParameter {
 	 * 房型列表查询参数
 	 */
 	@Data
-	@Api(tags = "房型列表查询参数" )
+	@Api(description = "房型列表查询参数" )
 	public static class QueryRoomCategory extends HotelPage{
 		@ApiModelProperty( value = "酒店ID", required = true)
 		@NotNull(message = "酒店ID不能为空")
@@ -33,11 +36,26 @@ public class RoomCategoryParameter {
 		private Integer categoryId;
 	}
 	
+	@Data
+	@Api(description = "移动端 房型列表 查询参数" )
+	public static class MobileQueryRoomCategory extends HotelPage{
+		@ApiModelProperty( value = "房型ID" )
+		private Integer categoryId;
+		
+		@ApiModelProperty( value = "入住时间" )
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		private Date roomInTime;
+		
+		@ApiModelProperty( value = "离店时间" )
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		private Date roomOutTime;
+	}
+	
 	/**
 	 * 房型对象查询参数
 	 */
 	@Data
-	@Api(tags = "房型对象查询参数" )
+	@Api(description = "房型对象查询参数" )
 	public static class QueryRoomCategoryOne{
 		@ApiModelProperty( value = "房型ID" )
 		@NotNull(message = "房型ID不能为空")
@@ -48,7 +66,7 @@ public class RoomCategoryParameter {
 	 * 新增 或 更新 参数
 	 */
 	@Data
-	@Api( "保存 或 更新 参数" )
+	@Api( description = "保存 或 更新 参数" )
 	public static class CategorySaveOrUpdate {
 		@ApiModelProperty( value = "房型ID" )
 		private Integer categoryId;

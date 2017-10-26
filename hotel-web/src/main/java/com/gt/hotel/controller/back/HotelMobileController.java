@@ -27,6 +27,7 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TFood;
+import com.gt.hotel.entity.THotel;
 import com.gt.hotel.param.HotelMobileParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.FoodVo;
@@ -35,6 +36,7 @@ import com.gt.hotel.vo.InfrastructureVo;
 import com.gt.hotel.vo.SysDictionaryVo;
 import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TFoodService;
+import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
 
 import io.swagger.annotations.Api;
@@ -60,6 +62,9 @@ public class HotelMobileController extends BaseController {
 	@Autowired
 	TFoodService tFoodService;
 
+	@Autowired
+	THotelService tHotelService;
+
 	@ApiOperation(value = "查询 移动端设置 对象", notes = "查询 移动端设置 对象")
 	@GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<HotelSettingVo> phoneSettingR(@PathVariable("hotelId") Integer hotelId) {
@@ -76,6 +81,8 @@ public class HotelMobileController extends BaseController {
 		tHotelSettingService.saveSetting(busid, setting);
 		return ResponseDTO.createBySuccess();
 	}
+	
+	//////////////////////////////////////////↓酒店发票↓ ////////////////////////////////////////
 
 	@ApiOperation(value = "查询 发票列表", notes = "查询 发票列表")
 	@GetMapping(value = "invoice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -104,9 +111,13 @@ public class HotelMobileController extends BaseController {
 		Date date = new Date();
 		TFood f = new TFood();
 		BeanUtils.copyProperties(food, f);
+		THotel th = tHotelService.selectById(f.getHotelId());
 		if(f.getId() == null) {
 			f.setCreatedAt(date);
 			f.setCreatedBy(busid);
+		}
+		if(f.getFoodProvides().equals(0)) {
+			f.setFoodProvidesName(th.getName());
 		}
 		f.setUpdatedAt(date);
 		f.setUpdatedBy(busid);

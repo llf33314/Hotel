@@ -78,80 +78,80 @@ public class HotelMobileParameter {
 	@Data
 	@Api( "餐饮 保存 实体参数" )
 	public static class FoodSaveOrUpdate {
-		@ApiModelProperty("ID")
+		@ApiModelProperty(value = "餐饮ID")
 		private Integer id;
 		
-		@ApiModelProperty("酒店ID")
+		@ApiModelProperty(value = "酒店ID", required = true)
 		@NotNull(message = "酒店ID不能为空")
 		private Integer hotelId;
 
-		@ApiModelProperty("菜品名称")
+		@ApiModelProperty(value = "菜品名称", required = true)
 		@NotEmpty(message = "菜品名称不能为空")
 		private String name;
 
-		@ApiModelProperty("单价")
+		@ApiModelProperty(value = "单价", required = true)
 		@NotNull(message = "单价不能为空")
 		private Integer price;
 
-		@ApiModelProperty("配送时间 单位分钟")
+		@ApiModelProperty(value = "配送时间 单位分钟", required = true)
 		@NotNull(message = "配送时间不能为空")
 		private Integer deliveryTime;
 
-		@ApiModelProperty("菜品提供方 0 本酒店 1 合作方")
+		@ApiModelProperty(value = "菜品提供方 0 本酒店 1 合作方")
 		private Integer foodProvides;
 
-		@ApiModelProperty("提供方名称 food_provides =0 为酒店名称 =1 则填写合作方名称")
+		@ApiModelProperty(value = "提供方名称 food_provides =0 为酒店名称 =1 则填写合作方名称")
 		private String foodProvidesName;
 
-		@ApiModelProperty("新订单接收(短信)手机号")
+		@ApiModelProperty(value = "新订单接收(短信)手机号", required = true)
 		@NotNull(message = "新订单接收(短信)手机号 不能为空")
-		private Integer newOrderReceive;
+		private String newOrderReceive;
 
-		@ApiModelProperty("菜品图片URL")
+		@ApiModelProperty(value = "菜品图片URL")
 		private String foodImage;
 
-		@ApiModelProperty("早餐时段是否提供 0 提供 1 不提供")
+		@ApiModelProperty(value = "早餐时段是否提供 0 提供 1 不提供")
 		private Integer breakfastEnable;
 
-		@ApiModelProperty("早餐开始时间 (示例: 6:00-10:00)")
-		@JsonFormat(pattern = "HH:mm:ss")
+		@ApiModelProperty(value = "早餐开始时间 (示例: 6:00-10:00)")
+		@JsonFormat(pattern = "HH:mm")
 		private Date breakfastBegin;
 
-		@ApiModelProperty("早餐结束时间 (示例: 6:00-10:00)")
-		@JsonFormat(pattern = "HH:mm:ss")
+		@ApiModelProperty(value = "早餐结束时间 (示例: 6:00-10:00)")
+		@JsonFormat(pattern = "HH:mm")
 		private Date breakfastEnd;
 
-		@ApiModelProperty("午餐时段是否提供 0 提供 1 不提供")
+		@ApiModelProperty(value = "午餐时段是否提供 0 提供 1 不提供")
 		private Integer lunchEnable;
 
-		@ApiModelProperty("午餐开始时间 (示例: 6:00-10:00)")
-		@JsonFormat(pattern = "HH:mm:ss")
+		@ApiModelProperty(value = "午餐开始时间 (示例: 6:00-10:00)")
+		@JsonFormat(pattern = "HH:mm")
 		private Date lunchBegin;
 
-		@ApiModelProperty("午餐结束时间 (示例: 6:00-10:00)")
-		@JsonFormat(pattern = "HH:mm:ss")
+		@ApiModelProperty(value = "午餐结束时间 (示例: 6:00-10:00)")
+		@JsonFormat(pattern = "HH:mm")
 		private Date lunchEnd;
 
-		@ApiModelProperty("晚餐是否提供 0 是 1 否")
+		@ApiModelProperty(value = "晚餐是否提供 0 是 1 否")
 		private Integer dinnerEnable;
 
-		@ApiModelProperty("晚餐开始时间")
-		@JsonFormat(pattern = "HH:mm:ss")
+		@ApiModelProperty(value = "晚餐开始时间")
+		@JsonFormat(pattern = "HH:mm")
 		private Date dinnerBegin;
 
-		@ApiModelProperty("晚餐结束时间")
-		@JsonFormat(pattern = "HH:mm:ss")
+		@ApiModelProperty(value = "晚餐结束时间")
+		@JsonFormat(pattern = "HH:mm")
 		private Date dinnerEnd;
 
-		@ApiModelProperty("宵夜是否提供 0 是 1 否")
+		@ApiModelProperty(value = "宵夜是否提供 0 是 1 否")
 		private Integer supperEnable;
 
-		@ApiModelProperty("宵夜开始时间")
-		@JsonFormat(pattern = "HH:mm:ss")
+		@ApiModelProperty(value = "宵夜开始时间")
+		@JsonFormat(pattern = "HH:mm")
 		private Date supperBegin;
 
-		@ApiModelProperty("宵夜结束时间")
-		@JsonFormat(pattern = "HH:mm:ss")
+		@ApiModelProperty(value = "宵夜结束时间")
+		@JsonFormat(pattern = "HH:mm")
 		private Date supperEnd;
 	}
 	
