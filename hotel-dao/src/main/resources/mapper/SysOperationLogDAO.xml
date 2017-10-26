@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.SysOperationLogDAO">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.SysOperationLog">
+        <id column="id" property="id"/>
+        <result column="reference_id" property="referenceId"/>
+        <result column="module" property="module"/>
+        <result column="action" property="action"/>
+        <result column="modify_details" property="modifyDetails"/>
+        <result column="ip_address" property="ipAddress"/>
+        <result column="result" property="result"/>
+        <result column="operation_id" property="operationId"/>
+        <result column="operatin_name" property="operatinName"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, reference_id, module, action, modify_details, ip_address, result, operation_id, operatin_name, create_time
+    </sql>
+
+</mapper>

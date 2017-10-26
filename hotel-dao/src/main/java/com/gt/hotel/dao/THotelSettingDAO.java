@@ -11,6 +11,6 @@ import com.gt.hotel.entity.THotelSetting;
  * @author
  * @since 2017-10-09
  */
-public interface THotelSettingDAO extends BaseMapper< THotelSetting > {
+public interface THotelSettingDAO extends BaseMapper<THotelSetting> {
 
 }

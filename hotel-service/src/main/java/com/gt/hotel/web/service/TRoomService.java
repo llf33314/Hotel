@@ -12,6 +12,6 @@ import com.gt.hotel.entity.TRoom;
  * @author
  * @since 2017-10-09
  */
-public interface TRoomService extends BaseService< TRoom > {
+public interface TRoomService extends BaseService<TRoom> {
 
 }

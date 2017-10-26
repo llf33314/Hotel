@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.THotelDAO">
 
+
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotel">
         <id column="id" property="id"/>
@@ -24,20 +25,19 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, bus_id AS busId, shop_id AS shopId, name, desc, phone, address, thumbnail, logo, longitude, latitude,
-        mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy,
-        updated_at AS updatedAt
+        id, bus_id, shop_id, name, desc, phone, address, thumbnail, logo, longitude, latitude, mark_modified, created_by, created_at, updated_by, updated_at
     </sql>
 
+
     <select id="queryHotelHome" resultType="com.gt.hotel.vo.HotelVo">
-        SELECT id hotelId, name, phone, address, logo, shop_id shopId, longitude, latitude, `desc` 
-        FROM t_hotel 
-        WHERE mark_modified = 0 
+        SELECT id hotelId, name, phone, address, logo, shop_id shopId, longitude, latitude, `desc`
+        FROM t_hotel
+        WHERE mark_modified = 0
         <if test="req.hotelId != null">
-            AND id = #{req.hotelId} 
+            AND id = #{req.hotelId}
         </if>
         <if test="busId != null">
-            AND bus_id = #{busId} 
+            AND bus_id = #{busId}
         </if>
     </select>
 

@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-10-09
  */
 @Service
-public class TInfrastructureServiceImpl extends BaseServiceImpl< TInfrastructureDAO, TInfrastructure > implements TInfrastructureService {
+public class TInfrastructureServiceImpl extends BaseServiceImpl<TInfrastructureDAO, TInfrastructure> implements TInfrastructureService {
 
 }

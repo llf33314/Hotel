@@ -10,4 +10,5 @@ import com.baomidou.mybatisplus.service.IService;
  * @date 2017/08/03
  * @since 1.0.0
  */
-public interface BaseService< T > extends IService< T > {}
+public interface BaseService<T> extends IService<T> {
+}

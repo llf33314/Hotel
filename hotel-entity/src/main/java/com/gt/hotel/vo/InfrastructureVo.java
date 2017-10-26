@@ -6,8 +6,8 @@ import lombok.Data;
 
 /**
  * 基础设施 包含 酒店 客房
- * @author Administrator
  *
+ * @author Administrator
  */
 @Data
 @Api(description = "基础设施 包含 酒店 客房")
@@ -17,12 +17,12 @@ public class InfrastructureVo {
     private Integer id;
 
     @ApiModelProperty("名称")
-    private String  name;
+    private String name;
 
     @ApiModelProperty("图标地址")
-    private String  iconUrl;
+    private String iconUrl;
 
     @ApiModelProperty("模块")
-    private String  module;
+    private String module;
 
 }

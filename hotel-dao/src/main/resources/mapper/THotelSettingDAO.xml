@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gt.hotel.mapper.THotelSettingDAO">
+<mapper namespace="com.gt.hotel.dao.THotelSettingDAO">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotelSetting">
-		<id column="hotel_id" property="hotelId" />
-		<result column="pay_mode" property="payMode" />
-		<result column="sms_enable" property="smsEnable" />
-		<result column="sms_phone" property="smsPhone" />
-		<result column="notice_enable" property="noticeEnable" />
-		<result column="bulletin" property="bulletin" />
-		<result column="remnant_room_enable" property="remnantRoomEnable" />
-		<result column="food_pay_mode" property="foodPayMode" />
-		<result column="reservation_check_out_enable" property="reservationCheckOutEnable" />
-		<result column="reservation_check_out_phone" property="reservationCheckOutPhone" />
-		<result column="Invoice_category" property="InvoiceCategory" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_at" property="createdAt" />
-		<result column="updated_by" property="updatedBy" />
-		<result column="updated_at" property="updatedAt" />
-		<result column="room_reservation_enable" property="roomReservationEnable" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotelSetting">
+        <id column="hotel_id" property="hotelId"/>
+        <result column="pay_mode" property="payMode"/>
+        <result column="sms_enable" property="smsEnable"/>
+        <result column="sms_phone" property="smsPhone"/>
+        <result column="notice_enable" property="noticeEnable"/>
+        <result column="bulletin" property="bulletin"/>
+        <result column="remnant_room_enable" property="remnantRoomEnable"/>
+        <result column="room_reservation_enable" property="roomReservationEnable"/>
+        <result column="food_pay_mode" property="foodPayMode"/>
+        <result column="reservation_check_out_enable" property="reservationCheckOutEnable"/>
+        <result column="reservation_check_out_phone" property="reservationCheckOutPhone"/>
+        <result column="invoice_categorys" property="invoiceCategorys"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
 
-	<!-- 通用查询结果列 -->
-	<sql id="Base_Column_List">
-		hotel_id, pay_mode, sms_enable, sms_phone, notice_enable, bulletin,
-		remnant_room_enable, food_pay_mode, reservation_check_out_enable,
-		reservation_check_out_phone, Invoice_category AS InvoiceCategory,
-		created_by, created_at, updated_by, updated_at,
-		room_reservation_enable
-	</sql>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        hotel_id, pay_mode, sms_enable, sms_phone, notice_enable, bulletin, remnant_room_enable, room_reservation_enable, food_pay_mode, reservation_check_out_enable, reservation_check_out_phone, invoice_categorys, created_by, created_at, updated_by, updated_at
+    </sql>
 
 </mapper>

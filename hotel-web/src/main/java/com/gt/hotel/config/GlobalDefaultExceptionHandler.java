@@ -32,12 +32,13 @@ public class GlobalDefaultExceptionHandler {
      *
      * @param request 请求信息
      * @param e       Exception
-     *
      * @return ResponseErrorDTO
      */
-    @ResponseBody @ExceptionHandler(value = Exception.class) public ResponseErrorDTO defaultErrorHandler(HttpServletRequest request, Exception e) {
-	logger.error("请求地址：{} , 系统异常详细：", request.getRequestURL(), e);
-	return ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.SYSTEM_ERROR.getCode(), ResponseEnums.SYSTEM_ERROR.getMsg());
+    @ResponseBody
+    @ExceptionHandler(value = Exception.class)
+    public ResponseErrorDTO defaultErrorHandler(HttpServletRequest request, Exception e) {
+        logger.error("请求地址：{} , 系统异常详细：", request.getRequestURL(), e);
+        return ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.SYSTEM_ERROR.getCode(), ResponseEnums.SYSTEM_ERROR.getMsg());
     }
 
     /**
@@ -45,15 +46,16 @@ public class GlobalDefaultExceptionHandler {
      *
      * @param request 请求信息
      * @param e       BaseException
-     *
      * @return ResponseErrorDTO
      */
-    @ResponseBody @ExceptionHandler(value = BaseException.class) public ResponseErrorDTO defaultCustomErrorHandler(HttpServletRequest request, BaseException e) {
-	logger.error("异常原因：{} , 异常信息：{} , 请求地址：{}", e.getCause(), e.getMessage(), request.getRequestURL(), e);
-	if (e instanceof ResponseEntityException || e instanceof BusinessException) {
-	    return ResponseErrorDTO.createByErrorCodeMessage(e.getCode(), e.getMessage(), null);
-	} else {
-	    return ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.ERROR.getCode(), e.getMessage(), null);
-	}
+    @ResponseBody
+    @ExceptionHandler(value = BaseException.class)
+    public ResponseErrorDTO defaultCustomErrorHandler(HttpServletRequest request, BaseException e) {
+        logger.error("异常原因：{} , 异常信息：{} , 请求地址：{}", e.getCause(), e.getMessage(), request.getRequestURL(), e);
+        if (e instanceof ResponseEntityException || e instanceof BusinessException) {
+            return ResponseErrorDTO.createByErrorCodeMessage(e.getCode(), e.getMessage(), null);
+        } else {
+            return ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.ERROR.getCode(), e.getMessage(), null);
+        }
     }
 }

@@ -19,8 +19,8 @@
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_while" value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.comment.insert_new_line_before_root_tags" value="insert"/>
         <setting
-            id="org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_annotation_type_member_declaration"
-            value="do not insert"/>
+                id="org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_annotation_type_member_declaration"
+                value="do not insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_declaration_throws"
                  value="do not insert"/>
         <setting id="org.eclipse.jdt.core.formatter.comment.format_javadoc_comments" value="true"/>
@@ -42,8 +42,8 @@
                  value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_enum_constant" value="16"/>
         <setting
-            id="org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_parameterized_type_reference"
-            value="insert"/>
+                id="org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_parameterized_type_reference"
+                value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.comment.indent_root_tags" value="true"/>
         <setting id="org.eclipse.jdt.core.formatter.wrap_before_or_operator_multicatch" value="true"/>
         <setting id="org.eclipse.jdt.core.formatter.enabling_tag" value="@formatter:on"/>
@@ -275,8 +275,8 @@
                  value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_colon_in_conditional" value="insert"/>
         <setting
-            id="org.eclipse.jdt.core.formatter.insert_space_before_opening_angle_bracket_in_parameterized_type_reference"
-            value="do not insert"/>
+                id="org.eclipse.jdt.core.formatter.insert_space_before_opening_angle_bracket_in_parameterized_type_reference"
+                value="do not insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_declaration_parameters"
                  value="do not insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_type_arguments"
@@ -289,8 +289,8 @@
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_bracket_in_array_type_reference"
                  value="do not insert"/>
         <setting
-            id="org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_parameterized_type_reference"
-            value="insert"/>
+                id="org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_parameterized_type_reference"
+                value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_qualified_allocation_expression"
                  value="16"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_opening_brace_in_array_initializer"
@@ -360,8 +360,8 @@
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_synchronized" value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_for_increments" value="do not insert"/>
         <setting
-            id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_annotation_type_member_declaration"
-            value="do not insert"/>
+                id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_annotation_type_member_declaration"
+                value="do not insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_while" value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_enum_constant" value="insert"/>
         <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_explicitconstructorcall_arguments"

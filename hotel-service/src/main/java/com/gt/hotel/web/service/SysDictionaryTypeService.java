@@ -11,6 +11,6 @@ import com.gt.hotel.entity.SysDictionaryType;
  * @author
  * @since 2017-10-09
  */
-public interface SysDictionaryTypeService extends BaseService< SysDictionaryType > {
+public interface SysDictionaryTypeService extends BaseService<SysDictionaryType> {
 
 }

@@ -17,7 +17,7 @@ public enum ResponseEnums {
     NEED_LOGIN(1001, "需要登录"),
     SAVE_ERROR(1002, "保存失败"),
     DELETE_ERROR(1003, "删除失败"),
-    
+
     INFRASTRUCTRUE_ERROR(1998, "设施保存失败"),
     IMAGE_ERROR(1999, "图片保存失败"),
 
@@ -27,21 +27,21 @@ public enum ResponseEnums {
     // 9000 以上均为 非项目自定义异常错误
     UNKNOWN_ERROR(9998, "未知错误"),
     SYSTEM_ERROR(9999, "系统错误");
-	
+
 
     private final int    code;
     private final String msg;
 
     ResponseEnums(int code, String msg) {
-	this.code = code;
-	this.msg = msg;
+        this.code = code;
+        this.msg = msg;
     }
 
     public int getCode() {
-	return code;
+        return code;
     }
 
     public String getMsg() {
-	return msg;
+        return msg;
     }
 }

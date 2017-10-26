@@ -1,7 +1,8 @@
 /* ---------------------------------- 初始化数据字典 ---------------------------------- */
 INSERT INTO `gt_hotel`.`sys_dictionary_type` (`id`, `dict_type_cn_name`, `dict_type_en_name`, `dict_type_status`, `dict_type_remark`) VALUES (1, '性别', 'GENDER', 0, '性别');
 INSERT INTO `gt_hotel`.`sys_dictionary_type` (`id`, `dict_type_cn_name`, `dict_type_en_name`, `dict_type_status`, `dict_type_remark`) VALUES (2, '数据状态', 'DATA_STATE', 0, '数据状态');
-INSERT INTO `gt_hotel`.`sys_dictionary_type` (`id`, `dict_type_cn_name`, `dict_type_en_name`, `dict_type_status`, `dict_type_remark`) VALUES (3, '授权功能', 'AUTHORIZATION_CAPABILITIES', 0, '授权功能 针对ERP 个别员工可使用部分功能');
+INSERT INTO `gt_hotel`.`sys_dictionary_type` (`id`, `dict_type_cn_name`, `dict_type_en_name`, `dict_type_status`, `dict_type_remark`)
+VALUES (3, '授权功能', 'AUTHORIZATION_CAPABILITIES', 0, '授权功能 针对ERP 个别员工可使用部分功能');
 INSERT INTO `gt_hotel`.`sys_dictionary_type` (`id`, `dict_type_cn_name`, `dict_type_en_name`, `dict_type_status`, `dict_type_remark`) VALUES (4, '发票类型', 'INVOICE_TYPE', 0, '发票类型');
 INSERT INTO `gt_hotel`.`sys_dictionary_type` (`id`, `dict_type_cn_name`, `dict_type_en_name`, `dict_type_status`, `dict_type_remark`) VALUES (5, '房型', 'ROOM_CATEGORY', 0, '房间类别');
 INSERT INTO `gt_hotel`.`sys_dictionary_type` (`id`, `dict_type_cn_name`, `dict_type_en_name`, `dict_type_status`, `dict_type_remark`) VALUES (6, '客房状态', 'ROOM_STATUS', 0, '客房状态');

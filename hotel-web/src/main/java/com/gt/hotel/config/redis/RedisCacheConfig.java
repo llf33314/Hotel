@@ -34,28 +34,31 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
      */
     private static final Logger LOG = LoggerFactory.getLogger(RedisCacheConfig.class);
 
-    @Bean public RedisTemplate< String, String > redisTemplate(RedisConnectionFactory cf) {
-	LOG.debug("注入RedisTemplate");
-	RedisTemplate< String, String > redisTemplate = new RedisTemplate<>();
-	redisTemplate.setConnectionFactory(cf);
-	Jackson2JsonRedisSerializer< Object > jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-	ObjectMapper om = new ObjectMapper();
-	om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-	om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-	jackson2JsonRedisSerializer.setObjectMapper(om);
-	redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);//如果key是String 需要配置一下StringSerializer,不然key会乱码 /XX/XX
-	redisTemplate.afterPropertiesSet();
-	return redisTemplate;
+    @Bean
+    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory cf) {
+        LOG.debug("注入RedisTemplate");
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(cf);
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+        //如果key是String 需要配置一下StringSerializer,不然key会乱码 /XX/XX
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
     }
 
-    @Bean public CacheManager cacheManager(RedisTemplate redisTemplate) {
-	RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
-	//默认超时时间,单位秒
-	cacheManager.setDefaultExpiration(3000);
-	//根据缓存名称设置超时时间,0为不超时
-	Map< String, Long > expires = new ConcurrentHashMap<>();
-	cacheManager.setExpires(expires);
-	return cacheManager;
+    @Bean
+    public CacheManager cacheManager(RedisTemplate redisTemplate) {
+        RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
+        //默认超时时间,单位秒
+        cacheManager.setDefaultExpiration(3000);
+        //根据缓存名称设置超时时间,0为不超时
+        Map<String, Long> expires = new ConcurrentHashMap<>();
+        cacheManager.setExpires(expires);
+        return cacheManager;
     }
 
 }

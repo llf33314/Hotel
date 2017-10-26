@@ -14,7 +14,7 @@ public final class CommonConst {
     /**
      * 酒店
      */
-    public static final String MODULE_HOTEL = "HOTEL";
+    public static final String MODULE_HOTEL         = "HOTEL";
     /**
      * 房型
      */
@@ -22,7 +22,7 @@ public final class CommonConst {
     /**
      * 客房
      */
-    public static final String MODULE_ROOM  = "ROOM";
+    public static final String MODULE_ROOM          = "ROOM";
 
     /****************************** 活动状态 ******************************/
 
@@ -81,20 +81,20 @@ public final class CommonConst {
     public static final Integer ALL_PAY     = 3;
 
     //////////////////////////使用状态 /////////////////////////
-    
+
     /**
      * 0 默认开启
      */
-    public static final Integer ENABLED  = 0;
+    public static final Integer ENABLED = 0;
     /**
      * 1 关闭
      */
-    public static final Integer CLOSE = 1;
+    public static final Integer CLOSE   = 1;
     /**
      * 2 删除标记
      */
-    public static final Integer DELETED  = 2;
-    
+    public static final Integer DELETED = 2;
+
     //////////////////////////字典名 /////////////////////////
     /**
      * 发票
@@ -103,7 +103,7 @@ public final class CommonConst {
     /**
      * 权限功能
      */
-    public static final Integer DICT_FUNCTION  = 3;
-    
-    
+    public static final Integer DICT_FUNCTION = 3;
+
+
 }

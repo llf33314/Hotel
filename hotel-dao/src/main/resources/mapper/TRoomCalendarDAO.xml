@@ -2,42 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.TRoomCalendarDAO">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TRoomCalendar">
-		<id column="id" property="id" />
-		<result column="hotel_id" property="hotelId" />
-		<result column="category_id" property="categoryId" />
-		<result column="begin_time" property="beginTime" />
-		<result column="end_time" property="endTime" />
-		<result column="price" property="price" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_at" property="createdAt" />
-		<result column="updated_by" property="updatedBy" />
-		<result column="updated_at" property="updatedAt" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TRoomCalendar">
+        <id column="id" property="id"/>
+        <result column="hotel_id" property="hotelId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="price" property="price"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, hotel_id, category_id, begin_time, end_time, price, created_by, created_at, updated_by, updated_at
     </sql>
 
-	<select id="queryRoomCalendarList" resultType="com.gt.hotel.vo.RoomCalendarVo">
-		SELECT <include refid="Base_Column_List" /> 
-		FROM t_room_calendar 
-		<where>
-			<if test="param.id != null">
-				AND id = #{param.id} 
-			</if>
-			<if test="categoryId != null">
-				AND category_id = #{categoryId} 
-			</if>
-			<if test="param.beginTime != null">
-				<![CDATA[ AND begin_time <= #{param.beginTime} ]]>
-			</if>
-			<if test="param.endTime != null">
-				<![CDATA[ AND end_time >= #{param.endTime} ]]>
-			</if>
-		</where>
-	</select>
-	
+    <select id="queryRoomCalendarList" resultType="com.gt.hotel.vo.RoomCalendarVo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_room_calendar
+        <where>
+            <if test="param.id != null">
+                AND id = #{param.id}
+            </if>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="param.beginTime != null">
+                <![CDATA[ AND begin_time <= #{param.beginTime} ]]>
+            </if>
+            <if test="param.endTime != null">
+                <![CDATA[ AND end_time >= #{param.endTime} ]]>
+            </if>
+        </where>
+    </select>
+
 </mapper>

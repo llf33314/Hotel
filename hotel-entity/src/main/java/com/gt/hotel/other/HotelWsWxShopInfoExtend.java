@@ -125,260 +125,261 @@ public class HotelWsWxShopInfoExtend {
     private String adder;
 
     public void setMainShop(Integer mainShop) {
-	this.mainShop = mainShop;
+        this.mainShop = mainShop;
     }
 
     public Integer getMainShop() {
-	return mainShop;
+        return mainShop;
     }
 
     public void setCreateTime(String createTime) {
-	this.createTime = createTime;
+        this.createTime = createTime;
     }
 
     public String getCreateTime() {
-	return createTime;
+        return createTime;
     }
 
     public void setBusinessName(String businessName) {
-	this.businessName = businessName;
+        this.businessName = businessName;
     }
 
     public String getBusinessName() {
-	return businessName;
+        return businessName;
     }
 
     public void setDetail(String detail) {
-	this.detail = detail;
+        this.detail = detail;
     }
 
     public String getDetail() {
-	return detail;
+        return detail;
     }
 
     public void setBusId(Integer busId) {
-	this.busId = busId;
+        this.busId = busId;
     }
 
     public Integer getBusId() {
-	return busId;
+        return busId;
     }
 
     public void setImageUrl(String imageUrl) {
-	this.imageUrl = imageUrl;
+        this.imageUrl = imageUrl;
     }
 
     public String getImageUrl() {
-	return imageUrl;
+        return imageUrl;
     }
 
     public void setAvailableState(Integer availableState) {
-	this.availableState = availableState;
+        this.availableState = availableState;
     }
 
     public Integer getAvailableState() {
-	return availableState;
+        return availableState;
     }
 
     public void setEndTime(String endTime) {
-	this.endTime = endTime;
+        this.endTime = endTime;
     }
 
     public String getEndTime() {
-	return endTime;
+        return endTime;
     }
 
     public void setRecommend(String recommend) {
-	this.recommend = recommend;
+        this.recommend = recommend;
     }
 
     public String getRecommend() {
-	return recommend;
+        return recommend;
     }
 
     public void setCity(String city) {
-	this.city = city;
+        this.city = city;
     }
 
     public String getCity() {
-	return city;
+        return city;
     }
 
     public void setStartTime(String startTime) {
-	this.startTime = startTime;
+        this.startTime = startTime;
     }
 
     public String getStartTime() {
-	return startTime;
+        return startTime;
     }
 
     public void setId(Integer id) {
-	this.id = id;
+        this.id = id;
     }
 
     public Integer getId() {
-	return id;
+        return id;
     }
 
     public void setPoiid(String poiid) {
-	this.poiid = poiid;
+        this.poiid = poiid;
     }
 
     public String getPoiid() {
-	return poiid;
+        return poiid;
     }
 
     public void setProvince(String province) {
-	this.province = province;
+        this.province = province;
     }
 
     public String getProvince() {
-	return province;
+        return province;
     }
 
     public void setTwoCategories(String twoCategories) {
-	this.twoCategories = twoCategories;
+        this.twoCategories = twoCategories;
     }
 
     public String getTwoCategories() {
-	return twoCategories;
+        return twoCategories;
     }
 
     public void setOffsetType(Integer offsetType) {
-	this.offsetType = offsetType;
+        this.offsetType = offsetType;
     }
 
     public Integer getOffsetType() {
-	return offsetType;
+        return offsetType;
     }
 
     public void setLongitude(String longitude) {
-	this.longitude = longitude;
+        this.longitude = longitude;
     }
 
     public String getLongitude() {
-	return longitude;
+        return longitude;
     }
 
     public void setDistrict(String district) {
-	this.district = district;
+        this.district = district;
     }
 
     public String getDistrict() {
-	return district;
+        return district;
     }
 
     public void setSid(String sid) {
-	this.sid = sid;
+        this.sid = sid;
     }
 
     public String getSid() {
-	return sid;
+        return sid;
     }
 
     public void setStatus(Integer status) {
-	this.status = status;
+        this.status = status;
     }
 
     public Integer getStatus() {
-	return status;
+        return status;
     }
 
     public void setUpdateStatus(Integer updateStatus) {
-	this.updateStatus = updateStatus;
+        this.updateStatus = updateStatus;
     }
 
     public Integer getUpdateStatus() {
-	return updateStatus;
+        return updateStatus;
     }
 
     public void setAdder(String adder) {
-	this.adder = adder;
+        this.adder = adder;
     }
 
     public String getAdder() {
-	return adder;
+        return adder;
     }
 
     public void setThreeCategories(String threeCategories) {
-	this.threeCategories = threeCategories;
+        this.threeCategories = threeCategories;
     }
 
     public String getThreeCategories() {
-	return threeCategories;
+        return threeCategories;
     }
 
     public void setAvgPrice(Integer avgPrice) {
-	this.avgPrice = avgPrice;
+        this.avgPrice = avgPrice;
     }
 
     public Integer getAvgPrice() {
-	return avgPrice;
+        return avgPrice;
     }
 
     public void setAddress(String address) {
-	this.address = address;
+        this.address = address;
     }
 
     public String getAddress() {
-	return address;
+        return address;
     }
 
     public void setBranchName(String branchName) {
-	this.branchName = branchName;
+        this.branchName = branchName;
     }
 
     public String getBranchName() {
-	return branchName;
+        return branchName;
     }
 
     public void setSpecial(String special) {
-	this.special = special;
+        this.special = special;
     }
 
     public String getSpecial() {
-	return special;
+        return special;
     }
 
     public void setCategories(String categories) {
-	this.categories = categories;
+        this.categories = categories;
     }
 
     public String getCategories() {
-	return categories;
+        return categories;
     }
 
     public void setLatitude(String latitude) {
-	this.latitude = latitude;
+        this.latitude = latitude;
     }
 
     public String getLatitude() {
-	return latitude;
+        return latitude;
     }
 
     public void setTelephone(String telephone) {
-	this.telephone = telephone;
+        this.telephone = telephone;
     }
 
     public String getTelephone() {
-	return telephone;
+        return telephone;
     }
 
     public void setIntroduction(String introduction) {
-	this.introduction = introduction;
+        this.introduction = introduction;
     }
 
     public String getIntroduction() {
-	return introduction;
+        return introduction;
     }
 
-    @Override public String toString() {
-	return "HotelWsWxShopInfoExtend [id=" + id + ", sid=" + sid + ", poiid=" + poiid + ", busId=" + busId + ", businessName=" + businessName + ", branchName=" + branchName
-	    + ", categories=" + categories + ", twoCategories=" + twoCategories + ", threeCategories=" + threeCategories + ", telephone=" + telephone + ", avgPrice=" + avgPrice
-	    + ", startTime=" + startTime + ", endTime=" + endTime + ", special=" + special + ", introduction=" + introduction + ", recommend=" + recommend + ", province="
-	    + province + ", city=" + city + ", district=" + district + ", address=" + address + ", offsetType=" + offsetType + ", longitude=" + longitude + ", latitude=" + latitude
-	    + ", status=" + status + ", detail=" + detail + ", mainShop=" + mainShop + ", imageUrl=" + imageUrl + ", createTime=" + createTime + ", availableState="
-	    + availableState + ", updateStatus=" + updateStatus + ", adder=" + adder + "]";
+    @Override
+    public String toString() {
+        return "HotelWsWxShopInfoExtend [id=" + id + ", sid=" + sid + ", poiid=" + poiid + ", busId=" + busId + ", businessName=" + businessName + ", branchName=" + branchName
+                + ", categories=" + categories + ", twoCategories=" + twoCategories + ", threeCategories=" + threeCategories + ", telephone=" + telephone + ", avgPrice=" + avgPrice
+                + ", startTime=" + startTime + ", endTime=" + endTime + ", special=" + special + ", introduction=" + introduction + ", recommend=" + recommend + ", province="
+                + province + ", city=" + city + ", district=" + district + ", address=" + address + ", offsetType=" + offsetType + ", longitude=" + longitude + ", latitude=" + latitude
+                + ", status=" + status + ", detail=" + detail + ", mainShop=" + mainShop + ", imageUrl=" + imageUrl + ", createTime=" + createTime + ", availableState="
+                + availableState + ", updateStatus=" + updateStatus + ", adder=" + adder + "]";
     }
 
 }

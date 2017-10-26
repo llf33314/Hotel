@@ -5,10 +5,10 @@ import com.gt.hotel.entity.THotelMemberSetting;
 
 /**
  * <p>
-  * 酒店会员设置 Mapper 接口
+ * 酒店会员设置 Mapper 接口
  * </p>
  *
- * @author 
+ * @author
  * @since 2017-10-18
  */
 public interface THotelMemberSettingDAO extends BaseMapper<THotelMemberSetting> {

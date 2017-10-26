@@ -1,15 +1,15 @@
 package com.gt.hotel.vo;
 
-import java.util.Date;
-import java.util.List;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.List;
 
 @Data
 public class ActivityVo {
 
-	@ApiModelProperty(value = "活动ID")
+    @ApiModelProperty(value = "活动ID")
     private Integer id;
     /**
      * 酒店ID
@@ -94,7 +94,7 @@ public class ActivityVo {
 
     @ApiModelProperty(value = "活动详情表 根据活动类型不同整合各个活动所需字段")
     private ActivityDetailVo detail;
-    
+
     @ApiModelProperty(value = "活动房间 集合")
     private List<ActivityRoomVo> rooms;
 }

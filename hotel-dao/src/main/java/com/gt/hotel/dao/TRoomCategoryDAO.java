@@ -17,16 +17,15 @@ import java.util.List;
  * @author
  * @since 2017-10-09
  */
-public interface TRoomCategoryDAO extends BaseMapper< TRoomCategory > {
+public interface TRoomCategoryDAO extends BaseMapper<TRoomCategory> {
 
     /**
      * 查询 房型列表
      *
      * @param hotelId 酒店ID
      * @param page
-     *
      * @return
      */
-    List< RoomCategoryVo > queryRoomCategory(@Param("queryRoomCategory") QueryRoomCategory param, @Param("page") Pagination page);
+    List<RoomCategoryVo> queryRoomCategory(@Param("queryRoomCategory") QueryRoomCategory param, @Param("page") Pagination page);
 
 }

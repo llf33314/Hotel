@@ -1,9 +1,7 @@
 package com.gt.hotel.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -15,13 +13,12 @@ import java.io.Serializable;
  * 基础设施 包含 酒店 客房
  * </p>
  *
- * @author
- * @since 2017-10-09
+ * @author zhangmz
+ * @since 2017-10-26
  */
 @Data
 @Accessors(chain = true)
-@TableName("t_infrastructure")
-public class TInfrastructure extends Model< TInfrastructure > {
+public class TInfrastructure extends Model<TInfrastructure> {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,15 +31,20 @@ public class TInfrastructure extends Model< TInfrastructure > {
     /**
      * 图标地址
      */
-    @TableField("icon_url")
     private String  iconUrl;
     /**
-     * 模块 hotel 酒店基础设施 room 客房基础设施
+     * 模块 hotel 酒店基础设施 room 客房基础设施 字典值 sys_dictionary_type.id=5
      */
     private String  module;
+    /**
+     * 排序字段 根据这个排序
+     */
+    private Integer sortBy;
 
-    @Override protected Serializable pkVal() {
-	return this.id;
+
+    @Override
+    protected Serializable pkVal() {
+        return this.id;
     }
 
 }

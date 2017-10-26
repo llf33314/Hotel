@@ -11,6 +11,6 @@ import com.gt.hotel.entity.TActivityDetail;
  * @author
  * @since 2017-10-09
  */
-public interface TActivityDetailDAO extends BaseMapper< TActivityDetail > {
+public interface TActivityDetailDAO extends BaseMapper<TActivityDetail> {
 
 }

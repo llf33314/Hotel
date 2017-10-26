@@ -2,26 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.TActivityRoomDAO">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TActivityRoom">
-		<id column="id" property="id" />
-		<result column="hotel_id" property="hotelId" />
-		<result column="category_id" property="categoryId" />
-		<result column="room_category_name" property="categoryName" />
-		<result column="room_id" property="roomId" />
-		<result column="room_number" property="roomNumber" />
-		<result column="rack_rate" property="rackRate" />
-		<result column="activity_price" property="activityPrice" />
-		<result column="mark_modified" property="markModified" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_at" property="createdAt" />
-		<result column="updated_by" property="updatedBy" />
-		<result column="updated_at" property="updatedAt" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TActivityRoom">
+        <id column="id" property="id"/>
+        <result column="hotel_id" property="hotelId"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="room_id" property="roomId"/>
+        <result column="room_num" property="roomNum"/>
+        <result column="rack_rate" property="rackRate"/>
+        <result column="activity_price" property="activityPrice"/>
+        <result column="mark_modified" property="markModified"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, hotel_id AS hotelId, category_id AS categoryId, room_category_name AS categoryName, room_id AS roomId, room_number AS roomNumber, rack_rate AS rackRate, activity_price AS activityPrice, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
+        id, hotel_id, activity_id, category_id, category_name, room_id, room_num, rack_rate, activity_price, mark_modified, created_by, created_at, updated_by, updated_at
     </sql>
 
 </mapper>

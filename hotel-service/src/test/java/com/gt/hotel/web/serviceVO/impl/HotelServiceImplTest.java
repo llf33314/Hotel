@@ -8,7 +8,8 @@ import org.junit.Test;
  * @date 2017/10/10
  */
 public class HotelServiceImplTest {
-    @Test public void queryHotelHome() throws Exception {
+    @Test
+    public void queryHotelHome() throws Exception {
     }
 
 }

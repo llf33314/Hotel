@@ -31,9 +31,9 @@ public class RedisCacheUtil {
      * @param keys 数组Key
      */
     public void remove(final String... keys) {
-	for (String key : keys) {
-	    remove(key);
-	}
+        for (String key : keys) {
+            remove(key);
+        }
     }
 
     /**
@@ -42,9 +42,9 @@ public class RedisCacheUtil {
      * @param pattern pattern
      */
     public void removePattern(final String pattern) {
-	Set< Serializable > keys = redisTemplate.keys(pattern);
-	if (keys.size() > 0)
-	    redisTemplate.delete(keys);
+        Set<Serializable> keys = redisTemplate.keys(pattern);
+        if (keys.size() > 0)
+            redisTemplate.delete(keys);
     }
 
     /**
@@ -53,32 +53,30 @@ public class RedisCacheUtil {
      * @param key key
      */
     public void remove(final String key) {
-	if (exists(key)) {
-	    redisTemplate.delete(key);
-	}
+        if (exists(key)) {
+            redisTemplate.delete(key);
+        }
     }
 
     /**
      * 判断缓存中是否有对应的value
      *
      * @param key key
-     *
      * @return boolean
      */
     public boolean exists(final String key) {
-	return redisTemplate.hasKey(key);
+        return redisTemplate.hasKey(key);
     }
 
     /**
      * 读取缓存
      *
      * @param key key
-     *
      * @return Object
      */
     public Object get(final String key) {
-	ValueOperations< Serializable, Object > operations = redisTemplate.opsForValue();
-	return operations.get(key);
+        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+        return operations.get(key);
     }
 
     /**
@@ -87,11 +85,10 @@ public class RedisCacheUtil {
      *
      * @param key   key
      * @param value value
-     *
      * @return boolean
      */
     public boolean set(final String key, Object value) {
-	return set(key, value, 7200L);
+        return set(key, value, 7200L);
     }
 
     /**
@@ -100,12 +97,11 @@ public class RedisCacheUtil {
      * @param key        key
      * @param value      value
      * @param expireTime 过期时间
-     *
      * @return boolean
      */
     public boolean set(final String key, Object value, Long expireTime) {
-	ValueOperations< Serializable, Object > operations = redisTemplate.opsForValue();
-	operations.set(key, value);
-	return redisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
+        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+        operations.set(key, value);
+        return redisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
     }
 }
