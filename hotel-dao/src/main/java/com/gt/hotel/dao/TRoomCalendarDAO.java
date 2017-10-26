@@ -22,11 +22,11 @@ public interface TRoomCalendarDAO extends BaseMapper<TRoomCalendar> {
 
 	/**
 	 * 查询房型 日历价格 
-	 * @param roomCategoryId 房型ID
+	 * @param categoryId 房型ID
 	 * @param param 请求对象 
 	 * @param page 分页对象
 	 * @return
 	 */
-	List<RoomCalendarVo> queryRoomCalendarList(@Param("roomCategoryId") Integer roomCategoryId, @Param("param") CalendarQuery param, @Param("page") Pagination page);
+	List<RoomCalendarVo> queryRoomCalendarList(@Param("categoryId") Integer categoryId, @Param("param") CalendarQuery param, @Param("page") Pagination page);
 
 }

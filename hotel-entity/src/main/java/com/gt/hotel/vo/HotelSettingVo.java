@@ -32,6 +32,9 @@ public class HotelSettingVo {
     @ApiModelProperty("是否显示剩余房间数 默认 1 关闭 0 开启")
     private Integer remnantRoomEnable;
     
+    @ApiModelProperty("开启客房订餐 0 开启  1 不开启 默认1")
+	private Integer roomReservationEnable;
+    
     @ApiModelProperty("餐饮支付方式 1 在线 2 到付 3 在线&到付")
     private Integer foodPayMode;
     

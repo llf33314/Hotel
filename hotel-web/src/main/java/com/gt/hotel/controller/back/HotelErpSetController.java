@@ -43,6 +43,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+/**
+ * 酒店后台-ERP设置
+ * @author Reverien9@gmail.com
+ * 2017年10月25日 下午12:03:40
+ */
 @Api(tags = "酒店后台-ERP设置")
 @RestController
 @RequestMapping("/back/erp")

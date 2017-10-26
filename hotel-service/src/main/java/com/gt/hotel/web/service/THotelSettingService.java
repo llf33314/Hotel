@@ -1,9 +1,12 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.param.HotelMobileParameter.MobileSaveOrUpdate;
 import com.gt.hotel.vo.HotelSettingVo;
+import com.gt.hotel.vo.InfrastructureVo;
 
 /**
  * <p>
@@ -28,5 +31,11 @@ public interface THotelSettingService extends BaseService< THotelSetting > {
 	 * @param setting 
 	 */ 
 	void saveSetting(Integer busid, MobileSaveOrUpdate setting);
+
+	/**
+	 * 酒店移动端设备
+	 * @return
+	 */
+	List<InfrastructureVo> queryHotelSettingInfrastructure();
 
 }

@@ -14,11 +14,13 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
+import com.gt.hotel.dao.TInfrastructureDAO;
 import com.gt.hotel.dao.TRoomCalendarDAO;
 import com.gt.hotel.dao.TRoomCategoryDAO;
 import com.gt.hotel.dao.TRoomDAO;
 import com.gt.hotel.dao.TRoomPermanentDAO;
 import com.gt.hotel.entity.TFileRecord;
+import com.gt.hotel.entity.TInfrastructure;
 import com.gt.hotel.entity.TInfrastructureRelation;
 import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.entity.TRoomCategory;
@@ -33,6 +35,7 @@ import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
 import com.gt.hotel.vo.FileRecordVo;
 import com.gt.hotel.vo.InfrastructureRelationVo;
+import com.gt.hotel.vo.InfrastructureVo;
 import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomPermanentVo;
@@ -59,6 +62,9 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	
 	@Autowired
 	TRoomDAO tRoomDAO;
+	
+	@Autowired
+	TInfrastructureDAO tInfrastructureDAO;
 	
 	@Autowired
 	TFileRecordService tFileRecordService;
@@ -88,11 +94,11 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 
 	@Transactional
 	@Override
-	public void roomCategoryCU(Integer busid, CategorySaveOrUpdate roomCategory) {
+	public Integer roomCategoryCU(Integer busid, CategorySaveOrUpdate roomCategory) {
 		Date date = new Date();
 		TRoomCategory tRoomCategory = new TRoomCategory();
 		BeanUtils.copyProperties(roomCategory, tRoomCategory);
-		tRoomCategory.setId(roomCategory.getRoomCategoryId());
+		tRoomCategory.setId(roomCategory.getCategoryId());
 		tRoomCategory.setShopId(roomCategory.getShopId());
 		if(tRoomCategory.getId() == null){
 			tRoomCategory.setCreatedAt(date);
@@ -130,9 +136,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			file.setOriginalName(name);
 			imgs.add(file);
 		}
-		if(!tFileRecordService.insertBatch(imgs)){
-			throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
-		}
+		if(imgs.size() > 0) if(!tFileRecordService.insertBatch(imgs)) throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
 		//删除设施关系
 		Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
 		rwrapper.eq("reference_id", tRoomCategory.getId());
@@ -152,27 +156,24 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			_ir.setInfrastructureId(ir.getInfrastructureId());
 			irs.add(_ir);
 		}
-		if(!tInfrastructureRelationService.insertBatch(irs)){
-			throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
-		}
-		
+		if(irs.size() > 0) if(!tInfrastructureRelationService.insertBatch(irs)) throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
+		return tRoomCategory.getId();
 	}
 
 	@Override
-	public RoomCategoryVo queryRoomCategoryOne(Integer roomCategoryId) {
+	public RoomCategoryVo queryRoomCategoryOne(Integer categoryId) {
 		RoomCategoryVo roomCategoryVo = new RoomCategoryVo();
 		List<FileRecordVo> fileRecordVos = new ArrayList<>();
 		List<InfrastructureRelationVo> infrastructureRelationVos = new ArrayList<>();
-		String module = "roomCategory";
 		
-		TRoomCategory tRoomCategory = tRoomCategoryDAO.selectById(roomCategoryId);
+		TRoomCategory tRoomCategory = tRoomCategoryDAO.selectById(categoryId);
 		Wrapper<TFileRecord> fwrapper = new EntityWrapper<>();
-		fwrapper.eq("reference_id", roomCategoryId);
-		fwrapper.eq("module", module);
+		fwrapper.eq("reference_id", categoryId);
+		fwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		List<TFileRecord> tFileRecords = tFileRecordService.selectList(fwrapper);
 		Wrapper<TInfrastructureRelation> iwrapper = new EntityWrapper<>();
-		iwrapper.eq("reference_id", roomCategoryId);
-		iwrapper.eq("module", module);
+		iwrapper.eq("reference_id", categoryId);
+		iwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		List<TInfrastructureRelation> tInfrastructureRelations = tInfrastructureRelationService.selectList(iwrapper);
 		
 		BeanUtils.copyProperties(tRoomCategory, roomCategoryVo);
@@ -205,6 +206,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		}
 	}
 
+	@Transactional
 	@Override
 	public void editRooms(Integer busid, Integer categoryId, List<com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate> rooms) {
 		Date date = new Date();
@@ -216,6 +218,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		room.setUpdatedBy(busid);
 		wrapper.eq("category_id", categoryId);
 		tRoomService.update(room, wrapper);
+		
 		for(com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate r : rooms){
 			TRoom _r = new TRoom();
 			BeanUtils.copyProperties(r, _r);
@@ -224,22 +227,49 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 			_r.setUpdatedBy(busid);
 			entityList.add(_r);
 		}
-		if(!tRoomService.insertOrUpdateBatch(entityList)){
-			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		
+		List<TRoom> r1 = new ArrayList<>();
+		List<TRoom> r2 = new ArrayList<>();
+		for(TRoom r : entityList) {
+			if(r.getId() == null) r1.add(r);
+			else{
+				r.setMarkModified(CommonConst.ENABLED);
+				r2.add(r);
+			}
 		}
+		
+		if(r1.size() > 0) if(!tRoomService.insertBatch(r1)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		if(r2.size() > 0) if(!tRoomService.updateBatchById(r2)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		
+		if(entityList.size() > 0) {
+			TRoomCategory category = new TRoomCategory();
+			category.setRoomCount(entityList.size());
+			category.setUpdatedAt(date);
+			category.setUpdatedBy(busid);
+			Wrapper<TRoomCategory> cw = new EntityWrapper<>();
+			cw.eq("id", categoryId);
+			tRoomCategoryDAO.update(category, cw);
+		}
+		
 	}
 
 	@Override
-	public Page<RoomVo> queryRoomList(Integer roomCategoryId, Page<RoomVo> page) {
-		page.setRecords(tRoomDAO.queryRoomList(roomCategoryId, page));
+	public Page<RoomVo> queryRoomList(Integer categoryId, Page<RoomVo> page) {
+		page.setRecords(tRoomDAO.queryRoomList(categoryId, page));
 		return page;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, CalendarQuery param) {
+	public Page<RoomCalendarVo> queryRoomCalendarList(Integer categoryId, CalendarQuery param) {
 		Page<RoomCalendarVo> page = param.initPage();
-		page.setRecords(tRoomCalendarDAO.queryRoomCalendarList(roomCategoryId, param, page));
+		List<RoomCalendarVo> l = tRoomCalendarDAO.queryRoomCalendarList(categoryId, param, page);
+		TRoomCategory rc = tRoomCategoryDAO.selectById(categoryId);
+		for(RoomCalendarVo r : l) {
+			r.setWeekendFareEnable(rc.getWeekendFareEnable());
+			r.setWeekendFare(rc.getWeekendFare());
+		}
+		page.setRecords(l);
 		return page;
 	}
 
@@ -279,4 +309,19 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		if(tRoomPermanentService.updateBatchById(entityList)) throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
 	}
 
+	@Override
+	public List<InfrastructureVo> queryRoomCategoryInfrastructure(){
+		List<InfrastructureVo> l = new ArrayList<>();
+		Wrapper<TInfrastructure> wrapper = new EntityWrapper<>();
+		wrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
+		List<TInfrastructure> _l = tInfrastructureDAO.selectList(wrapper);
+		for(TInfrastructure i : _l) {
+			InfrastructureVo iv = new InfrastructureVo();
+			BeanUtils.copyProperties(i, iv);
+			l.add(iv);
+		}
+		return l;
+		
+	}
+	
 }

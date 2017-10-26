@@ -20,10 +20,10 @@ public class ActivityRoomVo {
     private Integer hotelId;
     
 	@ApiModelProperty(value = "房型ID")
-    private Integer roomCategoryId;
+    private Integer categoryId;
     
 	@ApiModelProperty(value = "房型名称 冗余参数")
-    private String  roomCategoryName;
+    private String  categoryName;
     
 	@ApiModelProperty(value = "客房ID")
     private Integer roomId;

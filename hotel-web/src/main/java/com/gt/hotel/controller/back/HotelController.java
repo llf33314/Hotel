@@ -31,6 +31,7 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.HotelShopInfo;
@@ -40,11 +41,17 @@ import com.gt.hotel.param.HotelParameter.HotelQuery;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.web.service.THotelService;
+import com.gt.hotel.web.service.THotelSettingService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+/**
+ * 酒店管理-新增酒店
+ * @author Reverien9@gmail.com
+ * 2017年10月25日 下午12:03:49
+ */
 @Api( tags = "酒店管理-新增酒店" )
 @RestController
 @RequestMapping( "/back/hotel" )
@@ -54,6 +61,9 @@ public class HotelController extends BaseController {
 	
 	@Autowired
 	private THotelService tHotelService;
+
+	@Autowired
+	private THotelSettingService tHotelSettingService;
 	
 	@Autowired
 	private WXMPApiUtil WXMPApiUtil;
@@ -111,11 +121,17 @@ public class HotelController extends BaseController {
 		e.setPhone(hotel.getTel());
 		e.setAddress(hotel.getAddr());
 		e.setShopId(hotel.getShopId());
-		e.setCreatedBy(busid);
-		e.setCreatedAt(date);
+		if(e.getId() == null) {
+			e.setCreatedBy(busid);
+			e.setCreatedAt(date);
+		}
 		e.setUpdatedBy(busid);
 		e.setUpdatedAt(date);
-		if (e.insertOrUpdate()) return ResponseDTO.createBySuccess();
+		boolean f = e.insertOrUpdate();
+		THotelSetting hs = new THotelSetting();
+		hs.setHotelId(e.getId());
+		f &= tHotelSettingService.insert(hs);
+		if (f) return ResponseDTO.createBySuccess();
 		else return ResponseDTO.createByError();
 	}
 

@@ -16,7 +16,7 @@
         id, dict_type_id, dict_code, dict_cn_name, dict_en_name
     </sql>
     <sql id="Base_Column_List_VO">
-        sys_dictionary_type.id, sys_dictionary_type.dict_type_id AS dictTypeId, sys_dictionary_type.dict_code AS dictCode, sys_dictionary_type.dict_cn_name AS dictCnName, sys_dictionary_type.dict_en_name AS dictEnName
+        sys_dictionary.id, sys_dictionary.dict_type_id AS dictTypeId, sys_dictionary.dict_code AS dictCode, sys_dictionary.dict_cn_name AS dictCnName, sys_dictionary.dict_en_name AS dictEnName
     </sql>
 
 	<select id="queryInvoice" resultType="com.gt.hotel.vo.SysDictionaryVo">
@@ -24,7 +24,7 @@
 		FROM sys_dictionary 
 		JOIN sys_dictionary_type ON sys_dictionary.dict_type_id = sys_dictionary_type.id 
 		<where>
-			<if test="dictName != null">
+			<if test="dictId != null">
 				AND sys_dictionary_type.id = #{dictId} 
 			</if>
 		</where>

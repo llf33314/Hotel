@@ -53,7 +53,7 @@ public class TFood extends Model<TFood> {
     /**
      * 新订单接收(短信)手机号
      */
-	private Integer newOrderReceive;
+	private String newOrderReceive;
     /**
      * 菜品图片URL
      */

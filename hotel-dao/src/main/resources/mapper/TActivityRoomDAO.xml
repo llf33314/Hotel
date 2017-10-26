@@ -6,8 +6,8 @@
 	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TActivityRoom">
 		<id column="id" property="id" />
 		<result column="hotel_id" property="hotelId" />
-		<result column="room_category_id" property="roomCategoryId" />
-		<result column="room_category_name" property="roomCategoryName" />
+		<result column="category_id" property="categoryId" />
+		<result column="room_category_name" property="categoryName" />
 		<result column="room_id" property="roomId" />
 		<result column="room_number" property="roomNumber" />
 		<result column="rack_rate" property="rackRate" />
@@ -21,7 +21,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, hotel_id AS hotelId, room_category_id AS roomCategoryId, room_category_name AS roomCategoryName, room_id AS roomId, room_number AS roomNumber, rack_rate AS rackRate, activity_price AS activityPrice, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
+        id, hotel_id AS hotelId, category_id AS categoryId, room_category_name AS categoryName, room_id AS roomId, room_number AS roomNumber, rack_rate AS rackRate, activity_price AS activityPrice, mark_modified AS markModified, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
     </sql>
 
 </mapper>
