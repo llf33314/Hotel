@@ -33,7 +33,7 @@ public class TRoomCalendar extends Model<TRoomCalendar> {
     /**
      * 房型ID
      */
-	private Integer roomCategoryId;
+	private Integer categoryId;
     /**
      * 开始日期
      */

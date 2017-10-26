@@ -31,6 +31,7 @@ import com.gt.hotel.param.HotelMobileParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.FoodVo;
 import com.gt.hotel.vo.HotelSettingVo;
+import com.gt.hotel.vo.InfrastructureVo;
 import com.gt.hotel.vo.SysDictionaryVo;
 import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TFoodService;
@@ -81,6 +82,15 @@ public class HotelMobileController extends BaseController {
 	public ResponseDTO<Page<SysDictionaryVo>> invoiceR(@Param("参数") @ModelAttribute HotelPage param) {
 		Page<SysDictionaryVo> page = sysDictionaryService.queryDictionary(CommonConst.DICT_INVOICE, param);
 		return ResponseDTO.createBySuccess(page);
+	}
+	
+	//////////////////////////////////////////↓酒店移动端设备↓ ////////////////////////////////////////
+		
+	@ApiOperation(value = "酒店移动端设备", notes = "酒店移动端设备")
+	@GetMapping(value = "infrastructure", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<List<InfrastructureVo>> InfrastructureR() {
+	List<InfrastructureVo> page = tHotelSettingService.queryHotelSettingInfrastructure();
+	return ResponseDTO.createBySuccess(page);
 	}
 
 	//////////////////////////////////////////////////////// 客房订餐 //////////////////////////////////////////////////////// 

@@ -17,7 +17,7 @@ public class RoomCalendarVo {
 	private Integer hotelId;
     
 	@ApiModelProperty(value = "房型ID")
-	private Integer roomCategoryId;
+	private Integer categoryId;
 	
 	@ApiModelProperty(value = "开始日期")
 	private Date beginTime;

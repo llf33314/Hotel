@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +49,7 @@ public class HotelActivityController extends BaseController {
 	
 	@ApiOperation( value = "查询 活动 列表", notes = "查询 活动 列表" )
 	@GetMapping( value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-	public ResponseDTO<Page<ActivityVo>> activityR(@Validated @Param("参数") @RequestBody ActivityParamter.ActivityQuery param, BindingResult result) {
+	public ResponseDTO<Page<ActivityVo>> activityR(@Validated @Param("参数") @ModelAttribute ActivityParamter.ActivityQuery param, BindingResult result) {
 		InvalidParameter(result);
 		Page<ActivityVo> page = tActivityService.queryActivity(param);
 		return ResponseDTO.createBySuccess(page);

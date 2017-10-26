@@ -98,7 +98,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 		Date date = new Date();
 		TRoomCategory tRoomCategory = new TRoomCategory();
 		BeanUtils.copyProperties(roomCategory, tRoomCategory);
-		tRoomCategory.setId(roomCategory.getRoomCategoryId());
+		tRoomCategory.setId(roomCategory.getCategoryId());
 		tRoomCategory.setShopId(roomCategory.getShopId());
 		if(tRoomCategory.getId() == null){
 			tRoomCategory.setCreatedAt(date);
@@ -161,18 +161,18 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	}
 
 	@Override
-	public RoomCategoryVo queryRoomCategoryOne(Integer roomCategoryId) {
+	public RoomCategoryVo queryRoomCategoryOne(Integer categoryId) {
 		RoomCategoryVo roomCategoryVo = new RoomCategoryVo();
 		List<FileRecordVo> fileRecordVos = new ArrayList<>();
 		List<InfrastructureRelationVo> infrastructureRelationVos = new ArrayList<>();
 		
-		TRoomCategory tRoomCategory = tRoomCategoryDAO.selectById(roomCategoryId);
+		TRoomCategory tRoomCategory = tRoomCategoryDAO.selectById(categoryId);
 		Wrapper<TFileRecord> fwrapper = new EntityWrapper<>();
-		fwrapper.eq("reference_id", roomCategoryId);
+		fwrapper.eq("reference_id", categoryId);
 		fwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		List<TFileRecord> tFileRecords = tFileRecordService.selectList(fwrapper);
 		Wrapper<TInfrastructureRelation> iwrapper = new EntityWrapper<>();
-		iwrapper.eq("reference_id", roomCategoryId);
+		iwrapper.eq("reference_id", categoryId);
 		iwrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		List<TInfrastructureRelation> tInfrastructureRelations = tInfrastructureRelationService.selectList(iwrapper);
 		
@@ -254,17 +254,17 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl< TRoomCategoryDAO,
 	}
 
 	@Override
-	public Page<RoomVo> queryRoomList(Integer roomCategoryId, Page<RoomVo> page) {
-		page.setRecords(tRoomDAO.queryRoomList(roomCategoryId, page));
+	public Page<RoomVo> queryRoomList(Integer categoryId, Page<RoomVo> page) {
+		page.setRecords(tRoomDAO.queryRoomList(categoryId, page));
 		return page;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, CalendarQuery param) {
+	public Page<RoomCalendarVo> queryRoomCalendarList(Integer categoryId, CalendarQuery param) {
 		Page<RoomCalendarVo> page = param.initPage();
-		List<RoomCalendarVo> l = tRoomCalendarDAO.queryRoomCalendarList(roomCategoryId, param, page);
-		TRoomCategory rc = tRoomCategoryDAO.selectById(roomCategoryId);
+		List<RoomCalendarVo> l = tRoomCalendarDAO.queryRoomCalendarList(categoryId, param, page);
+		TRoomCategory rc = tRoomCategoryDAO.selectById(categoryId);
 		for(RoomCalendarVo r : l) {
 			r.setWeekendFareEnable(rc.getWeekendFareEnable());
 			r.setWeekendFare(rc.getWeekendFare());

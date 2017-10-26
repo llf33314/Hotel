@@ -38,7 +38,7 @@ public class RoomCalendarParamter {
 		
 //		@ApiModelProperty(value = "房型ID")
 //		@NotNull(message = "房型ID不能为空")
-//		private Integer roomCategoryId;
+//		private Integer categoryId;
 		
 		@ApiModelProperty(value = "日历ID(更新需要)")
 		private Integer id;

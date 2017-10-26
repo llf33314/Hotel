@@ -45,11 +45,11 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 
 	/**
 	 * 查询 房型对象
-	 * @param roomCategoryId 房型ID
+	 * @param categoryId 房型ID
 	 * @param page
 	 * @return
 	 */
-	RoomCategoryVo queryRoomCategoryOne(Integer roomCategoryId);
+	RoomCategoryVo queryRoomCategoryOne(Integer categoryId);
 
 	/**
 	 * 保存 or 更新 房间
@@ -65,7 +65,7 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 	 * @param page 
 	 * @return
 	 */
-	Page<RoomVo> queryRoomList(Integer roomCategoryId, Page<RoomVo> page);
+	Page<RoomVo> queryRoomList(Integer categoryId, Page<RoomVo> page);
 
 	/**
 	 * 删除 房型(伪)
@@ -77,12 +77,12 @@ public interface TRoomCategoryService extends BaseService< TRoomCategory > {
 
 	/**
 	 * 查询房型 日历价格 
-	 * @param roomCategoryId 房型ID
+	 * @param categoryId 房型ID
 	 * @param param 请求对象 
 	 * @param page 分页对象
 	 * @return
 	 */
-	Page<RoomCalendarVo> queryRoomCalendarList(Integer roomCategoryId, CalendarQuery param);
+	Page<RoomCalendarVo> queryRoomCalendarList(Integer categoryId, CalendarQuery param);
 
 	/**
 	 * 保存 长包房设置

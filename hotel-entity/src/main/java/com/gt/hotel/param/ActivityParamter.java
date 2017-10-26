@@ -22,11 +22,11 @@ public class ActivityParamter {
 		@ApiModelProperty(value = "活动ID")
 		private Integer id;
 		
-		@ApiModelProperty(value = "酒店ID")
+		@ApiModelProperty(value = "酒店ID", required = true)
 		@NotNull(message = "酒店ID不能为空")
 		private Integer hotelId;
 		
-		@ApiModelProperty(value = "活动类型 1 特价房 2 钟点房 3 秒杀房 4 团购房")
+		@ApiModelProperty(value = "活动类型 1 特价房 2 钟点房 3 秒杀房 4 团购房", required = true)
 		@NotNull(message = "活动类型不能为空")
 	    private Integer activityType;
 		
@@ -98,11 +98,11 @@ public class ActivityParamter {
 	    
 		@ApiModelProperty(value = "房型ID")
 		@NotNull(message = "房型ID不能为空")
-	    private Integer roomCategoryId;
+	    private Integer categoryId;
 	    
 		@ApiModelProperty(value = "房型名称 冗余参数")
 		@NotEmpty(message = "房型名称不能为空")
-	    private String  roomCategoryName;
+	    private String  categoryName;
 	    
 		@ApiModelProperty(value = "客房ID")
 		@NotNull(message = "客房ID不能为空")

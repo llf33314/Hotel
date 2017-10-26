@@ -14,8 +14,10 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.THotelSettingDAO;
+import com.gt.hotel.dao.TInfrastructureDAO;
 import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.entity.THotelSetting;
+import com.gt.hotel.entity.TInfrastructure;
 import com.gt.hotel.entity.TInfrastructureRelation;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
@@ -24,6 +26,7 @@ import com.gt.hotel.param.InfrastructureRelationParamter;
 import com.gt.hotel.vo.FileRecordVo;
 import com.gt.hotel.vo.HotelSettingVo;
 import com.gt.hotel.vo.InfrastructureRelationVo;
+import com.gt.hotel.vo.InfrastructureVo;
 import com.gt.hotel.web.service.TFileRecordService;
 import com.gt.hotel.web.service.THotelSettingService;
 import com.gt.hotel.web.service.TInfrastructureRelationService;
@@ -44,6 +47,9 @@ public class THotelSettingServiceImpl extends BaseServiceImpl< THotelSettingDAO,
 
 	@Autowired
 	TInfrastructureRelationService tInfrastructureRelationService;
+	
+	@Autowired
+	TInfrastructureDAO tInfrastructureDAO;
 
 	@Override
 	public HotelSettingVo queryHotelSettingOne(Integer hotelId) {
@@ -51,6 +57,9 @@ public class THotelSettingServiceImpl extends BaseServiceImpl< THotelSettingDAO,
 		Wrapper<THotelSetting> hsw = new EntityWrapper<>();
 		hsw.eq("hotel_id", hotelId);
 		THotelSetting hs = this.selectOne(hsw);
+		if(hs == null) {
+			return s;
+		}
 		BeanUtils.copyProperties(hs, s);
 		
 		Wrapper<TFileRecord> rsw = new EntityWrapper<>();
@@ -137,6 +146,20 @@ public class THotelSettingServiceImpl extends BaseServiceImpl< THotelSettingDAO,
 			irs.add(_ir);
 		}
 		if(!tInfrastructureRelationService.insertBatch(irs)) throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
+	}
+
+	@Override
+	public List<InfrastructureVo> queryHotelSettingInfrastructure() {
+		List<InfrastructureVo> l = new ArrayList<>();
+		Wrapper<TInfrastructure> wrapper = new EntityWrapper<>();
+		wrapper.eq("module", CommonConst.MODULE_HOTEL);
+		List<TInfrastructure> _l = tInfrastructureDAO.selectList(wrapper);
+		for(TInfrastructure i : _l) {
+			InfrastructureVo iv = new InfrastructureVo();
+			BeanUtils.copyProperties(i, iv);
+			l.add(iv);
+		}
+		return l;
 	}
 
 }

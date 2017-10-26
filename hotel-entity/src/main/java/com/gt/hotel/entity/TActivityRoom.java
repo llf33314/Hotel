@@ -40,11 +40,11 @@ public class TActivityRoom extends Model<TActivityRoom> {
     /**
      * 房型ID
      */
-	private Integer roomCategoryId;
+	private Integer categoryId;
     /**
      * 房型名称 冗余参数
      */
-	private String roomCategoryName;
+	private String categoryName;
     /**
      * 客房ID
      */

@@ -19,7 +19,7 @@ public class RoomVo {
     private Integer id;
     
     @ApiModelProperty("房型ID")
-    private Integer roomCategoryId;
+    private Integer categoryId;
 
     @ApiModelProperty("客房编号")
     private String  number;

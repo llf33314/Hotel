@@ -30,7 +30,7 @@ public class RoomCategoryParameter {
 		private Integer hotelId;
 		
 		@ApiModelProperty( value = "房型ID" )
-		private Integer roomCategoryId;
+		private Integer categoryId;
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class RoomCategoryParameter {
 	public static class QueryRoomCategoryOne{
 		@ApiModelProperty( value = "房型ID" )
 		@NotNull(message = "房型ID不能为空")
-		private Integer roomCategoryId;
+		private Integer categoryId;
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public class RoomCategoryParameter {
 	@Api( "保存 或 更新 参数" )
 	public static class CategorySaveOrUpdate {
 		@ApiModelProperty( value = "房型ID" )
-		private Integer roomCategoryId;
+		private Integer categoryId;
 		
 		@ApiModelProperty( value = "酒店ID", required = true )
 		@NotNull( message = "酒店ID不能为空" )

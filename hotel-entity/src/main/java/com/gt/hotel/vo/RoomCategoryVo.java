@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,7 +17,7 @@ public class RoomCategoryVo {
     private Integer hotelId;
 
     @ApiModelProperty( "房型ID" )
-    private Integer roomCategoryId;
+    private Integer categoryId;
 
     @ApiModelProperty( "房间类型" )
     private String name;
@@ -37,6 +39,12 @@ public class RoomCategoryVo {
 
     @ApiModelProperty( "房间总数" )
     private Integer roomCount;
+    
+    @ApiModelProperty( "是否开启早餐券 0 开启 1 关闭" )
+    private Integer breakfastEnable;
+    
+    @ApiModelProperty( "早餐数量" )
+    private Integer breakfastQuantity;
     
     @ApiModelProperty(value = "简要说明")
 	private String desc;

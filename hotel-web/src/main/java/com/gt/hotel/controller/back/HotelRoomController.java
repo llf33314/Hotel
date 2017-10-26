@@ -69,7 +69,7 @@ public class HotelRoomController extends BaseController {
 		Integer busid = getLoginUserId(session);
 		Integer id = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
 		QueryRoomCategoryOne q = new QueryRoomCategoryOne();
-		q.setRoomCategoryId(id);
+		q.setCategoryId(id);
 		return ResponseDTO.createBySuccess(q);
 	}
 
@@ -102,9 +102,9 @@ public class HotelRoomController extends BaseController {
 	////////////////////////////////////////// ↓房间↓ ////////////////////////////////////////
 	
 	@ApiOperation(value = "房间 集合", notes = "房间 集合")
-	@GetMapping(value = "{roomCategoryId}/room", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(value = "{categoryId}/room", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings({ "unchecked" })
-	public ResponseDTO<Page<RoomVo>> roomRList(@PathVariable("roomCategoryId") @ApiParam("房型ID") Integer categoryId,
+	public ResponseDTO<Page<RoomVo>> roomRList(@PathVariable("categoryId") @ApiParam("房型ID") Integer categoryId,
 			HotelPage hpage) {
 		Page<RoomVo> page = hpage.initPage();
 		page = tRoomCategoryService.queryRoomList(categoryId, page);
@@ -112,34 +112,34 @@ public class HotelRoomController extends BaseController {
 	}
 
 	@ApiOperation(value = "编辑 房间", notes = "编辑 房间")
-	@PostMapping(value = "{roomCategoryId}/room", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PostMapping(value = "{categoryId}/room", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO roomCU(@RequestBody List<RoomParameter.RoomSaveOrUpdate> rooms, @PathVariable("roomCategoryId") Integer roomCategoryId, HttpSession session) {
+	public ResponseDTO roomCU(@RequestBody List<RoomParameter.RoomSaveOrUpdate> rooms, @PathVariable("categoryId") Integer categoryId, HttpSession session) {
 		Integer busid = getLoginUserId(session);
-		tRoomCategoryService.editRooms(busid, roomCategoryId, rooms);
+		tRoomCategoryService.editRooms(busid, categoryId, rooms);
 		return ResponseDTO.createBySuccess();
 	}
 
 	////////////////////////////////////////// ↓日历↓ ////////////////////////////////////////
 	
 	@ApiOperation(value = "查询日历-房型 价格信息", notes = "查询日历-房型 价格信息")
-	@GetMapping(value = "{roomCategoryId}/calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<Page<RoomCalendarVo>> calendarRList(@PathVariable("roomCategoryId") @ApiParam("房型ID") Integer roomCategoryId,
+	@GetMapping(value = "{categoryId}/calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<Page<RoomCalendarVo>> calendarRList(@PathVariable("categoryId") @ApiParam("房型ID") Integer categoryId,
 			RoomCalendarParamter.CalendarQuery param) {
-		Page<RoomCalendarVo> page = tRoomCategoryService.queryRoomCalendarList(roomCategoryId, param);
+		Page<RoomCalendarVo> page = tRoomCategoryService.queryRoomCalendarList(categoryId, param);
 		return ResponseDTO.createBySuccess(page);
 	}
 	
 	@ApiOperation(value = "编辑 房型 价格信息", notes = "编辑 房型 价格信息")
-	@PostMapping(value = "{roomCategoryId}/calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PostMapping(value = "{categoryId}/calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO roomCalendarCU(@PathVariable("roomCategoryId") Integer roomCategoryId, @RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, HttpSession session) {
+	public ResponseDTO roomCalendarCU(@PathVariable("categoryId") Integer categoryId, @RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, HttpSession session) {
 		System.err.println(cal);
 		Integer busid = getLoginUserId(session);
 		Date date = new Date();
 		TRoomCalendar calendar = new TRoomCalendar();
 		BeanUtils.copyProperties(cal, calendar);
-		calendar.setRoomCategoryId(roomCategoryId);
+		calendar.setCategoryId(categoryId);
 		if(cal.getId() == null){
 			calendar.setCreatedBy(busid);
 			calendar.setCreatedAt(date);
