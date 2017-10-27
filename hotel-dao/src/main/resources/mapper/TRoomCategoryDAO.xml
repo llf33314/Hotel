@@ -31,7 +31,7 @@
 
     <select id="queryRoomCategory" resultType="com.gt.hotel.vo.RoomCategoryVo">
         SELECT hotel_id hotelId, id categoryId, name, room_count roomCount, rack_rate rackRate, deposit, weekend_fare_enable weekendFareEnable,
-        discount, weekend_fare weekendFare
+        weekend_fare weekendFare
         FROM t_room_category
         WHERE mark_modified = 0
         <if test="queryRoomCategory.categoryId != null">

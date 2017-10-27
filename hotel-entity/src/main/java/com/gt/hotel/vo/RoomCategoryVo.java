@@ -21,8 +21,8 @@ public class RoomCategoryVo {
     @ApiModelProperty("门市价")
     private Integer rackRate;
 
-    @ApiModelProperty("折扣率")
-    private Integer discount;
+//    @ApiModelProperty("折扣率")
+//    private Integer discount;
 
     @ApiModelProperty("是否开启周末价 0 开启 1 禁用，即显示门市价即可")
     private Integer weekendFareEnable;
