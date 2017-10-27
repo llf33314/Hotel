@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TOrderDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TOrder">
+		<id column="id" property="id" />
+		<result column="order_num" property="orderNum" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="bus_id" property="busId" />
+		<result column="member_id" property="memberId" />
+		<result column="pay_type" property="payType" />
+		<result column="pay_status" property="payStatus" />
+		<result column="pay_time" property="payTime" />
+		<result column="order_status" property="orderStatus" />
+		<result column="create_time" property="createTime" />
+		<result column="real_price" property="realPrice" />
+		<result column="bill_price" property="billPrice" />
+		<result column="fb" property="fb" />
+		<result column="integral" property="integral" />
+		<result column="order_coupons_id" property="orderCouponsId" />
+		<result column="receivable_price" property="receivablePrice" />
+		<result column="remark" property="remark" />
+		<result column="completion_time" property="completionTime" />
+		<result column="mark_modified" property="markModified" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_num, hotel_id, bus_id, member_id, pay_type, pay_status, pay_time, order_status, create_time, real_price, bill_price, fb, integral, order_coupons_id, receivable_price, remark, completion_time, mark_modified, created_by, created_at, updated_by, updated_at
+    </sql>
+
+</mapper>

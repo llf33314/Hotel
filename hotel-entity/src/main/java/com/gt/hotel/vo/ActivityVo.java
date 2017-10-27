@@ -20,7 +20,7 @@ public class ActivityVo {
      * 外部活动编号 提供对外显示 ID 格式 前缀 HD+时间戳年月日时分秒毫秒 14位
      */
     @ApiModelProperty(value = "外部活动编号 提供对外显示 ID 格式 前缀 HD+时间戳年月日时分秒毫秒 14位")
-    private String  externalNumber;
+    private String  activityNum;
     /**
      * 活动 开始时间
      */

@@ -66,7 +66,7 @@ public class HotelMobileParameter {
 	    private String  reservationCheckOutPhone;
 	    
 	    @ApiModelProperty(value = "发票支持的类目  存储方式 1,2,3,4,5 or 1,2,3")
-	    private String  InvoiceCategory;
+	    private String  InvoiceCategorys;
 	    
 	    @ApiModelProperty(value =  "图片地址 集合" )
 	    private List<String> imageurls;
@@ -114,44 +114,44 @@ public class HotelMobileParameter {
 		private Integer breakfastEnable;
 
 		@ApiModelProperty(value = "早餐开始时间 (示例: 6:00-10:00)")
-		@JsonFormat(pattern = "HH:mm")
+		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date breakfastBegin;
 
 		@ApiModelProperty(value = "早餐结束时间 (示例: 6:00-10:00)")
-		@JsonFormat(pattern = "HH:mm")
+		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date breakfastEnd;
 
 		@ApiModelProperty(value = "午餐时段是否提供 0 提供 1 不提供")
 		private Integer lunchEnable;
 
 		@ApiModelProperty(value = "午餐开始时间 (示例: 6:00-10:00)")
-		@JsonFormat(pattern = "HH:mm")
+		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date lunchBegin;
 
 		@ApiModelProperty(value = "午餐结束时间 (示例: 6:00-10:00)")
-		@JsonFormat(pattern = "HH:mm")
+		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date lunchEnd;
 
 		@ApiModelProperty(value = "晚餐是否提供 0 是 1 否")
 		private Integer dinnerEnable;
 
 		@ApiModelProperty(value = "晚餐开始时间")
-		@JsonFormat(pattern = "HH:mm")
+		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date dinnerBegin;
 
 		@ApiModelProperty(value = "晚餐结束时间")
-		@JsonFormat(pattern = "HH:mm")
+		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date dinnerEnd;
 
 		@ApiModelProperty(value = "宵夜是否提供 0 是 1 否")
 		private Integer supperEnable;
 
 		@ApiModelProperty(value = "宵夜开始时间")
-		@JsonFormat(pattern = "HH:mm")
+		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date supperBegin;
 
 		@ApiModelProperty(value = "宵夜结束时间")
-		@JsonFormat(pattern = "HH:mm")
+		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date supperEnd;
 	}
 	

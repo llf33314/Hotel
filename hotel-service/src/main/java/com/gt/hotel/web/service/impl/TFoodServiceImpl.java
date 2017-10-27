@@ -27,9 +27,9 @@ public class TFoodServiceImpl extends BaseServiceImpl<TFoodDAO, TFood> implement
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<FoodVo> queryFood(HotelPage hpage) {
+	public Page<FoodVo> queryFood(HotelPage hpage, Integer hotelId) {
 		Page<FoodVo> page = hpage.initPage();
-		page.setRecords(tFoodDAO.queryFood(hpage, page));
+		page.setRecords(tFoodDAO.queryFood(hpage, hotelId, page));
 		return page;
 	}
 	

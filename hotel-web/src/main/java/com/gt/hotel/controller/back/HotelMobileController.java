@@ -45,8 +45,8 @@ import io.swagger.annotations.ApiParam;
 
 /**
  * 酒店后台-移动端设置
- * @author Reverien9@gmail.com
- * 2017年10月25日 上午11:54:18
+ * 
+ * @author Reverien9@gmail.com 2017年10月25日 上午11:54:18
  */
 @Api(tags = "酒店后台-移动端设置")
 @RestController
@@ -54,11 +54,11 @@ import io.swagger.annotations.ApiParam;
 public class HotelMobileController extends BaseController {
 
 	@Autowired
-	THotelSettingService	tHotelSettingService;
+	THotelSettingService tHotelSettingService;
 
 	@Autowired
-	SysDictionaryService	sysDictionaryService;
-	
+	SysDictionaryService sysDictionaryService;
+
 	@Autowired
 	TFoodService tFoodService;
 
@@ -75,14 +75,17 @@ public class HotelMobileController extends BaseController {
 	@ApiOperation(value = "保存 移动端设置", notes = "保存 移动端设置")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO phoneSettingCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.MobileSaveOrUpdate setting, BindingResult result, HttpSession session) {
+	public ResponseDTO phoneSettingCU(
+			@Validated @RequestBody @Param("参数") HotelMobileParameter.MobileSaveOrUpdate setting, BindingResult result,
+			HttpSession session) {
 		InvalidParameter(result);
 		Integer busid = getLoginUserId(session);
 		tHotelSettingService.saveSetting(busid, setting);
 		return ResponseDTO.createBySuccess();
 	}
-	
-	//////////////////////////////////////////↓酒店发票↓ ////////////////////////////////////////
+
+	////////////////////////////////////////// ↓酒店发票↓
+	////////////////////////////////////////// ////////////////////////////////////////
 
 	@ApiOperation(value = "查询 发票列表", notes = "查询 发票列表")
 	@GetMapping(value = "invoice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -90,65 +93,70 @@ public class HotelMobileController extends BaseController {
 		Page<SysDictionaryVo> page = sysDictionaryService.queryDictionary(CommonConst.DICT_INVOICE, param);
 		return ResponseDTO.createBySuccess(page);
 	}
-	
-	//////////////////////////////////////////↓酒店移动端设备↓ ////////////////////////////////////////
-		
+
+	////////////////////////////////////////// ↓酒店移动端设备↓
+	////////////////////////////////////////// ////////////////////////////////////////
+
 	@ApiOperation(value = "酒店移动端设备", notes = "酒店移动端设备")
 	@GetMapping(value = "infrastructure", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<List<InfrastructureVo>> InfrastructureR() {
-	List<InfrastructureVo> page = tHotelSettingService.queryHotelSettingInfrastructure();
-	return ResponseDTO.createBySuccess(page);
+		List<InfrastructureVo> page = tHotelSettingService.queryHotelSettingInfrastructure();
+		return ResponseDTO.createBySuccess(page);
 	}
 
-	//////////////////////////////////////////////////////// 客房订餐 //////////////////////////////////////////////////////// 
+	//////////////////////////////////////////////////////// 客房订餐
+	//////////////////////////////////////////////////////// ////////////////////////////////////////////////////////
 
 	@ApiOperation(value = "保存 订餐设置", notes = "保存 订餐设置")
-	@PostMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PostMapping(value = "{hotelId}/food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO foodCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.FoodSaveOrUpdate food, BindingResult result, HttpSession session) {
+	public ResponseDTO foodCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.FoodSaveOrUpdate food,
+			@PathVariable("hotelId") Integer hotelId, BindingResult result, HttpSession session) {
 		InvalidParameter(result);
 		Integer busid = getLoginUserId(session);
 		Date date = new Date();
 		TFood f = new TFood();
 		BeanUtils.copyProperties(food, f);
 		THotel th = tHotelService.selectById(f.getHotelId());
-		if(f.getId() == null) {
+		if (f.getId() == null) {
 			f.setCreatedAt(date);
 			f.setCreatedBy(busid);
 		}
-		if(f.getFoodProvides().equals(0)) {
+		if (f.getFoodProvides().equals(0)) {
 			f.setFoodProvidesName(th.getName());
 		}
 		f.setUpdatedAt(date);
 		f.setUpdatedBy(busid);
-		if(f.insertOrUpdate()) {
+		if (f.insertOrUpdate()) {
 			return ResponseDTO.createBySuccess();
-		}
-		else {
+		} else {
 			return ResponseDTO.createByError();
 		}
 	}
 
 	@ApiOperation(value = "查询 订餐设置 列表", notes = "查询 订餐设置 列表")
-	@GetMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<Page<FoodVo>> foodR(@Param("参数") @ModelAttribute HotelPage hpage) {
-		Page<FoodVo> page = tFoodService.queryFood(hpage);
+	@GetMapping(value = "{hotelId}/food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<Page<FoodVo>> foodR(@Param("参数") @ModelAttribute HotelPage hpage,
+			@PathVariable("hotelId") Integer hotelId) {
+		Page<FoodVo> page = tFoodService.queryFood(hpage, hotelId);
 		return ResponseDTO.createBySuccess(page);
 	}
 
 	@ApiOperation(value = "查询 订餐设置 对象", notes = "查询 订餐设置 对象")
-	@GetMapping(value = "food/{foodId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<TFood> foodROne(@PathVariable("foodId") @ApiParam("订餐ID") Integer foodId) {
+	@GetMapping(value = "{hotelId}/food/{foodId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<FoodVo> foodROne(@PathVariable("foodId") @ApiParam("订餐ID") Integer foodId,
+			@PathVariable("hotelId") Integer hotelId) {
 		TFood food = tFoodService.selectById(foodId);
 		FoodVo iFood = new FoodVo();
 		BeanUtils.copyProperties(food, iFood);
-		return ResponseDTO.createBySuccess(food);
+		return ResponseDTO.createBySuccess(iFood);
 	}
 
 	@ApiOperation(value = "删除 订餐设置", notes = "删除 订餐设置")
-	@DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@DeleteMapping(value = "{hotelId}/food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO foodD(@RequestBody @ApiParam("订餐ID 数组") List<Integer> ids, HttpSession session) {
+	public ResponseDTO foodD(@RequestBody @ApiParam("订餐ID 数组") List<Integer> ids,
+			@PathVariable("hotelId") Integer hotelId, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		TFood f = new TFood();
 		Wrapper<TFood> wrapper = new EntityWrapper<>();
@@ -156,10 +164,9 @@ public class HotelMobileController extends BaseController {
 		f.setUpdatedBy(busid);
 		f.setMarkModified(CommonConst.DELETED);
 		wrapper.in("id", ids);
-		if(tFoodService.update(f, wrapper)) {
+		if (tFoodService.update(f, wrapper)) {
 			return ResponseDTO.createBySuccess();
-		}
-		else {
+		} else {
 			return ResponseDTO.createByError();
 		}
 	}

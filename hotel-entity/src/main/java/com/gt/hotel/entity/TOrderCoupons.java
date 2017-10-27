@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 基础设施 包含 酒店 客房
+ * 订单与优惠券 1 : N 
  * </p>
  *
  * @author 
@@ -22,28 +22,22 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class TInfrastructure extends Model<TInfrastructure> {
+public class TOrderCoupons extends Model<TOrderCoupons> {
 
     private static final long serialVersionUID = 1L;
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
+	private Integer orderId;
+	private String orderNum;
     /**
-     * 名称
+     * 优惠券ID
      */
-	private String name;
+	private Integer couponsId;
     /**
-     * 图标地址
+     * 优惠券数量
      */
-	private String iconUrl;
-    /**
-     * 模块 hotel 酒店基础设施 room 客房基础设施 字典值 sys_dictionary_type.id=5
-     */
-	private String module;
-    /**
-     * 排序字段 根据这个排序
-     */
-	private Integer sortBy;
+	private Integer couponsNum;
 
 
 	@Override

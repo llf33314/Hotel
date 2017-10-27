@@ -66,7 +66,7 @@ public class TActivityServiceImpl extends BaseServiceImpl< TActivityDAO, TActivi
 		BeanUtils.copyProperties(arooms, a);
 		BeanUtils.copyProperties(arooms, ad);
 		//保存活动
-		a.setExternalNumber("HD"+date.getTime());
+		a.setActivityNum("HD"+date.getTime());
 		if(a.getId() == null){
 			a.setCreatedAt(date);
 			a.setCreatedBy(busid);

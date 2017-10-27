@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * ERP 功能授权管理
+ * 系统操作日志
  * </p>
  *
  * @author 
@@ -23,48 +23,45 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class TAuthorization extends Model<TAuthorization> {
+public class SysOperationLog extends Model<SysOperationLog> {
 
     private static final long serialVersionUID = 1L;
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
     /**
-     * 账号ID
+     * module =HOTEL 则hotel_id =ROOM 则 room_id =ROOM_CATEGORY 则 房型ID =ORDER 则 order_id 等操作日志
      */
-	private Integer accountId;
+	private Integer referenceId;
+	private String module;
     /**
-     * 酒店ID
+     * 动作 module =ORDER 下的 改价功能 例如 客房状态需要记录
      */
-	private Integer hotelId;
+	private String action;
     /**
-     * 功能ID 复数 存储方式：1,2,3,4 代表功能 =1 体现 =2 免押金 =3 修改房价 =4 挂账 来自 sys_dictionary.dict_type_id=3
+     * 修改详情： 例如 订单下的改价功能 修改 原价格 288 -> 188 价格 
      */
-	private String functionIds;
+	private String modifyDetails;
     /**
-     * 是否已扫码授权 0 是 1 否
+     * ip 地址
      */
-	private Integer scanCodeAuthorization;
+	private String ipAddress;
     /**
-     * 标记备注 0 启用 1 禁用 2 删除 默认0  可查看 sys_dictionary.dict_type_id=2
+     * 处理结果 0 成功 1 失败
      */
-	private Integer markModified;
+	private Integer result;
     /**
-     * 创建者ID
+     * 操作用户
      */
-	private Integer createdBy;
+	private Integer operationId;
+    /**
+     * 操作用户名
+     */
+	private String operatinName;
     /**
      * 创建时间
      */
-	private Date createdAt;
-    /**
-     * 最后修改人 ID
-     */
-	private Integer updatedBy;
-    /**
-     * 最后修改时间
-     */
-	private Date updatedAt;
+	private Date createTime;
 
 
 	@Override

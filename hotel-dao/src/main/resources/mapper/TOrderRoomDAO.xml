@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TOrderRoomDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TOrderRoom">
+		<id column="order_id" property="orderId" />
+		<result column="order_num" property="orderNum" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="hotel_name" property="hotelName" />
+		<result column="category_id" property="categoryId" />
+		<result column="category_name" property="categoryName" />
+		<result column="check_in_way" property="checkInWay" />
+		<result column="room_num" property="roomNum" />
+		<result column="customer_name" property="customerName" />
+		<result column="customer_id_type" property="customerIdType" />
+		<result column="customer_id_card" property="customerIdCard" />
+		<result column="customer_id_card_image" property="customerIdCardImage" />
+		<result column="customer_phone" property="customerPhone" />
+		<result column="number" property="number" />
+		<result column="room_in_time" property="roomInTime" />
+		<result column="room_out_time" property="roomOutTime" />
+		<result column="rack_rate" property="rackRate" />
+		<result column="receivable_price" property="receivablePrice" />
+		<result column="deposit" property="deposit" />
+		<result column="room_price" property="roomPrice" />
+		<result column="from" property="from" />
+		<result column="pay_time" property="payTime" />
+		<result column="pay_status" property="payStatus" />
+		<result column="activity_id" property="activityId" />
+		<result column="completion_time" property="completionTime" />
+		<result column="create_time" property="createTime" />
+		<result column="mark_modified" property="markModified" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at
+    </sql>
+
+</mapper>

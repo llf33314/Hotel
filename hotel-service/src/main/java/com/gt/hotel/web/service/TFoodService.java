@@ -21,6 +21,7 @@ public interface TFoodService extends BaseService<TFood> {
 	 * @param hpage
 	 * @return
 	 */
-	Page<FoodVo> queryFood(HotelPage hpage);
+	Page<FoodVo> queryFood(HotelPage hpage, Integer hotelId);
+
 	
 }

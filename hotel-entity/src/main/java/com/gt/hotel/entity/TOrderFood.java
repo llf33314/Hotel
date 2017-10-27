@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * ERP 功能授权管理
+ * 订餐订单 独立订单
  * </p>
  *
  * @author 
@@ -23,28 +23,67 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class TAuthorization extends Model<TAuthorization> {
+public class TOrderFood extends Model<TOrderFood> {
 
     private static final long serialVersionUID = 1L;
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
     /**
-     * 账号ID
+     * 总订单id
      */
-	private Integer accountId;
+	private Integer orderId;
     /**
-     * 酒店ID
+     * 订单编号
      */
+	private String orderNum;
 	private Integer hotelId;
     /**
-     * 功能ID 复数 存储方式：1,2,3,4 代表功能 =1 体现 =2 免押金 =3 修改房价 =4 挂账 来自 sys_dictionary.dict_type_id=3
+     * 酒店名称
      */
-	private String functionIds;
+	private String hotelName;
+	private String roomNum;
+	private Integer categoryId;
     /**
-     * 是否已扫码授权 0 是 1 否
+     * 房型名称
      */
-	private Integer scanCodeAuthorization;
+	private String categoryName;
+    /**
+     * 客户姓名
+     */
+	private String customerName;
+    /**
+     * 客户联系电话
+     */
+	private String customerPhone;
+    /**
+     * 订单状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 默认0
+     */
+	private Integer orderStatus;
+    /**
+     * 支付状态：=0 待支付 =1 已支付 =2 已退款
+     */
+	private Integer payStatus;
+    /**
+     * 退款到账时间
+     */
+	private Date refundTime;
+    /**
+     * 支付时间
+     */
+	private Date payTime;
+    /**
+     * 创建订单时间
+     */
+	private Date createTime;
+    /**
+     * 订单完成时间( 确认订单已完成 )
+     */
+	private Date completionTime;
+    /**
+     * 订餐订单总价
+     */
+	private Integer foodTotalPrice;
     /**
      * 标记备注 0 启用 1 禁用 2 删除 默认0  可查看 sys_dictionary.dict_type_id=2
      */

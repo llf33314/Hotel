@@ -3,7 +3,6 @@ package com.gt.hotel.entity;
 import java.io.Serializable;
 
 import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import java.io.Serializable;
 
@@ -18,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author 
- * @since 2017-10-26
+ * @since 2017-10-27
  */
 @Data
 @Accessors(chain = true)
@@ -47,13 +46,17 @@ public class THotelSetting extends Model<THotelSetting> {
      */
 	private Integer noticeEnable;
     /**
-     * 公告
+     * 公告内容
      */
 	private String bulletin;
     /**
      * 是否显示剩余房间数 默认 1 关闭 0 开启
      */
 	private Integer remnantRoomEnable;
+    /**
+     * 开启客房订餐 0 开启  1 不开启 默认1
+     */
+	private Integer roomReservationEnable;
     /**
      * 餐饮支付方式 1 在线 2 到付 3 在线&到付
      */
@@ -67,10 +70,9 @@ public class THotelSetting extends Model<THotelSetting> {
      */
 	private String reservationCheckOutPhone;
     /**
-     * 发票支持的类目 1 办公用品 2 住宿费 3 餐费 4 培训费 5 打球费 6 健身费 存储方式 1,2,3,4,5 or 1,2,3
+     * 发票支持的类目 1 办公用品 2 住宿费 3 餐费 4 培训费 5 打球费 6 健身费 存储方式 1,2,3,4,5 or 1,2,3 来自sys_dictionary.dict_type_id = 4
      */
-	@TableField("Invoice_category")
-	private String InvoiceCategory;
+	private String invoiceCategorys;
     /**
      * 创建者ID
      */
@@ -87,10 +89,6 @@ public class THotelSetting extends Model<THotelSetting> {
      * 最后修改时间
      */
 	private Date updatedAt;
-    /**
-     * 开启客房订餐 0 开启  1 不开启 默认1
-     */
-	private Integer roomReservationEnable;
 
 
 	@Override

@@ -37,7 +37,7 @@ public class FoodVo {
 	private String foodProvidesName;
 
 	@ApiModelProperty("新订单接收(短信)手机号")
-	private Integer newOrderReceive;
+	private String newOrderReceive;
 
 	@ApiModelProperty("菜品图片URL")
 	private String foodImage;

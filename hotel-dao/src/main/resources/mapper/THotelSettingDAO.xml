@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gt.hotel.mapper.THotelSettingDAO">
+<mapper namespace="com.gt.hotel.dao.THotelSettingDAO">
 
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotelSetting">
@@ -14,7 +14,7 @@
 		<result column="food_pay_mode" property="foodPayMode" />
 		<result column="reservation_check_out_enable" property="reservationCheckOutEnable" />
 		<result column="reservation_check_out_phone" property="reservationCheckOutPhone" />
-		<result column="Invoice_category" property="InvoiceCategory" />
+		<result column="Invoice_categorys" property="InvoiceCategorys" />
 		<result column="created_by" property="createdBy" />
 		<result column="created_at" property="createdAt" />
 		<result column="updated_by" property="updatedBy" />
@@ -26,7 +26,7 @@
 	<sql id="Base_Column_List">
 		hotel_id, pay_mode, sms_enable, sms_phone, notice_enable, bulletin,
 		remnant_room_enable, food_pay_mode, reservation_check_out_enable,
-		reservation_check_out_phone, Invoice_category AS InvoiceCategory,
+		reservation_check_out_phone, Invoice_categorys AS InvoiceCategorys,
 		created_by, created_at, updated_by, updated_at,
 		room_reservation_enable
 	</sql>

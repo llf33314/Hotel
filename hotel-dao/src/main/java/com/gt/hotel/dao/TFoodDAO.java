@@ -25,6 +25,6 @@ public interface TFoodDAO extends BaseMapper<TFood> {
 	 * @param hpage
 	 * @return
 	 */
-	List<FoodVo> queryFood(@Param("param") HotelPage hpage, @Param("page") Pagination page);
+	List<FoodVo> queryFood(@Param("param") HotelPage hpage, @Param("hotelId") Integer hotelId, @Param("page") Pagination page);
 
 }

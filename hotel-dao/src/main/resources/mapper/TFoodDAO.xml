@@ -48,6 +48,6 @@
 	<select id="queryFood" resultType="com.gt.hotel.vo.FoodVo">
 		SELECT <include refid="Base_Column_List_VO" /> 
 		FROM t_food 
-		WHERE mark_modified = 0 
+		WHERE mark_modified = 0 AND hotel_id = #{hotelId} 
 	</select>
 </mapper>

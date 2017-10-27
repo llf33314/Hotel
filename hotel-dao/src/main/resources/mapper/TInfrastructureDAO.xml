@@ -8,11 +8,12 @@
         <result column="name" property="name"/>
         <result column="icon_url" property="iconUrl"/>
         <result column="module" property="module"/>
+        <result column="sort_by" property="sortBy" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, icon_url AS iconUrl, module
+        id, name, icon_url AS iconUrl, module, sort_by AS sortBy 
     </sql>
 
 </mapper>

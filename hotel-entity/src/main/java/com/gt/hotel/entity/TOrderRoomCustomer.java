@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * ERP 功能授权管理
+ * 登记入住客户 与 订单记录 一间客房 1 : n 入住客户身份信息(类似客户入住历史记录)
  * </p>
  *
  * @author 
@@ -23,28 +23,40 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class TAuthorization extends Model<TAuthorization> {
+public class TOrderRoomCustomer extends Model<TOrderRoomCustomer> {
 
     private static final long serialVersionUID = 1L;
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
     /**
-     * 账号ID
+     * 入住客户姓名
      */
-	private Integer accountId;
+	private String name;
     /**
-     * 酒店ID
+     * 客户证件类型
      */
-	private Integer hotelId;
+	private Integer idType;
     /**
-     * 功能ID 复数 存储方式：1,2,3,4 代表功能 =1 体现 =2 免押金 =3 修改房价 =4 挂账 来自 sys_dictionary.dict_type_id=3
+     * 手机号码
      */
-	private String functionIds;
+	private String phone;
     /**
-     * 是否已扫码授权 0 是 1 否
+     * 证件号
      */
-	private Integer scanCodeAuthorization;
+	private String idCard;
+    /**
+     * 扫描证件照
+     */
+	private String idCardImage;
+    /**
+     * 订单ID
+     */
+	private Integer orderId;
+    /**
+     * 房号
+     */
+	private String roomNum;
     /**
      * 标记备注 0 启用 1 禁用 2 删除 默认0  可查看 sys_dictionary.dict_type_id=2
      */

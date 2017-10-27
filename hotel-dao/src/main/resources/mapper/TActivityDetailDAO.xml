@@ -2,24 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.TActivityDetailDAO">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TActivityDetail">
-        <id column="activity_id" property="activityId"/>
-        <result column="activity_type" property="activityType"/>
-        <result column="check_in_time" property="checkInTime"/>
-        <result column="check_in_period" property="checkInPeriod"/>
-        <result column="min_purchase_number" property="minPurchaseNumber"/>
-        <result column="created_by" property="createdBy"/>
-        <result column="created_at" property="createdAt"/>
-        <result column="updated_by" property="updatedBy"/>
-        <result column="updated_at" property="updatedAt"/>
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TActivityDetail">
+		<id column="activity_id" property="activityId" />
+		<result column="activity_type" property="activityType" />
+		<result column="check_in_time" property="checkInTime" />
+		<result column="check_in_period" property="checkInPeriod" />
+		<result column="min_purchase_number" property="minPurchaseNumber" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        activity_id AS activityId, activity_type AS activityType, check_in_time AS checkInTime, check_in_period AS
-        checkInPeriod, min_purchase_number AS minPurchaseNumber,
-        created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS updatedAt
+        activity_id, activity_type, check_in_time, check_in_period, min_purchase_number, created_by, created_at, updated_by, updated_at
     </sql>
 
 </mapper>

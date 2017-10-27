@@ -2,9 +2,9 @@ package com.gt.hotel.entity;
 
 import java.io.Serializable;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import java.util.Date;
 import com.baomidou.mybatisplus.enums.IdType;
+import java.util.Date;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.activerecord.Model;
 import java.io.Serializable;
 
@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author 
- * @since 2017-10-16
+ * @since 2017-10-27
  */
 @Data
 @Accessors(chain = true)
@@ -52,7 +52,7 @@ public class TActivityRoom extends Model<TActivityRoom> {
     /**
      * 客房编号
      */
-	private String roomNumber;
+	private String roomNum;
     /**
      * 门市价
      */

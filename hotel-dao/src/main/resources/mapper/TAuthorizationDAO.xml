@@ -7,7 +7,6 @@
 		<id column="id" property="id" />
 		<result column="account_id" property="accountId" />
 		<result column="hotel_id" property="hotelId" />
-		<result column="shop_id" property="shopId" />
 		<result column="function_ids" property="functionIds" />
 		<result column="scan_code_authorization" property="scanCodeAuthorization" />
 		<result column="mark_modified" property="markModified" />
@@ -17,22 +16,31 @@
 		<result column="updated_at" property="updatedAt" />
 	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, account_id, hotel_id, shop_id, function_ids, scan_code_authorization, mark_modified, created_by, created_at, updated_by, updated_at
-    </sql>
-    <sql id="Base_Column_List_VO">
-        t_authorization.id, t_authorization.account_id accountId, t_authorization.hotel_id hotelId, t_authorization.shop_id shopId, 
-        t_authorization.function_ids functionIds, t_authorization.scan_code_authorization scanCodeAuthorization, t_authorization.mark_modified markModified, t_authorization.created_by createdBy, 
-        t_authorization.created_at createdAt, t_authorization.updated_by updatedBy, t_authorization.updated_at updatedAt 
-    </sql>
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, account_id, hotel_id, function_ids, scan_code_authorization,
+		mark_modified, created_by, created_at, updated_by, updated_at
+	</sql>
+	<sql id="Base_Column_List_VO">
+		t_authorization.id, t_authorization.account_id accountId, t_authorization.hotel_id
+		hotelId,
+		t_authorization.function_ids functionIds, t_authorization.scan_code_authorization
+		scanCodeAuthorization, t_authorization.mark_modified markModified,
+		t_authorization.created_by createdBy,
+		t_authorization.created_at createdAt, t_authorization.updated_by updatedBy,
+		t_authorization.updated_at updatedAt
+	</sql>
 
 	<select id="queryAuthor" resultType="com.gt.hotel.vo.AuthorizationVo">
-		SELECT <include refid="Base_Column_List_VO" /> , t_hotel.`name` hotelName, 
-			(SELECT GROUP_CONCAT(dict_cn_name) FROM sys_dictionary WHERE FIND_IN_SET(sys_dictionary.id, t_authorization.function_ids)) functions 
-		FROM t_authorization JOIN t_hotel ON t_authorization.hotel_id = t_hotel.id 
-		WHERE t_authorization.mark_modified != 2 
-		GROUP BY t_authorization.id 
+		SELECT
+		<include refid="Base_Column_List_VO" />
+		, t_hotel.`name` hotelName,
+		(SELECT GROUP_CONCAT(dict_cn_name) FROM sys_dictionary WHERE
+		FIND_IN_SET(sys_dictionary.id, t_authorization.function_ids))
+		functions
+		FROM t_authorization JOIN t_hotel ON t_authorization.hotel_id = t_hotel.id
+		WHERE t_authorization.mark_modified != 2
+		GROUP BY t_authorization.id
 	</select>
-	
+
 </mapper>
