@@ -29,13 +29,54 @@
 		<result column="updated_at" property="updatedAt" />
 	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, order_num, hotel_id, bus_id, member_id, pay_type, pay_status, pay_time, order_status, create_time, real_price, bill_price, fb, integral, order_coupons_id, receivable_price, remark, completion_time, mark_modified, created_by, created_at, updated_by, updated_at
-    </sql>
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, order_num, hotel_id, bus_id, member_id, pay_type, pay_status,
+		pay_time, order_status, create_time, real_price, bill_price, fb,
+		integral, order_coupons_id, receivable_price, remark, completion_time,
+		mark_modified, created_by, created_at, updated_by, updated_at
+	</sql>
+	<sql id="Base_Column_List_VO">
+		t_order.id, t_order.order_num orderNum, t_order.hotel_id hotelId, t_order.bus_id busId, t_order.member_id memberId, t_order.pay_type payType, t_order.pay_status payStatus,
+		t_order.pay_time payTime, t_order.order_status orderStatus, t_order.create_time createTime, t_order.real_price realPrice, t_order.bill_price billPrice, t_order.fb,
+		t_order.integral, t_order.order_coupons_id orderCouponsId, t_order.receivable_price receivablePrice, t_order.remark, t_order.completion_time completionTime,
+		t_order.mark_modified markModified, t_order.created_by createdBy, t_order.created_at createdAt, t_order.updated_by updatedBy, t_order.updated_at updatedAt 
+	</sql>
 
-	<!-- <select id="queryRoomOrder" resultType="">
-		
-	</select> -->
+	<select id="queryRoomOrder" resultType="com.gt.hotel.vo.HotelBackRoomOrderVo">
+		SELECT t_order.id, t_order.order_num orderNum, t_order.hotel_id hotelId, t_order.bus_id busId, t_order.member_id memberId, t_order.pay_type payType, t_order.pay_status payStatus,
+			t_order.pay_time payTime, t_order.order_status orderStatus, t_order.create_time createTime, t_order.real_price realPrice, t_order.bill_price billPrice, t_order.fb,
+			t_order.integral, t_order.order_coupons_id orderCouponsId, t_order.receivable_price receivablePrice, t_order.remark, t_order.completion_time completionTime,
+			t_order_room.hotel_name hotelName, t_order_room.category_id categoryId, t_order_room.category_name categoryName, t_order_room.check_in_way checkInWay, t_order_room.room_num roomNum,
+			t_order_room.customer_name customerName, t_order_room.customer_id_type customerIdType, t_order_room.customer_id_card customerIdCard, 
+			t_order_room.customer_id_card_image customerIdCardImage, t_order_room.customer_phone customerPhone, t_order_room.number, 
+			t_order_room.room_in_time roomInTime, t_order_room.room_out_time roomOutTime, t_order_room.deposit, t_order_room.room_price roomPrice, t_order_room.from,
+			t_order_room.activity_id activityId 
+		roomOutTime, t_order_room.rack_rate rackRate,
+		FROM t_order 
+		JOIN t_order_room ON t_order.id = t_order_room.order_id 
+		WHERE t_order.mark_modified = 0 
+		<if test="busid != null">
+			AND t_order.bus_id = #{busid} 
+		</if>
+		<if test="param.hotelId != null">
+			AND t_order.hotel_id = #{param.hotelId} 
+		</if>
+		<if test="param.orderStatus != null">
+			AND t_order.order_status = #{param.orderStatus} 
+		</if>
+		<if test="param.payStatus != null">
+			AND t_order.pay_status = #{param.payStatus} 
+		</if>
+		<if test="param.roomInTime != null">
+			<![CDATA[ AND t_order_room.room_in_time <= #{param.roomInTime} ]]>
+		</if>
+		<if test="param.roomOutTime != null">
+			<![CDATA[ AND t_order_room.room_out_time >= #{param.roomOutTime} ]]>
+		</if>
+		<if test="param.keyword != null">
+			AND (t_order_room.customer_name = #{param.keyword} OR t_order_room.customer_phone = #{param.keyword}) 
+		</if>
+	</select>
 
 </mapper>

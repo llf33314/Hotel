@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * 菜品
  *
@@ -37,7 +39,7 @@ public class FoodVo {
     private String foodProvidesName;
 
 	@ApiModelProperty("新订单接收(短信)手机号")
-	private String newOrderReceive;
+	private String orderReceivePhone;
 
     @ApiModelProperty("菜品图片URL")
     private String foodImage;
@@ -46,36 +48,44 @@ public class FoodVo {
     private Integer breakfastEnable;
 
     @ApiModelProperty("早餐开始时间 (示例: 6:00-10:00)")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date breakfastBegin;
 
     @ApiModelProperty("早餐结束时间 (示例: 6:00-10:00)")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date breakfastEnd;
 
     @ApiModelProperty("午餐时段是否提供 0 提供 1 不提供")
     private Integer lunchEnable;
 
     @ApiModelProperty("午餐开始时间 (示例: 6:00-10:00)")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date lunchBegin;
 
     @ApiModelProperty("午餐结束时间 (示例: 6:00-10:00)")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date lunchEnd;
 
     @ApiModelProperty("晚餐是否提供 0 是 1 否")
     private Integer dinnerEnable;
 
     @ApiModelProperty("晚餐开始时间")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date dinnerBegin;
 
     @ApiModelProperty("晚餐结束时间")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date dinnerEnd;
 
     @ApiModelProperty("宵夜是否提供 0 是 1 否")
     private Integer supperEnable;
 
     @ApiModelProperty("宵夜开始时间")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date supperBegin;
 
     @ApiModelProperty("宵夜结束时间")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date supperEnd;
 
 }

@@ -10,8 +10,6 @@ import com.gt.hotel.entity.TFood;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.param.HotelMobileParameter;
 import com.gt.hotel.param.HotelPage;
-import com.gt.hotel.param.InfrastructureRelationParamter;
-import com.gt.hotel.vo.FileRecordVo;
 import com.gt.hotel.vo.FoodVo;
 import com.gt.hotel.vo.HotelSettingVo;
 import com.gt.hotel.vo.InfrastructureVo;
@@ -68,12 +66,8 @@ public class HotelMobileController extends BaseController {
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO phoneSettingCU(
-			@Validated @ModelAttribute HotelMobileParameter.MobileSaveOrUpdate setting,
-			@RequestBody List<InfrastructureRelationParamter> installations,
-			BindingResult result,
+			@Validated @RequestBody @Param("参数") HotelMobileParameter.MobileSaveOrUpdate setting, BindingResult result,
 			HttpSession session) {
-//		System.err.println(imageurls);
-		System.err.println(installations);
 		InvalidParameter(result);
 		Integer busid = getLoginUserId(session);
 		tHotelSettingService.saveSetting(busid, setting);

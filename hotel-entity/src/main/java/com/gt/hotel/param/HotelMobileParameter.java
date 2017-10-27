@@ -67,13 +67,13 @@ public class HotelMobileParameter {
 	    private String  reservationCheckOutPhone;
 	    
 	    @ApiModelProperty(value = "发票支持的类目  存储方式 1,2,3,4,5 or 1,2,3")
-	    private String  InvoiceCategorys;
+	    private String  invoiceCategorys;
 	    
-//	    @ApiModelProperty(value =  "图片地址 集合" )
-//	    private List<FileRecordVo> imageurls;
-//	    
-//	    @ApiModelProperty( value = "设施ID 集合" )
-//	    private List<InfrastructureRelationParamter> installations;
+	    @ApiModelProperty(value =  "图片地址 集合" )
+	    private List<FileRecordVo> imageurls;
+	    
+	    @ApiModelProperty( value = "设施ID 集合" )
+	    private List<InfrastructureRelationParamter> installations;
 	}
 	
 	@Data
@@ -104,9 +104,9 @@ public class HotelMobileParameter {
 		@ApiModelProperty(value = "提供方名称 food_provides =0 为酒店名称 =1 则填写合作方名称")
 		private String foodProvidesName;
 
-		@ApiModelProperty(value = "新订单接收(短信)手机号", required = true)
-		@NotNull(message = "新订单接收(短信)手机号 不能为空")
-		private String newOrderReceive;
+//		@ApiModelProperty(value = "新订单接收(短信)手机号", required = true)
+//		@NotNull(message = "新订单接收(短信)手机号 不能为空")
+//		private String newOrderReceive;
 
 		@ApiModelProperty(value = "菜品图片URL")
 		private String foodImage;
@@ -154,6 +154,10 @@ public class HotelMobileParameter {
 		@ApiModelProperty(value = "宵夜结束时间")
 		@JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
 		private Date supperEnd;
+		
+		@ApiModelProperty(value = "新订单接收(短信)手机号", required = true)
+		@NotNull(message = "新订单接收(短信)手机号不能为空")
+	    private String  orderReceivePhone;
 	}
 	
 }

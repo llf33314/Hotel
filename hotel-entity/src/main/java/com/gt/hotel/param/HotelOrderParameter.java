@@ -2,6 +2,8 @@ package com.gt.hotel.param;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,9 +29,11 @@ public class HotelOrderParameter {
 		private Integer orderStatus;
 		
 		@ApiModelProperty(value = "入住时间")
-		private Date roomOnTime;
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		private Date roomInTime;
 
 		@ApiModelProperty(value = "离店时间")
+		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date roomOutTime;
 	}
 

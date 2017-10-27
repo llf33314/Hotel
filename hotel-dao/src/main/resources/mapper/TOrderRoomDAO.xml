@@ -37,9 +37,35 @@
 		<result column="updated_at" property="updatedAt" />
 	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at
-    </sql>
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		order_id, order_num, hotel_id, hotel_name, category_id, category_name,
+		check_in_way, room_num, customer_name, customer_id_type,
+		customer_id_card, customer_id_card_image, customer_phone, number,
+		room_in_time, room_out_time, rack_rate, receivable_price, deposit,
+		room_price, from, pay_time, pay_status, activity_id, completion_time,
+		create_time, mark_modified, created_by, created_at, updated_by,
+		updated_at
+	</sql>
+	<sql id="Base_Column_List_VO">
+		t_order_room.order_id orderId, t_order_room.order_num orderNum, t_order_room.hotel_id
+		hotelId, t_order_room.hotel_name hotelName, t_order_room.category_id
+		categoryId, t_order_room.category_name categoryName,
+		t_order_room.check_in_way checkInWay, t_order_room.room_num roomNum,
+		t_order_room.customer_name customerName, t_order_room.customer_id_type
+		customerIdType, t_order_room.customer_id_card customerIdCard,
+		t_order_room.customer_id_card_image customerIdCardImage,
+		t_order_room.customer_phone customerPhone, t_order_room.number,
+		t_order_room.room_in_time roomInTime, t_order_room.room_out_time
+		roomOutTime, t_order_room.rack_rate rackRate,
+		t_order_room.receivable_price receivablePrice, t_order_room.deposit,
+		t_order_room.room_price roomPrice, t_order_room.from,
+		t_order_room.pay_time payTime, t_order_room.pay_status payStatus,
+		t_order_room.activity_id activityId, t_order_room.completion_time
+		completionTime, t_order_room.create_time createTime,
+		t_order_room.mark_modified markModified, t_order_room.created_by
+		createdBy, t_order_room.created_at createdAt, t_order_room.updated_by
+		updatedBy, t_order_room.updated_at updatedAt
+	</sql>
 
 </mapper>
