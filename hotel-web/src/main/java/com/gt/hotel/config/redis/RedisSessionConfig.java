@@ -36,13 +36,14 @@ public class RedisSessionConfig {
      *
      * @return DefaultCookieSerializer
      */
-    @Bean(name = "defaultCookieSerializer") public DefaultCookieSerializer defaultCookieSerializer() {
-	LOG.debug("domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath);
-	DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
-	//	cookieSerializer.setDomainName( domainName );
-	cookieSerializer.setCookieName(cookieName);
-	cookieSerializer.setCookiePath(cookiePath);
-	return cookieSerializer;
+    @Bean(name = "defaultCookieSerializer")
+    public DefaultCookieSerializer defaultCookieSerializer() {
+        LOG.debug("domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath);
+        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+        //	cookieSerializer.setDomainName( domainName );
+        cookieSerializer.setCookieName(cookieName);
+        cookieSerializer.setCookiePath(cookiePath);
+        return cookieSerializer;
     }
 
 }

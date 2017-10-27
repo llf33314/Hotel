@@ -1,9 +1,9 @@
 package com.gt.hotel.vo;
 
-import java.util.Date;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * <p>
@@ -71,8 +71,8 @@ public class FileRecordVo {
      */
     @ApiModelProperty("最后修改时间")
     private Date    updatedAt;
-    
+
     @ApiModelProperty("子模块")
-	private String subModule;
+    private String subModule;
 
 }

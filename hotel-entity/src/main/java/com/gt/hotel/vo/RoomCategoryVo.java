@@ -1,60 +1,56 @@
 package com.gt.hotel.vo;
 
-import java.util.List;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
-import com.baomidou.mybatisplus.annotations.TableField;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-@Api( description = "房型列表对象" )
+import java.util.List;
+
+@Api(description = "房型列表对象")
 @Data
 public class RoomCategoryVo {
-    @ApiModelProperty( "酒店ID" )
+    @ApiModelProperty("酒店ID")
     private Integer hotelId;
 
-    @ApiModelProperty( "房型ID" )
+    @ApiModelProperty("房型ID")
     private Integer categoryId;
 
-    @ApiModelProperty( "房间类型" )
+    @ApiModelProperty("房间类型")
     private String name;
 
-    @ApiModelProperty( "门市价" )
+    @ApiModelProperty("门市价")
     private Integer rackRate;
 
-    @ApiModelProperty( "折扣率" )
+    @ApiModelProperty("折扣率")
     private Integer discount;
-    
+
     @ApiModelProperty("是否开启周末价 0 开启 1 禁用，即显示门市价即可")
     private Integer weekendFareEnable;
 
-    @ApiModelProperty( "周末价" )
+    @ApiModelProperty("周末价")
     private Integer weekendFare;
 
-    @ApiModelProperty( "押金" )
+    @ApiModelProperty("押金")
     private Integer deposit;
 
-    @ApiModelProperty( "房间总数" )
+    @ApiModelProperty("房间总数")
     private Integer roomCount;
-    
-    @ApiModelProperty( "是否开启早餐券 0 开启 1 关闭" )
+
+    @ApiModelProperty("是否开启早餐券 0 开启 1 关闭")
     private Integer breakfastEnable;
-    
-    @ApiModelProperty( "早餐数量" )
+
+    @ApiModelProperty("早餐数量")
     private Integer breakfastQuantity;
-    
+
     @ApiModelProperty(value = "简要说明")
-	private String desc;
+    private String desc;
 
     @ApiModelProperty("房间集合")
-    private List< RoomVo > tRoomList;
+    private List<RoomVo> tRoomList;
 
     @ApiModelProperty("图片集合")
     private List<FileRecordVo> images;
-    
+
     @ApiModelProperty("设施 关系-数值 集合")
     private List<InfrastructureRelationVo> infrastructureRelations;
 }

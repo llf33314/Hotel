@@ -20,9 +20,9 @@ public class BaseException extends RuntimeException {
     private String message;//错误消息
 
     public BaseException(String message) {
-	super(message);
-	this.code = ResponseEnums.ERROR.getCode();
-	this.message = message;
+        super(message);
+        this.code = ResponseEnums.ERROR.getCode();
+        this.message = message;
     }
 
     /**
@@ -31,9 +31,9 @@ public class BaseException extends RuntimeException {
      * @param responseEnums
      */
     public BaseException(ResponseEnums responseEnums) {
-	super(responseEnums.getMsg());
-	this.message = responseEnums.getMsg();
-	this.code = responseEnums.getCode();
+        super(responseEnums.getMsg());
+        this.message = responseEnums.getMsg();
+        this.code = responseEnums.getCode();
     }
 
     /**
@@ -43,13 +43,13 @@ public class BaseException extends RuntimeException {
      * @param message
      */
     public BaseException(int code, String message) {
-	super(message);
-	this.message = message;
-	this.code = code;
+        super(message);
+        this.message = message;
+        this.code = code;
     }
 
     public int getCode() {
-	return this.code;
+        return this.code;
     }
 
 }

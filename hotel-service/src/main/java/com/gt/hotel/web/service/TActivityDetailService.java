@@ -11,6 +11,6 @@ import com.gt.hotel.entity.TActivityDetail;
  * @author
  * @since 2017-10-09
  */
-public interface TActivityDetailService extends BaseService< TActivityDetail > {
+public interface TActivityDetailService extends BaseService<TActivityDetail> {
 
 }

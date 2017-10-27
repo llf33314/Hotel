@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-10-09
  */
 @Service
-public class TFileRecordServiceImpl extends BaseServiceImpl< TFileRecordDAO, TFileRecord > implements TFileRecordService {
+public class TFileRecordServiceImpl extends BaseServiceImpl<TFileRecordDAO, TFileRecord> implements TFileRecordService {
 
 }

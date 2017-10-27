@@ -1,14 +1,11 @@
 package com.gt.hotel.entity;
 
 import java.io.Serializable;
-
-import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.activerecord.Model;
-import java.io.Serializable;
 
-import com.baomidou.mybatisplus.annotations.Version;
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -27,65 +24,65 @@ public class TActivityRoom extends Model<TActivityRoom> {
 
     private static final long serialVersionUID = 1L;
 
-	@TableId(value="id", type= IdType.AUTO)
-	private Integer id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
     /**
      * 酒店ID
      */
-	private Integer hotelId;
+    private Integer hotelId;
     /**
      * 活动ID
      */
-	private Integer activityId;
+    private Integer activityId;
     /**
      * 房型ID
      */
-	private Integer categoryId;
+    private Integer categoryId;
     /**
      * 房型名称 冗余参数
      */
-	private String categoryName;
+    private String  categoryName;
     /**
      * 客房ID
      */
-	private Integer roomId;
+    private Integer roomId;
     /**
      * 客房编号
      */
 	private String roomNum;
-    /**
+    /* 
      * 门市价
      */
-	private Integer rackRate;
+    private Integer rackRate;
     /**
      * 活动价 单位分 记录
      */
-	private Integer activityPrice;
+    private Integer activityPrice;
     /**
      * 状态标记
      */
-	private Integer markModified;
+    private Integer markModified;
     /**
      * 创建者ID
      */
-	private Integer createdBy;
+    private Integer createdBy;
     /**
      * 创建时间
      */
-	private Date createdAt;
+    private Date    createdAt;
     /**
      * 最后修改人 ID
      */
-	private Integer updatedBy;
+    private Integer updatedBy;
     /**
      * 最后修改时间
      */
-	private Date updatedAt;
+    private Date    updatedAt;
 
 
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
+    @Override
+    protected Serializable pkVal() {
+        return this.id;
+    }
 
 }

@@ -43,10 +43,10 @@ public class SwaggerConfig {
     private static final String  LICENSE             = "swagger-ui";
     //
     private static final String  LICENSE_URL         = "/swagger/index.html";
-	
+
 	/* .tags 第一个参数必须是Tag，后面的是 Tag 类型的可选参数 new Tag(String,String) 第一个参数是key，第二个参数是Value。注解@Api#tags传入的是tag的key */
     /** * 可以定义多个组，比如本类中定义把test和demo区分开了 * （访问页面就可以看到效果了） * */
-	
+
 	/* */
 
     /**
@@ -54,9 +54,10 @@ public class SwaggerConfig {
      *
      * @return
      */
-    @Bean public Docket appletRestApi() {
-	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("applet").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-	    .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(APPLET_PACKAGE)).paths(PathSelectors.any()).build();
+    @Bean
+    public Docket appletRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("applet").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
+                .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(APPLET_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -64,9 +65,10 @@ public class SwaggerConfig {
      *
      * @return
      */
-    @Bean public Docket erpRestApi() {
-	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("erp").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-	    .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(ERP_PACKAGE)).paths(PathSelectors.any()).build();
+    @Bean
+    public Docket erpRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("erp").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
+                .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(ERP_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -74,9 +76,10 @@ public class SwaggerConfig {
      *
      * @return
      */
-    @Bean public Docket backRestApi() {
-	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("back").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-	    .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(BACK_PACKAGE)).paths(PathSelectors.any()).build();
+    @Bean
+    public Docket backRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("back").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
+                .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(BACK_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     /**
@@ -84,19 +87,20 @@ public class SwaggerConfig {
      *
      * @return
      */
-    @Bean public Docket mobileRestApi() {
-	return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("mobile").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
-	    .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(MOBILE_PACKAGE)).paths(PathSelectors.any()).build();
+    @Bean
+    public Docket mobileRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2).enable(swaggerShow).groupName("mobile").genericModelSubstitutes(DeferredResult.class).useDefaultResponseMessages(false)
+                .forCodeGeneration(true).apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage(MOBILE_PACKAGE)).paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {
-	return new ApiInfo(TITLE, // 大标题
-	    DESC, // 小标题
-	    VERSION, // 版本
-	    TERMS_OF_SERVICEURL, CONTACT, // 作者
-	    LICENSE, // 链接显示文字
-	    LICENSE_URL// 网站链接
-	);
+        return new ApiInfo(TITLE, // 大标题
+                DESC, // 小标题
+                VERSION, // 版本
+                TERMS_OF_SERVICEURL, CONTACT, // 作者
+                LICENSE, // 链接显示文字
+                LICENSE_URL// 网站链接
+        );
     }
 
 }

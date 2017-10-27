@@ -14,12 +14,12 @@ import java.util.Date;
  * 基础设施表关系(酒店/房型 关联的基础属性都在这里)
  * </p>
  *
- * @author
- * @since 2017-10-11
+ * @author zhangmz
+ * @since 2017-10-26
  */
 @Data
 @Accessors(chain = true)
-public class TInfrastructureRelation extends Model< TInfrastructureRelation > {
+public class TInfrastructureRelation extends Model<TInfrastructureRelation> {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,8 +58,10 @@ public class TInfrastructureRelation extends Model< TInfrastructureRelation > {
      */
     private String  displayValue;
 
-    @Override protected Serializable pkVal() {
-	return this.id;
+
+    @Override
+    protected Serializable pkVal() {
+        return this.id;
     }
 
 }

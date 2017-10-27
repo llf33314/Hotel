@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-10-09
  */
 @Service
-public class SysDictionaryTypeServiceImpl extends BaseServiceImpl< SysDictionaryTypeDAO, SysDictionaryType > implements SysDictionaryTypeService {
+public class SysDictionaryTypeServiceImpl extends BaseServiceImpl<SysDictionaryTypeDAO, SysDictionaryType> implements SysDictionaryTypeService {
 
 }

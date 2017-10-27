@@ -9,7 +9,7 @@ spring:
  application:
   name: hotel
  profiles:
-  active: dev
+  active: @activatedProperties@
  http:
   encoding:
     force: true

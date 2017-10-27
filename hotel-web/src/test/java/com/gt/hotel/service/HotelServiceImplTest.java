@@ -20,14 +20,15 @@ public class HotelServiceImplTest extends BasicTest {
     @Autowired
     private THotelService tHotelService;
 
-    @Test public void queryHotelHome() throws Exception {
-	PageHelper.startPage(1, 10);
+    @Test
+    public void queryHotelHome() throws Exception {
+        PageHelper.startPage(1, 10);
 
-	List< THotel > hotels = tHotelService.selectList(null);
-	Assert.isNull(hotels, "空");
-	for (int i = 0; i < hotels.size(); i++) {
-	    System.out.println(hotels.get(i).getAddress());
-	}
+        List<THotel> hotels = tHotelService.selectList(null);
+        Assert.isNull(hotels, "空");
+        for (int i = 0; i < hotels.size(); i++) {
+            System.out.println(hotels.get(i).getAddress());
+        }
 
     }
 

@@ -15,32 +15,32 @@ import com.gt.hotel.vo.HotelVo;
  * @author
  * @since 2017-10-09
  */
-public interface THotelService extends BaseService< THotel > {
+public interface THotelService extends BaseService<THotel> {
 
     /**
      * 查询 新增酒店 首页 酒店列表
      *
      * @param busid 用户ID
      * @param page  分页对象
-     *
      * @return 酒店列表
      */
     Page<HotelVo> queryHotelHome(Integer busid, HotelQuery hpage);
 
-	/**
-	 * 查询酒店ERP对象
-	 * @param hotelId 酒店ID
-	 * @return
-	 */
+    /**
+     * 查询酒店ERP对象
+     *
+     * @param hotelId 酒店ID
+     * @return
+     */
     HotelVo queryHotelERP(Integer hotelId);
 
     /**
      * 保存 ERP前台设置
+     *
      * @param busid 用户ID
-     * @param save 
+     * @param save
      */
-	void SaveHotelERP(Integer busid, ERPSave save);
-
+    void SaveHotelERP(Integer busid, ERPSave save);
 
 
 }

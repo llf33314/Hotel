@@ -1,9 +1,7 @@
 package com.gt.hotel.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -16,13 +14,12 @@ import java.util.Date;
  * 酒店主表
  * </p>
  *
- * @author
- * @since 2017-10-09
+ * @author zhangmz
+ * @since 2017-10-26
  */
 @Data
 @Accessors(chain = true)
-@TableName("t_hotel")
-public class THotel extends Model< THotel > {
+public class THotel extends Model<THotel> {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,12 +28,10 @@ public class THotel extends Model< THotel > {
     /**
      * 商家ID 酒店所有者
      */
-    @TableField("bus_id")
     private Integer busId;
     /**
      * 门店ID
      */
-    @TableField("shop_id")
     private Integer shopId;
     /**
      * 酒店名称
@@ -65,33 +60,30 @@ public class THotel extends Model< THotel > {
     private Double  longitude;
     private Double  latitude;
     /**
-     * 标记备注 0 默认开启 1 关闭 2 删除标记
+     * 标记备注 0 启用 1 禁用 2 删除 默认0  可查看 sys_dictionary.dict_type_id=2
      */
-    @TableField("mark_modified")
     private Integer markModified;
     /**
      * 创建者ID
      */
-    @TableField("created_by")
     private Integer createdBy;
     /**
      * 创建时间
      */
-    @TableField("created_at")
     private Date    createdAt;
     /**
      * 最后修改人 ID
      */
-    @TableField("updated_by")
     private Integer updatedBy;
     /**
      * 最后修改时间
      */
-    @TableField("updated_at")
     private Date    updatedAt;
 
-    @Override protected Serializable pkVal() {
-	return this.id;
+
+    @Override
+    protected Serializable pkVal() {
+        return this.id;
     }
 
 }

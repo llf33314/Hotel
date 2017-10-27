@@ -22,14 +22,16 @@ public class BasicTest {
     // 开始时间
     private Long start_time;
 
-    @Before public void start() {
-	start_time = System.currentTimeMillis();
-	this.logger.info("=======================================  单元测试Start =======================================");
+    @Before
+    public void start() {
+        start_time = System.currentTimeMillis();
+        this.logger.info("=======================================  单元测试Start =======================================");
     }
 
-    @After public void end() {
-	this.logger.info("执行结束，方法执行 {} 毫秒", (System.currentTimeMillis() - start_time));
-	this.logger.info("=======================================  单元测试End =======================================");
+    @After
+    public void end() {
+        this.logger.info("执行结束，方法执行 {} 毫秒", (System.currentTimeMillis() - start_time));
+        this.logger.info("=======================================  单元测试End =======================================");
     }
 
 }

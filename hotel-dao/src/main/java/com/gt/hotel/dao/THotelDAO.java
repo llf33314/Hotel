@@ -17,16 +17,15 @@ import java.util.List;
  * @author
  * @since 2017-10-09
  */
-public interface THotelDAO extends BaseMapper< THotel > {
+public interface THotelDAO extends BaseMapper<THotel> {
 
     /**
      * 查询 新增酒店 首页 酒店列表
      *
      * @param page
      * @param busid 用户ID
-     *
      * @return
      */
-    List< HotelVo > queryHotelHome(@Param("page") Pagination page, @Param("req") HotelParameter.HotelQuery hpage, @Param("busId") Integer busid);
+    List<HotelVo> queryHotelHome(@Param("page") Pagination page, @Param("req") HotelParameter.HotelQuery hpage, @Param("busId") Integer busid);
 
 }

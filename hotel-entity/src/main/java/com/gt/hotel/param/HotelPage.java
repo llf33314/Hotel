@@ -30,7 +30,8 @@ public class HotelPage {
     @ApiModelProperty("查询条件参数")
     private String keyword;
 
-    @SuppressWarnings("rawtypes") public Page initPage() {
-    	return new Page(page, pageSize, orderByField);
+    @SuppressWarnings("rawtypes")
+    public Page initPage() {
+        return new Page(page, pageSize, orderByField);
     }
 }

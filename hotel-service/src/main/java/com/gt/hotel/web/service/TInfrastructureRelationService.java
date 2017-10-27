@@ -11,6 +11,6 @@ import com.gt.hotel.entity.TInfrastructureRelation;
  * @author
  * @since 2017-10-11
  */
-public interface TInfrastructureRelationService extends BaseService< TInfrastructureRelation > {
+public interface TInfrastructureRelationService extends BaseService<TInfrastructureRelation> {
 
 }

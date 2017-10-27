@@ -1,5 +1,6 @@
 package com.gt.hotel.base;
 
+import com.gt.hotel.constant.CommonSessionConst;
 import com.gt.hotel.exception.ResponseEntityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +26,10 @@ public abstract class BaseController {
      * 获取Sessionid
      *
      * @param session HttpSession
-     *
      * @return
      */
     public String getSessionId(HttpSession session) {
-	return session.getId();
+        return session.getId();
     }
 
     /**
@@ -37,12 +37,11 @@ public abstract class BaseController {
      * TODO: 待完善 登录流程
      *
      * @param session HttpSession
-     *
      * @return int
      */
     public Integer getLoginUserId(HttpSession session) {
-	//       Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
-	return 33;
+        Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
+        return 33;
     }
 
     /**
@@ -51,13 +50,13 @@ public abstract class BaseController {
      * @param result BindingResult
      */
     protected void InvalidParameter(BindingResult result) {
-	if (result.hasErrors()) {
-	    List< ObjectError > errorList = result.getAllErrors();
-	    for (ObjectError error : errorList) {
-		logger.warn(error.getDefaultMessage());
-		throw new ResponseEntityException(error.getDefaultMessage());
-	    }
-	}
+        if (result.hasErrors()) {
+            List<ObjectError> errorList = result.getAllErrors();
+            for (ObjectError error : errorList) {
+                logger.warn(error.getDefaultMessage());
+                throw new ResponseEntityException(error.getDefaultMessage());
+            }
+        }
     }
 
 }

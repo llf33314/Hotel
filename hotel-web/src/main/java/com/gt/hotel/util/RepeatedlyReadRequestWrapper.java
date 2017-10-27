@@ -21,34 +21,40 @@ public class RepeatedlyReadRequestWrapper extends HttpServletRequestWrapper {
     private final byte[] body;
 
     public RepeatedlyReadRequestWrapper(HttpServletRequest request) throws IOException {
-	super(request);
-	body = readBytes(request.getReader(), "utf-8");
+        super(request);
+        body = readBytes(request.getReader(), "utf-8");
     }
 
-    @Override public BufferedReader getReader() throws IOException {
-	return new BufferedReader(new InputStreamReader(getInputStream()));
+    @Override
+    public BufferedReader getReader() throws IOException {
+        return new BufferedReader(new InputStreamReader(getInputStream()));
     }
 
-    @Override public ServletInputStream getInputStream() throws IOException {
-	final ByteArrayInputStream bais = new ByteArrayInputStream(body);
-	return new ServletInputStream() {
+    @Override
+    public ServletInputStream getInputStream() throws IOException {
+        final ByteArrayInputStream bais = new ByteArrayInputStream(body);
+        return new ServletInputStream() {
 
-	    @Override public boolean isFinished() {
-		return false;
-	    }
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
 
-	    @Override public boolean isReady() {
-		return false;
-	    }
+            @Override
+            public boolean isReady() {
+                return false;
+            }
 
-	    @Override public void setReadListener(ReadListener listener) {
+            @Override
+            public void setReadListener(ReadListener listener) {
 
-	    }
+            }
 
-	    @Override public int read() throws IOException {
-		return bais.read();
-	    }
-	};
+            @Override
+            public int read() throws IOException {
+                return bais.read();
+            }
+        };
     }
 
     /**
@@ -56,18 +62,17 @@ public class RepeatedlyReadRequestWrapper extends HttpServletRequestWrapper {
      *
      * @param br
      * @param encoding
-     *
      * @return
      * @throws IOException
      */
     private byte[] readBytes(BufferedReader br, String encoding) throws IOException {
-	String str = null, retStr = "";
-	while ((str = br.readLine()) != null) {
-	    retStr += str;
-	}
-	if (StringUtils.isNotBlank(retStr)) {
-	    return retStr.getBytes(Charset.forName(encoding));
-	}
-	return null;
+        String str = null, retStr = "";
+        while ((str = br.readLine()) != null) {
+            retStr += str;
+        }
+        if (StringUtils.isNotBlank(retStr)) {
+            return retStr.getBytes(Charset.forName(encoding));
+        }
+        return null;
     }
 }

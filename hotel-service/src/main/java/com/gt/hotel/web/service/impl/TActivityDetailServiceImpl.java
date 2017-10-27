@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-10-09
  */
 @Service
-public class TActivityDetailServiceImpl extends BaseServiceImpl< TActivityDetailDAO, TActivityDetail > implements TActivityDetailService {
+public class TActivityDetailServiceImpl extends BaseServiceImpl<TActivityDetailDAO, TActivityDetail> implements TActivityDetailService {
 
 }

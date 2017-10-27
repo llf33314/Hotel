@@ -7,13 +7,11 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="room_count" property="roomCount"/>
-        <result column="hotel_id" property="hotelId"/>
         <result column="shop_id" property="shopId"/>
+        <result column="hotel_id" property="hotelId"/>
         <result column="desc" property="desc"/>
         <result column="rack_rate" property="rackRate"/>
         <result column="deposit" property="deposit"/>
-        <result column="discount_enable" property="discountEnable"/>
-        <result column="discount" property="discount"/>
         <result column="weekend_fare_enable" property="weekendFareEnable"/>
         <result column="weekend_fare" property="weekendFare"/>
         <result column="mark_modified" property="markModified"/>
@@ -27,19 +25,15 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, room_count AS roomCount, hotel_id AS hotelId, shop_id AS shopId, desc, rack_rate AS rackRate,
-        deposit, discount_enable AS discountEnable, discount,
-        weekend_fare_enable AS weekendFareEnable, weekend_fare AS weekendFare, mark_modified AS markModified,
-        breakfast_enable AS breakfastEnable, breakfast_quantity AS
-        breakfastQuantity, created_by AS createdBy, created_at AS createdAt, updated_by AS updatedBy, updated_at AS
-        updatedAt
+        id, name, room_count, shop_id, hotel_id, desc, rack_rate, deposit, weekend_fare_enable, weekend_fare, mark_modified, breakfast_enable, breakfast_quantity, created_by, created_at, updated_by, updated_at
     </sql>
 
+
     <select id="queryRoomCategory" resultType="com.gt.hotel.vo.RoomCategoryVo">
-        SELECT hotel_id hotelId, id categoryId, name, room_count roomCount, rack_rate rackRate, deposit, weekend_fare_enable weekendFareEnable, 
-        	discount, weekend_fare weekendFare 
-        FROM t_room_category 
-        WHERE mark_modified = 0 
+        SELECT hotel_id hotelId, id categoryId, name, room_count roomCount, rack_rate rackRate, deposit, weekend_fare_enable weekendFareEnable,
+        discount, weekend_fare weekendFare
+        FROM t_room_category
+        WHERE mark_modified = 0
         <if test="queryRoomCategory.categoryId != null">
             AND id = #{queryRoomCategory.categoryId}
         </if>

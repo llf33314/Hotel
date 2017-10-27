@@ -18,19 +18,18 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, category_id AS categoryId, number, floor, status, mark_modified AS markModified, created_by AS
-        createdBy, created_at AS createdAt, updated_by AS updatedBy,
-        updated_at AS updatedAt
+        id, category_id, number, floor, status, mark_modified, created_by, created_at, updated_by, updated_at
     </sql>
 
-	<select id="queryRoomList" resultType="com.gt.hotel.vo.RoomVo">
-		SELECT 
-		<include refid="Base_Column_List" /> 
-		FROM t_room 
-		WHERE mark_modified = 0 
-		<if test="categoryId != null">
-			AND category_id = #{categoryId} 
-		</if>
-	</select>
-	
+
+    <select id="queryRoomList" resultType="com.gt.hotel.vo.RoomVo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_room
+        WHERE mark_modified = 0
+        <if test="categoryId != null">
+            AND category_id = #{categoryId}
+        </if>
+    </select>
+
 </mapper>

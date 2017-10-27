@@ -11,6 +11,6 @@ import com.gt.hotel.entity.TInfrastructure;
  * @author
  * @since 2017-10-09
  */
-public interface TInfrastructureDAO extends BaseMapper< TInfrastructure > {
+public interface TInfrastructureDAO extends BaseMapper<TInfrastructure> {
 
 }

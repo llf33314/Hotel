@@ -14,15 +14,16 @@ import com.gt.hotel.vo.SysDictionaryVo;
  * @author
  * @since 2017-10-09
  */
-public interface SysDictionaryService extends BaseService< SysDictionary > {
+public interface SysDictionaryService extends BaseService<SysDictionary> {
 
-	/**
-	 * 查询 字典 列表
-	 * @param dictName 字典名
-	 * @param param
-	 * @return
-	 */
-	Page<SysDictionaryVo> queryDictionary(Integer dictId, HotelPage param);
+    /**
+     * 查询 字典 列表
+     *
+     * @param dictName 字典名
+     * @param param
+     * @return
+     */
+    Page<SysDictionaryVo> queryDictionary(Integer dictId, HotelPage param);
 
 
 }

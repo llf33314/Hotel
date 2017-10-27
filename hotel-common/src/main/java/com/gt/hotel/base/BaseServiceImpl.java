@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @date 2017/08/03
  * @since 1.0.0
  */
-public class BaseServiceImpl< M extends BaseMapper< T >, T > extends ServiceImpl< M, T > implements BaseService< T > {
+public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> implements BaseService<T> {
 
 }

@@ -1,7 +1,7 @@
 package com.gt.hotel.dao;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.gt.hotel.entity.TOrderRoomCustomer;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
  * <p>

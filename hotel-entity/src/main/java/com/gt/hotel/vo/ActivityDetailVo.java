@@ -1,9 +1,9 @@
 package com.gt.hotel.vo;
 
-import java.util.Date;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 public class ActivityDetailVo {

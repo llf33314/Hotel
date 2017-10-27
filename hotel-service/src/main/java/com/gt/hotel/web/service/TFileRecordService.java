@@ -11,6 +11,6 @@ import com.gt.hotel.entity.TFileRecord;
  * @author
  * @since 2017-10-09
  */
-public interface TFileRecordService extends BaseService< TFileRecord > {
+public interface TFileRecordService extends BaseService<TFileRecord> {
 
 }

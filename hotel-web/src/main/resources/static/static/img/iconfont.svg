@@ -11,12 +11,12 @@
 
         <font id="iconfont" horiz-adv-x="1024">
             <font-face
-                font-family="iconfont"
-                font-weight="500"
-                font-stretch="normal"
-                units-per-em="1024"
-                ascent="896"
-                descent="-128"
+                    font-family="iconfont"
+                    font-weight="500"
+                    font-stretch="normal"
+                    units-per-em="1024"
+                    ascent="896"
+                    descent="-128"
             />
             <missing-glyph/>
 

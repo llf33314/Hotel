@@ -8,9 +8,9 @@ import com.gt.hotel.entity.THotelMemberSetting;
  * 酒店会员设置 服务类
  * </p>
  *
- * @author 
+ * @author
  * @since 2017-10-18
  */
 public interface THotelMemberSettingService extends BaseService<THotelMemberSetting> {
-	
+
 }

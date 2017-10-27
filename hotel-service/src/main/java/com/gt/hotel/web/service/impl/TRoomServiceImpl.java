@@ -16,6 +16,6 @@ import org.springframework.stereotype.Service;
  * @since 2017-10-09
  */
 @Service
-public class TRoomServiceImpl extends BaseServiceImpl< TRoomDAO, TRoom > implements TRoomService {
+public class TRoomServiceImpl extends BaseServiceImpl<TRoomDAO, TRoom> implements TRoomService {
 
 }
