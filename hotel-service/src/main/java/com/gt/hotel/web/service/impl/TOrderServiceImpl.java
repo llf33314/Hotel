@@ -1,10 +1,14 @@
 package com.gt.hotel.web.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.param.HotelOrderParameter.OrderQuery;
+import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderService;
 
 /**
@@ -17,5 +21,16 @@ import com.gt.hotel.web.service.TOrderService;
  */
 @Service
 public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implements TOrderService {
+
+	@Autowired
+	TOrderDAO tOrderDAO;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<HotelBackRoomOrderVo> queryRoomOrder(Integer busid, OrderQuery param) {
+		Page<HotelBackRoomOrderVo> page = param.initPage();
+		page.setRecords(tOrderDAO.queryRoomOrder(busid, param, page));
+		return page;
+	}
 	
 }

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gt.hotel.vo.FileRecordVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -68,11 +69,11 @@ public class HotelMobileParameter {
 	    @ApiModelProperty(value = "发票支持的类目  存储方式 1,2,3,4,5 or 1,2,3")
 	    private String  InvoiceCategorys;
 	    
-	    @ApiModelProperty(value =  "图片地址 集合" )
-	    private List<String> imageurls;
-	    
-	    @ApiModelProperty( value = "设施ID 集合" )
-	    private List<InfrastructureRelationParamter> installations;
+//	    @ApiModelProperty(value =  "图片地址 集合" )
+//	    private List<FileRecordVo> imageurls;
+//	    
+//	    @ApiModelProperty( value = "设施ID 集合" )
+//	    private List<InfrastructureRelationParamter> installations;
 	}
 	
 	@Data

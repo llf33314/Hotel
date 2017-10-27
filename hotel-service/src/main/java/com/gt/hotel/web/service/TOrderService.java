@@ -1,6 +1,9 @@
 package com.gt.hotel.web.service;
 
 import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.param.HotelOrderParameter.OrderQuery;
+import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 
 /**
@@ -12,5 +15,13 @@ import com.gt.hotel.base.BaseService;
  * @since 2017-10-27
  */
 public interface TOrderService extends BaseService<TOrder> {
+
+	/**
+	 * 房间订单列表 
+	 * @param busid 用户ID
+	 * @param param
+	 * @return
+	 */
+	Page<HotelBackRoomOrderVo> queryRoomOrder(Integer busid, OrderQuery param);
 	
 }

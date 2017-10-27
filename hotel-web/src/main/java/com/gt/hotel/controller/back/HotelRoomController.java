@@ -32,7 +32,8 @@ import java.util.List;
 /**
  * 酒店后台-房型管理
  *
- * @author Reverien9@gmail.com 2017年10月25日 下午12:04:12
+ * @author Reverien9@gmail.com 
+ * 2017年10月25日 下午12:04:12
  */
 @Api(tags = "酒店后台-房型管理")
 @RestController

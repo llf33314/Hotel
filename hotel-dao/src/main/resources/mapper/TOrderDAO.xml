@@ -34,4 +34,8 @@
         id, order_num, hotel_id, bus_id, member_id, pay_type, pay_status, pay_time, order_status, create_time, real_price, bill_price, fb, integral, order_coupons_id, receivable_price, remark, completion_time, mark_modified, created_by, created_at, updated_by, updated_at
     </sql>
 
+	<!-- <select id="queryRoomOrder" resultType="">
+		
+	</select> -->
+
 </mapper>

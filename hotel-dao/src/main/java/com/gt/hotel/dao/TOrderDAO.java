@@ -1,7 +1,14 @@
 package com.gt.hotel.dao;
 
-import com.gt.hotel.entity.TOrder;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.param.HotelOrderParameter.OrderQuery;
+import com.gt.hotel.vo.HotelBackRoomOrderVo;
 
 /**
  * <p>
@@ -12,5 +19,14 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-10-27
  */
 public interface TOrderDAO extends BaseMapper<TOrder> {
+
+	/**
+	 * 房间订单列表 
+	 * @param busid 用户ID
+	 * @param param
+	 * @param page 分页对象
+	 * @return
+	 */
+	List<HotelBackRoomOrderVo> queryRoomOrder(@Param("busid") Integer busid, @Param("param") OrderQuery param, @Param("page") Pagination page);
 
 }
