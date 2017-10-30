@@ -1,16 +1,29 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.entity.TOrderRoom;
+import com.gt.hotel.entity.TOrderRoomCustomer;
+import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
+import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
+import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderService;
 
 /**
@@ -26,6 +39,9 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 
 	@Autowired
 	TOrderDAO tOrderDAO;
+
+	@Autowired
+	TOrderRoomCustomerService tOrderRoomCustomerService;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -41,6 +57,65 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		Page<HotelBackFoodOrderVo> page = param.initPage();
 		page.setRecords(tOrderDAO.queryFoodOrder(busid, param, page));
 		return page;
+	}
+
+	@Transactional
+	@Override
+	public void AddOffLineOrder(Integer busid, OffLineOrder order) {
+		Date date = new Date();
+		TOrder o = new TOrder();
+		BeanUtils.copyProperties(order, o);
+		o.setBusId(busid);
+		o.setOrderNum("DD" + date.getTime());
+		o.setPayStatus(CommonConst.PAY_STATUS_PAID);
+		o.setPayTime(date);
+		o.setCreateTime(date);
+		o.setCreatedAt(date);
+		o.setCreatedBy(busid);
+		o.setUpdatedAt(date);
+		o.setUpdatedBy(busid);
+		o.setBillPrice(o.getRealPrice());
+		o.setReceivablePrice(o.getRealPrice());
+		if(!o.insert()) {
+			throw new ResponseEntityException("线下订单保存失败");
+		}
+		
+		TOrderRoom or = new TOrderRoom();
+		BeanUtils.copyProperties(order, or);
+		or.setOrderId(o.getId());
+		or.setOrderNum(o.getOrderNum());
+		or.setCheckInWay(CommonConst.CHECK_IN_WAY_OFFLINE);
+		or.setNumber(order.getRooms().size());
+		or.setFrom(CommonConst.SOURCE_BACK);
+		or.setPayTime(date);
+		or.setPayStatus(CommonConst.PAY_STATUS_PAID);
+		or.setCreateTime(date);
+		or.setCreatedAt(date);
+		or.setCreatedBy(busid);
+		or.setUpdatedAt(date);
+		or.setUpdatedBy(busid);
+		if(!or.insert()) {
+			throw new ResponseEntityException("线下订单保存失败");
+		}
+		
+		List<TOrderRoomCustomer> orcs = new ArrayList<>();
+		for(HotelOrderRoomParameter.OrderRoom hor : order.getRooms()) {
+			TOrderRoomCustomer orc = new TOrderRoomCustomer();
+			orc.setName(order.getCustomerName());
+			orc.setIdType(order.getCustomerIdType());
+			orc.setPhone(order.getCustomerPhone());
+			orc.setIdCard(order.getCustomerIdCard());
+			orc.setOrderId(o.getId());
+			orc.setRoomNum(hor.getRoomNum());
+			orc.setCustomerGender(order.getCustomerGender());
+			orc.setCreatedAt(date);
+			orc.setCreatedBy(busid);
+			orc.setUpdatedAt(date);
+			orc.setUpdatedBy(busid);
+		}
+		if(!tOrderRoomCustomerService.insertBatch(orcs)) {
+			throw new ResponseEntityException("线下订单保存失败");
+		}
 	}
 	
 }

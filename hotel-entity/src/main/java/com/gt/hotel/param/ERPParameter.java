@@ -48,10 +48,17 @@ public class ERPParameter {
         @NotNull(message = "门店ID不能为空")
         private Integer shopId;
 
-        @ApiModelProperty("功能ID 复数 存储方式：1,2,3,4 代表功能 =1 体现 =2 免押金 =3 修改房价 =4 挂账 来自 sys_dictionary.dict_type_id=3")
+        @ApiModelProperty("功能ID 复数 存储方式：1,2,3,4 代表功能 =1 体现 =2 免押金 =3 修改房价 =4 挂账 ")
         @NotNull(message = "功能ID不能为空")
         private String functionIds;
     }
 
+    @Data
+    @Api("授权查询参数")
+    public static class AuthorQuery extends HotelPage{
+    	@ApiModelProperty("门店ID")
+        @NotNull(message = "门店ID不能为空")
+        private Integer shopId;
+    }
 }
 

@@ -1,5 +1,6 @@
 package com.gt.hotel.controller.back;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -8,6 +9,7 @@ import javax.validation.Valid;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -140,10 +142,37 @@ public class HotelErpSetController extends BaseController {
     public ResponseDTO<Page<Employee>> employeeR(@PathVariable("shopId") Integer shopId, 
     		@Param("门店ID") @ModelAttribute WXMPParameter.queryEmployee qe) {
     	Page<Employee> page = qe.initPage();
-        JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), qe.getPage(), qe.getPageSize());
+//        JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), qe.getPage(), qe.getPageSize());
+        JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), null, null);
         if ("0".equals(result.getString("code"))) {
             JSONObject temp = JSONObject.parseObject(result.getString("data"));
-            page.setRecords(JSONArray.parseArray(temp.getString("staffList"), Employee.class));
+            List<Employee> l = JSONArray.parseArray(temp.getString("staffList"), Employee.class);
+            List<Employee> le = new ArrayList<>();
+            if(!StringUtils.isEmpty(qe.getKeyword())) {
+            	for(int i=0;i<l.size();i++) {
+            		if(l.get(i).getName().indexOf(qe.getKeyword().trim()) != -1 
+            				|| l.get(i).getPhone().indexOf(qe.getKeyword().trim()) != -1) {
+            			le.add(l.get(i));
+            		}
+            	}
+            }else {
+            	le = l;
+            }
+            List<Employee> les = new ArrayList<>();
+            int begin = (qe.getPage()-1)*qe.getPageSize();
+            int end = begin + qe.getPageSize();
+            if(le.size() > begin) {
+            	for(int i=begin;i<end;i++) {
+            		if((le.size()-1) >= i) {
+            			les.add(le.get(i));
+            		}else {
+            			break;
+            		}
+            	}
+            }else {
+            	les = le;
+            }
+            page.setRecords(les);
             page.setTotal(temp.getInteger("count"));
         } else {
         	throw new ResponseEntityException(result.getString("msg"));
@@ -153,7 +182,7 @@ public class HotelErpSetController extends BaseController {
 
     @ApiOperation(value = "查询 授权管理列表", notes = "查询 授权管理列表")
     @GetMapping(value = "{hotelId}/author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<AuthorizationVo>> authorR(HotelPage param, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId) {
+    public ResponseDTO<Page<AuthorizationVo>> authorR(@ModelAttribute ERPParameter.AuthorQuery param, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId) {
         Page<AuthorizationVo> page = tAuthorizationService.queryAuthor(hotelId, param);
         return ResponseDTO.createBySuccess(page);
     }

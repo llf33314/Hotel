@@ -51,4 +51,12 @@ public class AuthorizationVo {
     @ApiModelProperty("授权功能")
     private String functions;
 
+    @ApiModelProperty("是否已扫码授权 0 是 1 否")
+	private Integer scanCodeAuthorization;
+    
+    @ApiModelProperty("姓名")
+    private String name;
+    
+    @ApiModelProperty("手机")
+    private String phone;
 }

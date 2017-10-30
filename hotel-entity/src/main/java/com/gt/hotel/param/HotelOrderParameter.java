@@ -1,6 +1,7 @@
 package com.gt.hotel.param;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -9,9 +10,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 订单请求对象
- *
- * @author ReverieNight@Foxmail.com
+ * 
+ * @author Reverien9@gmail.com
+ * 2017年10月30日 上午9:59:06
  */
 @Api(description = "订单请求对象")
 public class HotelOrderParameter {
@@ -64,36 +65,66 @@ public class HotelOrderParameter {
 	@Api("添加线下订单 参数")
 	@Data
 	public static class OffLineOrder {
-		@ApiModelProperty(value = "客户姓名")
+		@ApiModelProperty(value = "房型ID")
+		private Integer categoryId;
+
+		@ApiModelProperty(value = "房型名称")
+		private String categoryName;
+		
+		@ApiModelProperty(value = "客户姓名", required = true)
 		private String customerName;
 
-		@ApiModelProperty(value = "手机号码")
+		@ApiModelProperty(value = "手机号码", required = true)
 		private String customerPhone;
 
-		@ApiModelProperty(value = "证件类型")
+		@ApiModelProperty(value = "证件类型", required = true)
 		private Integer customerIdType;
 		
-		@ApiModelProperty(value = "证件号")
+		@ApiModelProperty(value = "证件号", required = true)
 		private String customerIdCard;
 		
-		@ApiModelProperty(value = "酒店ID")
+		@ApiModelProperty(value = "酒店ID", required = true)
 		private Integer hotelId;
 		
-		@ApiModelProperty(value = "酒店名称")
+		@ApiModelProperty(value = "酒店名称", required = true)
 		private String hotelName;
 		
-		@ApiModelProperty(value = "支付类型")
+		@ApiModelProperty(value = "支付类(方)型(式)", required = true)
 		private Integer payType;
 		
-		@ApiModelProperty(value = "订单状态")
+		@ApiModelProperty(value = "订单状态", required = true)
 		private Integer orderStatus;
 		
-		@ApiModelProperty(value = "入住时间")
+		@ApiModelProperty(value = "入住时间", required = true)
 		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date roomInTime;
 
-		@ApiModelProperty(value = "离店时间")
+		@ApiModelProperty(value = "离店时间", required = true)
 		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private Date roomOutTime;
+		
+		@ApiModelProperty(value = "住客类型(0:散客/会员, 1:协议单位)", required = true)
+		private Integer guestType;
+
+		@ApiModelProperty(value = "性别(0:男, 1:女)", required = true)
+		private Integer customerGender;
+
+		@ApiModelProperty(value = "实收金额", required = true)
+		private Integer realPrice;
+		
+		@ApiModelProperty(value = "当前门市价 固定从房型获取(周一至周四为 门市价 周五周六 为周末价。如果有日历价，则为日历价)", required = true)
+		private Integer rackRate;
+
+		@ApiModelProperty(value = "应收( (客房价格+押金) * 数量 room_price+deposit ) ", required = true)
+		private Integer receivablePrice;
+
+		@ApiModelProperty(value = "押金  0 则为免押金", required = true)
+		private Integer deposit;
+
+		@ApiModelProperty(value = "当前客房价格 可以是改价后的价格", required = true)
+		private Integer roomPrice;
+		
+		@ApiModelProperty(value = "房间集合")
+		private List<HotelOrderRoomParameter.OrderRoom> rooms;
 	}
 }

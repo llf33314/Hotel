@@ -26,9 +26,7 @@ public class MpGenerator {
 	// 生成*.java 的文件路径
 	public static final String outPutJavaModel = outPutBaseDir + "src/main/java";
 	// 需要生成的表
-	public static final String[] generatorTableName = new String[] { "t_hotel_setting", "t_infrastructure",
-			"t_activity", "t_activity_room", "t_authorization", "t_order", "t_order_coupons", "t_order_food",
-			"t_order_food_detail", "t_order_room", "t_order_room_customer", "sys_operation_log", "t_activity_detail" };
+	public static final String[] generatorTableName = new String[] { "t_order_room", "t_order_room_customer" };
 	// 作者
 	private static final String author = "";
 	// 去除表前缀 例如：bus_user 填入bus 生成的 user

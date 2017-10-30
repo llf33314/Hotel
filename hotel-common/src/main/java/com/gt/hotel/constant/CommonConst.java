@@ -79,8 +79,27 @@ public final class CommonConst {
      * 支付方式(3：1&2)
      */
     public static final Integer ALL_PAY     = 3;
+    
+    /****************************** 支付状态 ******************************/
+    
+    /**
+     * 支付状态(=0 待支付)
+     */
+    public static final Integer PAY_STATUS_UNPAID = 0;
+    /**
+     * 支付状态(=1 已支付 )
+     */
+    public static final Integer PAY_STATUS_PAID = 1;
+    /**
+     * 支付状态(=2 退款中 )
+     */
+    public static final Integer PAY_STATUS_UNREFUNDS = 2;
+    /**
+     * 支付状态(=3 已退款 )
+     */
+    public static final Integer PAY_STATUS_REFUNDS = 3;
 
-    //////////////////////////使用状态 /////////////////////////
+    /****************************** 使用状态  ******************************/
 
     /**
      * 0 默认开启
@@ -95,7 +114,7 @@ public final class CommonConst {
      */
     public static final Integer DELETED = 2;
 
-    //////////////////////////字典名 /////////////////////////
+    /****************************** 字典名  ******************************/
     /**
      * 发票
      */
@@ -105,5 +124,37 @@ public final class CommonConst {
      */
     public static final Integer DICT_FUNCTION = 3;
 
+    /****************************** 入住方式 0 预订订单(预约订单: 网上|电话|移动端 预订过产生了一条预订消息则为预订订单)  1 到店入住(直接办理入住)  ******************************/
+    /**
+     * 预订订单
+     */
+    public static final Integer CHECK_IN_WAY_ONLINE  = 0;
+    /**
+     * 到店入住
+     */
+    public static final Integer CHECK_IN_WAY_OFFLINE = 1;
+
+    /****************************** 来源 1 后台(线下订单) 2 ERP 3 移动端(H5) 4 小程序 ，默认 0 未知来源 ******************************/
+    
+    /**
+     * 0 未知来源
+     */
+    public static final Integer SOURCE_UNKNOWN = 0;
+    /**
+     * 1 后台(线下订单)
+     */
+    public static final Integer SOURCE_BACK = 1;
+    /**
+     * 2 ERP 
+     */
+    public static final Integer SOURCE_ERP = 2;
+    /**
+     * 3 移动端(H5)
+     */
+    public static final Integer SOURCE_MOBILE = 3;
+    /** 
+     * 4 小程序 
+     */
+    public static final Integer SOURCE_MINI_PROGRAM = 4;
 
 }

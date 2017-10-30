@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author 
- * @since 2017-10-27
+ * @since 2017-10-30
  */
 @Data
 @Accessors(chain = true)
@@ -149,6 +149,14 @@ public class TOrderRoom extends Model<TOrderRoom> {
      * 最后修改时间
      */
 	private Date updatedAt;
+    /**
+     * 住客类型(0:散客/会员, 1:协议单位)
+     */
+	private Integer guestType;
+    /**
+     * 性别(0:男, 1:女)
+     */
+	private Integer customerGender;
 
 
 	@Override

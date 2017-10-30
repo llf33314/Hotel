@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author 
- * @since 2017-10-27
+ * @since 2017-10-30
  */
 @Data
 @Accessors(chain = true)
@@ -77,6 +77,10 @@ public class TOrderRoomCustomer extends Model<TOrderRoomCustomer> {
      * 最后修改时间
      */
 	private Date updatedAt;
+    /**
+     * 性别(0:男, 1:女)
+     */
+	private Integer customerGender;
 
 
 	@Override

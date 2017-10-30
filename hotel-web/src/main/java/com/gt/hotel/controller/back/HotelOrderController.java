@@ -24,7 +24,6 @@ import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.HotelOrderParameter;
-import com.gt.hotel.param.RoomCategoryParameter.CategorySaveOrUpdate;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
@@ -81,10 +80,8 @@ public class HotelOrderController extends BaseController {
         	return msg;
         }
 		Integer busid = getLoginUserId(session);
-//		Integer id = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
-		QueryRoomCategoryOne q = new QueryRoomCategoryOne();
-//		q.setCategoryId(id);
-		return ResponseDTO.createBySuccess(q);
+		tOrderService.AddOffLineOrder(busid, order);
+		return ResponseDTO.createBySuccess();
 	}
 
 	////////////////////////////////////////////////////////////↓餐饮↓ //////////////////////////////////////////////////////////
