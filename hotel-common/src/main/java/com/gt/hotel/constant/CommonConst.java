@@ -157,4 +157,23 @@ public final class CommonConst {
      */
     public static final Integer SOURCE_MINI_PROGRAM = 4;
 
+    /****************************** 订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 默认0 ******************************/
+    
+    /**
+     * 0 处理中
+     */
+    public static final Integer ORDER_PROCESSING = 0;
+    /**
+     * 1 已确认
+     */
+    public static final Integer ORDER_CONFIRMED = 1;
+    /**
+     * 2 已取消
+     */
+    public static final Integer ORDER_CANCALLED = 2;
+    /**
+     * 3 已完成
+     */
+    public static final Integer ORDER_COMPLETED = 3;
+    
 }

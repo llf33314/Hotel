@@ -180,9 +180,15 @@ public class HotelErpSetController extends BaseController {
         return ResponseDTO.createBySuccess(page);
     }
 
-    @ApiOperation(value = "查询 授权管理列表", notes = "查询 授权管理列表")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@ApiOperation(value = "查询 授权管理列表", notes = "查询 授权管理列表")
     @GetMapping(value = "{hotelId}/author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<AuthorizationVo>> authorR(@ModelAttribute ERPParameter.AuthorQuery param, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId) {
+    public ResponseDTO<Page<AuthorizationVo>> authorR(@Validated @ModelAttribute ERPParameter.AuthorQuery param, 
+    		 BindingResult bindingResult, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId) {
+    	ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
         Page<AuthorizationVo> page = tAuthorizationService.queryAuthor(hotelId, param);
         return ResponseDTO.createBySuccess(page);
     }

@@ -41,5 +41,12 @@ public interface TOrderService extends BaseService<TOrder> {
 	 * @param order 
 	 */
 	void AddOffLineOrder(Integer busid, OffLineOrder order);
+
+	/**
+	 * 房间订单详情
+	 * @param id
+	 * @return
+	 */
+	HotelBackRoomOrderVo queryRoomOrderOne(Integer id);
 	
 }

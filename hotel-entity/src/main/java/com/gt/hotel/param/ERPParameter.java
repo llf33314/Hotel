@@ -56,7 +56,7 @@ public class ERPParameter {
     @Data
     @Api("授权查询参数")
     public static class AuthorQuery extends HotelPage{
-    	@ApiModelProperty("门店ID")
+    	@ApiModelProperty(value = "门店ID", required = true)
         @NotNull(message = "门店ID不能为空")
         private Integer shopId;
     }

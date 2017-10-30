@@ -16,6 +16,7 @@ import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.entity.TOrderRoomCustomer;
+import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
@@ -77,7 +78,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		o.setBillPrice(o.getRealPrice());
 		o.setReceivablePrice(o.getRealPrice());
 		if(!o.insert()) {
-			throw new ResponseEntityException("线下订单保存失败");
+			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
 		}
 		
 		TOrderRoom or = new TOrderRoom();
@@ -95,7 +96,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		or.setUpdatedAt(date);
 		or.setUpdatedBy(busid);
 		if(!or.insert()) {
-			throw new ResponseEntityException("线下订单保存失败");
+			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
 		}
 		
 		List<TOrderRoomCustomer> orcs = new ArrayList<>();
@@ -114,8 +115,22 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 			orc.setUpdatedBy(busid);
 		}
 		if(!tOrderRoomCustomerService.insertBatch(orcs)) {
-			throw new ResponseEntityException("线下订单保存失败");
+			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
 		}
+	}
+
+	@Override
+	public HotelBackRoomOrderVo queryRoomOrderOne(Integer id) {
+		HotelBackRoomOrderVo orderVo = new HotelBackRoomOrderVo();
+		RoomOrderQuery param = new RoomOrderQuery();
+		param.setId(id);
+		List<HotelBackRoomOrderVo> l = tOrderDAO.queryRoomOrder(null, param, null);
+		if(l.size() == 0) {
+			return null;
+		}
+		orderVo = l.get(0);
+		orderVo.setRooms(tOrderDAO.queryRoomOrderOneRooms(id));
+		return orderVo;
 	}
 	
 }

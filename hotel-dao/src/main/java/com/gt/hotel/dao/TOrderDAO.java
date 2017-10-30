@@ -11,6 +11,7 @@ import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.OrderRoomCustomerVo;
 
 /**
  * <p>
@@ -39,5 +40,12 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 * @return
 	 */
 	List<HotelBackFoodOrderVo> queryFoodOrder(@Param("busid") Integer busid, @Param("param") FoodOrderQuery param, @Param("page") Pagination page);
+
+	/**
+	 * 房间订单对象 -> 房间列表
+	 * @param orderId 订单ID 
+	 * @return
+	 */
+	List<OrderRoomCustomerVo> queryRoomOrderOneRooms(@Param("orderId") Integer orderId);
 
 }

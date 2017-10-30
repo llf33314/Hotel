@@ -17,6 +17,9 @@ public enum ResponseEnums {
     NEED_LOGIN(1001, "需要登录"),
     SAVE_ERROR(1002, "保存失败"),
     DELETE_ERROR(1003, "删除失败"),
+    OPERATING_ERROR(1004, "操作失败"),
+    ORDER_STATUS_ERROR(1005, "订单状态错误"),
+    PAY_STATUS_ERROR(1006, "支付状态错误"),
 
     INFRASTRUCTRUE_ERROR(1998, "设施保存失败"),
     IMAGE_ERROR(1999, "图片保存失败"),

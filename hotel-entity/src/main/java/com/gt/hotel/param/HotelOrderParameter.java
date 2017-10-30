@@ -20,6 +20,9 @@ public class HotelOrderParameter {
 	@Api("房间订单 查询参数")
 	@Data
 	public static class RoomOrderQuery extends HotelPage {
+		@ApiModelProperty(value = "订单ID")
+		private Integer id;
+
 		@ApiModelProperty(value = "酒店ID")
 		private Integer hotelId;
 

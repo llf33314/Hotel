@@ -79,7 +79,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         TRoomCategory tRoomCategory = new TRoomCategory();
         BeanUtils.copyProperties(roomCategory, tRoomCategory);
         tRoomCategory.setId(roomCategory.getCategoryId());
-        tRoomCategory.setShopId(roomCategory.getShopId());
+//        tRoomCategory.setShopId(roomCategory.getShopId());
         if (tRoomCategory.getId() == null) {
             tRoomCategory.setCreatedAt(date);
             tRoomCategory.setCreatedBy(busid);

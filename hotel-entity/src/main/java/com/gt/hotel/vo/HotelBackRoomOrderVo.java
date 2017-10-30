@@ -1,6 +1,7 @@
 package com.gt.hotel.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -116,4 +117,7 @@ public class HotelBackRoomOrderVo {
     
     @ApiModelProperty("活动ID，如果是活动进来的订单即可以使用活动ID")
     private Integer activityId;
+    
+    @ApiModelProperty("房间列表")
+    private List<OrderRoomCustomerVo> rooms;
 }

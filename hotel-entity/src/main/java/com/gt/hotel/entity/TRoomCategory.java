@@ -34,10 +34,6 @@ public class TRoomCategory extends Model<TRoomCategory> {
      */
     private Integer roomCount;
     /**
-     * 门店ID
-     */
-    private Integer shopId;
-    /**
      * 酒店ID
      */
     private Integer hotelId;

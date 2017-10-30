@@ -58,6 +58,9 @@
 		<if test="busid != null">
 			AND a.bus_id = #{busid} 
 		</if>
+		<if test="param.id != null">
+			AND a.id = #{param.id} 
+		</if>
 		<if test="param.hotelId != null">
 			AND a.hotel_id = #{param.hotelId} 
 		</if>
@@ -107,5 +110,13 @@
 		<if test="param.keyword != null">
 			AND (b.customer_name = #{param.keyword} OR b.customer_phone = #{param.keyword}) 
 		</if>
+	</select>
+	
+	<select id="queryRoomOrderOneRooms" resultType="com.gt.hotel.vo.OrderRoomCustomerVo">
+		SELECT b.category_id categoryId, c.`name` categoryName, b.id roomId, b.number roomNum 
+		FROM t_order_room_customer a 
+		JOIN t_room b ON a.room_num = b.number 
+		JOIN t_room_category c ON b.category_id = c.id 
+		WHERE a.order_id = #{orderId} 
 	</select>
 </mapper>
