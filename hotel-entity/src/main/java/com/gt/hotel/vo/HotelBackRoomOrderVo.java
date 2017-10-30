@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@Api(description = "酒店后台-订单管理-订单列表对象")
+@Api(description = "酒店后台-订单管理-房间订单列表对象")
 public class HotelBackRoomOrderVo {
     @ApiModelProperty("订单ID")
     private Integer id;

@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TOrder;
-import com.gt.hotel.param.HotelOrderParameter.OrderQuery;
+import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
+import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
+import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 
 /**
@@ -27,6 +29,15 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 * @param page 分页对象
 	 * @return
 	 */
-	List<HotelBackRoomOrderVo> queryRoomOrder(@Param("busid") Integer busid, @Param("param") OrderQuery param, @Param("page") Pagination page);
+	List<HotelBackRoomOrderVo> queryRoomOrder(@Param("busid") Integer busid, @Param("param") RoomOrderQuery param, @Param("page") Pagination page);
+
+	/**
+	 * 餐饮订单列表 
+	 * @param busid 用户ID
+	 * @param param
+	 * @param page 分页对象
+	 * @return
+	 */
+	List<HotelBackFoodOrderVo> queryFoodOrder(@Param("busid") Integer busid, @Param("param") FoodOrderQuery param, @Param("page") Pagination page);
 
 }

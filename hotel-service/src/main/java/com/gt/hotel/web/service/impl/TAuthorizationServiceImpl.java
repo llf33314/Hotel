@@ -36,11 +36,11 @@ public class TAuthorizationServiceImpl extends BaseServiceImpl<TAuthorizationDAO
     TAuthorizationDAO tAuthorizationDAO;
 
     @SuppressWarnings("unchecked")
-    @Override
-    public Page<AuthorizationVo> queryAuthor(HotelPage param) {
-        Page<AuthorizationVo> page = param.initPage();
-        page.setRecords(tAuthorizationDAO.queryAuthor(param, page));
-        return page;
+	@Override
+    public Page<AuthorizationVo> queryAuthor(Integer hotelId, HotelPage param) {
+    	Page<AuthorizationVo> page = param.initPage();
+    	page.setRecords(tAuthorizationDAO.queryAuthor(hotelId, param, page));
+    	return page;
     }
 
     @Override
@@ -51,7 +51,9 @@ public class TAuthorizationServiceImpl extends BaseServiceImpl<TAuthorizationDAO
         entity.setUpdatedAt(new Date());
         entity.setUpdatedBy(busId);
         entity.setMarkModified(CommonConst.DELETED);
-        if (this.update(entity, wrapper)) throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
+        if (!this.update(entity, wrapper)) {
+        	throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
+        }
     }
 
     @Override
@@ -66,7 +68,9 @@ public class TAuthorizationServiceImpl extends BaseServiceImpl<TAuthorizationDAO
             _a.setUpdatedAt(date);
             _a.setUpdatedBy(busid);
         }
-        if (this.insertBatch(al)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        if (!this.insertBatch(al)) {
+        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        }
     }
 
 }

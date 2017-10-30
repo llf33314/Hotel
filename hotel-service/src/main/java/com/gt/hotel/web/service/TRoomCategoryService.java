@@ -99,9 +99,10 @@ public interface TRoomCategoryService extends BaseService<TRoomCategory> {
      * 查询 长包房设置
      *
      * @param param
+     * @param hotelId
      * @return
      */
-    Page<RoomPermanentVo> queryRoomPermanent(RoomPermanentQuery param);
+    Page<RoomPermanentVo> queryRoomPermanent(Integer hotelId, RoomPermanentQuery param);
 
     /**
      * 删除 长包房设置

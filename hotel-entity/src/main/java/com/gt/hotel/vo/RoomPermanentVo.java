@@ -48,4 +48,7 @@ public class RoomPermanentVo {
 
     @ApiModelProperty(value = "门市价")
     private Integer rackRate;
+    
+    @ApiModelProperty(value = "房型名称")
+    private String categoryName;
 }

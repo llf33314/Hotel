@@ -12,7 +12,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        hotel_id, vip_level, vip_check_out, free_deposit_enable
+        hotel_id, vip_level, vip_check_out, free_deposit_enable  
     </sql>
 
 </mapper>

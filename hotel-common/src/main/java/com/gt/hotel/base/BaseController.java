@@ -1,6 +1,7 @@
 package com.gt.hotel.base;
 
 import com.gt.hotel.constant.CommonSessionConst;
+import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.exception.ResponseEntityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,24 @@ public abstract class BaseController {
                 throw new ResponseEntityException(error.getDefaultMessage());
             }
         }
+    }
+    
+    /**
+     * 参数校验
+     *
+     * @param result BindingResult
+     * @return 
+     */
+    @SuppressWarnings("rawtypes")
+	protected ResponseDTO InvalidParameterII(BindingResult result) {
+    	if (result.hasErrors()) {
+    		List<ObjectError> errorList = result.getAllErrors();
+    		for (ObjectError error : errorList) {
+    			logger.warn(error.getDefaultMessage());
+    			return ResponseDTO.createByErrorMessage(error.getDefaultMessage());
+    		}
+    	}
+		return null;
     }
 
 }

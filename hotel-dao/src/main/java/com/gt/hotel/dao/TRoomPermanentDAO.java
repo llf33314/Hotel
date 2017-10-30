@@ -26,6 +26,6 @@ public interface TRoomPermanentDAO extends BaseMapper<TRoomPermanent> {
      * @param page
      * @return
      */
-    List<RoomPermanentVo> queryRoomPermanent(@Param("param") RoomPermanentQuery param, @Param("page") Pagination page);
+    List<RoomPermanentVo> queryRoomPermanent(@Param("hotelId") Integer hotelId, @Param("param") RoomPermanentQuery param, @Param("page") Pagination page);
 
 }

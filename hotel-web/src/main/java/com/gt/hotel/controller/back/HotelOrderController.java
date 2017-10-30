@@ -7,8 +7,11 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +24,9 @@ import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.HotelOrderParameter;
+import com.gt.hotel.param.RoomCategoryParameter.CategorySaveOrUpdate;
+import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
+import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderService;
 
@@ -41,19 +47,10 @@ public class HotelOrderController extends BaseController {
 	@Autowired
 	TOrderService tOrderService;
 
-	@ApiOperation(value = "房间订单列表", notes = "房间订单列表")
-	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<Page<HotelBackRoomOrderVo>> roomOrderR(HotelOrderParameter.OrderQuery param,
-			HttpSession session) {
-		Integer busid = getLoginUserId(session);
-		Page<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrder(busid, param);
-		return ResponseDTO.createBySuccess(page);
-	}
-	
-	@ApiOperation(value = "删除 房间订单", notes = "删除 房间订单")
+	@ApiOperation(value = "删除 房间&餐饮订单(共用)", notes = "删除 房间&餐饮订单(共用)")
     @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO roomCategoryD(@RequestBody @ApiParam("订单ID 数组") List<Integer> ids, HttpSession session) {
+    public ResponseDTO orderD(@RequestBody @ApiParam("订单ID 数组") List<Integer> ids, HttpSession session) {
         Integer busid = getLoginUserId(session);
         Wrapper<TOrder> wrapper = new EntityWrapper<>();
         wrapper.in("id", ids);
@@ -64,5 +61,41 @@ public class HotelOrderController extends BaseController {
         tOrderService.update(h, wrapper);
         return ResponseDTO.createBySuccess();
     }
+	
+	@ApiOperation(value = "房间订单列表", notes = "房间订单列表")
+	@GetMapping(value = "room", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<Page<HotelBackRoomOrderVo>> roomOrderR(HotelOrderParameter.RoomOrderQuery param,
+			HttpSession session) {
+		Integer busid = getLoginUserId(session);
+		Page<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrder(busid, param);
+		return ResponseDTO.createBySuccess(page);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@ApiOperation(value = "添加线下订单", notes = "添加线下订单")
+	@PostMapping(value = "AddOffLineOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<QueryRoomCategoryOne> AddOffLineOrder(@Validated @RequestBody HotelOrderParameter.OffLineOrder order, 
+			BindingResult bindingResult, HttpSession session) {
+		ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
+		Integer busid = getLoginUserId(session);
+//		Integer id = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
+		QueryRoomCategoryOne q = new QueryRoomCategoryOne();
+//		q.setCategoryId(id);
+		return ResponseDTO.createBySuccess(q);
+	}
 
+	////////////////////////////////////////////////////////////↓餐饮↓ //////////////////////////////////////////////////////////
+	
+	@ApiOperation(value = "餐饮订单列表", notes = "餐饮订单列表")
+	@GetMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<Page<HotelBackFoodOrderVo>> foodOrderR(HotelOrderParameter.FoodOrderQuery param,
+			HttpSession session) {
+		Integer busid = getLoginUserId(session);
+		Page<HotelBackFoodOrderVo> page = tOrderService.queryFoodOrder(busid, param);
+		return ResponseDTO.createBySuccess(page);
+	}
+	
 }

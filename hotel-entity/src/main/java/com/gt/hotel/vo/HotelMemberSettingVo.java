@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Data
 @Api(description = "酒店会员设置")
 public class HotelMemberSettingVo {
@@ -17,9 +19,10 @@ public class HotelMemberSettingVo {
     private Integer vipLevel;
 
     @ApiModelProperty("会员 最晚退房时间(默认退房时间均为离店当天14点)")
+    @JsonFormat(pattern = "HH:mm", timezone = "GMT+8")
     private Date vipCheckOut;
 
     @ApiModelProperty("是否免押金  0 是 1 否")
-    private String freeDepositEnable;
-
+    private Integer freeDepositEnable;
+    
 }

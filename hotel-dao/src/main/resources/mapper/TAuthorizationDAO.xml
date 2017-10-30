@@ -39,7 +39,10 @@
 		FIND_IN_SET(sys_dictionary.id, t_authorization.function_ids))
 		functions
 		FROM t_authorization JOIN t_hotel ON t_authorization.hotel_id = t_hotel.id
-		WHERE t_authorization.mark_modified != 2
+		WHERE t_authorization.mark_modified == 0 
+		<if test="hotelId != null">
+			t_authorization.hotelId = #{hotelId}
+		</if>
 		GROUP BY t_authorization.id
 	</select>
 

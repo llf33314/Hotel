@@ -1,12 +1,32 @@
 package com.gt.hotel.controller.back;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.other.EmployeeList;
+import com.gt.hotel.other.Employee;
 import com.gt.hotel.param.ERPParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomParameter;
@@ -20,18 +40,10 @@ import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TAuthorizationService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * 酒店后台-ERP设置
@@ -70,7 +82,10 @@ public class HotelErpSetController extends BaseController {
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
     public ResponseDTO erpSettingCU(@Validated @Param("参数") @RequestBody ERPParameter.ERPSave save, BindingResult bindingResult, HttpSession session) {
-        InvalidParameter(bindingResult);
+    	ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
         Integer busid = getLoginUserId(session);
         tHotelService.SaveHotelERP(busid, save);
         return ResponseDTO.createBySuccess();
@@ -79,26 +94,32 @@ public class HotelErpSetController extends BaseController {
     //////////////////////////////////////////////////////////// 长包房 //////////////////////////////////////////////////////////
 
     @ApiOperation(value = "保存 长包房设置", notes = "保存 长包房设置")
-    @PostMapping(value = "roomPermanent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "{hotelId}/roomPermanent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO roomPermanentCU(@Validated @Param("参数") @RequestBody RoomParameter.RoomPermanent per, BindingResult bindingResult, HttpSession session) {
-        InvalidParameter(bindingResult);
+    public ResponseDTO roomPermanentCU(@Valid @Param("参数") @RequestBody RoomParameter.RoomPermanent per, 
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, BindingResult bindingResult, HttpSession session) {
+    	ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
         Integer busId = getLoginUserId(session);
         tRoomCategoryService.SaveRoomPermanent(busId, per);
         return ResponseDTO.createBySuccess();
     }
 
     @ApiOperation(value = "查询 长包房设置", notes = "查询 长包房设置")
-    @GetMapping(value = "roomPermanent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<RoomPermanentVo>> roomPermanentR(@Validated @Param("参数") @ModelAttribute RoomParameter.RoomPermanentQuery param) {
-        Page<RoomPermanentVo> page = tRoomCategoryService.queryRoomPermanent(param);
+    @GetMapping(value = "{hotelId}/roomPermanent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<Page<RoomPermanentVo>> roomPermanentR(@Validated @Param("参数") @ModelAttribute RoomParameter.RoomPermanentQuery param, 
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId) {
+        Page<RoomPermanentVo> page = tRoomCategoryService.queryRoomPermanent(hotelId, param);
         return ResponseDTO.createBySuccess(page);
     }
 
     @ApiOperation(value = "删除 长包房设置", notes = "删除 长包房设置")
-    @DeleteMapping(value = "roomPermanent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = "{hotelId}/roomPermanent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO roomPermanentD(@RequestBody @ApiParam("长包房设置ID 数组") List<Integer> ids, HttpSession session) {
+    public ResponseDTO roomPermanentD(@RequestBody @ApiParam("长包房设置ID 数组") List<Integer> ids, 
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpSession session) {
         Integer busId = getLoginUserId(session);
         tRoomCategoryService.delRoomPermanent(busId, ids);
         return ResponseDTO.createBySuccess();
@@ -113,37 +134,45 @@ public class HotelErpSetController extends BaseController {
         return ResponseDTO.createBySuccess(page);
     }
 
-    @ApiOperation(value = "查询 员工列表", notes = "查询 员工列表")
+    @SuppressWarnings("unchecked")
+	@ApiOperation(value = "查询 员工列表", notes = "查询 员工列表")
     @GetMapping(value = "employee/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<EmployeeList> employeeR(@PathVariable("shopId") Integer shopId, @Param("门店ID") @ModelAttribute WXMPParameter.queryEmployee qe) {
-        EmployeeList e = null;
-        JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone());
+    public ResponseDTO<Page<Employee>> employeeR(@PathVariable("shopId") Integer shopId, 
+    		@Param("门店ID") @ModelAttribute WXMPParameter.queryEmployee qe) {
+    	Page<Employee> page = qe.initPage();
+        JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), qe.getPage(), qe.getPageSize());
         if ("0".equals(result.getString("code"))) {
-            e = JSONObject.parseObject(result.getString("data"), EmployeeList.class);
-        } else throw new ResponseEntityException(result.getString("msg"));
-        return ResponseDTO.createBySuccess(e);
+            JSONObject temp = JSONObject.parseObject(result.getString("data"));
+            page.setRecords(JSONArray.parseArray(temp.getString("staffList"), Employee.class));
+            page.setTotal(temp.getInteger("count"));
+        } else {
+        	throw new ResponseEntityException(result.getString("msg"));
+        }
+        return ResponseDTO.createBySuccess(page);
     }
 
     @ApiOperation(value = "查询 授权管理列表", notes = "查询 授权管理列表")
-    @GetMapping(value = "author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<AuthorizationVo>> authorR(HotelPage param) {
-        Page<AuthorizationVo> page = tAuthorizationService.queryAuthor(param);
+    @GetMapping(value = "{hotelId}/author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<Page<AuthorizationVo>> authorR(HotelPage param, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId) {
+        Page<AuthorizationVo> page = tAuthorizationService.queryAuthor(hotelId, param);
         return ResponseDTO.createBySuccess(page);
     }
 
     @ApiOperation(value = "新增 授权管理", notes = "新增 授权管理")
-    @PostMapping(value = "author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "{hotelId}/author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO roomCategoryCU(@RequestBody @ApiParam("授权管理ID 数组") List<ERPParameter.AuthorSave> authors, HttpSession session) {
+    public ResponseDTO roomCategoryCU(@RequestBody @ApiParam("授权管理ID 数组") List<ERPParameter.AuthorSave> authors, 
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpSession session) {
         Integer busid = getLoginUserId(session);
         tAuthorizationService.saveAuthor(busid, authors);
         return ResponseDTO.createBySuccess();
     }
 
     @ApiOperation(value = "删除 授权管理", notes = "删除 授权管理")
-    @DeleteMapping(value = "author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @DeleteMapping(value = "{hotelId}/author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO authorD(@RequestBody @ApiParam("授权管理ID 数组") List<Integer> ids, HttpSession session) {
+    public ResponseDTO authorD(@RequestBody @ApiParam("授权管理ID 数组") List<Integer> ids, 
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpSession session) {
         Integer busId = getLoginUserId(session);
         tAuthorizationService.delAuthor(busId, ids);
         return ResponseDTO.createBySuccess();

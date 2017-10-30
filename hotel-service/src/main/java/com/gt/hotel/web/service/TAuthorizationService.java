@@ -25,7 +25,7 @@ public interface TAuthorizationService extends BaseService<TAuthorization> {
      * @param param
      * @return
      */
-    Page<AuthorizationVo> queryAuthor(HotelPage param);
+    Page<AuthorizationVo> queryAuthor(Integer hotelId, HotelPage param);
 
     /**
      * 删除 授权管理
@@ -42,5 +42,6 @@ public interface TAuthorizationService extends BaseService<TAuthorization> {
      * @param authors
      */
     void saveAuthor(Integer busid, List<AuthorSave> authors);
+
 
 }

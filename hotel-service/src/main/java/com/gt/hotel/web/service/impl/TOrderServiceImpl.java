@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.entity.TOrder;
-import com.gt.hotel.param.HotelOrderParameter.OrderQuery;
+import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
+import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
+import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderService;
 
@@ -27,9 +29,17 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<HotelBackRoomOrderVo> queryRoomOrder(Integer busid, OrderQuery param) {
+	public Page<HotelBackRoomOrderVo> queryRoomOrder(Integer busid, RoomOrderQuery param) {
 		Page<HotelBackRoomOrderVo> page = param.initPage();
 		page.setRecords(tOrderDAO.queryRoomOrder(busid, param, page));
+		return page;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<HotelBackFoodOrderVo> queryFoodOrder(Integer busid, FoodOrderQuery param) {
+		Page<HotelBackFoodOrderVo> page = param.initPage();
+		page.setRecords(tOrderDAO.queryFoodOrder(busid, param, page));
 		return page;
 	}
 	

@@ -1,5 +1,24 @@
 package com.gt.hotel.controller.back;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
@@ -15,19 +34,10 @@ import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomVo;
 import com.gt.hotel.web.service.TRoomCategoryService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 酒店后台-房型管理
@@ -43,21 +53,29 @@ public class HotelRoomController extends BaseController {
 	@Autowired
 	TRoomCategoryService tRoomCategoryService;
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@ApiOperation(value = "房型列表", notes = "房型列表")
 	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<RoomCategoryVo>> roomCategoryR(
 			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param, BindingResult bindingResult) {
-		InvalidParameter(bindingResult);
+		ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
 		Page<RoomCategoryVo> page = tRoomCategoryService.queryRoomCategory(param);
 		return ResponseDTO.createBySuccess(page);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@ApiOperation(value = "新增 或 更新 房型", notes = "新增 或 更新 房型")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<QueryRoomCategoryOne> roomCategoryCU(
 			@Validated @RequestBody @ApiParam("参数") CategorySaveOrUpdate roomCategory, BindingResult bindingResult,
 			HttpSession session) {
-		InvalidParameter(bindingResult);
+		ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
 		Integer busid = getLoginUserId(session);
 		Integer id = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
 		QueryRoomCategoryOne q = new QueryRoomCategoryOne();
@@ -132,7 +150,6 @@ public class HotelRoomController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO roomCalendarCU(@PathVariable("categoryId") Integer categoryId,
 			@RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, HttpSession session) {
-		System.err.println(cal);
 		Integer busid = getLoginUserId(session);
 		Date date = new Date();
 		TRoomCalendar calendar = new TRoomCalendar();

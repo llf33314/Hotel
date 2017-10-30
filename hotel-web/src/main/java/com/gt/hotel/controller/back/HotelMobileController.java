@@ -66,9 +66,12 @@ public class HotelMobileController extends BaseController {
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO phoneSettingCU(
-			@Validated @RequestBody @Param("参数") HotelMobileParameter.MobileSaveOrUpdate setting, BindingResult result,
+			@Validated @RequestBody @Param("参数") HotelMobileParameter.MobileSaveOrUpdate setting, BindingResult bindingResult,
 			HttpSession session) {
-		InvalidParameter(result);
+		ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
 		Integer busid = getLoginUserId(session);
 		tHotelSettingService.saveSetting(busid, setting);
 		return ResponseDTO.createBySuccess();
@@ -101,8 +104,11 @@ public class HotelMobileController extends BaseController {
 	@PostMapping(value = "{hotelId}/food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO foodCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.FoodSaveOrUpdate food,
-			@PathVariable("hotelId") Integer hotelId, BindingResult result, HttpSession session) {
-		InvalidParameter(result);
+			@PathVariable("hotelId") Integer hotelId, BindingResult bindingResult, HttpSession session) {
+		ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
 		Integer busid = getLoginUserId(session);
 		Date date = new Date();
 		TFood f = new TFood();

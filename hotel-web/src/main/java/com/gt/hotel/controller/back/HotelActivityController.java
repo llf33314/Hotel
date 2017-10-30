@@ -38,10 +38,14 @@ public class HotelActivityController extends BaseController {
     @Autowired
     TActivityService tActivityService;
 
-    @ApiOperation(value = "查询 活动 列表", notes = "查询 活动 列表")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@ApiOperation(value = "查询 活动 列表", notes = "查询 活动 列表")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<ActivityVo>> activityR(@Validated @Param("参数") @ModelAttribute ActivityParamter.ActivityQuery param, BindingResult result) {
-        InvalidParameter(result);
+    public ResponseDTO<Page<ActivityVo>> activityR(@Validated @Param("参数") @ModelAttribute ActivityParamter.ActivityQuery param, BindingResult bindingResult) {
+    	ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
         Page<ActivityVo> page = tActivityService.queryActivity(param);
         return ResponseDTO.createBySuccess(page);
     }
@@ -50,7 +54,10 @@ public class HotelActivityController extends BaseController {
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
     public ResponseDTO activityCU(@Validated @Param("参数") @RequestBody ActivityParamter.ActivitySaveOrUpdate arooms, BindingResult bindingResult, HttpSession session) {
-        InvalidParameter(bindingResult);
+    	ResponseDTO msg = InvalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
         Integer busid = getLoginUserId(session);
         tActivityService.editActivity(busid, arooms);
         return ResponseDTO.createBySuccess();

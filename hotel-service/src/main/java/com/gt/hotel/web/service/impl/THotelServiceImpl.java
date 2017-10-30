@@ -76,15 +76,20 @@ public class THotelServiceImpl extends BaseServiceImpl<THotelDAO, THotel> implem
         h.setLogo(save.getLogo());
         h.setUpdatedAt(new Date());
         h.setUpdatedBy(busid);
-        if (this.updateById(h)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
-
-        List<THotelMemberSetting> mss = new ArrayList<>();
-        for (HotelMemberSettingVo v : save.getMemberSetting()) {
-            THotelMemberSetting _v = new THotelMemberSetting();
-            BeanUtils.copyProperties(v, _v);
-            mss.add(_v);
+        if (!this.updateById(h)) {
+        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
-        if (tHotelMemberSettingService.insertOrUpdateBatch(mss)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+
+        for (HotelMemberSettingVo v : save.getMemberSetting()) {
+            THotelMemberSetting hotelMemberSetting = new THotelMemberSetting();
+            BeanUtils.copyProperties(v, hotelMemberSetting);
+            Wrapper<THotelMemberSetting> wrapper = new EntityWrapper<>();
+            wrapper.eq("hotel_id", hotelMemberSetting.getHotelId());
+            wrapper.eq("vip_level", hotelMemberSetting.getVipLevel());
+			if (!tHotelMemberSettingService.update(hotelMemberSetting, wrapper)) {
+            	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            }
+        }
     }
 
 }

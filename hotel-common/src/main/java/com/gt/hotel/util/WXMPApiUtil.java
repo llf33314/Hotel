@@ -67,6 +67,7 @@ public class WXMPApiUtil {
     @SuppressWarnings("rawtypes")
     private JSONObject getCApi(Map param, String _url) throws SignException {
         String s = SignHttpUtils.WxmppostByHttp(SERVER_URL + _url, param, SIGN_KEY);
+//        String s = SignHttpUtils.WxmppostByHttp("https://deeptel.com.cn" + _url, param, "WXMP2017");
         JSONObject result = JSONObject.parseObject(s);
         return result;
     }
@@ -194,11 +195,13 @@ public class WXMPApiUtil {
 //		}
 //		return es;
 //	}
-    public JSONObject getAllStaffShopId(Integer shopId, String name, String phone) {
+    public JSONObject getAllStaffShopId(Integer shopId, String name, String phone, Integer page, Integer pageSize) {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("shopId", shopId);
         paramObj.put("name", name);
         paramObj.put("phone", phone);
+        paramObj.put("page", page);
+        paramObj.put("pageSize", pageSize);
         JSONObject result = null;
         try {
             result = getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
@@ -369,9 +372,10 @@ public class WXMPApiUtil {
             paramObj.put("shopId", 33);
             // System.err.println(getDictKey("1180"));
 //			System.err.println(u.queryWxShopByBusId(33));
-            JSONObject json = u.getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
+//            JSONObject json = u.getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
+            JSONObject json = u.getAllStaffShopId(33, "", "", 1, 10);
             System.err.println(json.getString("data"));
-        } catch (SignException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

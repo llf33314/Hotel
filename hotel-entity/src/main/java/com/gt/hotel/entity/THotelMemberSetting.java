@@ -1,6 +1,8 @@
 package com.gt.hotel.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

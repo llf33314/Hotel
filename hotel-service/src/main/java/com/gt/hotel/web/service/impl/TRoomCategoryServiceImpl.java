@@ -218,8 +218,12 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
             }
         }
 
-        if (r1.size() > 0) if (!tRoomService.insertBatch(r1)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
-        if (r2.size() > 0) if (!tRoomService.updateBatchById(r2)) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        if (r1.size() > 0) if (!tRoomService.insertBatch(r1)) {
+        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        }
+        if (r2.size() > 0) if (!tRoomService.updateBatchById(r2)) {
+        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        }
 
         if (entityList.size() > 0) {
             TRoomCategory category = new TRoomCategory();
@@ -264,29 +268,29 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         }
         rp.setUpdatedAt(date);
         rp.setUpdatedBy(busId);
-        if (rp.insertOrUpdate()) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        if (!rp.insertOrUpdate()) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Page<RoomPermanentVo> queryRoomPermanent(RoomPermanentQuery param) {
+    public Page<RoomPermanentVo> queryRoomPermanent(Integer hotelId, RoomPermanentQuery param) {
         Page<RoomPermanentVo> page = param.initPage();
-        page.setRecords(tRoomPermanentDAO.queryRoomPermanent(param, page));
+        page.setRecords(tRoomPermanentDAO.queryRoomPermanent(hotelId, param, page));
         return page;
     }
 
     @Override
     public void delRoomPermanent(Integer busId, List<Integer> ids) {
-        List<TRoomPermanent> entityList = new ArrayList<>();
         Date date = new Date();
-        for (Integer id : ids) {
-            TRoomPermanent rp = new TRoomPermanent();
-            rp.setId(id);
-            rp.setMarkModified(CommonConst.DELETED);
-            rp.setUpdatedBy(busId);
-            rp.setUpdatedAt(date);
-        }
-        if (tRoomPermanentService.updateBatchById(entityList)) throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
+        TRoomPermanent rp = new TRoomPermanent();
+        rp.setMarkModified(CommonConst.DELETED);
+        rp.setUpdatedBy(busId);
+        rp.setUpdatedAt(date);
+    	Wrapper<TRoomPermanent> wrapper = new EntityWrapper<>();
+    	wrapper.in("id", ids);
+		if (!tRoomPermanentService.update(rp, wrapper)) {
+    		throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
+    	}
     }
 
     @Override
