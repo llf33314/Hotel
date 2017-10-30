@@ -119,8 +119,16 @@ public class HotelRoomController extends BaseController {
 	public ResponseDTO<Page<RoomVo>> roomRList(@PathVariable("categoryId") @ApiParam("房型ID") Integer categoryId,
 			HotelPage hpage) {
 		Page<RoomVo> page = hpage.initPage();
-		page = tRoomCategoryService.queryRoomList(categoryId, page);
+		page = tRoomCategoryService.queryRoomList(null, categoryId, page);
 		return ResponseDTO.createBySuccess(page);
+	}
+	
+	@ApiOperation(value = "房间 集合", notes = "房间 集合")
+	@GetMapping(value = "{hotelId}/roomAll", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<List<RoomVo>> roomRList(@PathVariable("hotelId") @ApiParam("酒店ID") Integer hotelId, 
+			@ApiParam("房型ID") Integer categoryId) {
+		List<RoomVo> l = tRoomCategoryService.queryRoomList(hotelId, categoryId);
+		return ResponseDTO.createBySuccess(l);
 	}
 
 	@ApiOperation(value = "编辑 房间", notes = "编辑 房间")

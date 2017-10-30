@@ -18,18 +18,35 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, category_id, number, floor, status, mark_modified, created_by, created_at, updated_by, updated_at
+        t_room.id, t_room.category_id, t_room.number, t_room.floor, t_room.status, t_room.mark_modified, t_room.created_by, t_room.created_at, t_room.updated_by, t_room.updated_at
     </sql>
 
-
-    <select id="queryRoomList" resultType="com.gt.hotel.vo.RoomVo">
+	<select id="queryRoomList" resultType="com.gt.hotel.vo.RoomVo">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_room
-        WHERE mark_modified = 0
+        FROM t_room 
+        JOIN t_room_category ON t_room.category_id = t_room_category.id 
+        WHERE t_room.mark_modified = 0 
+        <if test="hotelId != null">
+            AND t_room_category.hotel_id = #{hotelId} 
+        </if>
         <if test="categoryId != null">
-            AND category_id = #{categoryId}
+            AND t_room.category_id = #{categoryId} 
         </if>
     </select>
 
+	<select id="queryRoomListAll" resultType="com.gt.hotel.vo.RoomVo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_room 
+        JOIN t_room_category ON t_room.category_id = t_room_category.id 
+        WHERE t_room.mark_modified = 0 
+        <if test="hotelId != null">
+            AND t_room_category.hotel_id = #{hotelId} 
+        </if>
+        <if test="categoryId != null">
+            AND t_room.category_id = #{categoryId} 
+        </if>
+    </select>
+    
 </mapper>

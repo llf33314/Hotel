@@ -238,10 +238,16 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
     }
 
     @Override
-    public Page<RoomVo> queryRoomList(Integer categoryId, Page<RoomVo> page) {
-        page.setRecords(tRoomDAO.queryRoomList(categoryId, page));
+    public Page<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, Page<RoomVo> page) {
+        page.setRecords(tRoomDAO.queryRoomList(hotelId, categoryId, page));
         return page;
     }
+    
+
+	@Override
+	public List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId) {
+		return tRoomDAO.queryRoomListAll(hotelId, categoryId);
+	}
 
     @SuppressWarnings("unchecked")
     @Override
@@ -307,5 +313,6 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         return l;
 
     }
+
 
 }

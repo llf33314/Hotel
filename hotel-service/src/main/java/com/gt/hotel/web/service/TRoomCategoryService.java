@@ -66,7 +66,7 @@ public interface TRoomCategoryService extends BaseService<TRoomCategory> {
      * @param page
      * @return
      */
-    Page<RoomVo> queryRoomList(Integer categoryId, Page<RoomVo> page);
+    Page<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, Page<RoomVo> page);
 
     /**
      * 删除 房型(伪)
@@ -118,6 +118,14 @@ public interface TRoomCategoryService extends BaseService<TRoomCategory> {
      * @return
      */
     List<InfrastructureVo> queryRoomCategoryInfrastructure();
+
+    /**
+     * 查询 房间列表 全部
+     * @param hotelId
+     * @param categoryId
+     * @return
+     */
+	List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId);
 
 
 }
