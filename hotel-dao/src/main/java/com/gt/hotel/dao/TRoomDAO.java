@@ -34,6 +34,6 @@ public interface TRoomDAO extends BaseMapper<TRoom> {
      * @param categoryId
      * @return
      */
-	List<RoomVo> queryRoomListAll(@Param("hotelId") Integer hotelId, @Param("categoryId") Integer categoryId);
+	List<RoomVo> queryRoomListAll(@Param("hotelId") Integer hotelId, @Param("categoryId") Integer categoryId, @Param("roomNumber") String roomNumber);
 
 }

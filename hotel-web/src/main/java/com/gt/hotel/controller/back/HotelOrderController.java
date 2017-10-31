@@ -62,6 +62,97 @@ public class HotelOrderController extends BaseController {
         tOrderService.update(h, wrapper);
         return ResponseDTO.createBySuccess();
     }
+
+	@SuppressWarnings("rawtypes")
+	@ApiOperation(value = "订单  确认 操作", notes = "订单  确认 操作")
+	@PostMapping(value = "{orderId}/confirm", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO orderConfirm(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
+		Integer busid = getLoginUserId(session);
+		TOrder order = tOrderService.selectById(orderId);
+		if(!order.getOrderStatus().equals(0)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
+		}
+		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+		wrapper.eq("id", orderId);
+		TOrder newOrder = new TOrder();
+		newOrder.setOrderStatus(CommonConst.ORDER_CONFIRMED);
+		newOrder.setUpdatedBy(busid);
+		newOrder.setUpdatedAt(new Date());
+		if(!tOrderService.update(newOrder, wrapper)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.SAVE_ERROR.getMsg());
+		}
+		return ResponseDTO.createBySuccess();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@ApiOperation(value = "订单  取消 操作", notes = "订单  取消 操作")
+	@PostMapping(value = "{orderId}/cancel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO orderCancel(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
+		Integer busid = getLoginUserId(session);
+		TOrder order = tOrderService.selectById(orderId);
+		if(!order.getOrderStatus().equals(0)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
+		}
+		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+		wrapper.eq("id", orderId);
+		TOrder newOrder = new TOrder();
+		newOrder.setOrderStatus(CommonConst.ORDER_CANCALLED);
+		newOrder.setUpdatedBy(busid);
+		newOrder.setUpdatedAt(new Date());
+		if(!tOrderService.update(newOrder, wrapper)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+		}
+		return ResponseDTO.createBySuccess();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@ApiOperation(value = "订单  完成 操作", notes = "订单  完成 操作")
+	@PostMapping(value = "{orderId}/complete", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO foodOrderComplete(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
+		Integer busid = getLoginUserId(session);
+		TOrder order = tOrderService.selectById(orderId);
+		if(!order.getOrderStatus().equals(1) || !order.getOrderStatus().equals(2)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
+		}
+		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+		wrapper.eq("id", orderId);
+		TOrder newOrder = new TOrder();
+		newOrder.setOrderStatus(CommonConst.ORDER_CANCALLED);
+		newOrder.setUpdatedBy(busid);
+		newOrder.setUpdatedAt(new Date());
+		if(!tOrderService.update(newOrder, wrapper)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+		}
+		return ResponseDTO.createBySuccess();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@ApiOperation(value = "订单  退款 操作(占位)", notes = "订单  退款 操作(占位)")
+	@PostMapping(value = "{orderId}/refunds", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO orderRefunds(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
+		Integer busid = getLoginUserId(session);
+		TOrder order = tOrderService.selectById(orderId);
+		if(!order.getPayStatus().equals(1)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
+		}
+		
+		//TODO 退款
+		
+		//TODO 退款
+		
+		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+		wrapper.eq("id", orderId);
+		TOrder newOrder = new TOrder();
+		newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+		newOrder.setUpdatedBy(busid);
+		newOrder.setUpdatedAt(new Date());
+		if(!tOrderService.update(newOrder, wrapper)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+		}
+		return ResponseDTO.createBySuccess();
+	}
+	
+	////////////////////////////////////////////////////////////↓房间↓ //////////////////////////////////////////////////////////
 	
 	@ApiOperation(value = "房间订单列表", notes = "房间订单列表")
 	@GetMapping(value = "room", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -73,9 +164,9 @@ public class HotelOrderController extends BaseController {
 	}
 	
 	@ApiOperation(value = "房间订单详情", notes = "房间订单详情")
-	@GetMapping(value = "room/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<HotelBackRoomOrderVo> roomOrderR(@PathVariable("id") Integer id) {
-		HotelBackRoomOrderVo order = tOrderService.queryRoomOrderOne(id);
+	@GetMapping(value = "room/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<HotelBackRoomOrderVo> roomOrderOneR(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId) {
+		HotelBackRoomOrderVo order = tOrderService.queryRoomOrderOne(orderId);
 		return ResponseDTO.createBySuccess(order);
 	}
 	
@@ -92,7 +183,49 @@ public class HotelOrderController extends BaseController {
 		tOrderService.AddOffLineOrder(busid, order);
 		return ResponseDTO.createBySuccess();
 	}
-
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@ApiOperation(value = "房间订单入住", notes = "房间订单入住")
+	@PostMapping(value = "{orderId}/checkIn", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<QueryRoomCategoryOne> checkIn(@PathVariable("orderId") Integer orderId, 
+			@Validated @RequestBody HotelOrderParameter.CheckInParam param, 
+			BindingResult bindingResult, HttpSession session) {
+		ResponseDTO msg = InvalidParameterII(bindingResult);
+		if(msg != null) {
+			return msg;
+		}
+		Integer busid = getLoginUserId(session);
+		tOrderService.checkIn(busid, orderId, param);
+		return ResponseDTO.createBySuccess();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@ApiOperation(value = "房间订单  结账退房 操作(占位)", notes = "房间订单  结账退房 操作(占位)")
+	@PostMapping(value = "{orderId}/checkOut", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO checkOut(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
+		Integer busid = getLoginUserId(session);
+		TOrder order = tOrderService.selectById(orderId);
+		if(!order.getPayStatus().equals(3)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
+		}
+		
+		//TODO 结账退房
+		
+		//TODO 结账退房
+		
+		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+		wrapper.eq("id", orderId);
+		Date date = new Date();
+		TOrder newOrder = new TOrder();
+		newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+		newOrder.setUpdatedBy(busid);
+		newOrder.setUpdatedAt(date);
+		if(!tOrderService.update(newOrder, wrapper)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+		}
+		return ResponseDTO.createBySuccess();
+	}
+	
 	////////////////////////////////////////////////////////////↓餐饮↓ //////////////////////////////////////////////////////////
 	
 	@ApiOperation(value = "餐饮订单列表", notes = "餐饮订单列表")
@@ -104,93 +237,6 @@ public class HotelOrderController extends BaseController {
 		return ResponseDTO.createBySuccess(page);
 	}
 	
-	@SuppressWarnings("rawtypes")
-	@ApiOperation(value = "餐饮订单  确认 操作", notes = "餐饮订单  确认 操作")
-	@PostMapping(value = "food/{id}/confirm", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO foodOrderConfirm(@PathVariable("id") Integer id, HttpSession session) {
-		Integer busid = getLoginUserId(session);
-		TOrder order = tOrderService.selectById(id);
-		if(!order.getOrderStatus().equals(0)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
-		}
-		Wrapper<TOrder> wrapper = new EntityWrapper<>();
-		wrapper.eq("id", id);
-		TOrder newOrder = new TOrder();
-		newOrder.setOrderStatus(CommonConst.ORDER_CONFIRMED);
-		newOrder.setUpdatedBy(busid);
-		newOrder.setUpdatedAt(new Date());
-		if(!tOrderService.update(newOrder, wrapper)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.SAVE_ERROR.getMsg());
-		}
-		return ResponseDTO.createBySuccess();
-	}
 	
-	@SuppressWarnings("rawtypes")
-	@ApiOperation(value = "餐饮订单  取消 操作", notes = "餐饮订单  取消 操作")
-	@PostMapping(value = "food/{id}/cancel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO foodOrderCancel(@PathVariable("id") Integer id, HttpSession session) {
-		Integer busid = getLoginUserId(session);
-		TOrder order = tOrderService.selectById(id);
-		if(!order.getOrderStatus().equals(0)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
-		}
-		Wrapper<TOrder> wrapper = new EntityWrapper<>();
-		wrapper.eq("id", id);
-		TOrder newOrder = new TOrder();
-		newOrder.setOrderStatus(CommonConst.ORDER_CANCALLED);
-		newOrder.setUpdatedBy(busid);
-		newOrder.setUpdatedAt(new Date());
-		if(!tOrderService.update(newOrder, wrapper)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
-		}
-		return ResponseDTO.createBySuccess();
-	}
-	
-	@SuppressWarnings("rawtypes")
-	@ApiOperation(value = "餐饮订单  完成 操作", notes = "餐饮订单  完成 操作")
-	@PostMapping(value = "food/{id}/complete", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO foodOrderComplete(@PathVariable("id") Integer id, HttpSession session) {
-		Integer busid = getLoginUserId(session);
-		TOrder order = tOrderService.selectById(id);
-		if(!order.getOrderStatus().equals(1) || !order.getOrderStatus().equals(2)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
-		}
-		Wrapper<TOrder> wrapper = new EntityWrapper<>();
-		wrapper.eq("id", id);
-		TOrder newOrder = new TOrder();
-		newOrder.setOrderStatus(CommonConst.ORDER_CANCALLED);
-		newOrder.setUpdatedBy(busid);
-		newOrder.setUpdatedAt(new Date());
-		if(!tOrderService.update(newOrder, wrapper)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
-		}
-		return ResponseDTO.createBySuccess();
-	}
-	
-	@SuppressWarnings("rawtypes")
-	@ApiOperation(value = "餐饮订单  退款 操作", notes = "餐饮订单  退款 操作")
-	@PostMapping(value = "food/{id}/refunds", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO foodOrderRefunds(@PathVariable("id") Integer id, HttpSession session) {
-		Integer busid = getLoginUserId(session);
-		TOrder order = tOrderService.selectById(id);
-		if(!order.getPayStatus().equals(1)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
-		}
-		
-		//TODO 餐饮退款
-		
-		//TODO 餐饮退款
-		
-		Wrapper<TOrder> wrapper = new EntityWrapper<>();
-		wrapper.eq("id", id);
-		TOrder newOrder = new TOrder();
-		newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
-		newOrder.setUpdatedBy(busid);
-		newOrder.setUpdatedAt(new Date());
-		if(!tOrderService.update(newOrder, wrapper)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
-		}
-		return ResponseDTO.createBySuccess();
-	}
 	
 }

@@ -245,8 +245,8 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
     
 
 	@Override
-	public List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId) {
-		return tRoomDAO.queryRoomListAll(hotelId, categoryId);
+	public List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber) {
+		return tRoomDAO.queryRoomListAll(hotelId, categoryId, roomNumber);
 	}
 
     @SuppressWarnings("unchecked")

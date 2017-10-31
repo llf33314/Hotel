@@ -18,9 +18,15 @@ public class RoomVo {
 
     @ApiModelProperty("房间ID")
     private Integer id;
-
+    
     @ApiModelProperty("房型ID")
     private Integer categoryId;
+
+    @ApiModelProperty("房型名称")
+    private String categoryName;
+
+    @ApiModelProperty("门市价 ")
+    private Integer rackRate;
 
     @ApiModelProperty("客房编号")
     private String number;

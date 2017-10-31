@@ -1,14 +1,17 @@
 package com.gt.hotel.param;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
 
 @Api(description = "酒店 活动 参数实体类")
 public class ActivityParamter {
@@ -36,6 +39,9 @@ public class ActivityParamter {
     public static class ActivitySaveOrUpdate {
         @ApiModelProperty(value = "活动ID(更新需要)")
         private Integer id;
+        
+        @ApiModelProperty(value = "酒店ID")
+        private Integer hotelId;
 
         @ApiModelProperty(value = "活动 开始时间")
         @NotNull(message = "开始时间不能为空")
@@ -75,9 +81,13 @@ public class ActivityParamter {
         @ApiModelProperty(value = "当activity=2 , 此项不能为空，入住时长。 单位分钟")
         private Integer checkInTime;
 
-        @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段 始")
+        @JsonFormat(pattern = "HH:mm:ss")
         private Date checkInPeriod;
+        
+        @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段 末")
+        @JsonFormat(pattern = "HH:mm:ss")
+    	private Date checkOutPeriod;
 
         @ApiModelProperty(value = "如果 activity=4 团购房 规则 最少预订房间数量")
         private Integer minPurchaseNumber;
@@ -107,7 +117,7 @@ public class ActivityParamter {
 
         @ApiModelProperty(value = "客房编号")
         @NotEmpty(message = "客房编号不能为空")
-        private String roomNumber;
+        private String roomNum;
 
         @ApiModelProperty(value = "门市价")
         @NotNull(message = "门市价不能为空")

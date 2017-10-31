@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Data
 public class ActivityDetailVo {
     /**
@@ -22,11 +24,15 @@ public class ActivityDetailVo {
      */
     @ApiModelProperty(value = "当activity=2 , 此项不能为空，入住时长。 单位分钟")
     private Integer checkInTime;
-    /**
-     * 如果 activity_type=2 钟点房 客人可入住时间段
-     */
-    @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段")
-    private Date    checkInPeriod;
+    
+    @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段 始")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private Date checkInPeriod;
+    
+    @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段 末")
+    @JsonFormat(pattern = "HH:mm:ss")
+	private Date checkOutPeriod;
+    
     /**
      * 如果 activity=4 团购房 规则 最少预订房间数量
      */

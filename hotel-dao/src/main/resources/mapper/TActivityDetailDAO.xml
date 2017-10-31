@@ -8,6 +8,7 @@
 		<result column="activity_type" property="activityType" />
 		<result column="check_in_time" property="checkInTime" />
 		<result column="check_in_period" property="checkInPeriod" />
+		<result column="check_out_period" property="checkOutPeriod" />
 		<result column="min_purchase_number" property="minPurchaseNumber" />
 		<result column="created_by" property="createdBy" />
 		<result column="created_at" property="createdAt" />
@@ -17,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        activity_id, activity_type, check_in_time, check_in_period, min_purchase_number, created_by, created_at, updated_by, updated_at
+        activity_id, activity_type, check_in_time, check_in_period, check_out_period, min_purchase_number, created_by, created_at, updated_by, updated_at
     </sql>
 
 </mapper>

@@ -125,7 +125,7 @@ public interface TRoomCategoryService extends BaseService<TRoomCategory> {
      * @param categoryId
      * @return
      */
-	List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId);
+	List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber);
 
 
 }

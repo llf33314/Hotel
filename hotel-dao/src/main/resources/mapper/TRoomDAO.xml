@@ -26,7 +26,7 @@
         <include refid="Base_Column_List"/>
         FROM t_room 
         JOIN t_room_category ON t_room.category_id = t_room_category.id 
-        WHERE t_room.mark_modified = 0 
+        WHERE t_room.mark_modified = 0 AND t_room_category.mark_modified = 0 
         <if test="hotelId != null">
             AND t_room_category.hotel_id = #{hotelId} 
         </if>
@@ -37,15 +37,18 @@
 
 	<select id="queryRoomListAll" resultType="com.gt.hotel.vo.RoomVo">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>, t_room_category.`name` categoryName, t_room_category.rack_rate rackRate 
         FROM t_room 
         JOIN t_room_category ON t_room.category_id = t_room_category.id 
-        WHERE t_room.mark_modified = 0 
+        WHERE t_room.mark_modified = 0 AND t_room_category.mark_modified = 0 
         <if test="hotelId != null">
             AND t_room_category.hotel_id = #{hotelId} 
         </if>
         <if test="categoryId != null">
             AND t_room.category_id = #{categoryId} 
+        </if>
+        <if test="roomNumber != null">
+            AND t_room.number LIKE #{roomNumber} 
         </if>
     </select>
     

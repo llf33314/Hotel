@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author 
- * @since 2017-10-27
+ * @since 2017-10-31
  */
 @Data
 @Accessors(chain = true)
@@ -38,9 +38,13 @@ public class TActivityDetail extends Model<TActivityDetail> {
      */
 	private Integer checkInTime;
     /**
-     * 如果 activity_type=2 钟点房 客人可入住时间段
+     * 如果 activity_type=2 钟点房 客人可入住时间段  始
      */
 	private Date checkInPeriod;
+    /**
+     * 如果 activity_type=2 钟点房 客人可入住时间段 末
+     */
+	private Date checkOutPeriod;
     /**
      * 如果 activity=4 团购房 规则 最少预订房间数量
      */

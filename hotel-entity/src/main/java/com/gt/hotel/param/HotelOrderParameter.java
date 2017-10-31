@@ -130,4 +130,26 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "房间集合")
 		private List<HotelOrderRoomParameter.OrderRoom> rooms;
 	}
+	
+	@Api("房间订单入住  参数")
+	@Data
+	public static class CheckInParam {
+		@ApiModelProperty(value = "客户姓名", required = true)
+		private String customerName;
+
+		@ApiModelProperty(value = "手机号码", required = true)
+		private String customerPhone;
+		
+		@ApiModelProperty(value = "证件类型", required = true)
+		private Integer customerIdType;
+		
+		@ApiModelProperty(value = "证件号", required = true)
+		private String customerIdCard;
+		
+		@ApiModelProperty(value = "性别(0:男, 1:女)", required = true)
+		private Integer customerGender;
+		
+		@ApiModelProperty(value = "房间集合")
+		private List<HotelOrderRoomParameter.OrderRoom> rooms;
+	}
 }

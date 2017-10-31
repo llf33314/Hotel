@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
@@ -18,6 +20,7 @@ import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.entity.TOrderRoomCustomer;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.param.HotelOrderParameter.CheckInParam;
 import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
@@ -25,6 +28,7 @@ import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderRoomCustomerService;
+import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 
 /**
@@ -43,6 +47,9 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 
 	@Autowired
 	TOrderRoomCustomerService tOrderRoomCustomerService;
+	
+	@Autowired
+	TOrderRoomService tOrderRoomService;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -131,6 +138,42 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		orderVo = l.get(0);
 		orderVo.setRooms(tOrderDAO.queryRoomOrderOneRooms(id));
 		return orderVo;
+	}
+
+	@Transactional
+	@Override
+	public void checkIn(Integer busid, Integer orderId, CheckInParam param) {
+		Date date = new Date();
+		TOrderRoom orderRoom = new TOrderRoom();
+		List<TOrderRoomCustomer> customers = new ArrayList<>();
+		orderRoom.setCustomerIdType(param.getCustomerIdType());
+		orderRoom.setCustomerIdCard(param.getCustomerIdCard());
+		orderRoom.setCustomerGender(param.getCustomerGender());
+		orderRoom.setUpdatedAt(date);
+		orderRoom.setUpdatedBy(busid);
+		Wrapper<TOrderRoom> wrapper = new EntityWrapper<>();
+		wrapper.eq("order_id", orderId);
+		if(!tOrderRoomService.update(orderRoom, wrapper)) {
+			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		}
+		for(HotelOrderRoomParameter.OrderRoom o : param.getRooms()) {
+			TOrderRoomCustomer customer = new TOrderRoomCustomer();
+			customer.setIdType(param.getCustomerIdType());
+			customer.setIdCard(param.getCustomerIdCard());
+			customer.setCustomerGender(param.getCustomerGender());
+			customer.setRoomNum(o.getRoomNum());
+			customer.setOrderId(orderId);
+			customer.setName(param.getCustomerName());
+			customer.setPhone(param.getCustomerPhone());
+			customer.setCreatedAt(date);
+			customer.setCreatedBy(busid);
+			customer.setUpdatedAt(date);
+			customer.setUpdatedBy(busid);
+			customers.add(customer);
+		}
+		if(!tOrderRoomCustomerService.insertBatch(customers)) {
+			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		}
 	}
 	
 }

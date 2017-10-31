@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TActivityDAO;
 import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.entity.TActivityDetail;
@@ -60,7 +61,6 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
         Date date = new Date();
         TActivity a = new TActivity();
         TActivityDetail ad = new TActivityDetail();
-        List<TActivityRoom> ars = new ArrayList<>();
 
         BeanUtils.copyProperties(arooms, a);
         BeanUtils.copyProperties(arooms, ad);
@@ -72,38 +72,60 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
         }
         a.setUpdatedAt(date);
         a.setUpdatedBy(busid);
-        if (a.insertOrUpdate()) {
+        if (!a.insertOrUpdate()) {
             throw new ResponseEntityException("活动保存失败");
         }
         //保存活动详情
         ad.setActivityId(a.getId());
-        if (a.getId() == null) {
-            ad.setCreatedAt(date);
-            ad.setCreatedBy(busid);
-        }
         ad.setUpdatedAt(date);
         ad.setUpdatedBy(busid);
-        if (ad.insertOrUpdate()) {
-            throw new ResponseEntityException("活动详情保存失败");
+        if (arooms.getId() == null) {
+            ad.setCreatedAt(date);
+            ad.setCreatedBy(busid);
+            if (!ad.insert()) {
+                throw new ResponseEntityException("活动详情保存失败");
+            }            
+        }else {
+        	Wrapper<TActivityDetail> wrapper = new EntityWrapper<>();
+        	wrapper.eq("activity_id", a.getId());
+			if (!tActivityDetailService.update(ad, wrapper)) {
+        		throw new ResponseEntityException("活动详情保存失败");
+        	}
         }
         //保存活动房间
+        Wrapper<TActivityRoom> wrapper = new EntityWrapper<>();
+        wrapper.eq(a.getId() != null, "activity_id", a.getId());
+        TActivityRoom entity = new TActivityRoom();
+        entity.setMarkModified(CommonConst.DELETED);
+        entity.setUpdatedBy(busid);
+        entity.setUpdatedAt(date);
+        tActivityRoomService.update(entity, wrapper);
+
+        List<TActivityRoom> ars = new ArrayList<>();
+        List<Integer> arsids = new ArrayList<>();
         for (ActivityRoomParam arp : arooms.getRooms()) {
             TActivityRoom ar = new TActivityRoom();
             BeanUtils.copyProperties(arp, ar);
-            ar.setActivityId(a.getId());
-            ar.setMarkModified(0);
-            ar.setCreatedAt(date);
-            ar.setCreatedBy(busid);
-            ar.setUpdatedAt(date);
-            ar.setUpdatedBy(busid);
-            ars.add(ar);
+            if(ar.getId() == null) {
+            	ar.setActivityId(a.getId());
+            	ar.setMarkModified(0);
+            	ar.setCreatedAt(date);
+            	ar.setCreatedBy(busid);
+            	ar.setUpdatedAt(date);
+            	ar.setUpdatedBy(busid);
+            	ars.add(ar);
+            }else {
+            	arsids.add(ar.getId());
+            }
         }
-        Wrapper<TActivityRoom> wrapper = new EntityWrapper<>();
-        wrapper.eq(a.getId() != null, "activity_id", a.getId());
-        tActivityRoomService.delete(wrapper);
-        if (tActivityRoomService.insertBatch(ars)) {
-            throw new ResponseEntityException("活动房间保存失败");
-        }
+		if (!tActivityRoomService.insertBatch(ars)) {
+			throw new ResponseEntityException("活动房间保存失败");
+		}
+		Wrapper<TActivityRoom> wrapperII = new EntityWrapper<>();
+		wrapperII.in("id", arsids);
+		TActivityRoom arsII = new TActivityRoom();
+		arsII.setMarkModified(CommonConst.ENABLED);
+		tActivityRoomService.update(arsII, wrapperII);
     }
 
     @Override
