@@ -29,7 +29,7 @@ public class ActivityRoomVo {
     private Integer roomId;
 
     @ApiModelProperty(value = "客房编号")
-    private String roomNumber;
+    private String roomNum;
 
     @ApiModelProperty(value = "门市价")
     private Integer rackRate;

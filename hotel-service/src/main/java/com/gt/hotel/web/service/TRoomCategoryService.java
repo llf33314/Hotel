@@ -5,6 +5,7 @@ import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.RoomCalendarParamter.CalendarQuery;
 import com.gt.hotel.param.RoomCategoryParameter.CategorySaveOrUpdate;
+import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
@@ -126,6 +127,14 @@ public interface TRoomCategoryService extends BaseService<TRoomCategory> {
      * @return
      */
 	List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber);
+
+	/**
+	 * 移动端 首页房型列表 
+	 * @param hotelId 
+	 * @param req 
+	 * @return
+	 */
+	Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req);
 
 
 }

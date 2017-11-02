@@ -21,6 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -92,7 +94,7 @@ public class HotelActivityController extends BaseController {
     public ResponseDTO activitySTOP(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
         Wrapper<TActivity> wrapper = new EntityWrapper<>();
         TActivity entity = new TActivity();
-        entity.setPublishStatus(CommonConst.STOP);
+        entity.setPublishStatus(CommonConst.ACTIVITY_STOP);
         entity.setUpdatedAt(new Date());
         entity.setUpdatedBy(getLoginUserId(session));
         wrapper.in("id", ids);
@@ -100,6 +102,36 @@ public class HotelActivityController extends BaseController {
             return ResponseDTO.createBySuccess();
         else
             return ResponseDTO.createByError();
+    }
+    
+    @ApiOperation(value = "开始 活动", notes = "开始 活动")
+    @PostMapping(value = "open", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @SuppressWarnings("rawtypes")
+    public ResponseDTO activityOPEN(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
+    	Date date = new Date();
+    	Wrapper<TActivity> wrapper = new EntityWrapper<>();
+    	wrapper.in("id", ids);
+    	List<TActivity> as = tActivityService.selectList(wrapper);
+    	List<TActivity> asII = new ArrayList<>();
+    	for(TActivity a :as) {
+    		long begintime = a.getBeginTime().getTime();
+    		long endtime = a.getEndTime().getTime();
+    		if(date.getTime() < begintime) {
+    			a.setPublishStatus(CommonConst.ACTIVITY_NOT_START);
+    		}else if(date.getTime() > endtime) {
+    			a.setPublishStatus(CommonConst.ACTIVITY_OVER);
+    		}else if(date.getTime() > begintime && date.getTime() < endtime){
+    			a.setPublishStatus(CommonConst.ACTIVITY_PROCESSING);
+    		}
+    		a.setUpdatedAt(date);
+    		a.setUpdatedBy(getLoginUserId(session));
+    		asII.add(a);
+    	}
+		if (tActivityService.updateAllColumnBatchById(asII)) {
+    		return ResponseDTO.createBySuccess();
+    	}else {
+    		return ResponseDTO.createByError();
+    	}
     }
 
 }

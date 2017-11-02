@@ -72,6 +72,15 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
         }
         a.setUpdatedAt(date);
         a.setUpdatedBy(busid);
+        long begintime = a.getBeginTime().getTime();
+        long endtime = a.getEndTime().getTime();
+        if(date.getTime() < begintime) {
+        	a.setPublishStatus(CommonConst.ACTIVITY_NOT_START);
+        }else if(date.getTime() > endtime) {
+        	a.setPublishStatus(CommonConst.ACTIVITY_OVER);
+        }else if(date.getTime() > begintime && date.getTime() < endtime){
+        	a.setPublishStatus(CommonConst.ACTIVITY_PROCESSING);
+        }
         if (!a.insertOrUpdate()) {
             throw new ResponseEntityException("活动保存失败");
         }
@@ -118,14 +127,18 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
             	arsids.add(ar.getId());
             }
         }
-		if (!tActivityRoomService.insertBatch(ars)) {
-			throw new ResponseEntityException("活动房间保存失败");
+		if(ars.size() != 0) {
+			if (!tActivityRoomService.insertBatch(ars)) {
+				throw new ResponseEntityException("活动房间保存失败");
+			}
 		}
-		Wrapper<TActivityRoom> wrapperII = new EntityWrapper<>();
-		wrapperII.in("id", arsids);
-		TActivityRoom arsII = new TActivityRoom();
-		arsII.setMarkModified(CommonConst.ENABLED);
-		tActivityRoomService.update(arsII, wrapperII);
+		if(arsids.size() != 0) {
+			Wrapper<TActivityRoom> wrapperII = new EntityWrapper<>();
+			wrapperII.in("id", arsids);
+			TActivityRoom arsII = new TActivityRoom();
+			arsII.setMarkModified(CommonConst.ENABLED);
+			tActivityRoomService.update(arsII, wrapperII);
+		}
     }
 
     @Override
@@ -143,6 +156,7 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
 
         Wrapper<TActivityRoom> rw = new EntityWrapper<>();
         rw.eq("activity_id", id);
+        rw.eq("mark_modified", CommonConst.ENABLED);
         List<TActivityRoom> ars = tActivityRoomService.selectList(rw);
         List<ActivityRoomVo> arvs = new ArrayList<>();
         for (TActivityRoom ar : ars) {
@@ -150,6 +164,7 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
             BeanUtils.copyProperties(ar, arv);
             arvs.add(arv);
         }
+        av.setRooms(arvs);
 
         return av;
     }

@@ -29,7 +29,7 @@ public class RoomVo {
     private Integer rackRate;
 
     @ApiModelProperty("客房编号")
-    private String number;
+    private String roomNum;
 
     @ApiModelProperty("楼层")
     private String floor;

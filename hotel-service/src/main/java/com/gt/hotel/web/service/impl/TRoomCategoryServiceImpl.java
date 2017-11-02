@@ -12,6 +12,7 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.InfrastructureRelationParamter;
 import com.gt.hotel.param.RoomCalendarParamter.CalendarQuery;
 import com.gt.hotel.param.RoomCategoryParameter.CategorySaveOrUpdate;
+import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
@@ -313,6 +314,46 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         return l;
 
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req) {
+		Page<MobileRoomCategoryVo> page = req.initPage();
+		List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req, page);
+		Wrapper<TFileRecord> fw = new EntityWrapper<>();
+		fw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
+		fw.eq("mark_modified", CommonConst.ENABLED);
+		List<TFileRecord> fl = tFileRecordService.selectList(fw);
+		
+		Wrapper<TInfrastructureRelation> iw = new EntityWrapper<>();
+		iw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
+		iw.eq("mark_modified", CommonConst.ENABLED);
+		List<TInfrastructureRelation> il = tInfrastructureRelationService.selectList(iw);
+		
+		for(MobileRoomCategoryVo r : l) {
+			List<FileRecordVo> images = new ArrayList<>();
+			for(TFileRecord f : fl) {
+				if(f.getReferenceId().equals(r.getId())) {
+					FileRecordVo v = new FileRecordVo();
+					BeanUtils.copyProperties(f, v);;
+					images.add(v);
+				}
+			}
+			r.setImages(images);
+			List<InfrastructureRelationVo> infrastructureRelations = new ArrayList<>();
+			for(TInfrastructureRelation i : il) {
+				if(i.getReferenceId().equals(r.getId())) {
+					InfrastructureRelationVo v = new InfrastructureRelationVo();
+					BeanUtils.copyProperties(i, v);;
+					infrastructureRelations.add(v);
+				}
+			}
+			r.setInfrastructureRelations(infrastructureRelations);
+		}
+		
+		page.setRecords(l);
+		return page;
+	}
 
 
 }

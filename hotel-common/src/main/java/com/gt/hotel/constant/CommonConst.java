@@ -29,19 +29,19 @@ public final class CommonConst {
     /**
      * 未开始
      */
-    public static final Integer NOT_START  = 0;
+    public static final Integer ACTIVITY_NOT_START  = 0;
     /**
      * 进行中
      */
-    public static final Integer PROCESSING = 1;
+    public static final Integer ACTIVITY_PROCESSING = 1;
     /**
      * 已结束
      */
-    public static final Integer OVER       = 2;
+    public static final Integer ACTIVITY_OVER       = 2;
     /**
      * 停止
      */
-    public static final Integer STOP       = 3;
+    public static final Integer ACTIVITY_STOP       = 3;
 
     /****************************** 活动类型 ******************************/
 

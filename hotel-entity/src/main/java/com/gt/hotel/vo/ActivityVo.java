@@ -64,7 +64,7 @@ public class ActivityVo {
     /**
      * 活动发布状态 0 开启 1 未开启
      */
-    @ApiModelProperty(value = "活动发布状态 0 开启 1 未开启")
+    @ApiModelProperty(value = "活动发布状态 0 进行中 1 未开始 2 已结束 3 停止")
     private Integer publishStatus;
     /**
      * 0 正常 1 禁用 2 删除
@@ -94,6 +94,9 @@ public class ActivityVo {
 
     @ApiModelProperty(value = "活动详情表 根据活动类型不同整合各个活动所需字段")
     private ActivityDetailVo detail;
+    
+    @ApiModelProperty(value = "当前时间")
+    private Date newTime = new Date(); 
 
     @ApiModelProperty(value = "活动房间 集合")
     private List<ActivityRoomVo> rooms;

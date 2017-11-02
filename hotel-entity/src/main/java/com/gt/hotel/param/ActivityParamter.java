@@ -32,6 +32,7 @@ public class ActivityParamter {
 
         @ApiModelProperty(value = "活动发布状态 0 开启 1 未开启")
         private Integer publishStatus;
+        
     }
 
     @Data
@@ -99,6 +100,9 @@ public class ActivityParamter {
     @Data
     @Api("酒店 活动房间 对象")
     public static class ActivityRoomParam {
+    	@ApiModelProperty(value = "活动房间ID")
+    	private Integer id;
+    	
         @ApiModelProperty(value = "酒店ID")
         @NotNull(message = "酒店ID不能为空")
         private Integer hotelId;

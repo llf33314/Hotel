@@ -67,6 +67,7 @@
 		<if test="param.publishStatus != null">
 			AND publish_status = #{param.publishStatus}
 		</if>
+		ORDER BY t_activity.id DESC
 	</select>
 
 </mapper>

@@ -123,7 +123,7 @@ public class HotelRoomController extends BaseController {
 		return ResponseDTO.createBySuccess(page);
 	}
 	
-	@ApiOperation(value = "房间 集合", notes = "房间 集合")
+	@ApiOperation(value = "房间 集合 ALL", notes = "房间 集合 ALL")
 	@GetMapping(value = "{hotelId}/roomAll", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<List<RoomVo>> roomRList(@PathVariable("hotelId") @ApiParam("酒店ID") Integer hotelId, 
 			@ApiParam("房型ID") Integer categoryId, @ApiParam("房型号") String roomNumber) {
