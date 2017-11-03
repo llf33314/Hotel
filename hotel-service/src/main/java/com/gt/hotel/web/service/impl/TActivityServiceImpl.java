@@ -1,5 +1,14 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -12,20 +21,15 @@ import com.gt.hotel.entity.TActivityRoom;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.param.ActivityParamter.ActivityRoomParam;
+import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.ActivityDetailVo;
 import com.gt.hotel.vo.ActivityRoomVo;
 import com.gt.hotel.vo.ActivityVo;
+import com.gt.hotel.vo.MobileActivityRoomCategoryVo;
+import com.gt.hotel.vo.MobileActivityVo;
 import com.gt.hotel.web.service.TActivityDetailService;
 import com.gt.hotel.web.service.TActivityRoomService;
 import com.gt.hotel.web.service.TActivityService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
@@ -168,5 +172,21 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
 
         return av;
     }
+
+	@Override
+	public Page<MobileActivityVo> queryMobileActivity(Integer hotelId) {
+		Page<MobileActivityVo> page = new Page<>();
+		page.setRecords(tActivityDAO.queryMobileActivity(hotelId));
+		return page;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<MobileActivityRoomCategoryVo> queryMobileActivityRoomCategoryList(
+			Integer hotelId, Integer activityId, HotelPage hotelPage) {
+		Page<MobileActivityRoomCategoryVo> page = hotelPage.initPage();
+		page.setRecords(tActivityDAO.queryMobileActivityRoomCategoryList(hotelId, activityId, page));
+		return null;
+	}
     
 }

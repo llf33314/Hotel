@@ -40,7 +40,7 @@
         SELECT
         t_room.id, t_room.category_id categoryId, t_room.number roomNum, t_room.floor, t_room.status, t_room.mark_modified markModified, 
         t_room.created_by createdBy, t_room.created_at createdAt, t_room.updated_by updatedBy, t_room.updated_at updatedAt, 
-        t_room_category.`name` categoryName, t_room_category.rack_rate rackRate 
+        t_room_category.`name` categoryName, t_room_category.rack_rate rackRate, t_room_category.deposit 
         FROM t_room 
         JOIN t_room_category ON t_room.category_id = t_room_category.id 
         WHERE t_room.mark_modified = 0 AND t_room_category.mark_modified = 0 

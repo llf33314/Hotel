@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderDAO;
@@ -120,9 +121,12 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 			orc.setCreatedBy(busid);
 			orc.setUpdatedAt(date);
 			orc.setUpdatedBy(busid);
+			orcs.add(orc);
 		}
-		if(!tOrderRoomCustomerService.insertBatch(orcs)) {
-			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+		if(orcs.size() != 0) {
+			if(!tOrderRoomCustomerService.insertBatch(orcs)) {
+				throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+			}
 		}
 	}
 
@@ -131,7 +135,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		HotelBackRoomOrderVo orderVo = new HotelBackRoomOrderVo();
 		RoomOrderQuery param = new RoomOrderQuery();
 		param.setId(id);
-		List<HotelBackRoomOrderVo> l = tOrderDAO.queryRoomOrder(null, param, null);
+		List<HotelBackRoomOrderVo> l = tOrderDAO.queryRoomOrder(null, param, new Pagination());
 		if(l.size() == 0) {
 			return null;
 		}

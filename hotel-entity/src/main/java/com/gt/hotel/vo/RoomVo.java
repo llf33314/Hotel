@@ -52,4 +52,6 @@ public class RoomVo {
     @ApiModelProperty("最后修改时间")
     private Date updatedAt;
 
+    @ApiModelProperty("押金")
+    private Integer deposit;
 }

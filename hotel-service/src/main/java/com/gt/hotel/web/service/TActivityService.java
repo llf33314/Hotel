@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.param.ActivityParamter;
+import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.ActivityVo;
+import com.gt.hotel.vo.MobileActivityRoomCategoryVo;
+import com.gt.hotel.vo.MobileActivityVo;
 
 /**
  * <p>
@@ -40,6 +43,24 @@ public interface TActivityService extends BaseService<TActivity> {
      * @return
      */
     ActivityVo queryActivityOne(Integer id);
+
+    /**
+     * 首页房型 活动 列表
+     * @param hotelId
+     * @param req
+     * @return
+     */
+	Page<MobileActivityVo> queryMobileActivity(Integer hotelId);
+
+	/**
+	 * 首页房型 活动 房型 列表
+	 * @param hotelId
+	 * @param activityId
+	 * @param hotelPage
+	 * @return
+	 */
+	Page<MobileActivityRoomCategoryVo> queryMobileActivityRoomCategoryList(Integer hotelId, Integer activityId,
+			HotelPage hotelPage);
 
 
 }

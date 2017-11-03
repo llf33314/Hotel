@@ -14,6 +14,9 @@ public class HotelBackFoodOrderVo {
 
     @ApiModelProperty("外部订单编号")
     private String orderNum;
+    
+    @ApiModelProperty("房号 来自 t_room.number 预约订单则不会自动锁定房号")
+    private String roomNum;
 
     @ApiModelProperty("酒店ID")
     private Integer hotelId;
@@ -72,5 +75,6 @@ public class HotelBackFoodOrderVo {
     @ApiModelProperty("客户联系电话")
 	private String customerPhone;
     
-    
+    @ApiModelProperty("菜品提供方")
+    private String foodProvidesName;
 }

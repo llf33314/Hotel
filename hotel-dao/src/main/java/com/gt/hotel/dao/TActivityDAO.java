@@ -1,13 +1,16 @@
 package com.gt.hotel.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.vo.ActivityVo;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
+import com.gt.hotel.vo.MobileActivityRoomCategoryVo;
+import com.gt.hotel.vo.MobileActivityVo;
 
 /**
  * <p>
@@ -27,5 +30,23 @@ public interface TActivityDAO extends BaseMapper<TActivity> {
      * @return
      */
     List<ActivityVo> queryActivity(@Param("param") ActivityParamter.ActivityQuery param, @Param("page") Pagination page);
+
+    /**
+     * 首页房型 活动 列表
+     * @param hotelId
+     * @return
+     */
+	List<MobileActivityVo> queryMobileActivity(Integer hotelId);
+
+	/**
+	 * 首页房型 活动 房型 列表
+	 * @param hotelId
+	 * @param activityId
+	 * @param hotelPage
+	 * @return
+	 */
+	List<MobileActivityRoomCategoryVo> queryMobileActivityRoomCategoryList(@Param("hotelId") Integer hotelId, @Param("activityId") Integer activityId,
+			@Param("page") Pagination hotelPage);
+
 
 }

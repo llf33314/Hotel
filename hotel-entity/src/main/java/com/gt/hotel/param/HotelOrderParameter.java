@@ -80,7 +80,7 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "手机号码", required = true)
 		private String customerPhone;
 
-		@ApiModelProperty(value = "证件类型", required = true)
+		@ApiModelProperty(value = "证件类型 =0 二代身份证 =1 一代身份证 =2 驾驶证 =3 护照 =4 军官证 =5 士兵证 =6 港澳通行证 =7 其他", required = true)
 		private Integer customerIdType;
 		
 		@ApiModelProperty(value = "证件号", required = true)
@@ -92,10 +92,10 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "酒店名称", required = true)
 		private String hotelName;
 		
-		@ApiModelProperty(value = "支付类(方)型(式)", required = true)
+		@ApiModelProperty(value = "支付类(方)型(式) 支付类型 =1 在线支付 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
 		private Integer payType;
 		
-		@ApiModelProperty(value = "订单状态", required = true)
+		@ApiModelProperty(value = "订单状态 订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 默认0", required = true)
 		private Integer orderStatus;
 		
 		@ApiModelProperty(value = "入住时间", required = true)
