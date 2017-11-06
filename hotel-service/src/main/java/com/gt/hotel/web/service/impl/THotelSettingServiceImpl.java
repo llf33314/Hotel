@@ -1,5 +1,14 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.hotel.base.BaseServiceImpl;
@@ -7,6 +16,7 @@ import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.THotelSettingDAO;
 import com.gt.hotel.dao.TInfrastructureDAO;
 import com.gt.hotel.entity.TFileRecord;
+import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.entity.TInfrastructure;
 import com.gt.hotel.entity.TInfrastructureRelation;
@@ -15,20 +25,13 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelMobileParameter.MobileSaveOrUpdate;
 import com.gt.hotel.param.InfrastructureRelationParamter;
 import com.gt.hotel.vo.FileRecordVo;
-import com.gt.hotel.vo.HotelSettingVo;
 import com.gt.hotel.vo.InfrastructureRelationVo;
 import com.gt.hotel.vo.InfrastructureVo;
+import com.gt.hotel.vo.MobileHotelVo;
 import com.gt.hotel.web.service.TFileRecordService;
+import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
 import com.gt.hotel.web.service.TInfrastructureRelationService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
@@ -50,16 +53,21 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
     @Autowired
     TInfrastructureDAO tInfrastructureDAO;
 
+    @Autowired
+    THotelService tHotelService;
+    
     @Override
-    public HotelSettingVo queryHotelSettingOne(Integer hotelId) {
-        HotelSettingVo s = new HotelSettingVo();
+    public MobileHotelVo queryHotelSettingOne(Integer hotelId) {
+    	MobileHotelVo hotelVo = new MobileHotelVo();
+		THotel hotel = tHotelService.selectById(hotelId);
+		if (hotel == null) {
+			return hotelVo;
+		}
+		BeanUtils.copyProperties(hotel, hotelVo);
         Wrapper<THotelSetting> hsw = new EntityWrapper<>();
         hsw.eq("hotel_id", hotelId);
         THotelSetting hs = this.selectOne(hsw);
-        if (hs == null) {
-            return s;
-        }
-        BeanUtils.copyProperties(hs, s);
+        BeanUtils.copyProperties(hs, hotelVo);
 
         Wrapper<TFileRecord> rsw = new EntityWrapper<>();
         rsw.eq("module", CommonConst.MODULE_HOTEL);
@@ -72,7 +80,11 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
             BeanUtils.copyProperties(fr, frv);
             imageurls.add(frv);
         }
-        s.setImageurls(imageurls);
+        hotelVo.setImageurls(imageurls);
+        
+        Wrapper<TInfrastructure> iwr = new EntityWrapper<>();
+        iwr.eq("module", CommonConst.MODULE_HOTEL);
+        List<TInfrastructure> il = tInfrastructureDAO.selectList(iwr);
 
         Wrapper<TInfrastructureRelation> irw = new EntityWrapper<>();
         irw.eq("module", CommonConst.MODULE_HOTEL);
@@ -82,11 +94,16 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
         for (TInfrastructureRelation ir : irs) {
             InfrastructureRelationVo irv = new InfrastructureRelationVo();
             BeanUtils.copyProperties(ir, irv);
+            for(TInfrastructure i : il) {
+            	if(ir.getInfrastructureId().equals(i.getId())) {
+            		irv.setName(i.getName());
+            		irv.setIconUrl(i.getIconUrl());
+            	}
+            }
             installations.add(irv);
         }
-        s.setInstallations(installations);
-
-        return s;
+        hotelVo.setInstallations(installations);
+        return hotelVo;
     }
 
     @Transactional

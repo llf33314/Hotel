@@ -3,6 +3,8 @@ package com.gt.hotel.vo;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,19 +27,21 @@ public class HotelBackRoomOrderVo {
     @ApiModelProperty("会员ID")
     private Integer memberId;
     
-    @ApiModelProperty("支付类型 =1 在线支付 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金")
+    @ApiModelProperty("支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金")
 	private Integer payType;
 
     @ApiModelProperty("支付状态 =0 待支付 =1 已支付 =2 退款中 =3 已退款 默认 0")
     private Integer payStatus;
 
     @ApiModelProperty("支付时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date payTime;
     
-    @ApiModelProperty("订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 默认0")
+    @ApiModelProperty("订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0")
 	private Integer orderStatus;
 
     @ApiModelProperty("创建订单时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createTime;
 
     @ApiModelProperty("实收金额")
@@ -62,6 +66,7 @@ public class HotelBackRoomOrderVo {
     private String remark;
 
     @ApiModelProperty("总订单完成时间 (已完成状态) 完成总订单 必须把子订单全部都完成")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date completionTime;
     
     @ApiModelProperty("冗余参数 酒店名称")
@@ -98,9 +103,11 @@ public class HotelBackRoomOrderVo {
     private Integer number;
 
     @ApiModelProperty("抵店时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date roomInTime;
 
     @ApiModelProperty("离店时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date roomOutTime;
 
     @ApiModelProperty("当前门市价 固定从房型获取(周一至周四为 门市价 周五周六 为周末价。如果有日历价，则为日历价)")
@@ -123,6 +130,9 @@ public class HotelBackRoomOrderVo {
     
     @ApiModelProperty("性别")
     private Integer customerGender;
+    
+    @ApiModelProperty("入住标准 0 全天房 1 特价房 2 钟点房 3 秒杀房 4 团购房")
+    private Integer checkStandard;
     
     @ApiModelProperty("房间列表")
     private List<OrderRoomCustomerVo> rooms;

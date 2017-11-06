@@ -1,9 +1,11 @@
 package com.gt.hotel.web.service;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TFood;
-import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.param.FoodMobileParameter;
 import com.gt.hotel.vo.FoodVo;
 
 /**
@@ -21,7 +23,7 @@ public interface TFoodService extends BaseService<TFood> {
 	 * @param hpage
 	 * @return
 	 */
-	Page<FoodVo> queryFood(HotelPage hpage, Integer hotelId);
+	Page<FoodVo> queryFood(@Param("param") FoodMobileParameter.FoodMobileQuery param, @Param("hotelId") Integer hotelId);
 
 	
 }

@@ -148,6 +148,17 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 	@Override
 	public void checkIn(Integer busid, Integer orderId, CheckInParam param) {
 		Date date = new Date();
+		
+		Wrapper<TOrder> owrapper = new EntityWrapper<>();
+		owrapper.eq("id", orderId);
+		TOrder newOrder = new TOrder();
+		newOrder.setOrderStatus(CommonConst.ORDER_CHECK_IN);
+		newOrder.setUpdatedBy(busid);
+		newOrder.setUpdatedAt(new Date());
+		if(!this.update(newOrder, owrapper)) {
+			throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+		}
+		
 		TOrderRoom orderRoom = new TOrderRoom();
 		List<TOrderRoomCustomer> customers = new ArrayList<>();
 		orderRoom.setCustomerIdType(param.getCustomerIdType());
@@ -178,6 +189,16 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		if(!tOrderRoomCustomerService.insertBatch(customers)) {
 			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
 		}
+	}
+
+	@Override
+	public List<HotelBackRoomOrderVo> queryRoomOrderExport(Integer busid, RoomOrderQuery param) {
+		return tOrderDAO.queryRoomOrder(busid, param);
+	}
+
+	@Override
+	public List<HotelBackFoodOrderVo> queryFoodOrderExport(Integer busid, FoodOrderQuery param) {
+		return tOrderDAO.queryFoodOrder(busid, param);
 	}
 	
 }

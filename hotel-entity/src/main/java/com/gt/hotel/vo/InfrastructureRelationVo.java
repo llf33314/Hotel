@@ -59,4 +59,9 @@ public class InfrastructureRelationVo {
     @ApiModelProperty("展示值")
     private String  displayValue;
 
+    @ApiModelProperty("名称")
+    private String name;
+
+    @ApiModelProperty("图标地址")
+    private String iconUrl;
 }

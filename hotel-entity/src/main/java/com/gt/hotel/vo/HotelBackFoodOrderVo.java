@@ -2,6 +2,8 @@ package com.gt.hotel.vo;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,19 +29,21 @@ public class HotelBackFoodOrderVo {
     @ApiModelProperty("会员ID")
     private Integer memberId;
     
-    @ApiModelProperty("支付类型 =1 在线支付 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金")
+    @ApiModelProperty("支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金")
 	private Integer payType;
 
     @ApiModelProperty("支付状态 =0 待支付 =1 已支付 =2 退款中 =3 已退款 默认 0")
     private Integer payStatus;
 
     @ApiModelProperty("支付时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date payTime;
     
-    @ApiModelProperty("订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 默认0")
+    @ApiModelProperty("订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0")
 	private Integer orderStatus;
 
     @ApiModelProperty("创建订单时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createTime;
 
     @ApiModelProperty("实收金额")
@@ -64,6 +68,7 @@ public class HotelBackFoodOrderVo {
     private String remark;
 
     @ApiModelProperty("总订单完成时间 (已完成状态) 完成总订单 必须把子订单全部都完成")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date completionTime;
     
     @ApiModelProperty("酒店名称")

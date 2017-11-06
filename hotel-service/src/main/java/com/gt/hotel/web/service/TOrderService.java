@@ -1,5 +1,7 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TOrder;
@@ -57,5 +59,21 @@ public interface TOrderService extends BaseService<TOrder> {
 	 * @param param
 	 */
 	void checkIn(Integer busid, Integer orderId, CheckInParam param);
+
+	/**
+	 * 房间订单列表 
+	 * @param busid
+	 * @param param
+	 * @return
+	 */
+	List<HotelBackRoomOrderVo> queryRoomOrderExport(Integer busid, RoomOrderQuery param);
+
+	/**
+	 * 餐饮订单列表
+	 * @param busid
+	 * @param param
+	 * @return
+	 */
+	List<HotelBackFoodOrderVo> queryFoodOrderExport(Integer busid, FoodOrderQuery param);
 	
 }

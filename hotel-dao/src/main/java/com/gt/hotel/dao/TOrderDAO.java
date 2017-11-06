@@ -31,6 +31,7 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 * @return
 	 */
 	List<HotelBackRoomOrderVo> queryRoomOrder(@Param("busid") Integer busid, @Param("param") RoomOrderQuery param, @Param("page") Pagination page);
+	List<HotelBackRoomOrderVo> queryRoomOrder(@Param("busid") Integer busid, @Param("param") RoomOrderQuery param);
 
 	/**
 	 * 餐饮订单列表 
@@ -40,6 +41,7 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 * @return
 	 */
 	List<HotelBackFoodOrderVo> queryFoodOrder(@Param("busid") Integer busid, @Param("param") FoodOrderQuery param, @Param("page") Pagination page);
+	List<HotelBackFoodOrderVo> queryFoodOrder(@Param("busid") Integer busid, @Param("param") FoodOrderQuery param);
 
 	/**
 	 * 房间订单对象 -> 房间列表
@@ -47,5 +49,6 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 * @return
 	 */
 	List<OrderRoomCustomerVo> queryRoomOrderOneRooms(@Param("orderId") Integer orderId);
+
 
 }

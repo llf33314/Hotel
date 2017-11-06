@@ -52,7 +52,8 @@
 			b.customer_name customerName, b.customer_id_type customerIdType, b.customer_id_card customerIdCard, 
 			b.customer_id_card_image customerIdCardImage, b.customer_phone customerPhone, b.number, 
 			b.room_in_time roomInTime, b.room_out_time roomOutTime, b.deposit, b.room_price roomPrice, b.`from`,
-			b.activity_id activityId, b.rack_rate rackRate, b.guest_type guestType, b.customer_gender customerGender 
+			b.activity_id activityId, b.rack_rate rackRate, b.guest_type guestType, b.customer_gender customerGender, 
+			b.check_standard checkStandard 
 		FROM t_order a 
 		JOIN t_order_room b ON a.id = b.order_id 
 		WHERE a.mark_modified = 0 
@@ -87,7 +88,7 @@
 		SELECT a.id, a.order_num orderNum, a.hotel_id hotelId, a.bus_id busId, a.member_id memberId, a.pay_type payType, a.pay_status payStatus,
 			a.pay_time payTime, a.order_status orderStatus, a.create_time createTime, a.real_price realPrice, a.bill_price billPrice, a.fb,
 			a.integral, a.order_coupons_id orderCouponsId, a.receivable_price receivablePrice, a.remark, a.completion_time completionTime,
-			b.hotel_name hotelName, b.customer_name customerName, b.customer_phone customerPhone, a.room_num roomNum, c.food_provides_name foodProvidesName 
+			b.hotel_name hotelName, b.customer_name customerName, b.customer_phone customerPhone, b.room_num roomNum, c.food_provides_name foodProvidesName 
 		FROM t_order a 
 		JOIN t_order_food b ON a.id = b.order_id 
 		LEFT JOIN t_order_food_detail c ON b.id = c.order_food_id 

@@ -79,7 +79,7 @@ public class HotelOrderController extends BaseController {
 	public ResponseDTO orderConfirm(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getOrderStatus().equals(0)) {
+		if(!order.getOrderStatus().equals(CommonConst.ORDER_PROCESSING)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
 		}
 		Wrapper<TOrder> wrapper = new EntityWrapper<>();
@@ -100,7 +100,7 @@ public class HotelOrderController extends BaseController {
 	public ResponseDTO orderCancel(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getOrderStatus().equals(0)) {
+		if(!order.getOrderStatus().equals(CommonConst.ORDER_PROCESSING) && !order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
 		}
 		Wrapper<TOrder> wrapper = new EntityWrapper<>();
@@ -121,7 +121,9 @@ public class HotelOrderController extends BaseController {
 	public ResponseDTO foodOrderComplete(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getOrderStatus().equals(1) || !order.getOrderStatus().equals(2)) {
+		if(!order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)
+				|| !order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED)
+				|| !order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
 		}
 		Wrapper<TOrder> wrapper = new EntityWrapper<>();
@@ -142,7 +144,8 @@ public class HotelOrderController extends BaseController {
 	public ResponseDTO orderRefunds(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getPayStatus().equals(1)) {
+		if(!order.getPayStatus().equals(CommonConst.ORDER_CONFIRMED) 
+				|| !order.getPayStatus().equals(CommonConst.ORDER_CANCALLED)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
 		
@@ -180,10 +183,10 @@ public class HotelOrderController extends BaseController {
 		return ResponseDTO.createBySuccess(order);
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	@ApiOperation(value = "添加线下订单", notes = "添加线下订单")
 	@PostMapping(value = "AddOffLineOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<QueryRoomCategoryOne> AddOffLineOrder(@Validated @RequestBody HotelOrderParameter.OffLineOrder order, 
+	public ResponseDTO AddOffLineOrder(@Validated @RequestBody HotelOrderParameter.OffLineOrder order, 
 			BindingResult bindingResult, HttpSession session) {
 		ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
@@ -204,6 +207,10 @@ public class HotelOrderController extends BaseController {
 		if(msg != null) {
 			return msg;
 		}
+		TOrder order = tOrderService.selectById(orderId);
+		if(!order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
+		}
 		Integer busid = getLoginUserId(session);
 		tOrderService.checkIn(busid, orderId, param);
 		return ResponseDTO.createBySuccess();
@@ -215,7 +222,7 @@ public class HotelOrderController extends BaseController {
 	public ResponseDTO checkOut(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getPayStatus().equals(3)) {
+		if(!order.getPayStatus().equals(CommonConst.ORDER_CONFIRMED) || !order.getPayStatus().equals(CommonConst.ORDER_CANCALLED)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
 		
@@ -258,17 +265,17 @@ public class HotelOrderController extends BaseController {
 		HSSFWorkbook wb = null;
 		try {
 			Integer busid = getLoginUserId(session);
-			List<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrder(busid, param).getRecords();
+			List<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrderExport(busid, param);
 			String[] titles = new String[]{"订单号", "酒店名称", "姓名", "手机号", "入住时间", "离店时间", "房间类型", "预订间数", 
 					"门市价", "订单状态", "支付状态", "支付方式", "住客类型", "入住标准", "证件类型", "证件号码", "性别", "消费金额", 
 					"优惠金额", "应收金额", "退还金额", "实收金额"};
 			String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomInTime", "roomOutTime", 
 					"categoryName", "number", "rackRate", "orderStatus", "payStatus", "payType", "guestType", "入住标准", "customerIdType", 
 					"customerIdCard", "customerGender", "billPrice", "优惠金额", "receivablePrice", "退还金额", "realPrice"};
-			wb = ExportUtil.getExcel("餐饮订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
+			wb = ExportUtil.getExcel("房间订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
 				@Override
 				public String fieldPprocessing(Object c, String contentName) {
-					String s = "";
+					String s = c.toString();
 					if("orderStatus".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
 						case 0:s = "处理中";break;
@@ -276,16 +283,14 @@ public class HotelOrderController extends BaseController {
 						case 2:s = "已取消";break;
 						case 3:s = "已完成";break;
 						}
-					}
-					if("payStatus".equals(contentName)) {
+					}else if("payStatus".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
 						case 0:s = "待支付";break;
 						case 1:s = "已支付";break;
 						case 2:s = "退款中";break;
 						case 3:s = "已退款";break;
 						}
-					}
-					if("payType".equals(contentName)) {
+					}else if("payType".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
 						case 1:s = "在线支付";break;
 						case 2:s = "到店支付";break;
@@ -293,8 +298,7 @@ public class HotelOrderController extends BaseController {
 						case 4:s = "信用卡";break;
 						case 5:s = "现金";break;
 						}
-					}
-					if("customerIdType".equals(contentName)) {
+					}else if("customerIdType".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
 						case 0:s = "二代身份证";break;
 						case 1:s = "一代身份证";break;
@@ -305,8 +309,7 @@ public class HotelOrderController extends BaseController {
 						case 6:s = "港澳通行证";break;
 						case 7:s = "其他";break;
 						}
-					}
-					if("customerGender".equals(contentName)) {
+					}else if("customerGender".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
 						case 0:s = "男";break;
 						case 1:s = "女";break;
@@ -316,7 +319,7 @@ public class HotelOrderController extends BaseController {
 				}
 			});
 			response.setHeader("Content-Disposition", "attachment;filename=\"" + 
-					URLEncoder.encode("餐饮订单"+new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())+
+					URLEncoder.encode("房间订单"+new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())+
 							".xls", "UTF-8") + "\"");  
 			response.setContentType("application/vnd.ms-excel");
 			outputStream = new BufferedOutputStream(response.getOutputStream());
@@ -348,14 +351,14 @@ public class HotelOrderController extends BaseController {
 		HSSFWorkbook wb = null;
 	    try {
 	    	Integer busid = getLoginUserId(session);
-	    	List<HotelBackFoodOrderVo> page = tOrderService.queryFoodOrder(busid, param).getRecords();
+	    	List<HotelBackFoodOrderVo> page = tOrderService.queryFoodOrderExport(busid, param);
 	        String[] titles = new String[]{"订单编号", "酒店名称", "预订人", "电话", "房号", "订单总额(元)", "下单时间", "菜品提供方", "订单状态", "支付状态", "支付方式"};
 	        String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomNum", 
 	        		"realPrice", "createTime", "foodProvidesName", "orderStatus", "payStatus", "payType"};
 	        wb = ExportUtil.getExcel("餐饮订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
 				@Override
 				public String fieldPprocessing(Object c, String contentName) {
-					String s = "";
+					String s = c.toString();
 					if("orderStatus".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
 						case 0:s = "处理中";break;
@@ -363,16 +366,14 @@ public class HotelOrderController extends BaseController {
 						case 2:s = "已取消";break;
 						case 3:s = "已完成";break;
 						}
-					}
-					if("payStatus".equals(contentName)) {
+					}else if("payStatus".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
 						case 0:s = "待支付";break;
 						case 1:s = "已支付";break;
 						case 2:s = "退款中";break;
 						case 3:s = "已退款";break;
 						}
-					}
-					if("payType".equals(contentName)) {
+					}else if("payType".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
 						case 1:s = "在线支付";break;
 						case 2:s = "到店支付";break;

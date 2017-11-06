@@ -1,5 +1,25 @@
 package com.gt.hotel.controller.back;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -8,30 +28,21 @@ import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TFood;
 import com.gt.hotel.entity.THotel;
+import com.gt.hotel.param.FoodMobileParameter;
 import com.gt.hotel.param.HotelMobileParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.FoodVo;
-import com.gt.hotel.vo.HotelSettingVo;
 import com.gt.hotel.vo.InfrastructureVo;
+import com.gt.hotel.vo.MobileHotelVo;
 import com.gt.hotel.vo.SysDictionaryVo;
 import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TFoodService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 酒店后台-移动端设置
@@ -57,8 +68,8 @@ public class HotelMobileController extends BaseController {
 
 	@ApiOperation(value = "查询 移动端设置 对象", notes = "查询 移动端设置 对象")
 	@GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<HotelSettingVo> phoneSettingR(@PathVariable("hotelId") Integer hotelId) {
-		HotelSettingVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
+	public ResponseDTO<MobileHotelVo> phoneSettingR(@PathVariable("hotelId") Integer hotelId) {
+		MobileHotelVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
 		return ResponseDTO.createBySuccess(setting);
 	}
 
@@ -132,7 +143,7 @@ public class HotelMobileController extends BaseController {
 
 	@ApiOperation(value = "查询 订餐设置 列表", notes = "查询 订餐设置 列表")
 	@GetMapping(value = "{hotelId}/food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO<Page<FoodVo>> foodR(@Param("参数") @ModelAttribute HotelPage hpage,
+	public ResponseDTO<Page<FoodVo>> foodR(@Param("参数") @ModelAttribute FoodMobileParameter.FoodMobileQuery hpage,
 			@PathVariable("hotelId") Integer hotelId) {
 		Page<FoodVo> page = tFoodService.queryFood(hpage, hotelId);
 		return ResponseDTO.createBySuccess(page);

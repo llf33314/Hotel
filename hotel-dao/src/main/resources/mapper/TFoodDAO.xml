@@ -49,5 +49,14 @@
 		SELECT <include refid="Base_Column_List_VO" /> 
 		FROM t_food 
 		WHERE mark_modified = 0 AND hotel_id = #{hotelId} 
+		<if test="param.id != null">
+			AND id = #{param.id}
+		</if>
+		<if test="param.id != null">
+			AND food_provides_name = #{param.foodProvidesName}
+		</if>
+		<if test="param.keyword != null">
+			AND name LIKE #{param.keyword}
+		</if>
 	</select>
 </mapper>

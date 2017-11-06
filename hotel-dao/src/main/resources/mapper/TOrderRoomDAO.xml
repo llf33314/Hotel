@@ -37,11 +37,12 @@
 		<result column="updated_at" property="updatedAt" />
 		<result column="guest_type" property="guestType" />
 		<result column="customer_gender" property="customerGender" />
+		<result column="check_standard" property="checkStandard" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender
+        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender, check_standard
     </sql>
     
     <sql id="Base_Column_List_VO">
@@ -63,7 +64,7 @@
 		t_order_room.mark_modified markModified, t_order_room.created_by
 		createdBy, t_order_room.created_at createdAt, t_order_room.updated_by
 		updatedBy, t_order_room.updated_at updatedAt, t_order_room.guest_type guestType, 
-		t_order_room.customer_gender customerGender 
+		t_order_room.customer_gender customerGender, check_standard checkStandard 
 	</sql>
 
 </mapper>

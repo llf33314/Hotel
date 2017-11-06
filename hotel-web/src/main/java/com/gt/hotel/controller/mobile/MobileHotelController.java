@@ -14,9 +14,9 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
-import com.gt.hotel.vo.HotelSettingVo;
 import com.gt.hotel.vo.MobileActivityRoomCategoryVo;
 import com.gt.hotel.vo.MobileActivityVo;
+import com.gt.hotel.vo.MobileHotelVo;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.web.service.TActivityService;
 import com.gt.hotel.web.service.THotelSettingService;
@@ -47,8 +47,8 @@ public class MobileHotelController extends BaseController {
     
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<HotelSettingVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId) {
-        HotelSettingVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
+    public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId) {
+    	MobileHotelVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
         return ResponseDTO.createBySuccess(setting);
     }
 

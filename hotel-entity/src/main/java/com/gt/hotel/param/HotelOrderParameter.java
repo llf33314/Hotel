@@ -33,12 +33,12 @@ public class HotelOrderParameter {
 		private Integer orderStatus;
 		
 		@ApiModelProperty(value = "入住时间")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-		private Date roomInTime;
+//		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		private String roomInTime;
 
 		@ApiModelProperty(value = "离店时间")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-		private Date roomOutTime;
+//		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		private String roomOutTime;
 	}
 
 	@Api("餐饮订单 查询参数")
@@ -54,12 +54,12 @@ public class HotelOrderParameter {
 		private Integer orderStatus;
 		
 		@ApiModelProperty(value = "开始时间")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-		private Date beginTime;
+//		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		private String beginTime;
 		
 		@ApiModelProperty(value = "结束时间")
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-		private Date endTime;
+//		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		private String endTime;
 
 		@ApiModelProperty(value = "菜品提供方")
 		private String foodProvidesName;
@@ -92,10 +92,10 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "酒店名称", required = true)
 		private String hotelName;
 		
-		@ApiModelProperty(value = "支付类(方)型(式) 支付类型 =1 在线支付 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
+		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
 		private Integer payType;
 		
-		@ApiModelProperty(value = "订单状态 订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 默认0", required = true)
+		@ApiModelProperty(value = "订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0", required = true)
 		private Integer orderStatus;
 		
 		@ApiModelProperty(value = "入住时间", required = true)
@@ -123,9 +123,15 @@ public class HotelOrderParameter {
 
 		@ApiModelProperty(value = "押金  0 则为免押金", required = true)
 		private Integer deposit;
+		
+		@ApiModelProperty(value = "入住标准 0 全天房 1 特价房 2 钟点房 3 秒杀房 4 团购房", required = true)
+		private Integer checkStandard;
 
 		@ApiModelProperty(value = "当前客房价格 可以是改价后的价格", required = true)
 		private Integer roomPrice;
+		
+		
+		
 		
 		@ApiModelProperty(value = "房间集合")
 		private List<HotelOrderRoomParameter.OrderRoom> rooms;

@@ -175,5 +175,9 @@ public final class CommonConst {
      * 3 已完成
      */
     public static final Integer ORDER_COMPLETED = 3;
+    /**
+     * 4 已入住
+     */
+    public static final Integer ORDER_CHECK_IN = 4;
     
 }

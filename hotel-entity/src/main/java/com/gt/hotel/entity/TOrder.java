@@ -46,7 +46,7 @@ public class TOrder extends Model<TOrder> {
      */
 	private Integer memberId;
     /**
-     * 支付类型 =1 在线支付 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金
+     * 支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金
      */
 	private Integer payType;
     /**
@@ -58,7 +58,7 @@ public class TOrder extends Model<TOrder> {
      */
 	private Date payTime;
     /**
-     * 订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 默认0
+     * 订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0
      */
 	private Integer orderStatus;
     /**

@@ -157,6 +157,10 @@ public class TOrderRoom extends Model<TOrderRoom> {
      * 性别(0:男, 1:女)
      */
 	private Integer customerGender;
+	/**
+	 * 入住标准 0 全天房 1 特价房 2 钟点房 3 秒杀房 4 团购房
+	 */
+	private Integer checkStandard;
 
 
 	@Override
