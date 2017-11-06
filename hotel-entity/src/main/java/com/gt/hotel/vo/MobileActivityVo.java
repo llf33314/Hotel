@@ -84,4 +84,7 @@ public class MobileActivityVo {
 
     @ApiModelProperty(value = "活动价 单位分 记录")
     private Integer activityPrice;
+    
+    @ApiModelProperty(value = "图片")
+    private String path;
 }

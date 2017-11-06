@@ -87,4 +87,7 @@ public class MobileActivityRoomCategoryVo {
     
     @ApiModelProperty(value = "剩余房间数")
     private Integer remainder;
+
+    @ApiModelProperty(value = "图片")
+    private String path;
 }

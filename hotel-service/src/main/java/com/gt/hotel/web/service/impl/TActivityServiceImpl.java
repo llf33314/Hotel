@@ -18,6 +18,7 @@ import com.gt.hotel.dao.TActivityDAO;
 import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.entity.TActivityDetail;
 import com.gt.hotel.entity.TActivityRoom;
+import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.param.ActivityParamter.ActivityRoomParam;
@@ -30,6 +31,7 @@ import com.gt.hotel.vo.MobileActivityVo;
 import com.gt.hotel.web.service.TActivityDetailService;
 import com.gt.hotel.web.service.TActivityRoomService;
 import com.gt.hotel.web.service.TActivityService;
+import com.gt.hotel.web.service.TFileRecordService;
 
 /**
  * <p>
@@ -50,6 +52,9 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
 
     @Autowired
     TActivityDetailService tActivityDetailService;
+
+    @Autowired
+    TFileRecordService tFileRecordService;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -176,7 +181,19 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
 	@Override
 	public Page<MobileActivityVo> queryMobileActivity(Integer hotelId) {
 		Page<MobileActivityVo> page = new Page<>();
-		page.setRecords(tActivityDAO.queryMobileActivity(hotelId));
+		List<MobileActivityVo> mavs = tActivityDAO.queryMobileActivity(hotelId);
+		Wrapper<TFileRecord> wrapper = new EntityWrapper<>();
+		wrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
+		wrapper.eq("mark_modified", CommonConst.ENABLED);
+		List<TFileRecord> frs = tFileRecordService.selectList(wrapper);
+		for(MobileActivityVo mav : mavs) {
+			for(TFileRecord fr : frs) {
+				if(fr.getReferenceId().equals(mav.getCategoryId())) {
+					mav.setPath(fr.getPath());
+				}
+			}
+		}
+		page.setRecords(mavs);
 		return page;
 	}
 
@@ -185,8 +202,20 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
 	public Page<MobileActivityRoomCategoryVo> queryMobileActivityRoomCategoryList(
 			Integer hotelId, Integer activityId, HotelPage hotelPage) {
 		Page<MobileActivityRoomCategoryVo> page = hotelPage.initPage();
-		page.setRecords(tActivityDAO.queryMobileActivityRoomCategoryList(hotelId, activityId, page));
-		return null;
+		List<MobileActivityRoomCategoryVo> marcvs = tActivityDAO.queryMobileActivityRoomCategoryList(hotelId, activityId, page);
+		Wrapper<TFileRecord> wrapper = new EntityWrapper<>();
+		wrapper.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
+		wrapper.eq("mark_modified", CommonConst.ENABLED);
+		List<TFileRecord> frs = tFileRecordService.selectList(wrapper);
+		for(MobileActivityRoomCategoryVo mav : marcvs) {
+			for(TFileRecord fr : frs) {
+				if(fr.getReferenceId().equals(mav.getCategoryId())) {
+					mav.setPath(fr.getPath());
+				}
+			}
+		}
+		page.setRecords(marcvs);
+		return page;
 	}
     
 }
