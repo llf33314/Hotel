@@ -37,6 +37,7 @@ import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
 import com.gt.hotel.util.ExcelUtil;
 import com.gt.hotel.util.ExportUtil;
+import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderService;
@@ -57,6 +58,9 @@ public class HotelOrderController extends BaseController {
 
 	@Autowired
 	TOrderService tOrderService;
+	
+	@Autowired
+	WXMPApiUtil wxmpApiUtil;
 	
 	@ApiOperation(value = "删除 房间&餐饮订单(共用)", notes = "删除 房间&餐饮订单(共用)")
     @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -144,15 +148,18 @@ public class HotelOrderController extends BaseController {
 	public ResponseDTO orderRefunds(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getPayStatus().equals(CommonConst.ORDER_CONFIRMED) 
-				|| !order.getPayStatus().equals(CommonConst.ORDER_CANCALLED)) {
+		if(!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
-		
 		//TODO 退款
-		
+		if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
+//		JSONObject json = wxmpApiUtil.wxmemberPayRefund(appid, mchid, sysOrderNo, refundFee, totalFee);
+		}else if(order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
+			
+		}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {
+			
+		}
 		//TODO 退款
-		
 		Wrapper<TOrder> wrapper = new EntityWrapper<>();
 		wrapper.eq("id", orderId);
 		TOrder newOrder = new TOrder();
@@ -250,6 +257,9 @@ public class HotelOrderController extends BaseController {
 	public ResponseDTO<Page<HotelBackFoodOrderVo>> foodOrderR(HotelOrderParameter.FoodOrderQuery param,
 			HttpSession session) {
 		Integer busid = getLoginUserId(session);
+		if(param.getKeyword() != null && param.getKeyword().trim().length() == 0) {
+			param.setKeyword(null); 
+		}
 		Page<HotelBackFoodOrderVo> page = tOrderService.queryFoodOrder(busid, param);
 		return ResponseDTO.createBySuccess(page);
 	}
@@ -282,6 +292,7 @@ public class HotelOrderController extends BaseController {
 						case 1:s = "已确认";break;
 						case 2:s = "已取消";break;
 						case 3:s = "已完成";break;
+						case 4:s = "已入住";break;
 						}
 					}else if("payStatus".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
@@ -292,7 +303,8 @@ public class HotelOrderController extends BaseController {
 						}
 					}else if("payType".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
-						case 1:s = "在线支付";break;
+						case 0:s = "支付宝";break;
+						case 1:s = "微信";break;
 						case 2:s = "到店支付";break;
 						case 3:s = "储值卡支付";break;
 						case 4:s = "信用卡";break;
@@ -375,7 +387,8 @@ public class HotelOrderController extends BaseController {
 						}
 					}else if("payType".equals(contentName)) {
 						switch (Integer.valueOf(c.toString())) {
-						case 1:s = "在线支付";break;
+						case 0:s = "支付宝";break;
+						case 1:s = "微信";break;
 						case 2:s = "到店支付";break;
 						case 3:s = "储值卡支付";break;
 						case 4:s = "信用卡";break;

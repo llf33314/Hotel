@@ -101,20 +101,16 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         tFileRecordService.delete(filewrapper);
         //保存图片
         List<TFileRecord> imgs = new ArrayList<>();
-        for (String imgurl : roomCategory.getImages()) {
+        for (FileRecordVo imgurl : roomCategory.getImages()) {
             TFileRecord file = new TFileRecord();
+            BeanUtils.copyProperties(imgurl, file);
             file.setCreatedAt(date);
             file.setCreatedBy(busid);
             file.setUpdatedAt(date);
             file.setUpdatedBy(busid);
             file.setModule(CommonConst.MODULE_ROOM_CATEGORY);
             file.setReferenceId(tRoomCategory.getId());
-            file.setPath(imgurl);
-            int index = imgurl.lastIndexOf("/");
-            if (index == -1) index = 0;
-            String name = imgurl.substring(index);
-            file.setName(name);
-            file.setOriginalName(name);
+            file.setOriginalName(imgurl.getName());
             imgs.add(file);
         }
         if (imgs.size() > 0) if (!tFileRecordService.insertBatch(imgs)) throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
@@ -315,11 +311,10 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
 
     }
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req) {
-		Page<MobileRoomCategoryVo> page = req.initPage();
-		List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req, page);
+		Page<MobileRoomCategoryVo> page = new Page<>();
+		List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req);
 		Wrapper<TFileRecord> fw = new EntityWrapper<>();
 		fw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		fw.eq("mark_modified", CommonConst.ENABLED);
@@ -327,7 +322,6 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
 		
 		Wrapper<TInfrastructureRelation> iw = new EntityWrapper<>();
 		iw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
-		iw.eq("mark_modified", CommonConst.ENABLED);
 		List<TInfrastructureRelation> il = tInfrastructureRelationService.selectList(iw);
 		
 		for(MobileRoomCategoryVo r : l) {

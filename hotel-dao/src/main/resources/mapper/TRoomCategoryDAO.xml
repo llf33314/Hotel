@@ -44,12 +44,13 @@
     <select id="queryMobileRoomCategory" resultType="com.gt.hotel.vo.MobileRoomCategoryVo">
     	SELECT a.id, a.hotel_id hotelId, a.`name`, a.rack_rate rackRate, a.`desc`, a.deposit,a.weekend_fare_enable weekendFareEnable, 
 			a.weekend_fare weekendFare, a.breakfast_enable breakfastEnable, a.breakfast_quantity breakfastQuantity, 
-			a.room_count roomCount,
+			a.room_count roomCount, d.remnant_room_enable remnantRoomEnable,
 			b.price calenderPrice, IFNULL(SUM(c.number), 0) orderCount
 		FROM t_room_category a 
+		JOIN t_hotel_setting d ON a.hotel_id = d.hotel_id
     	<![CDATA[
 		LEFT JOIN (SELECT category_id, price FROM t_room_calendar WHERE NOW() >= begin_time AND NOW() <= end_time) b ON a.id = b.category_id 
-		LEFT JOIN (SELECT category_id, number FROM t_order_room WHERE #{param.roomInTime} >= room_in_time AND #{param.roomOutTime} <= room_out_time) c ON a.id = c.category_id
+		LEFT JOIN (SELECT category_id, number FROM t_order_room WHERE #{param.roomInTime} >= room_in_time AND #{param.roomOutTime} <= room_out_time) c ON a.id = c.category_id 
 		]]>
 		WHERE a.hotel_id = #{hotelId} 
 		AND a.mark_modified = 0 

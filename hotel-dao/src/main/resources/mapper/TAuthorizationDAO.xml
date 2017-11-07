@@ -14,12 +14,13 @@
 		<result column="created_at" property="createdAt" />
 		<result column="updated_by" property="updatedBy" />
 		<result column="updated_at" property="updatedAt" />
+		<result column="member_id" property="memberId" />
 	</resultMap>
 
 	<!-- 通用查询结果列 -->
 	<sql id="Base_Column_List">
 		id, account_id, hotel_id, function_ids, scan_code_authorization,
-		mark_modified, created_by, created_at, updated_by, updated_at
+		mark_modified, created_by, created_at, updated_by, updated_at, member_id
 	</sql>
 	<sql id="Base_Column_List_VO">
 		t_authorization.id, t_authorization.account_id accountId, t_authorization.hotel_id hotelId,
@@ -27,7 +28,7 @@
 		scanCodeAuthorization, t_authorization.mark_modified markModified,
 		t_authorization.created_by createdBy,
 		t_authorization.created_at createdAt, t_authorization.updated_by updatedBy,
-		t_authorization.updated_at updatedAt
+		t_authorization.updated_at updatedAt, t_authorization.member_id memberId
 	</sql>
 
 	<select id="queryAuthor" resultType="com.gt.hotel.vo.AuthorizationVo">

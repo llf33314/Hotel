@@ -37,7 +37,8 @@ public interface TRoomCategoryDAO extends BaseMapper<TRoomCategory> {
      * @param req
      * @return
      */
-	List<MobileRoomCategoryVo> queryMobileRoomCategory(@Param("hotelId") Integer hotelId, @Param("param") MobileQueryRoomCategory req, 
-			@Param("page") Pagination page);
+//	List<MobileRoomCategoryVo> queryMobileRoomCategory(@Param("hotelId") Integer hotelId, @Param("param") MobileQueryRoomCategory req, 
+//			@Param("page") Pagination page);
+	List<MobileRoomCategoryVo> queryMobileRoomCategory(@Param("hotelId") Integer hotelId, @Param("param") MobileQueryRoomCategory req);
 
 }

@@ -76,6 +76,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <dependency>
+            <groupId>com.gt.member</groupId>
+            <artifactId>Member_bo</artifactId>
+            <version>1.0.4</version>
+        </dependency>
 
         <!-- 将内嵌的tomcat容器标记为provided(来自官网) -->
         <dependency>

@@ -50,6 +50,9 @@ public class MobileRoomCategoryVo {
     
     @ApiModelProperty(value = "订单已订房间数量")
     private Integer orderCount;
+    
+    @ApiModelProperty(value = "是否显示剩余房间数 默认 1 关闭 0 开启")
+    private Integer remnantRoomEnable;
 
 //    @ApiModelProperty("房间集合")
 //    private List<RoomVo> tRoomList;

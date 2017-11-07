@@ -1,9 +1,16 @@
 package com.gt.hotel.controller.back;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -16,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +47,11 @@ import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 import com.gt.hotel.param.HotelParameter;
 import com.gt.hotel.param.HotelParameter.HotelQuery;
+import com.gt.hotel.util.QrCodeUtil;
+import com.gt.hotel.util.ShortUrlUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelVo;
+import com.gt.hotel.vo.LinkVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
@@ -73,6 +84,9 @@ public class HotelController extends BaseController {
     
     @Autowired
     THotelMemberSettingService hotelMemberSettingService; 
+    
+    @Autowired
+    ShortUrlUtil shortUrlUtil;
 
     @Value("${wxmp.imageurl.prefixurl}")
     private String IMAGE_PREFIX;
@@ -172,4 +186,31 @@ public class HotelController extends BaseController {
         return ResponseDTO.createBySuccess();
     }
 
+    @ApiOperation(value = "链接", notes = "链接")
+    @GetMapping(value = "{hotelId}/link", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<LinkVo> link(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
+    	THotel hotel = tHotelService.selectById(hotelId);
+    	Integer busId = hotel.getBusId();
+    	String url = getHost(request) + "/mobile" + busId + "/home";
+    	LinkVo link = new LinkVo();
+    	link.setLongUrl(url);
+    	link.setShortUrl(shortUrlUtil.getShorUrl(url));
+    	return ResponseDTO.createBySuccess(link);
+    }
+    
+    @ApiOperation(value = "二维码", notes = "二维码")
+    @GetMapping(value = "/qrcode", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void qrcode(String url, HttpServletResponse response) {
+    	OutputStream outputStream;
+		try {
+			outputStream = new BufferedOutputStream(response.getOutputStream());
+			BufferedImage bi = QrCodeUtil.encode(url, null, "H", null, outputStream, 500, 500, 1);
+			ImageIO.write(bi, "png", outputStream);
+			outputStream.flush();  
+			outputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
 }

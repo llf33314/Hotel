@@ -61,7 +61,10 @@ public class TAuthorization extends Model<TAuthorization> {
      * 最后修改时间
      */
     private Date    updatedAt;
-
+    /**
+     * 会员ID
+     */
+    private Integer memberId;
 
     @Override
     protected Serializable pkVal() {

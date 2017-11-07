@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(description = "酒店移动端 餐饮")
 @RestController
-@RequestMapping("/mobile/food")
+@RequestMapping("/mobile/78CDF1/food")
 public class MobileFoodController extends BaseController {
 
     @Autowired

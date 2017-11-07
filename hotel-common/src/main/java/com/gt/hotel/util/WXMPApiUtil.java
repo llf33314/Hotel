@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 多粉接口
+ * @author Reverien9@gmail.com
+ * 2017年11月7日 上午10:36:52
+ */
 @Component
 public class WXMPApiUtil {
 
@@ -66,6 +71,7 @@ public class WXMPApiUtil {
      */
     @SuppressWarnings("rawtypes")
     private JSONObject getCApi(Map param, String _url) throws SignException {
+    	System.err.println(SERVER_URL + _url);
         String s = SignHttpUtils.WxmppostByHttp(SERVER_URL + _url, param, SIGN_KEY);
 //        String s = SignHttpUtils.WxmppostByHttp("https://deeptel.com.cn" + _url, param, "WXMP2017");
         JSONObject result = JSONObject.parseObject(s);
@@ -154,47 +160,6 @@ public class WXMPApiUtil {
         return result;
     }
 
-    /**
-     * 根据门店ID获取该店铺的所有员工和管理员信息
-     *
-     * @param shopId
-     * @param pageSize
-     * @param page
-     * @param name
-     * @param phone
-     * @return
-     * @throws SignException
-     */
-//	public List<Employee> getAllStaffShopId(Integer shopId, String name, String phone) throws SignException {
-//		Map<String, Object> paramObj = new HashMap<String, Object>();
-//		List<Employee> es = null;
-//		paramObj.put("shopId", shopId);
-//		paramObj.put("name", name);
-//		paramObj.put("phone", phone);
-//		JSONObject result = getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
-//		if("0".equals(result.getString("code"))) {
-//			JSONObject _j = JSONObject.parseObject(result.getString("data"));
-//			es = JSONArray.parseArray(_j.getString("staffList"), Employee.class);
-//		}else throw new SignException(result.getString("msg"));
-//		return es;
-//	}
-//	public EmployeeList getAllStaffShopId(Integer shopId, String name, String phone) {
-//		Map<String, Object> paramObj = new HashMap<String, Object>();
-//		EmployeeList es = null;
-//		paramObj.put("shopId", shopId);
-//		paramObj.put("name", name);
-//		paramObj.put("phone", phone);
-//		JSONObject result;
-//		try {
-//			result = getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
-//			if("0".equals(result.getString("code"))) {
-//				es = JSONObject.parseObject(result.getString("data"), EmployeeList.class);
-//			}else throw new ResponseEntityException(result.getString("msg"));
-//		} catch (SignException e) {
-//			e.printStackTrace();
-//		}
-//		return es;
-//	}
     public JSONObject getAllStaffShopId(Integer shopId, String name, String phone, Integer page, Integer pageSize) {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("shopId", shopId);
@@ -363,6 +328,41 @@ public class WXMPApiUtil {
             json = JSONObject.parseObject(result);
         }
         return json;
+    }
+    
+    /**
+     * 微信退款
+     * @param appid 公众号或小程序appid
+     * @param mchid 支付商户号
+     * @param sysOrderNo 订单号
+     * @param refundFee 退款金额
+     * @param totalFee 总金额
+     * @return
+     * @throws SignException
+     */
+    public JSONObject wxmemberPayRefund(String appid, String mchid, String sysOrderNo, Double refundFee, Double totalFee)
+            throws SignException {
+    	JSONObject param = new JSONObject();
+        param.put("appid", appid);
+        param.put("mchid", mchid);
+        param.put("sysOrderNo", sysOrderNo);
+        param.put("refundFee", refundFee);
+        param.put("totalFee", totalFee);
+        JSONObject result = getLApi(param, "/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do");
+        return result;
+    }
+    
+    /**
+     * 获取WxPulbic对象
+     * @param busId 商家ID
+     * @return
+     * @throws SignException
+     */
+    public JSONObject getWxPulbicMsg(Integer busId) throws SignException {
+    	JSONObject param = new JSONObject();
+    	param.put("busId", busId);
+    	JSONObject result = getCApi(param, "/8A5DA52E/busUserApi/getWxPulbicMsg.do");
+    	return result;
     }
 
     public static void main(String[] args) {

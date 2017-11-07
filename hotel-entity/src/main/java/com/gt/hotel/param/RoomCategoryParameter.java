@@ -1,14 +1,18 @@
 package com.gt.hotel.param;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gt.hotel.vo.FileRecordVo;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 新增or更新房型请求对象
@@ -35,7 +39,7 @@ public class RoomCategoryParameter {
 
     @Data
     @Api(description = "移动端 房型列表 查询参数")
-    public static class MobileQueryRoomCategory extends HotelPage {
+    public static class MobileQueryRoomCategory {
         @ApiModelProperty(value = "房型ID")
         private Integer categoryId;
 
@@ -80,7 +84,7 @@ public class RoomCategoryParameter {
         private String name;
 
         @ApiModelProperty(value = "图片路径集合")
-        private List<String> images;
+        private List<FileRecordVo> images;
 
         @ApiModelProperty(value = "简要说明", required = true)
         @NotEmpty(message = "简要说明不能为空")

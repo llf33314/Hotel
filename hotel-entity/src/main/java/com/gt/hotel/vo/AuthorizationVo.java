@@ -59,4 +59,7 @@ public class AuthorizationVo {
     
     @ApiModelProperty("手机")
     private String phone;
+    
+    @ApiModelProperty("会员ID")
+    private Integer memberId;
 }

@@ -180,4 +180,42 @@ public final class CommonConst {
      */
     public static final Integer ORDER_CHECK_IN = 4;
     
+    /****************************** 支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金 ******************************/
+    
+    /**
+     * 0 支付宝 
+     */
+    public static final Integer PAY_TYPE_ALI = 0;
+    /**
+     * 1 微信
+     */
+    public static final Integer PAY_TYPE_WX = 1;
+    /**
+     * 2 到店支付
+     */
+    public static final Integer PAY_TYPE_OFFLINE = 2;
+    /**
+     * 3 储值卡支付
+     */
+    public static final Integer PAY_TYPE_VALUE_CARD = 3;
+    /**
+     * 4 信用卡
+     */
+    public static final Integer PAY_TYPE_CREDIT_CARD = 4;
+    /**
+     * 5 现金 
+     */
+    public static final Integer PAY_TYPE_CASH = 5;
+    
+    /****************************** 是否已扫码授权 0 是 1 否 ******************************/
+    
+    /**
+     * 是否已扫码授权 0 是 
+     */
+    public static final Integer AUTHORIZED_ENABLED = 0;
+    /**
+     * 是否已扫码授权 1 否
+     */
+    public static final Integer AUTHORIZED_UNENABLED = 1;
+    
 }

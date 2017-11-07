@@ -1,17 +1,27 @@
 package com.gt.hotel.controller.mobile;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.Member;
+import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
 import com.gt.hotel.vo.MobileActivityRoomCategoryVo;
@@ -33,7 +43,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(description = "酒店移动端")
 @RestController
-@RequestMapping("/mobile")
+@RequestMapping("/mobile/78CDF1")
 public class MobileHotelController extends BaseController {
 
     @Autowired
@@ -45,6 +55,30 @@ public class MobileHotelController extends BaseController {
     @Autowired
     TActivityService tActivityService;
     
+    @ApiOperation(value = "首页", notes = "首页")
+    @GetMapping(value = "{busId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("busId") Integer busId, ModelAndView model) {
+    	Member member = SessionUtils.getLoginMember(request);
+    	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
+    		Map<String, Object> param = new HashMap<>();
+    		
+    		param.put("busId", busId);
+    		param.put("requestUrl", getHost(request) + "/mobile/home/" + busId);
+    		String url = null;
+			try {
+				url = authorizeMember(request, param);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    		if(!StringUtils.isEmpty(url)) {
+    			model.setViewName(url);
+    	        return model;
+    		}
+    	}
+    	model.setViewName("/index.html");
+        return model;
+    }
+    
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId) {
@@ -55,7 +89,7 @@ public class MobileHotelController extends BaseController {
     @ApiOperation(value = "首页房型列表", notes = "首页房型列表")
     @GetMapping(value = "{hotelId}/roomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<MobileRoomCategoryVo>> mobileRoomCategoryR(@PathVariable("hotelId") Integer hotelId, 
-    		@RequestBody RoomCategoryParameter.MobileQueryRoomCategory req) {
+    		@ModelAttribute RoomCategoryParameter.MobileQueryRoomCategory req) {
     	Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
         return ResponseDTO.createBySuccess(page);
     }
@@ -75,4 +109,20 @@ public class MobileHotelController extends BaseController {
     	return ResponseDTO.createBySuccess(page);
     }
 
+    @SuppressWarnings("rawtypes")
+	@ApiOperation(value = "立即预定", notes = "立即预定")
+	@PostMapping(value = "/book", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO roomBook(HotelOrderParameter.BookOrder order, HttpServletRequest request) {
+		
+		//TODO book order
+		
+		
+		
+		
+		
+		
+		
+		return ResponseDTO.createBySuccess();
+	}
+    
 }
