@@ -31,6 +31,9 @@ public class HotelConfigController extends BaseController {
     @Value("${wxmp.socket.url}")
     private String SOCKET_URL;
 
+    @Value("${wxmp.api.serverurl}")
+    private String API_URL;
+
     @ApiOperation(value = "配置", notes = "配置")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<ConfigVO> config(HttpServletRequest request) {
@@ -38,6 +41,7 @@ public class HotelConfigController extends BaseController {
     	vo.setHostUrl(getHost(request));
     	vo.setPrefixUrl(IMAGE_PREFIX);
     	vo.setSocketUrl(SOCKET_URL);
+    	vo.setApiUrl(API_URL);
     	return ResponseDTO.createBySuccess();
     }
 }

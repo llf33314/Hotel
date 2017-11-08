@@ -27,6 +27,9 @@ public class WXMPApiUtil {
     @Value("${wxmp.api.membersign}")
     private String MEMBER_SIGN_KEY;
 
+    @Value("${wxmp.api.memberserverurl}")
+    private String MEMBER_SERVER_URL;
+
     @Value("${wxmp.api.serverurl}")
     private String SERVER_URL;
 
@@ -76,6 +79,22 @@ public class WXMPApiUtil {
 //        String s = SignHttpUtils.WxmppostByHttp("https://deeptel.com.cn" + _url, param, "WXMP2017");
         JSONObject result = JSONObject.parseObject(s);
         return result;
+    }
+
+    /**
+     * 对照彭江丽的接口文档
+     *
+     * @param param 参数
+     * @param _url  路径
+     * @return
+     * @throws SignException
+     */
+    @SuppressWarnings("rawtypes")
+    private JSONObject getPApi(Map param, String _url) throws SignException {
+    	System.err.println(SERVER_URL + _url);
+    	String s = SignHttpUtils.WxmppostByHttp(MEMBER_SERVER_URL + _url, param, MEMBER_SIGN_KEY);
+    	JSONObject result = JSONObject.parseObject(s);
+    	return result;
     }
 
     /**
@@ -386,14 +405,11 @@ public class WXMPApiUtil {
 
     public static void main(String[] args) {
         try {
-            WXMPApiUtil u = new WXMPApiUtil();
-            Map<String, Object> paramObj = new HashMap<String, Object>();
-            paramObj.put("shopId", 33);
-            // System.err.println(getDictKey("1180"));
-//			System.err.println(u.queryWxShopByBusId(33));
-//            JSONObject json = u.getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
-            JSONObject json = u.getAllStaffShopId(33, "", "", 1, 10);
-            System.err.println(json.getString("data"));
+        	 Map<String, Object> paramObj = new HashMap<String, Object>();
+             paramObj.put("style", 1198);
+             String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
+             String result = SignHttpUtils.WxmppostByHttp(url, paramObj, "WXMP2017");
+            System.err.println(result);
         } catch (Exception e) {
             e.printStackTrace();
         }

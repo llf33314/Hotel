@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +31,6 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.WxPublicUsers;
-import com.gt.api.exception.SignException;
 import com.gt.api.util.KeysUtil;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;

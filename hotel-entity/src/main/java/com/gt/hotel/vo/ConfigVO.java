@@ -17,4 +17,7 @@ public class ConfigVO {
 	@ApiModelProperty("服务器根路径")
 	private String hostUrl;
 	
+	@ApiModelProperty("API服务器路径")
+	private String apiUrl;
+	
 }
