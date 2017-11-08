@@ -1,8 +1,5 @@
 package com.gt.hotel.config;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,7 +9,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.gt.hotel.interceptor.SecurityInterceptor;
 
 /**
  * SpringMVC 配置类
@@ -50,7 +48,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
+        /*InterceptorRegistration addInterceptor = */registry.addInterceptor(new SecurityInterceptor());
 //        addInterceptor.addPathPatterns("/**");
 //        addInterceptor.excludePathPatterns("/backstage/home", "/error", "/v2/**", "/webjars/**", "/swagger-resources/**");
         //        super.addInterceptors(registry);

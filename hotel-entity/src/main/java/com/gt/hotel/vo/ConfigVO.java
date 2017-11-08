@@ -20,4 +20,7 @@ public class ConfigVO {
 	@ApiModelProperty("API服务器路径")
 	private String apiUrl;
 	
+	@ApiModelProperty("素材库服务器路径")
+	private String materialUrl;
+	
 }

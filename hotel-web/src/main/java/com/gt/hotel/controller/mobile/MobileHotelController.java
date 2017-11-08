@@ -1,13 +1,9 @@
 package com.gt.hotel.controller.mobile;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.gt.api.bean.session.Member;
-import com.gt.api.util.SessionUtils;
+import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.entity.THotel;
 import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
+import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.MobileActivityRoomCategoryVo;
 import com.gt.hotel.vo.MobileActivityVo;
 import com.gt.hotel.vo.MobileHotelVo;
@@ -59,27 +55,30 @@ public class MobileHotelController extends BaseController {
 
     @Autowired
     TActivityService tActivityService;
+
+    @Autowired
+    WXMPApiUtil wXMPApiUtil;
     
     @ApiOperation(value = "首页", notes = "首页")
     @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("hotelId") Integer hotelId, ModelAndView model) {
-    	THotel hotel = tHotelService.selectById(hotelId);
-    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
-    		Map<String, Object> param = new HashMap<>();
-    		param.put("busId", hotel.getBusId());
-    		param.put("requestUrl", getHost(request) + "/mobile/78CDF1" + hotelId + "/home/");
-    		String url = null;
-			try {
-				url = authorizeMember(request, param);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-    		if(!StringUtils.isEmpty(url)) {
-    			model.setViewName(url);
-    	        return model;
-    		}
-    	}
+//    	THotel hotel = tHotelService.selectById(hotelId);
+//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+//    	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
+//    		Map<String, Object> param = new HashMap<>();
+//    		param.put("busId", hotel.getBusId());
+//    		param.put("requestUrl", getHost(request) + "/mobile/78CDF1" + hotelId + "/home/");
+//    		String url = null;
+//			try {
+//				url = authorizeMember(request, param);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//    		if(!StringUtils.isEmpty(url)) {
+//    			model.setViewName(url);
+//    	        return model;
+//    		}
+//    	}
     	model.setViewName("/index.html");
         return model;
     }
@@ -95,6 +94,12 @@ public class MobileHotelController extends BaseController {
     @GetMapping(value = "{hotelId}/roomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<MobileRoomCategoryVo>> mobileRoomCategoryR(@PathVariable("hotelId") Integer hotelId, 
     		@ModelAttribute RoomCategoryParameter.MobileQueryRoomCategory req) {
+    	JSONObject member = new JSONObject();
+    	try {
+    		member = wXMPApiUtil.findMemberCard("13433550667", 33, 29);
+		} catch (SignException e) {
+			e.printStackTrace();
+		}
     	Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
         return ResponseDTO.createBySuccess(page);
     }

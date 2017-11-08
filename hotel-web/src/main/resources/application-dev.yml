@@ -79,13 +79,15 @@ wxmp:
     sign: WXMP2017
     membersign: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
     serverurl: https://deeptel.com.cn
-    memberserverurl: https://member.yifriend.net
+    memberserverurl: https://member.deeptel.com.cn
+    memberserverurly: https://member.yifriend.net
   short:
     url:
       path: http://short.duofee.com
       signkey: goodtom2016@shortUrl.
   socket:
     url: https://socket.deeptel.com.cn
+  materialurl: https://suc.deeptel.com.cn
 
 
 

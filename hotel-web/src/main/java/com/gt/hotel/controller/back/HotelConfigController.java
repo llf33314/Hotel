@@ -33,6 +33,9 @@ public class HotelConfigController extends BaseController {
 
     @Value("${wxmp.api.serverurl}")
     private String API_URL;
+    
+    @Value("${wxmp.materialurl}")
+    private String MATERIAL_URL;
 
     @ApiOperation(value = "配置", notes = "配置")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -42,6 +45,7 @@ public class HotelConfigController extends BaseController {
     	vo.setPrefixUrl(IMAGE_PREFIX);
     	vo.setSocketUrl(SOCKET_URL);
     	vo.setApiUrl(API_URL);
+    	vo.setMaterialUrl(MATERIAL_URL);
     	return ResponseDTO.createBySuccess(vo);
     }
 }
