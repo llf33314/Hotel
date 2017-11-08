@@ -31,8 +31,10 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.WxPublicUsers;
+import com.gt.api.exception.SignException;
 import com.gt.api.util.KeysUtil;
 import com.gt.api.util.SessionUtils;
+import com.gt.entityBo.ErpRefundBo;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
@@ -172,6 +174,45 @@ public class HotelOrderController extends BaseController {
 				JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(), 
 						order.getRealPrice() / 100d, order.getRealPrice() / 100d);
 				if(result.getInteger("code").equals(0)) {
+					ErpRefundBo bo = new ErpRefundBo();
+					bo.setBusId(order.getBusId());
+					bo.setOrderCode(order.getOrderNum());
+					bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2)); // ali = 0, wx = 1, 储值卡 = 5
+					bo.setRefundMoney(0d);
+					bo.setRefundJifen(order.getIntegral());
+					bo.setRefundFenbi(order.getFb() / 100d);
+					bo.setRefundDate(System.currentTimeMillis());
+					/*JSONObject resultII = */wxmpApiUtil.memberRefundErp(bo);
+//					if(resultII.getInteger("code").equals(0)) {
+						Wrapper<TOrder> wrapper = new EntityWrapper<>();
+						wrapper.eq("id", orderId);
+						Date date = new Date();
+						TOrder newOrder = new TOrder();
+						newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+						newOrder.setUpdatedBy(busid);
+						newOrder.setUpdatedAt(date);
+						if(!tOrderService.update(newOrder, wrapper)) {
+							return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+						}else {
+							return ResponseDTO.createBySuccess();
+						}
+//					}else {
+//						return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+//					}
+				}else {
+					return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
+				}
+			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {	//储蓄卡
+				ErpRefundBo bo = new ErpRefundBo();
+				bo.setBusId(order.getBusId());
+				bo.setOrderCode(order.getOrderNum());
+				bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2)); // ali = 0, wx = 1, 储值卡 = 5
+				bo.setRefundMoney(order.getRealPrice() / 100d);
+				bo.setRefundJifen(order.getIntegral());
+				bo.setRefundFenbi(order.getFb() / 100d);
+				bo.setRefundDate(System.currentTimeMillis());
+				JSONObject result = wxmpApiUtil.memberRefundErp(bo);
+				if(result.getInteger("code").equals(0)) {
 					Wrapper<TOrder> wrapper = new EntityWrapper<>();
 					wrapper.eq("id", orderId);
 					Date date = new Date();
@@ -187,9 +228,6 @@ public class HotelOrderController extends BaseController {
 				}else {
 					return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
 				}
-			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {	//储蓄卡
-				//TODO 储蓄卡退款
-				return ResponseDTO.createBySuccess();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -203,12 +241,30 @@ public class HotelOrderController extends BaseController {
 	public void aliPayCallBack(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId,
 			@RequestBody Map<String,Object> param,
 			HttpServletRequest request) {
-		if(param.get("outTradeNo") != null && param.get("outTradeNo").toString().trim().length() > 0) {
-			Wrapper<TOrder> wrapper = new EntityWrapper<>();
-			wrapper.eq("id", orderId);
-			TOrder order = new TOrder();
-			order.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
-			tOrderService.update(order, wrapper);
+		TOrder order = tOrderService.selectById(orderId);
+		try {
+			if(param.get("outTradeNo") != null && param.get("outTradeNo").toString().trim().length() > 0) {
+				ErpRefundBo bo = new ErpRefundBo();
+				bo.setBusId(order.getBusId());
+				bo.setOrderCode(order.getOrderNum());
+				bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2)); // ali = 0, wx = 1, 储值卡 = 5
+				bo.setRefundMoney(order.getRealPrice() / 100d);
+				bo.setRefundJifen(order.getIntegral());
+				bo.setRefundFenbi(order.getFb() / 100d);
+				bo.setRefundDate(System.currentTimeMillis());
+				JSONObject result = wxmpApiUtil.memberRefundErp(bo);
+				if(result.getInteger("code").equals(0)) {
+					Wrapper<TOrder> wrapper = new EntityWrapper<>();
+					wrapper.eq("id", orderId);
+					TOrder newOrder = new TOrder();
+					newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+					if(tOrderService.update(newOrder, wrapper)) {
+						wxmpApiUtil.getSocketApi("hotel:socket", null, "success");
+					}
+				}
+			}
+		} catch (SignException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -289,6 +345,45 @@ public class HotelOrderController extends BaseController {
 				JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(), 
 						refundsP.getRefundFee() / 100d, order.getRealPrice() / 100d);
 				if(result.getInteger("code").equals(0)) {
+					ErpRefundBo bo = new ErpRefundBo();
+					bo.setBusId(order.getBusId());
+					bo.setOrderCode(order.getOrderNum());
+					bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2)); // ali = 0, wx = 1, 储值卡 = 5
+					bo.setRefundMoney(0d);
+					bo.setRefundJifen(order.getIntegral());
+					bo.setRefundFenbi(order.getFb() / 100d);
+					bo.setRefundDate(System.currentTimeMillis());
+					/*JSONObject resultII = */wxmpApiUtil.memberRefundErp(bo);
+//					if(resultII.getInteger("code").equals(0)) {
+						Wrapper<TOrder> wrapper = new EntityWrapper<>();
+						wrapper.eq("id", orderId);
+						Date date = new Date();
+						TOrder newOrder = new TOrder();
+						newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+						newOrder.setUpdatedBy(busid);
+						newOrder.setUpdatedAt(date);
+						if(!tOrderService.update(newOrder, wrapper)) {
+							return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+						}else {
+							return ResponseDTO.createBySuccess();
+						}
+//					}else {
+//						return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+//					}
+				}else {
+					return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
+				}
+			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {	//储蓄卡
+				ErpRefundBo bo = new ErpRefundBo();
+				bo.setBusId(order.getBusId());
+				bo.setOrderCode(order.getOrderNum());
+				bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2)); // ali = 0, wx = 1, 储值卡 = 5
+				bo.setRefundMoney(refundsP.getRefundFee() / 100d);
+				bo.setRefundJifen(order.getIntegral());
+				bo.setRefundFenbi(order.getFb() / 100d);
+				bo.setRefundDate(System.currentTimeMillis());
+				JSONObject result = wxmpApiUtil.memberRefundErp(bo);
+				if(result.getInteger("code").equals(0)) {
 					Wrapper<TOrder> wrapper = new EntityWrapper<>();
 					wrapper.eq("id", orderId);
 					Date date = new Date();
@@ -304,9 +399,6 @@ public class HotelOrderController extends BaseController {
 				}else {
 					return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
 				}
-			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {	//储蓄卡
-				//TODO 储蓄卡退款
-				return ResponseDTO.createBySuccess();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

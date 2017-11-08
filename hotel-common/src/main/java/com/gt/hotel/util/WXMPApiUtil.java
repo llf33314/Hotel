@@ -1,14 +1,16 @@
 package com.gt.hotel.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.gt.entityBo.ErpRefundBo;
 
 /**
  * 多粉接口
@@ -89,8 +91,7 @@ public class WXMPApiUtil {
      * @return
      * @throws SignException
      */
-    @SuppressWarnings("rawtypes")
-    private JSONObject getPApi(Map param, String _url) throws SignException {
+    private JSONObject getPApi(Object param, String _url) throws SignException {
     	System.err.println(SERVER_URL + _url);
     	String s = SignHttpUtils.WxmppostByHttp(MEMBER_SERVER_URL + _url, param, MEMBER_SIGN_KEY);
     	JSONObject result = JSONObject.parseObject(s);
@@ -371,6 +372,18 @@ public class WXMPApiUtil {
     }
     
     /**
+     * 会员结算退款
+     * @param bo
+     * @return
+     * @throws SignException
+     */
+    public JSONObject memberRefundErp(ErpRefundBo bo)
+    		throws SignException {
+    	JSONObject result = getPApi(bo, "/memberAPI/member/refundErp");
+    	return result;
+    }
+    
+    /**
      * socket推送人
      * @param pushName 推送人（不能为null）
      * @param pushStyle 推送属性（有属性的要填，没有属性的不用填）
@@ -381,11 +394,11 @@ public class WXMPApiUtil {
     public JSONObject getSocketApi(String pushName, String pushStyle, String pushMsg)
     		throws SignException {
     	JSONObject param = new JSONObject();
-    	param.put("appid", pushName);
+    	param.put("pushName", pushName);
     	if(pushStyle != null) {
-    		param.put("mchid", pushStyle);
+    		param.put("pushStyle", pushStyle);
     	}
-		param.put("sysOrderNo", pushMsg);
+		param.put("pushMsg", pushMsg);
     	JSONObject result = getCApi(param, "/8A5DA52E/socket/getSocketApi.do");
     	return result;
     }
@@ -405,11 +418,14 @@ public class WXMPApiUtil {
 
     public static void main(String[] args) {
         try {
-        	 Map<String, Object> paramObj = new HashMap<String, Object>();
-             paramObj.put("style", 1198);
-             String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
-             String result = SignHttpUtils.WxmppostByHttp(url, paramObj, "WXMP2017");
-            System.err.println(result);
+        	Map<String, Object> param = new HashMap<String, Object>();
+//        	param.put("style", 1198);
+//        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
+        	param.put("pushName", "hotel:test");
+        	param.put("pushMsg", "test");
+        	String url = "https://deeptel.com.cn" + "/8A5DA52E/socket/getSocketApi.do";
+        	String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
+        	System.err.println(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
