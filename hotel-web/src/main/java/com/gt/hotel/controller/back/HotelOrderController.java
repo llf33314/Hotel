@@ -6,7 +6,9 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +33,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.WxPublicUsers;
 import com.gt.api.exception.SignException;
+import com.gt.api.util.KeysUtil;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -147,44 +150,68 @@ public class HotelOrderController extends BaseController {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	@ApiOperation(value = "订单  退款 操作(占位)", notes = "订单  退款 操作(占位)")
+	@ApiOperation(value = "订单  退款 操作", notes = "订单  退款 操作(占位)")
 	@PostMapping(value = "{orderId}/refunds", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO orderRefunds(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId,
-			@RequestBody HotelOrderParameter.RefundsParam refundsP,
 			HttpSession session, HttpServletRequest request) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
 		if(!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
-		//TODO 退款
 		try {
 			WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
-			if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
-				
-			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
+			if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {	//支付宝
+				JSONObject params = new JSONObject();
+				params.put("out_trade_no", order.getOrderNum());
+				params.put("busId", order.getBusId());
+				params.put("desc", "酒店后台退款");
+				params.put("fee", order.getRealPrice() / 100d);
+				params.put("notifyUrl", getHost(request) + "/back/order" + orderId + "/aliPayCallBack");
+				String key = KeysUtil.getEncString(params.toJSONString());
+				return ResponseDTO.createBySuccess(key);
+			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {	//微信
 				JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(), 
-						refundsP.getRefundFee() / 100d, order.getRealPrice() / 100d);
-				if(!result.getInteger("code").equals(0)) {
+						order.getRealPrice() / 100d, order.getRealPrice() / 100d);
+				if(result.getInteger("code").equals(0)) {
+					Wrapper<TOrder> wrapper = new EntityWrapper<>();
+					wrapper.eq("id", orderId);
+					Date date = new Date();
+					TOrder newOrder = new TOrder();
+					newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+					newOrder.setUpdatedBy(busid);
+					newOrder.setUpdatedAt(date);
+					if(!tOrderService.update(newOrder, wrapper)) {
+						return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+					}else {
+						return ResponseDTO.createBySuccess();
+					}
+				}else {
 					return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
 				}
-			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {
-				
+			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {	//储蓄卡
+				//TODO 储蓄卡退款
+				return ResponseDTO.createBySuccess();
 			}
-		} catch (SignException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		//TODO 退款
-		Wrapper<TOrder> wrapper = new EntityWrapper<>();
-		wrapper.eq("id", orderId);
-		TOrder newOrder = new TOrder();
-		newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
-		newOrder.setUpdatedBy(busid);
-		newOrder.setUpdatedAt(new Date());
-		if(!tOrderService.update(newOrder, wrapper)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+			return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
 		}
 		return ResponseDTO.createBySuccess();
+	}
+	
+	@ApiOperation(value = "支付宝  退款 回调", notes = "支付宝  退款 回调")
+	@PostMapping(value = "{orderId}/aliPayCallBack", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public void aliPayCallBack(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId,
+			@RequestBody Map<String,Object> param,
+			HttpServletRequest request) {
+		if(param.get("outTradeNo") != null && param.get("outTradeNo").toString().trim().length() > 0) {
+			Wrapper<TOrder> wrapper = new EntityWrapper<>();
+			wrapper.eq("id", orderId);
+			TOrder order = new TOrder();
+			order.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+			tOrderService.update(order, wrapper);
+		}
 	}
 	
 	////////////////////////////////////////////////////////////↓房间↓ //////////////////////////////////////////////////////////
@@ -241,26 +268,53 @@ public class HotelOrderController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "房间订单  结账退房 操作(占位)", notes = "房间订单  结账退房 操作(占位)")
 	@PostMapping(value = "{orderId}/checkOut", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO checkOut(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
+	public ResponseDTO checkOut(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, 
+			@RequestBody HotelOrderParameter.RefundsParam refundsP, 
+			HttpSession session, HttpServletRequest request) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
 		if(!order.getPayStatus().equals(CommonConst.ORDER_CONFIRMED) || !order.getPayStatus().equals(CommonConst.ORDER_CANCALLED)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
-		//TODO 结账退房
-		
-		//TODO 结账退房
-		Wrapper<TOrder> wrapper = new EntityWrapper<>();
-		wrapper.eq("id", orderId);
-		Date date = new Date();
-		TOrder newOrder = new TOrder();
-		newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
-		newOrder.setUpdatedBy(busid);
-		newOrder.setUpdatedAt(date);
-		if(!tOrderService.update(newOrder, wrapper)) {
-			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+		try {
+			WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
+			if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {	//支付宝
+				JSONObject params = new JSONObject();
+				params.put("out_trade_no", order.getOrderNum());
+				params.put("busId", order.getBusId());
+				params.put("desc", "酒店后台退款");
+				params.put("fee", refundsP.getRefundFee() / 100d);
+				params.put("notifyUrl", getHost(request) + "/back/order" + orderId + "/aliPayCallBack");
+				String key = KeysUtil.getEncString(params.toJSONString());
+				return ResponseDTO.createBySuccess(key);
+			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {	//微信
+				JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(), 
+						refundsP.getRefundFee() / 100d, order.getRealPrice() / 100d);
+				if(result.getInteger("code").equals(0)) {
+					Wrapper<TOrder> wrapper = new EntityWrapper<>();
+					wrapper.eq("id", orderId);
+					Date date = new Date();
+					TOrder newOrder = new TOrder();
+					newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+					newOrder.setUpdatedBy(busid);
+					newOrder.setUpdatedAt(date);
+					if(!tOrderService.update(newOrder, wrapper)) {
+						return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+					}else {
+						return ResponseDTO.createBySuccess();
+					}
+				}else {
+					return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
+				}
+			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {	//储蓄卡
+				//TODO 储蓄卡退款
+				return ResponseDTO.createBySuccess();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
 		}
-		return ResponseDTO.createBySuccess();
+		return ResponseDTO.createByError();
 	}
 	
 	////////////////////////////////////////////////////////////↓餐饮↓ //////////////////////////////////////////////////////////
