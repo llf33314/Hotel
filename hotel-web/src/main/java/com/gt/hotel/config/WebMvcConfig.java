@@ -50,29 +50,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
-        addInterceptor.addPathPatterns("/**");
-        addInterceptor.excludePathPatterns("/backstage/home", "/error", "/v2/**", "/webjars/**", "/swagger-resources/**");
+//        InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
+//        addInterceptor.addPathPatterns("/**");
+//        addInterceptor.excludePathPatterns("/backstage/home", "/error", "/v2/**", "/webjars/**", "/swagger-resources/**");
         //        super.addInterceptors(registry);
-    }
-
-    @Bean
-    public SecurityInterceptor getSecurityInterceptor() {
-        return new SecurityInterceptor();
-    }
-
-    private class SecurityInterceptor extends HandlerInterceptorAdapter {
-        @Override
-        public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-            System.err.println(request.getLocalAddr() + " " + request.getRequestURL());
-            if(request.getRequestURL().indexOf("78CDF1") != -1) {
-            	return true;            	
-            }
-        /*if (SessionUtils.getLoginUser(request) != null)*/
-            return true;
-            //            response.sendRedirect("/");
-            //            return false;
-        }
     }
 
     @Bean

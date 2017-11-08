@@ -42,6 +42,6 @@ public class HotelConfigController extends BaseController {
     	vo.setPrefixUrl(IMAGE_PREFIX);
     	vo.setSocketUrl(SOCKET_URL);
     	vo.setApiUrl(API_URL);
-    	return ResponseDTO.createBySuccess();
+    	return ResponseDTO.createBySuccess(vo);
     }
 }
