@@ -391,7 +391,7 @@ public class WXMPApiUtil {
      */
     public JSONObject findMemberCard(String cardNo, Integer busId, Integer shopId) throws SignException {
     	Map<String, Object> param = new HashMap<>();
-    	param.put("cardNo", "cardNo");
+    	param.put("cardNo", cardNo);
     	param.put("busId", busId);
     	param.put("shopId", shopId);
     	JSONObject result = getPApi(param, "/memberAPI/member/findMemberCard");
