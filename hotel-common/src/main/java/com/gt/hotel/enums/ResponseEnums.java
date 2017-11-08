@@ -20,6 +20,7 @@ public enum ResponseEnums {
     OPERATING_ERROR(1004, "操作失败"),
     ORDER_STATUS_ERROR(1005, "订单状态错误"),
     PAY_STATUS_ERROR(1006, "支付状态错误"),
+    REFUNDS_ERROR(1006, "退款失败"),
 
     INFRASTRUCTRUE_ERROR(1998, "设施保存失败"),
     IMAGE_ERROR(1999, "图片保存失败"),

@@ -21,6 +21,7 @@ import com.gt.api.bean.session.Member;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.THotel;
 import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
@@ -29,6 +30,7 @@ import com.gt.hotel.vo.MobileActivityVo;
 import com.gt.hotel.vo.MobileHotelVo;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.web.service.TActivityService;
+import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
@@ -45,6 +47,9 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/mobile/78CDF1")
 public class MobileHotelController extends BaseController {
+	
+	@Autowired
+	THotelService tHotelService;
 
     @Autowired
     THotelSettingService tHotelSettingService;
@@ -56,14 +61,14 @@ public class MobileHotelController extends BaseController {
     TActivityService tActivityService;
     
     @ApiOperation(value = "首页", notes = "首页")
-    @GetMapping(value = "{busId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("busId") Integer busId, ModelAndView model) {
-    	Member member = SessionUtils.getLoginMember(request);
+    @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("hotelId") Integer hotelId, ModelAndView model) {
+    	THotel hotel = tHotelService.selectById(hotelId);
+    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
     	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
     		Map<String, Object> param = new HashMap<>();
-    		
-    		param.put("busId", busId);
-    		param.put("requestUrl", getHost(request) + "/mobile/home/" + busId);
+    		param.put("busId", hotel.getBusId());
+    		param.put("requestUrl", getHost(request) + "/mobile/78CDF1" + hotelId + "/home/");
     		String url = null;
 			try {
 				url = authorizeMember(request, param);

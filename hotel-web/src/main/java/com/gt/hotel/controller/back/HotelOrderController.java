@@ -25,9 +25,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.WxPublicUsers;
+import com.gt.api.exception.SignException;
+import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
@@ -145,19 +149,30 @@ public class HotelOrderController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "订单  退款 操作(占位)", notes = "订单  退款 操作(占位)")
 	@PostMapping(value = "{orderId}/refunds", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO orderRefunds(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
+	public ResponseDTO orderRefunds(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId,
+			@RequestBody HotelOrderParameter.RefundsParam refundsP,
+			HttpSession session, HttpServletRequest request) {
 		Integer busid = getLoginUserId(session);
 		TOrder order = tOrderService.selectById(orderId);
 		if(!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
 		//TODO 退款
-		if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
-//		JSONObject json = wxmpApiUtil.wxmemberPayRefund(appid, mchid, sysOrderNo, refundFee, totalFee);
-		}else if(order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
-			
-		}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {
-			
+		try {
+			WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
+			if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
+				
+			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
+				JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(), 
+						refundsP.getRefundFee() / 100d, order.getRealPrice() / 100d);
+				if(!result.getInteger("code").equals(0)) {
+					return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
+				}
+			}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {
+				
+			}
+		} catch (SignException e) {
+			e.printStackTrace();
 		}
 		//TODO 退款
 		Wrapper<TOrder> wrapper = new EntityWrapper<>();
