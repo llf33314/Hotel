@@ -1,21 +1,5 @@
 package com.gt.hotel.base;
 
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.session.BusUser;
@@ -25,6 +9,20 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.util.RedisCacheUtil;
 import com.gt.hotel.util.WXMPApiUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * BaseController
@@ -45,7 +43,7 @@ public abstract class BaseController {
     WXMPApiUtil wxmpApiUtil;
     
     @Value("${wxmp.api.memberserverurl}")
-    private String MEMBER_URL;
+    private String memberUrl;
 
     /**
      * 获取Sessionid
@@ -148,7 +146,7 @@ public abstract class BaseController {
         queryMap.put("uclogin", uclogin);
         logger.info("queryMap=" + JSON.toJSONString(queryMap));
         String params = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
-        return "redirect:" + MEMBER_URL + "/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody=" + params;
+        return "redirect:" + memberUrl + "/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody=" + params;
     }
     
     /**

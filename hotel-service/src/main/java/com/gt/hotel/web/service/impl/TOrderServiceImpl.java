@@ -1,14 +1,5 @@
 package com.gt.hotel.web.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -31,6 +22,15 @@ import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -68,7 +68,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		return page;
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void AddOffLineOrder(Integer busid, OffLineOrder order) {
 		Date date = new Date();
@@ -144,7 +144,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		return orderVo;
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void checkIn(Integer busid, Integer orderId, CheckInParam param) {
 		Date date = new Date();
@@ -200,5 +200,24 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 	public List<HotelBackFoodOrderVo> queryFoodOrderExport(Integer busid, FoodOrderQuery param) {
 		return tOrderDAO.queryFoodOrder(busid, param);
 	}
-	
+
+	@Override
+	public void mobileCheckNewOrder(Integer busId, Integer hid, Integer cid, DateTime startTime, DateTime endTime) {
+		//1. 检测当前房型是否已存在预订订单
+
+		//2. 房价信息 当前房型是否存在日历价 客户是否是协议单位
+
+		//2.1 当前房型
+
+		//2.2
+
+	}
+
+	public void mobileCheckOrdeRoom(Integer hid, Integer cid, DateTime startTime, DateTime endTime){
+		// 检测当前酒店hid 的 房型cid
+
+	}
+
+
+
 }
