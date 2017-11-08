@@ -102,15 +102,14 @@ public class WXMPApiUtil {
      * @return
      * @throws SignException
      */
-    public String socketPush(String pushName, String pushMsg)
+    public JSONObject socketPush(String pushName, String pushMsg)
             throws SignException {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("pushName", pushName);
         // paramObj.put("pushStyle", pushStyle);
         paramObj.put("pushMsg", pushMsg);
-        String url = SERVER_URL + "/8A5DA52E/socket/getSocketApi.do";
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
-        return result;
+        JSONObject result = getCApi(paramObj, "/8A5DA52E/socket/getSocketApi.do");
+		return result;
     }
 
     /**
@@ -350,6 +349,26 @@ public class WXMPApiUtil {
         param.put("totalFee", totalFee);
         JSONObject result = getLApi(param, "/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do");
         return result;
+    }
+    
+    /**
+     * socket推送人
+     * @param pushName 推送人（不能为null）
+     * @param pushStyle 推送属性（有属性的要填，没有属性的不用填）
+     * @param pushMsg 推送内容
+     * @return
+     * @throws SignException
+     */
+    public JSONObject getSocketApi(String pushName, String pushStyle, String pushMsg)
+    		throws SignException {
+    	JSONObject param = new JSONObject();
+    	param.put("appid", pushName);
+    	if(pushStyle != null) {
+    		param.put("mchid", pushStyle);
+    	}
+		param.put("sysOrderNo", pushMsg);
+    	JSONObject result = getCApi(param, "/8A5DA52E/socket/getSocketApi.do");
+    	return result;
     }
     
     /**

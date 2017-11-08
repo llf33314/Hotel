@@ -225,4 +225,12 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "优惠券集合")
 		private List<OrderCouponsVo> coupons;
 	}
+	
+	@Api("退款 参数")
+	@Data
+	public static class RefundsParam {
+		@ApiModelProperty(value = "退款金额", required = true)
+		private Integer refundFee;
+	}
+	
 }

@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -205,7 +206,10 @@ public class HotelController extends BaseController {
 		try {
 			outputStream = new BufferedOutputStream(response.getOutputStream());
 			BufferedImage bi = QrCodeUtil.encode(url, null, "H", null, outputStream, 500, 500, 1);
-			ImageIO.write(bi, "png", outputStream);
+			response.setHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode("二维码.jpg", "UTF-8") + "\"");  
+			response.setContentType("application/octet-stream");
+			outputStream = new BufferedOutputStream(response.getOutputStream());
+			ImageIO.write(bi, "jpg", outputStream);
 			outputStream.flush();  
 			outputStream.close();
 		} catch (IOException e) {

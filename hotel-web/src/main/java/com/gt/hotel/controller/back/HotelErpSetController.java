@@ -39,6 +39,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.Member;
+import com.gt.api.exception.SignException;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -277,6 +278,11 @@ public class HotelErpSetController extends BaseController {
 		entity.setUpdatedBy(busId);
 		entity.setMemberId(member.getId());
 		if(tAuthorizationService.update(entity, wrapper)) {
+			try {
+				WXMPApiUtil.getSocketApi("hotel:backsocket", null, "success");
+			} catch (SignException e) {
+				e.printStackTrace();
+			}
 			model.setViewName("/author/success.html");
 		}else {
 			model.setViewName("/author/fail.html");
