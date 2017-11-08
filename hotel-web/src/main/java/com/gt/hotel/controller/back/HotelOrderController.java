@@ -153,7 +153,7 @@ public class HotelOrderController extends BaseController {
 		}
 		//TODO 退款
 		if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
-//		JSONObject json = wxmpApiUtil.wxmemberPayRefund(appid, mchid, sysOrderNo, refundFee, totalFee);
+//			JSONObject json = wxmpApiUtil.wxmemberPayRefund(appid, mchid, sysOrderNo, refundFee, totalFee);
 		}else if(order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
 			
 		}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {
