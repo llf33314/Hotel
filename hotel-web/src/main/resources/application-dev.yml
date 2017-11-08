@@ -84,6 +84,8 @@ wxmp:
     url:
       path: http://short.duofee.com
       signkey: goodtom2016@shortUrl.
+  socket:
+    url: https://socket.deeptel.com.cn
 
 
 

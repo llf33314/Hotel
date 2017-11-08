@@ -247,11 +247,9 @@ public class HotelOrderController extends BaseController {
 		if(!order.getPayStatus().equals(CommonConst.ORDER_CONFIRMED) || !order.getPayStatus().equals(CommonConst.ORDER_CANCALLED)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
-		
 		//TODO 结账退房
 		
 		//TODO 结账退房
-		
 		Wrapper<TOrder> wrapper = new EntityWrapper<>();
 		wrapper.eq("id", orderId);
 		Date date = new Date();
