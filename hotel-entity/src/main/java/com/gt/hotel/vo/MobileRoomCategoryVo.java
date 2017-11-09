@@ -57,6 +57,9 @@ public class MobileRoomCategoryVo {
 //    @ApiModelProperty("房间集合")
 //    private List<RoomVo> tRoomList;
 
+    @ApiModelProperty("显示价格")
+    private Integer displayPrice;
+    
     @ApiModelProperty("图片集合")
     private List<FileRecordVo> images;
 

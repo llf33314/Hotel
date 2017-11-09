@@ -39,6 +39,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.Member;
+import com.gt.api.exception.SignException;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -252,8 +253,8 @@ public class HotelErpSetController extends BaseController {
     @GetMapping(value = "78CDF1/{hotelId}/{authorId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView moblieHome(HttpServletRequest request, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId, 
     		@Param("授权ID") @PathVariable("authorId") Integer authorId, ModelAndView model) {
-    	Member member = SessionUtils.getLoginMember(request);
     	Integer busId = tHotelService.selectById(hotelId).getBusId();
+    	Member member = SessionUtils.getLoginMember(request, busId);
     	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
     		Map<String, Object> param = new HashMap<>();
     		param.put("busId", busId);
@@ -277,6 +278,11 @@ public class HotelErpSetController extends BaseController {
 		entity.setUpdatedBy(busId);
 		entity.setMemberId(member.getId());
 		if(tAuthorizationService.update(entity, wrapper)) {
+			try {
+				WXMPApiUtil.getSocketApi("hotel:backsocket", null, "success");
+			} catch (SignException e) {
+				e.printStackTrace();
+			}
 			model.setViewName("/author/success.html");
 		}else {
 			model.setViewName("/author/fail.html");

@@ -58,5 +58,17 @@
 		<if test="param.keyword != null">
 			AND name LIKE #{param.keyword}
 		</if>
+		<if test="param.breakfastEnable != null and param.breakfastEnable != 0">
+			AND breakfast_enable = #{param.breakfastEnable}
+		</if>
+		<if test="param.lunchEnable != null and param.lunchEnable != 0">
+			AND lunch_enable = #{param.lunchEnable}
+		</if>
+		<if test="param.dinnerEnable != null and param.dinnerEnable != 0">
+			AND dinner_enable = #{param.dinnerEnable}
+		</if>
+		<if test="param.supperEnable != null and param.supperEnable != 0">
+			AND supper_enable = #{param.supperEnable}
+		</if>
 	</select>
 </mapper>
