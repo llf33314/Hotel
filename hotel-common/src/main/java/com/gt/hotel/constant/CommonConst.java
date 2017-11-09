@@ -27,13 +27,13 @@ public final class CommonConst {
     /****************************** 活动状态 ******************************/
 
     /**
-     * 未开始
-     */
-    public static final Integer ACTIVITY_NOT_START  = 0;
-    /**
      * 进行中
      */
-    public static final Integer ACTIVITY_PROCESSING = 1;
+    public static final Integer ACTIVITY_PROCESSING = 0;
+    /**
+     * 未开始
+     */
+    public static final Integer ACTIVITY_NOT_START  = 1;
     /**
      * 已结束
      */
@@ -217,5 +217,19 @@ public final class CommonConst {
      * 是否已扫码授权 1 否
      */
     public static final Integer AUTHORIZED_UNENABLED = 1;
+    
+    /****************************** 会员卡类型 ******************************/
+    /**
+     * 1 积分卡
+     */
+	public static final int CARD_TYPE_POINT_CARD = 1;
+	/**
+	 * 2 折扣卡
+	 */
+	public static final int CARD_TYPE_DISCOUNT_CARD = 2;
+	/**
+	 * 3 储值卡
+	 */
+	public static final int CARD_TYPE_VALUE_CARD = 3;
     
 }

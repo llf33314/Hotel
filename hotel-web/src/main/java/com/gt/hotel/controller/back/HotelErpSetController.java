@@ -1,37 +1,5 @@
 package com.gt.hotel.controller.back;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -39,6 +7,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.Member;
+import com.gt.api.exception.SignException;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -60,10 +29,28 @@ import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TAuthorizationService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * 酒店后台-ERP设置
@@ -252,8 +239,8 @@ public class HotelErpSetController extends BaseController {
     @GetMapping(value = "78CDF1/{hotelId}/{authorId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView moblieHome(HttpServletRequest request, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId, 
     		@Param("授权ID") @PathVariable("authorId") Integer authorId, ModelAndView model) {
-    	Member member = SessionUtils.getLoginMember(request);
     	Integer busId = tHotelService.selectById(hotelId).getBusId();
+    	Member member = SessionUtils.getLoginMember(request, busId);
     	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
     		Map<String, Object> param = new HashMap<>();
     		param.put("busId", busId);
@@ -277,6 +264,11 @@ public class HotelErpSetController extends BaseController {
 		entity.setUpdatedBy(busId);
 		entity.setMemberId(member.getId());
 		if(tAuthorizationService.update(entity, wrapper)) {
+			try {
+				WXMPApiUtil.getSocketApi("hotel:backsocket", null, "success");
+			} catch (SignException e) {
+				e.printStackTrace();
+			}
 			model.setViewName("/author/success.html");
 		}else {
 			model.setViewName("/author/fail.html");
