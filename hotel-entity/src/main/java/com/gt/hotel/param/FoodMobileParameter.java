@@ -1,5 +1,9 @@
 package com.gt.hotel.param;
 
+import java.util.List;
+
+import com.gt.hotel.vo.OrderFoodDetailVo;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -56,7 +60,7 @@ public class FoodMobileParameter {
 		@ApiModelProperty(value = "订餐订单总价", required = true)
 		private Integer foodTotalPrice;
 		
-//		@ApiModelProperty(value = "菜品集合")
-//		private List<> foods; 
+		@ApiModelProperty(value = "菜品集合")
+		private List<OrderFoodDetailVo> foods; 
 	}
 }
