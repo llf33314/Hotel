@@ -14,6 +14,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * 
  * @author Reverien9@gmail.com
@@ -249,7 +252,7 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "优惠券集合")
 		private List<OrderCouponsVo> coupons;
 	}
-	
+
 	@Api("退款 参数")
 	@Data
 	public static class RefundsParam {
@@ -257,5 +260,5 @@ public class HotelOrderParameter {
 		@NotNull(message = "退款金额不能为空")
 		private Integer refundFee;
 	}
-	
+
 }

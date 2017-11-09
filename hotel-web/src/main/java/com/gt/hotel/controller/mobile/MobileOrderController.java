@@ -3,11 +3,13 @@ package com.gt.hotel.controller.mobile;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +31,8 @@ public class MobileOrderController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MobileOrderController.class);
 
-    // 1. 创建预订订单
+    @Autowired
+    private WebServerConfigurationProperties webServerConfigurationProperties;
 
     /**
      * 预订
@@ -78,5 +81,15 @@ public class MobileOrderController extends BaseController {
         return ResponseDTO.createBySuccess();
     }
 
+
+    @GetMapping(value = "/{hotelId}/test", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO test(@PathVariable Integer hotelId) {
+        System.out.println("hotelId : " + hotelId);
+        System.out.println(webServerConfigurationProperties.getWxmpService());
+        System.out.println(webServerConfigurationProperties.getWxmpService().getApiMap().get("dictKey"));
+        System.out.println(webServerConfigurationProperties.getShortService());
+        System.out.println(webServerConfigurationProperties.getMemberService());
+        return ResponseDTO.createBySuccess();
+    }
 
 }

@@ -1,39 +1,28 @@
 package com.gt.hotel.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
 import com.gt.entityBo.ErpRefundBo;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 多粉接口
+ *
  * @author Reverien9@gmail.com
  * 2017年11月7日 上午10:36:52
  */
 @Component
 public class WXMPApiUtil {
 
-    @Value("${wxmp.api.sign}")
-    private String SIGN_KEY;
-
-    /**
-     * 会员签名 参考 https://member.deeptel.com.cn/swagger-ui.html#/
-     */
-    @Value("${wxmp.api.membersign}")
-    private String MEMBER_SIGN_KEY;
-
-    @Value("${wxmp.api.memberserverurly}")
-    private String MEMBER_SERVER_URL;
-    
-    @Value("${wxmp.api.serverurl}")
-    private String SERVER_URL;
+    @Autowired
+    private WebServerConfigurationProperties webServerConfigurationProperties;
 
     /**
      * 获取字典信息
@@ -45,8 +34,8 @@ public class WXMPApiUtil {
     public String getDictKey(String style) throws SignException {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("style", style);
-        String url = SERVER_URL + "/8A5DA52E/dictApi/getDictApi.do";
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("dictKey");
+        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
         return result;
     }
 
@@ -54,15 +43,14 @@ public class WXMPApiUtil {
      * 对照李逢喜的接口文档
      *
      * @param param 参数
-     * @param _url  路径
+     * @param url   路径
      * @return
      * @throws SignException
      */
-    private JSONObject getLApi(JSONObject param, String _url)
+    private JSONObject getLApi(JSONObject param, String url)
             throws SignException {
-        String url = SERVER_URL + _url;
         JSONObject result = HttpClienUtils.reqPostUTF8(
-                JSONObject.toJSONString(param), url, JSONObject.class, SIGN_KEY);
+                JSONObject.toJSONString(param), url, JSONObject.class, webServerConfigurationProperties.getWxmpService().getSignKey());
         return result;
     }
 
@@ -70,30 +58,26 @@ public class WXMPApiUtil {
      * 对照陈丹的接口文档
      *
      * @param param 参数
-     * @param _url  路径
+     * @param url   路径
      * @return
      * @throws SignException
      */
     @SuppressWarnings("rawtypes")
-    private JSONObject getCApi(Map param, String _url) throws SignException {
-    	System.err.println(SERVER_URL + _url);
-        String s = SignHttpUtils.WxmppostByHttp(SERVER_URL + _url, param, SIGN_KEY);
-//        String s = SignHttpUtils.WxmppostByHttp("https://deeptel.com.cn" + _url, param, "WXMP2017");
-        JSONObject result = JSONObject.parseObject(s);
-        return result;
+    private JSONObject getCApi(Map param, String url) throws SignException {
+        String s = SignHttpUtils.WxmppostByHttp(url, param, webServerConfigurationProperties.getWxmpService().getSignKey());
+        return JSONObject.parseObject(s);
     }
 
     /**
      * 对照彭江丽的接口文档
      *
      * @param param 参数
-     * @param _url  路径
+     * @param url  路径
      * @return
      * @throws SignException
      */
-    private JSONObject getPApi(Object param, String _url) throws SignException {
-    	System.err.println(SERVER_URL + _url);
-    	String s = SignHttpUtils.WxmppostByHttp(MEMBER_SERVER_URL + _url, param, MEMBER_SIGN_KEY);
+    private JSONObject getPApi(Object param, String url) throws SignException {
+    	String s = SignHttpUtils.WxmppostByHttp(url, param, webServerConfigurationProperties.getMemberService().getSignKey());
     	JSONObject result = JSONObject.parseObject(s);
     	return result;
     }
@@ -109,8 +93,8 @@ public class WXMPApiUtil {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("userId", userId);
         paramObj.put("modelstyle", "9");
-        String url = SERVER_URL + "/8A5DA52E/busUserApi/getIsErpCount.do";
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("isErpCount");
+        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
         return result;
     }
 
@@ -122,15 +106,15 @@ public class WXMPApiUtil {
      * @return
      * @throws SignException
      */
-    public JSONObject socketPush(String pushName, String pushMsg)
+    /*public JSONObject socketPush(String pushName, String pushMsg)
             throws SignException {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("pushName", pushName);
         // paramObj.put("pushStyle", pushStyle);
         paramObj.put("pushMsg", pushMsg);
-        JSONObject result = getCApi(paramObj, "/8A5DA52E/socket/getSocketApi.do");
-		return result;
-    }
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("socketPush");
+        return  SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
+    }*/
 
     /**
      * 商家/员工获取ERP列表菜单
@@ -150,8 +134,8 @@ public class WXMPApiUtil {
         paramObj.put("loginuc", loginuc);
         paramObj.put("erpstyle", 9);
         paramObj.put("levelModel", levelModel);
-        String url = SERVER_URL + "/8A5DA52E/ErploginApi/getMenus.do";
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("erpMenus");
+        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
         return result;
     }
 
@@ -174,8 +158,8 @@ public class WXMPApiUtil {
         paramObj.put("page", page);
         paramObj.put("name", name);
         paramObj.put("phone", phone);
-        String url = SERVER_URL + "/8A5DA52E/staffApiMsg/getStaffListShopId.do";
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("staffListByShopId");
+        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
         return result;
     }
 
@@ -188,7 +172,7 @@ public class WXMPApiUtil {
         paramObj.put("pageSize", pageSize);
         JSONObject result = null;
         try {
-            result = getCApi(paramObj, "/8A5DA52E/staffApiMsg/getStaffListShopId.do");
+            result = getCApi(paramObj, webServerConfigurationProperties.getWxmpService().getApiMap().get("staffListByShopId"));
         } catch (SignException e) {
             e.printStackTrace();
         }
@@ -210,8 +194,8 @@ public class WXMPApiUtil {
         paramObj.put("shopId", shopId);
         paramObj.put("pageSize", pageSize);
         paramObj.put("page", page);
-        String url = SERVER_URL + "/8A5DA52E/staffApiMsg/getChildListShopId.do";
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("childListByShopId");
+        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
         return result;
     }
 
@@ -234,19 +218,15 @@ public class WXMPApiUtil {
         OldApiSms.put("model", 7);
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("reqdata", OldApiSms);
-        String url = SERVER_URL
-                + "/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsOld.do";
-        // String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
-        String result = SignHttpUtils.postByHttp(url, paramObj, SIGN_KEY);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSMSOld");
+        String result = SignHttpUtils.postByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
         System.err.println(result);
         if (result != null) {
             JSONObject json = JSONObject.parseObject(result);
-            if (json.getInteger("code") != null && json.getInteger("code") == 0)
-                return true;
-            else
-                return false;
-        } else
+            return (json.getInteger("code") != null && json.getInteger("code") == 0);
+        } else {
             return false;
+        }
     }
 
     /**
@@ -259,9 +239,8 @@ public class WXMPApiUtil {
     public JSONObject getShopById(Integer shopid) throws SignException {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("reqdata", shopid);
-        String url = SERVER_URL
-                + "/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/getShopById.do";
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, SIGN_KEY);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("findShopInfoByShopId");
+        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
         System.err.println(result);
         JSONObject json = null;
         if (result != null && result.trim().length() > 0) {
@@ -277,26 +256,12 @@ public class WXMPApiUtil {
      * @return
      * @throws SignException
      */
-//	public List<HotelWsWxShopInfoExtend> queryWxShopByBusId(Integer busid)
-//			throws SignException {
-//		JSONObject param = new JSONObject();
-//		List<HotelWsWxShopInfoExtend> shops = null;
-//		param.put("reqdata", busid);
-//		JSONObject json = getLApi(param,
-//				"/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do");
-//		if (json.getBoolean("success")) {
-//			shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
-//					HotelWsWxShopInfoExtend.class);
-//		}
-//		return shops;
-//	}
     public JSONObject queryWxShopByBusId(Integer busid)
             throws SignException {
         JSONObject param = new JSONObject();
         param.put("reqdata", busid);
-        JSONObject json = getLApi(param,
-                "/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do");
-        return json;
+        return getLApi(param,
+                webServerConfigurationProperties.getWxmpService().getApiMap().get("findWxShopListByBusId"));
     }
 
     /**
@@ -305,7 +270,7 @@ public class WXMPApiUtil {
      * @param shopid 门店id
      * @param busid  商家id
      * @param number 卡号或手机号
-     * @return
+     * @return JSONObject
      * @throws SignException
      */
     public JSONObject queryMember(Integer shopid, Integer busid, String number)
@@ -314,10 +279,8 @@ public class WXMPApiUtil {
         paramObj.put("shopId", shopid);
         paramObj.put("busId", busid);
         paramObj.put("cardNo", number);
-        String url = SERVER_URL + "/memberAPI/member/findMemberCard";
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj,
-                MEMBER_SIGN_KEY);
-        System.err.println(result);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("findMemberCard");
+        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getMemberService().getSignKey());
         JSONObject json = null;
         if (result != null && result.trim().length() > 0) {
             json = JSONObject.parseObject(result);
@@ -338,9 +301,9 @@ public class WXMPApiUtil {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("shopId", shopid);
         paramObj.put("memberId", memberid);
-        String url = SERVER_URL + "/memberAPI/member/findCardByMembeId";
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("findCardByMembeId");
         String result = SignHttpUtils.WxmppostByHttp(url, paramObj,
-                MEMBER_SIGN_KEY);
+                webServerConfigurationProperties.getMemberService().getSignKey());
         System.err.println(result);
         JSONObject json = null;
         if (result != null && result.trim().length() > 0) {
@@ -348,29 +311,30 @@ public class WXMPApiUtil {
         }
         return json;
     }
-    
+
     /**
      * 微信退款
-     * @param appid 公众号或小程序appid
-     * @param mchid 支付商户号
+     *
+     * @param appid      公众号或小程序appid
+     * @param mchid      支付商户号
      * @param sysOrderNo 订单号
-     * @param refundFee 退款金额
-     * @param totalFee 总金额
+     * @param refundFee  退款金额
+     * @param totalFee   总金额
      * @return
      * @throws SignException
      */
     public JSONObject wxmemberPayRefund(String appid, String mchid, String sysOrderNo, Double refundFee, Double totalFee)
             throws SignException {
-    	JSONObject param = new JSONObject();
+        JSONObject param = new JSONObject();
         param.put("appid", appid);
         param.put("mchid", mchid);
         param.put("sysOrderNo", sysOrderNo);
         param.put("refundFee", refundFee);
         param.put("totalFee", totalFee);
-        JSONObject result = getLApi(param, "/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do");
+        JSONObject result = getLApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("wxmemberPayRefund"));
         return result;
     }
-    
+
     /**
      * 会员结算退款
      * @param bo
@@ -382,7 +346,7 @@ public class WXMPApiUtil {
     	JSONObject result = getPApi(bo, "/memberAPI/member/refundErp");
     	return result;
     }
-    
+
     /**
      * 根据粉丝id获取粉丝信息
      * @param memberId 会员ID
@@ -394,10 +358,10 @@ public class WXMPApiUtil {
     	param.put("cardNo", cardNo);
     	param.put("busId", busId);
     	param.put("shopId", shopId);
-    	JSONObject result = getPApi(param, "/memberAPI/member/findMemberCard");
+    	JSONObject result = getPApi(param, webServerConfigurationProperties.getMemberService().getApiMap().get("findMemberCard"));
     	return result;
     }
-    
+
     /**
      * socket推送人
      * @param pushName 推送人（不能为null）
@@ -414,21 +378,22 @@ public class WXMPApiUtil {
     		param.put("pushStyle", pushStyle);
     	}
 		param.put("pushMsg", pushMsg);
-    	JSONObject result = getCApi(param, "/8A5DA52E/socket/getSocketApi.do");
+    	JSONObject result = getCApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("socketPush"));
     	return result;
     }
-    
+
     /**
      * 获取WxPulbic对象
+     *
      * @param busId 商家ID
      * @return
      * @throws SignException
      */
     public JSONObject getWxPulbicMsg(Integer busId) throws SignException {
-    	JSONObject param = new JSONObject();
-    	param.put("busId", busId);
-    	JSONObject result = getCApi(param, "/8A5DA52E/busUserApi/getWxPulbicMsg.do");
-    	return result;
+        JSONObject param = new JSONObject();
+        param.put("busId", busId);
+        JSONObject result = getCApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("getWxPulbicMsg"));
+        return result;
     }
 
     public static void main(String[] args) {
@@ -440,13 +405,13 @@ public class WXMPApiUtil {
 //        	param.put("pushMsg", "test");
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/socket/getSocketApi.do";
 //        	String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
-        	
+
         	param.put("cardNo", "13433550667");
         	param.put("busId", 33);
         	param.put("shopId", 29);
         	String url = "http://member.yifriend.net" + "/memberAPI/member/findMemberCard";
         	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
-        	
+
         	System.err.println(result);
         } catch (Exception e) {
             e.printStackTrace();

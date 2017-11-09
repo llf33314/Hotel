@@ -1,22 +1,9 @@
 package com.gt.hotel.controller.mobile;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
+import com.gt.hotel.annotation.MobileLoginRequired;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
@@ -33,9 +20,15 @@ import com.gt.hotel.web.service.TActivityService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
 import com.gt.hotel.web.service.TRoomCategoryService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 酒店移动端
@@ -47,7 +40,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/mobile/78CDF1")
 public class MobileHotelController extends BaseController {
-	
+
 	@Autowired
 	THotelService tHotelService;
 
@@ -62,7 +55,7 @@ public class MobileHotelController extends BaseController {
 
     @Autowired
     WXMPApiUtil wXMPApiUtil;
-    
+
     @ApiOperation(value = "首页", notes = "首页")
     @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("hotelId") Integer hotelId, ModelAndView model) {
@@ -86,7 +79,8 @@ public class MobileHotelController extends BaseController {
     	model.setViewName("/index.html");
         return model;
     }
-    
+
+    @MobileLoginRequired
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {

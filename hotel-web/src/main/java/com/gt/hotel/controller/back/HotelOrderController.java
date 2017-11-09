@@ -159,6 +159,25 @@ public class HotelOrderController extends BaseController {
 		if(!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
+<<<<<<< HEAD
+		//TODO 退款
+		if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
+//			JSONObject json = wxmpApiUtil.wxmemberPayRefund(appid, mchid, sysOrderNo, refundFee, totalFee);
+		}else if(order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
+			
+		}else if(order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {
+			
+		}
+		//TODO 退款
+		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+		wrapper.eq("id", orderId);
+		TOrder newOrder = new TOrder();
+		newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+		newOrder.setUpdatedBy(busid);
+		newOrder.setUpdatedAt(new Date());
+		if(!tOrderService.update(newOrder, wrapper)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+=======
 		try {
 			WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
 			if(order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {	//支付宝
@@ -232,6 +251,7 @@ public class HotelOrderController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
+>>>>>>> c1063204d5979d4d13131b36ba388afdae2d9356
 		}
 		return ResponseDTO.createBySuccess();
 	}
