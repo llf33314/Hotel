@@ -80,7 +80,7 @@ wxmp:
     membersign: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
     serverurl: https://deeptel.com.cn
     memberserverurl: https://member.deeptel.com.cn
-    memberserverurly: https://member.yifriend.net
+    memberserverurly: http://member.yifriend.net
   short:
     url:
       path: http://short.duofee.com

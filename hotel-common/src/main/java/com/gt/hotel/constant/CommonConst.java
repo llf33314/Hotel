@@ -218,4 +218,18 @@ public final class CommonConst {
      */
     public static final Integer AUTHORIZED_UNENABLED = 1;
     
+    /****************************** 会员卡类型 ******************************/
+    /**
+     * 1 积分卡
+     */
+	public static final int CARD_TYPE_POINT_CARD = 1;
+	/**
+	 * 2 折扣卡
+	 */
+	public static final int CARD_TYPE_DISCOUNT_CARD = 2;
+	/**
+	 * 3 储值卡
+	 */
+	public static final int CARD_TYPE_VALUE_CARD = 3;
+    
 }

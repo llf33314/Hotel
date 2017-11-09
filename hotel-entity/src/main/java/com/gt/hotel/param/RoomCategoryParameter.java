@@ -1,13 +1,11 @@
 package com.gt.hotel.param;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gt.hotel.vo.FileRecordVo;
 
 import io.swagger.annotations.Api;
@@ -44,12 +42,12 @@ public class RoomCategoryParameter {
         private Integer categoryId;
 
         @ApiModelProperty(value = "入住时间")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-        private Date roomInTime;
+//        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        private String roomInTime;
 
         @ApiModelProperty(value = "离店时间")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-        private Date roomOutTime;
+//        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        private String roomOutTime;
     }
 
     /**

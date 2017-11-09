@@ -1,5 +1,7 @@
 package com.gt.hotel.controller.mobile;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.gt.api.exception.SignException;
+import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseController;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.THotel;
 import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
@@ -85,7 +89,15 @@ public class MobileHotelController extends BaseController {
     
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId) {
+    public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
+    	//test
+    	Member member = new Member();
+    	member.setId(1071);
+    	member.setBusid(33);
+    	member.setPhone("13433550667");
+    	member.setPublicId(492);
+//		SessionUtils.setLoginMember(request, member);
+    	//test
     	MobileHotelVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
         return ResponseDTO.createBySuccess(setting);
     }
@@ -93,14 +105,42 @@ public class MobileHotelController extends BaseController {
     @ApiOperation(value = "首页房型列表", notes = "首页房型列表")
     @GetMapping(value = "{hotelId}/roomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<MobileRoomCategoryVo>> mobileRoomCategoryR(@PathVariable("hotelId") Integer hotelId, 
-    		@ModelAttribute RoomCategoryParameter.MobileQueryRoomCategory req) {
-    	JSONObject member = new JSONObject();
-    	try {
-    		member = wXMPApiUtil.findMemberCard("13433550667", 33, 29);
-		} catch (SignException e) {
-			e.printStackTrace();
-		}
+    		@ModelAttribute RoomCategoryParameter.MobileQueryRoomCategory req, HttpServletRequest request) {
+    	THotel hotel = tHotelService.selectById(hotelId);
+//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+    	//test
+    	Member member = new Member();
+    	member.setId(1071);
+    	member.setBusid(33);
+    	member.setPhone("13433550667");
+    	member.setPublicId(492);
+    	member.setCardid("15338");
+    	//test
     	Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
+    	try {
+    	if(member != null && member.getId() != null) {
+    		JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+    		JSONObject card = json.getJSONObject("data");
+    		Integer cardType = card.getInteger("ctId");
+    		List<MobileRoomCategoryVo> l = page.getRecords();
+    		for(MobileRoomCategoryVo m : l) {	//会员
+				switch (cardType) {
+				case CommonConst.CARD_TYPE_POINT_CARD:
+					break;
+				case CommonConst.CARD_TYPE_DISCOUNT_CARD:
+					m.setDisplayPrice(Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue());
+					break;
+				case CommonConst.CARD_TYPE_VALUE_CARD:
+					break;
+				default:
+					break;
+				}
+    		}
+    	}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		return ResponseDTO.createByErrorMessage("会员信息获取失败");
+    	}
         return ResponseDTO.createBySuccess(page);
     }
     
