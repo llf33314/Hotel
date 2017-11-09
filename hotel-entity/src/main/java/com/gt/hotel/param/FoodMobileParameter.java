@@ -20,6 +20,18 @@ public class FoodMobileParameter {
 		
 		@ApiModelProperty(value = "提供方名称")
 		private String foodProvidesName;
+		
+		@ApiModelProperty("早餐时段是否提供 0 提供 1 不提供")
+	    private Integer breakfastEnable;
+
+	    @ApiModelProperty("午餐时段是否提供 0 提供 1 不提供")
+	    private Integer lunchEnable;
+
+	    @ApiModelProperty("晚餐是否提供 0 是 1 否")
+	    private Integer dinnerEnable;
+
+	    @ApiModelProperty("宵夜是否提供 0 是 1 否")
+	    private Integer supperEnable;
 	}
 	
 }

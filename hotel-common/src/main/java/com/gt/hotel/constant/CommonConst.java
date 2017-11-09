@@ -27,13 +27,13 @@ public final class CommonConst {
     /****************************** 活动状态 ******************************/
 
     /**
-     * 未开始
-     */
-    public static final Integer ACTIVITY_NOT_START  = 0;
-    /**
      * 进行中
      */
-    public static final Integer ACTIVITY_PROCESSING = 1;
+    public static final Integer ACTIVITY_PROCESSING = 0;
+    /**
+     * 未开始
+     */
+    public static final Integer ACTIVITY_NOT_START  = 1;
     /**
      * 已结束
      */

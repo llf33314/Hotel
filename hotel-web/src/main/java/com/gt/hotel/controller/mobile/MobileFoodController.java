@@ -2,6 +2,7 @@ package com.gt.hotel.controller.mobile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
  * @author Reverien9@gmail.com
  * 2017年11月3日 下午3:01:20
  */
-@Api(description = "酒店移动端 餐饮")
+@Api(tags = "酒店移动端 餐饮")
 @RestController
 @RequestMapping("/mobile/78CDF1/food")
 public class MobileFoodController extends BaseController {
@@ -35,7 +36,9 @@ public class MobileFoodController extends BaseController {
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<FoodVo>> moblieHotelR(@PathVariable("hotelId") Integer hotelId, 
     		@ModelAttribute FoodMobileParameter.FoodMobileQuery query) {
-    	query.setKeyword("%"+query.getKeyword()+"%");
+    	if(!StringUtils.isEmpty(query.getKeyword())) {
+    		query.setKeyword("%"+query.getKeyword()+"%");
+    	}
     	Page<FoodVo> page = tFoodService.queryFood(query, hotelId);
         return ResponseDTO.createBySuccess(page);
     }
