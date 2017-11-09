@@ -1,5 +1,6 @@
 package com.gt.hotel.config;
 
+import com.gt.hotel.interceptor.MobileAuthenticationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.gt.hotel.interceptor.SecurityInterceptor;
+import org.springframework.web.servlet.config.annotation.*;
 
 /**
  * SpringMVC 配置类
@@ -46,13 +48,18 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         //		super.addResourceHandlers(registry);
     }
 
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        /*InterceptorRegistration addInterceptor = */registry.addInterceptor(new SecurityInterceptor());
+//        InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
 //        addInterceptor.addPathPatterns("/**");
 //        addInterceptor.excludePathPatterns("/backstage/home", "/error", "/v2/**", "/webjars/**", "/swagger-resources/**");
         //        super.addInterceptors(registry);
+        registry.addInterceptor(new MobileAuthenticationInterceptor()).addPathPatterns("/**");
+        super.addInterceptors(registry);
     }
+
+
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {

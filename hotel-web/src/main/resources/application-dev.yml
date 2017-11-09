@@ -89,5 +89,39 @@ wxmp:
     url: https://socket.deeptel.com.cn
   materialurl: https://suc.deeptel.com.cn
 
+### WebServer 第三方API 配置 ###
+hotel:
+  webserver:
+    WxmpService:
+      signKey: WXMP2017
+      serviceUrl: https://deeptel.com.cn
+      imageUrl: http://maint.duofriend.com/upload
+      ApiMap: # Api接口列表
+        dictKey: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/dictApi/getDictApi.do   # 获取字典信息
+        isErpCount: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getIsErpCount.do # 根据商家ID判断是否开通某个erp
+        socketPush: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/socket/getSocketApi.do # Socket推送
+        erpMenus: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenus.do # 商家/员工获取ERP列表菜单
+        staffListByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/staffApiMsg/getStaffListShopId.do # 根据门店ID获取员工列表分页功能（支持员工姓名，手机登模糊查询）
+        childListByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/staffApiMsg/getChildListShopId.do # 根据门店ID获取管理员（子账号）分页列表信息
+        sendSMSOld: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsOld.do #发送短信 旧版
+        findShopInfoByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/getShopById.do #根据ID获取门店信息
+        findWxShopListByBusId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do #根据商家ID获取所有门店
+        getWxPulbicMsg: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getWxPulbicMsg.do  # 获取WxPulbic对象
+    ShortService:
+      signKey: goodtom2016@shortUrl.
+      serviceUrl: http://short.duofee.com
+      ApiMap:
+        shortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl?longUrl= # 获取短连接
+        getShortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl  # 获取短连接
+    MemberService:
+      signKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
+      serviceUrl: https://member.yifriend.net
+      ApiMap: # Api接口列表
+        authorizeMember: ${hotel.webserver.MemberService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody= # 授权地址
+        findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard   # 获取会员信息
+        findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId   # 包含会员信息、微信卡券、多粉卡券
+        wxmemberPayRefund: ${hotel.webserver.MemberService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do  # 微信退款
+
+
 
 
