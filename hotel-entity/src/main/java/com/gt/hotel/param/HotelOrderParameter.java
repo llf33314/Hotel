@@ -10,6 +10,10 @@ import lombok.Data;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * 
  * @author Reverien9@gmail.com
@@ -76,27 +80,34 @@ public class HotelOrderParameter {
 		private String categoryName;
 		
 		@ApiModelProperty(value = "客户姓名", required = true)
+		@NotEmpty(message = "客户姓名不能为空")
 		private String customerName;
 
 		@ApiModelProperty(value = "手机号码", required = true)
+		@NotEmpty(message = "手机号码不能为空")
 		private String customerPhone;
 
 		@ApiModelProperty(value = "证件类型 =0 二代身份证 =1 一代身份证 =2 驾驶证 =3 护照 =4 军官证 =5 士兵证 =6 港澳通行证 =7 其他", required = true)
+		@NotNull(message = "证件类型不能为空")
 		private Integer customerIdType;
 		
 		@ApiModelProperty(value = "证件号", required = true)
+		@NotEmpty(message = "证件号不能为空")
 		private String customerIdCard;
 		
 		@ApiModelProperty(value = "酒店ID", required = true)
 		private Integer hotelId;
 		
 		@ApiModelProperty(value = "酒店名称", required = true)
+		@NotEmpty(message = "酒店名称不能为空")
 		private String hotelName;
 		
 		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
+		@NotNull(message = "支付类型不能为空")
 		private Integer payType;
 		
 		@ApiModelProperty(value = "订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0", required = true)
+		@NotNull(message = "订单流程状态不能为空")
 		private Integer orderStatus;
 		
 		@ApiModelProperty(value = "入住时间", required = true)
@@ -108,27 +119,35 @@ public class HotelOrderParameter {
 		private Date roomOutTime;
 		
 		@ApiModelProperty(value = "住客类型(0:散客/会员, 1:协议单位)", required = true)
+		@NotNull(message = "住客类型不能为空")
 		private Integer guestType;
 
 		@ApiModelProperty(value = "性别(0:男, 1:女)", required = true)
+		@NotNull(message = "性别不能为空")
 		private Integer customerGender;
 
 		@ApiModelProperty(value = "实收金额", required = true)
+		@NotNull(message = "实收金额不能为空")
 		private Integer realPrice;
 		
 		@ApiModelProperty(value = "当前门市价 固定从房型获取(周一至周四为 门市价 周五周六 为周末价。如果有日历价，则为日历价)", required = true)
+		@NotNull(message = "当前门市价不能为空")
 		private Integer rackRate;
 
 		@ApiModelProperty(value = "应收( (客房价格+押金) * 数量 room_price+deposit ) ", required = true)
+		@NotNull(message = "应收价不能为空")
 		private Integer receivablePrice;
 
 		@ApiModelProperty(value = "押金  0 则为免押金", required = true)
+		@NotNull(message = "押金不能为空")
 		private Integer deposit;
 		
 		@ApiModelProperty(value = "入住标准 0 全天房 1 特价房 2 钟点房 3 秒杀房 4 团购房", required = true)
+		@NotNull(message = "入住标准 不能为空")
 		private Integer checkStandard;
 
 		@ApiModelProperty(value = "当前客房价格 可以是改价后的价格", required = true)
+		@NotNull(message = "当前客房价格不能为空")
 		private Integer roomPrice;
 
 		@ApiModelProperty(value = "房间集合")
@@ -139,18 +158,23 @@ public class HotelOrderParameter {
 	@Data
 	public static class CheckInParam {
 		@ApiModelProperty(value = "客户姓名", required = true)
+		@NotEmpty(message = "客户姓名不能为空")
 		private String customerName;
 
 		@ApiModelProperty(value = "手机号码", required = true)
+		@NotEmpty(message = "手机号码不能为空")
 		private String customerPhone;
 		
 		@ApiModelProperty(value = "证件类型", required = true)
+		@NotNull(message = "证件类型不能为空")
 		private Integer customerIdType;
 		
 		@ApiModelProperty(value = "证件号", required = true)
+		@NotEmpty(message = "证件号不能为空")
 		private String customerIdCard;
 		
 		@ApiModelProperty(value = "性别(0:男, 1:女)", required = true)
+		@NotNull(message = "性别不能为空")
 		private Integer customerGender;
 		
 		@ApiModelProperty(value = "房间集合")
@@ -230,6 +254,7 @@ public class HotelOrderParameter {
 	@Data
 	public static class RefundsParam {
 		@ApiModelProperty(value = "退款金额", required = true)
+		@NotNull(message = "退款金额不能为空")
 		private Integer refundFee;
 	}
 	

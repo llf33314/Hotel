@@ -21,17 +21,42 @@ public class FoodMobileParameter {
 		@ApiModelProperty(value = "提供方名称")
 		private String foodProvidesName;
 		
-		@ApiModelProperty("早餐时段是否提供 0 提供 1 不提供")
+		@ApiModelProperty(value = "早餐时段是否提供 0 提供 1 不提供")
 	    private Integer breakfastEnable;
 
-	    @ApiModelProperty("午餐时段是否提供 0 提供 1 不提供")
+	    @ApiModelProperty(value = "午餐时段是否提供 0 提供 1 不提供")
 	    private Integer lunchEnable;
 
-	    @ApiModelProperty("晚餐是否提供 0 是 1 否")
+	    @ApiModelProperty(value = "晚餐是否提供 0 是 1 否")
 	    private Integer dinnerEnable;
 
-	    @ApiModelProperty("宵夜是否提供 0 是 1 否")
+	    @ApiModelProperty(value = "宵夜是否提供 0 是 1 否")
 	    private Integer supperEnable;
 	}
 	
+	@Data
+	@Api( "餐饮 移动端 订单 参数" )
+	public static class FoodMobileOrder{
+		
+		@ApiModelProperty(value = "酒店ID", required = true)
+		private Integer hotelId;
+
+		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
+		private Integer payType;
+		
+		@ApiModelProperty(value = "实收金额", required = true)
+		private Integer realPrice;
+		
+		@ApiModelProperty(value = "账单金额", required = true)
+		private Integer billPrice;
+		
+		@ApiModelProperty(value = "应收金额", required = true)
+		private Integer receivablePrice;
+		
+		@ApiModelProperty(value = "订餐订单总价", required = true)
+		private Integer foodTotalPrice;
+		
+//		@ApiModelProperty(value = "菜品集合")
+//		private List<> foods; 
+	}
 }
