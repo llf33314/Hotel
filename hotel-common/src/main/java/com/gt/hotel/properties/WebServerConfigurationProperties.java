@@ -32,6 +32,10 @@ public class WebServerConfigurationProperties {
         private String serviceUrl;
 
         private String imageUrl;
+        
+        private String materialUrl;
+        
+        private String socketUrl;
 
         private Map<String,String> ApiMap;
     }
