@@ -106,9 +106,11 @@ hotel:
         staffListByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/staffApiMsg/getStaffListShopId.do # 根据门店ID获取员工列表分页功能（支持员工姓名，手机登模糊查询）
         childListByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/staffApiMsg/getChildListShopId.do # 根据门店ID获取管理员（子账号）分页列表信息
         sendSMSOld: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsOld.do #发送短信 旧版
+        sendSmsNew: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsNew.do #2、发送短信(模板接口)
         findShopInfoByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/getShopById.do #根据ID获取门店信息
         findWxShopListByBusId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do #根据商家ID获取所有门店
         getWxPulbicMsg: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getWxPulbicMsg.do  # 获取WxPulbic对象
+        payapi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/payapi.do?obj=  #  1、支付(支付宝公众号多粉钱包)
     ShortService:
       signKey: goodtom2016@shortUrl.
       serviceUrl: http://short.duofee.com

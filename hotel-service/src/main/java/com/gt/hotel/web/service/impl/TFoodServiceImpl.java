@@ -29,6 +29,14 @@ public class TFoodServiceImpl extends BaseServiceImpl<TFoodDAO, TFood> implement
 	@Override
 	public Page<FoodVo> queryFood(FoodMobileQuery param, Integer hotelId) {
 		Page<FoodVo> page = param.initPage();
+		page.setRecords(tFoodDAO.queryFood(param, hotelId, page));
+		return page;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<FoodVo> queryFoodNoPage(FoodMobileQuery param, Integer hotelId) {
+		Page<FoodVo> page = param.initPage();
 		page.setRecords(tFoodDAO.queryFood(param, hotelId));
 		return page;
 	}

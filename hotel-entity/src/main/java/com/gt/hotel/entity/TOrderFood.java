@@ -104,6 +104,10 @@ public class TOrderFood extends Model<TOrderFood> {
      * 最后修改时间
      */
 	private Date updatedAt;
+	/**
+	 * 发票抬头
+	 */
+	private String invoiceHead;
 
 
 	@Override

@@ -39,14 +39,17 @@ public class FoodMobileParameter {
 	}
 	
 	@Data
-	@Api( "餐饮 移动端 订单 参数" )
+	@Api( "餐饮 移动端 去结算(购物车) 订单 参数" )
 	public static class FoodMobileOrder{
 		
 		@ApiModelProperty(value = "酒店ID", required = true)
 		private Integer hotelId;
+		
+		@ApiModelProperty(value = "酒店名字", required = true)
+		private String hotelName;
 
-		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
-		private Integer payType;
+//		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
+//		private Integer payType;
 		
 		@ApiModelProperty(value = "实收金额", required = true)
 		private Integer realPrice;
@@ -62,5 +65,34 @@ public class FoodMobileParameter {
 		
 		@ApiModelProperty(value = "菜品集合")
 		private List<OrderFoodDetailVo> foods; 
+	}
+	
+	@Data
+	@Api( "餐饮 移动端 支付 订单 参数" )
+	public static class FoodMobileBookOrder{
+		
+		@ApiModelProperty(value = "订单ID", required = true)
+		private Integer orderId;
+		
+		@ApiModelProperty(value = "酒店ID", required = true)
+		private Integer hotelId;
+		
+		@ApiModelProperty(value = "客户姓名", required = true)
+		private String customerName;
+		
+		@ApiModelProperty(value = "客户联系电话", required = true)
+		private String customerPhone;
+		
+		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
+		private Integer payType;
+		
+		@ApiModelProperty(value = "备注")
+		private String remark;
+		
+		@ApiModelProperty(value = "房间号", required = true)
+		private String roomNum;
+		
+		@ApiModelProperty(value = "发票抬头")
+		private String invoiceHead;
 	}
 }

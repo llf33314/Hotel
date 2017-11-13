@@ -26,11 +26,12 @@
 		<result column="created_at" property="createdAt" />
 		<result column="updated_by" property="updatedBy" />
 		<result column="updated_at" property="updatedAt" />
+		<result column="invoice_head" property="invoiceHead" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, order_id, order_num, hotel_id, hotel_name, room_num, category_id, category_name, customer_name, customer_phone, order_status, pay_status, refund_time, pay_time, create_time, completion_time, food_total_price, mark_modified, created_by, created_at, updated_by, updated_at
+        id, order_id, order_num, hotel_id, hotel_name, room_num, category_id, category_name, customer_name, customer_phone, order_status, pay_status, refund_time, pay_time, create_time, completion_time, food_total_price, mark_modified, created_by, created_at, updated_by, updated_at, invoice_head
     </sql>
 
 </mapper>

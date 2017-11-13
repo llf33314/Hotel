@@ -24,6 +24,7 @@ public class TOrderFoodDetail extends Model<TOrderFoodDetail> {
 
     private static final long serialVersionUID = 1L;
 
+    private Integer id;
 	private Integer orderFoodId;
 	private Integer foodId;
     /**
@@ -50,7 +51,7 @@ public class TOrderFoodDetail extends Model<TOrderFoodDetail> {
 
 	@Override
 	protected Serializable pkVal() {
-		return this.orderFoodId;
+		return this.id;
 	}
 
 }

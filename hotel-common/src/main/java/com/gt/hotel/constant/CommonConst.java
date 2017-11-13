@@ -231,5 +231,19 @@ public final class CommonConst {
 	 * 3 储值卡
 	 */
 	public static final int CARD_TYPE_VALUE_CARD = 3;
+	
+	/****************************** 支付model字典值 ******************************/
+	/**
+	 * 4 酒店订房
+	 */
+	public static final int PAY_MODEL_ROOM = 4;
+	/**
+	 * 5 酒店订餐
+	 */
+	public static final int PAY_MODEL_FOOD = 5;
+	/**
+	 * 51 ERP统一计算
+	 */
+	public static final int PAY_MODEL_ERP = 51;
     
 }

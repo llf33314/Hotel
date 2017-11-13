@@ -159,5 +159,24 @@ public class HotelMobileParameter {
 		@NotNull(message = "新订单接收(短信)手机号不能为空")
 	    private String  orderReceivePhone;
 	}
-	
+
+	@Data
+	@Api( "预约退款 参数" )
+	public static class CheckOutParam{
+		@ApiModelProperty(value = "订单号", required = true)
+		private String orderNum;
+		
+		@ApiModelProperty(value = "房号", required = true)
+		private String roomNum;
+		
+		@ApiModelProperty(value = "是否需要开发票 0 需 1不需", required = true)
+		private String invoiceEnable;
+		
+		@ApiModelProperty(value = "发票抬头")
+		private String invoiceHead;
+		
+		@ApiModelProperty(value = "发票类目")
+		private String invoiceCategory;
+		
+	}
 }
