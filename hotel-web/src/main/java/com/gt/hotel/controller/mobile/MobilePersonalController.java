@@ -20,9 +20,9 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.enums.ResponseEnums;
-import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.vo.DepositVo;
@@ -76,10 +76,9 @@ public class MobilePersonalController extends BaseController {
 	/********************************************************* 房间订单 *************************************************************************/
 	
 	@ApiOperation(value = "房间订单", notes = "房间订单")
-    @GetMapping(value = "{hotelId}/roomOrder/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{hotelId}/roomOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<HotelBackRoomOrderVo>> moblieRoomOrder(
     		@PathVariable("hotelId") Integer hotelId, 
-    		@PathVariable("orderId") Integer orderId, 
     		@ModelAttribute HotelPage hotelPage, 
     		HttpServletRequest request) {
 //		THotel hotel = tHotelService.selectById(hotelId);
@@ -95,15 +94,46 @@ public class MobilePersonalController extends BaseController {
         return ResponseDTO.createBySuccess(tOrderService.queryMobileRoomOrder(member, hotelPage));
     }
 	
-	/********************************************************* 房间订单 *************************************************************************/
+	/********************************************************* ↑房间订单↑ ↓共用↓ *************************************************************************/
 	
-	/********************************************************* 我的订餐 *************************************************************************/
+	@SuppressWarnings("rawtypes")
+	@ApiOperation(value = "移动端订单 取消", notes = "移动端订单 取消")
+	@PostMapping(value = "{hotelId}/cancel/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO moblieRoomOrderCancel(
+			@PathVariable("hotelId") Integer hotelId, 
+			@PathVariable("orderId") Integer orderId, 
+			HttpServletRequest request) {
+//		THotel hotel = tHotelService.selectById(hotelId);
+//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+    	//test
+    	Member member = new Member();
+    	member.setId(1071);
+    	member.setBusid(33);
+    	member.setPhone("13433550667");
+    	member.setPublicId(492);
+    	member.setCardid("15338");
+    	//test
+		TOrder order = tOrderService.selectById(orderId);
+		if(!order.getOrderStatus().equals(CommonConst.ORDER_PROCESSING) && !order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
+		}
+		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+		wrapper.eq("id", orderId);
+		TOrder newOrder = new TOrder();
+		newOrder.setOrderStatus(CommonConst.ORDER_CANCALLED);
+		newOrder.setUpdatedBy(member.getId());
+		if(!tOrderService.update(newOrder, wrapper)) {
+			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+		}
+		return ResponseDTO.createBySuccess();
+	}
+	
+	/********************************************************* ↓我的订餐↓ ↑共用↑ *************************************************************************/
 	
 	@ApiOperation(value = "我的订餐", notes = "我的订餐")
-    @GetMapping(value = "{hotelId}/foodOrder/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{hotelId}/foodOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<HotelBackFoodOrderVo>> moblieFoodOrder(
     		@PathVariable("hotelId") Integer hotelId, 
-    		@PathVariable("orderId") Integer orderId, 
     		@ModelAttribute HotelPage hotelPage, 
     		HttpServletRequest request) {
 //		THotel hotel = tHotelService.selectById(hotelId);
@@ -142,9 +172,10 @@ public class MobilePersonalController extends BaseController {
         return ResponseDTO.createBySuccess(tOrderService.queryMobileDeposit(member, hotelPage));
     }
 	
+	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "我的押金 垃圾箱按钮", notes = "我的押金 垃圾箱按钮")
     @PostMapping(value = "{hotelId}/deposit/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<DepositVo>> moblieDepositD(
+    public ResponseDTO moblieDepositD(
     		@PathVariable("hotelId") Integer hotelId, 
     		@PathVariable("orderId") Integer orderId, 
     		HttpServletRequest request) {
@@ -164,7 +195,7 @@ public class MobilePersonalController extends BaseController {
 		entity.setDeposit(CommonConst.CLOSE);
 		entity.setUpdatedBy(member.getId());
 		if(!tOrderRoomService.update(entity, wrapper)) {
-    		throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
     	}
         return ResponseDTO.createBySuccess();
     }
