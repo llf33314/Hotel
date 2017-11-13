@@ -422,13 +422,23 @@ public class WXMPApiUtil {
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/socket/getSocketApi.do";
 //        	String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
 
-        	param.put("cardNo", "13433550667");
-        	param.put("busId", 33);
-        	param.put("shopId", 29);
-        	String url = "http://member.yifriend.net" + "/memberAPI/member/findMemberCard";
-        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
+//        	param.put("cardNo", "13433550667");
+//        	param.put("busId", 33);
+//        	param.put("shopId", 29);
+//        	String url = "http://member.yifriend.net" + "/memberAPI/member/findMemberCard";
+//        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
+//
+//        	System.err.println(result);
+        	
+        	String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
+            String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
+            Map<String,Object> params = new HashMap<>();
+            params.put("busId",33);
+            params.put("ids","1071");
+            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
+            System.err.println(result);
 
-        	System.err.println(result);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

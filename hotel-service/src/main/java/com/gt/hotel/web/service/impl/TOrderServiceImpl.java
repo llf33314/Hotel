@@ -1,9 +1,20 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderDAO;
@@ -17,20 +28,13 @@ import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelOrderRoomParameter;
+import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
-import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
@@ -218,6 +222,33 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<HotelBackRoomOrderVo> queryMobileRoomOrder(Member member, HotelPage hotelPage) {
+		Page<HotelBackRoomOrderVo> page = hotelPage.initPage();
+		RoomOrderQuery roq = new RoomOrderQuery();
+		roq.setMemberId(member.getId());
+		page.setRecords(tOrderDAO.queryRoomOrder(null, roq, page));
+		return page;
+	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<HotelBackFoodOrderVo> queryMobileFoodOrder(Member member, HotelPage hotelPage) {
+		Page<HotelBackFoodOrderVo> page = hotelPage.initPage();
+		FoodOrderQuery param = new FoodOrderQuery();
+		param.setMemberId(member.getId());
+		page.setRecords(tOrderDAO.queryFoodOrder(null, param, page));
+		return page;
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<DepositVo> queryMobileDeposit(Member member, HotelPage hotelPage) {
+		Page<DepositVo> page = hotelPage.initPage();
+		page.setRecords(tOrderDAO.queryMobileDeposit(member.getId(), page));
+		return null;
+	}
 
 }

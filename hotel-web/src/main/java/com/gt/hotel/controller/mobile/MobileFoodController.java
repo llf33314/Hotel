@@ -29,6 +29,7 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.FoodMobileParameter;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
+import com.gt.hotel.vo.FoodSettleVo;
 import com.gt.hotel.vo.FoodVo;
 import com.gt.hotel.web.service.TFoodService;
 import com.gt.hotel.web.service.THotelService;
@@ -97,6 +98,23 @@ public class MobileFoodController extends BaseController {
     	order.setHotelId(hotelId);
 		return ResponseDTO.createBySuccess(tOrderFoodService.mobileFoodOrderBook(member, order));
 	}
+	
+	@ApiOperation(value = "支付订单详情", notes = "支付订单详情")
+    @GetMapping(value = "{hotelId}/order/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<FoodSettleVo> moblieHotelFoodOrderR(@PathVariable("hotelId") Integer hotelId,
+    		@PathVariable("orderId") Integer orderId, HttpServletRequest request) {
+//		THotel hotel = tHotelService.selectById(hotelId);
+//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+    	//test
+    	Member member = new Member();
+    	member.setId(1071);
+    	member.setBusid(33);
+    	member.setPhone("13433550667");
+    	member.setPublicId(492);
+    	member.setCardid("15338");
+    	//test
+        return ResponseDTO.createBySuccess(tOrderFoodService.queryFoodOrderOne(hotelId, orderId, member));
+    }
     
     @SuppressWarnings("rawtypes")
     @ApiOperation(value = "支付", notes = "支付")
@@ -145,7 +163,7 @@ public class MobileFoodController extends BaseController {
 		try {
 			String obj;
 			obj = KeysUtil.getEncString(SubQrPayParams.toJSONString());
-			modelAndView.setViewName(properties.getWxmpService().getApiMap().get("payapi").toString()+obj);
+			modelAndView.setViewName("redirect:" + properties.getWxmpService().getApiMap().get("payapi").toString()+obj);
 		} catch (Exception e) {
 			e.printStackTrace();
 			modelAndView.setViewName("/error");

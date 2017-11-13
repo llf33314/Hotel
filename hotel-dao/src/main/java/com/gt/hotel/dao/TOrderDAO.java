@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
+import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.vo.OrderRoomCustomerVo;
@@ -49,6 +50,14 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 * @return
 	 */
 	List<OrderRoomCustomerVo> queryRoomOrderOneRooms(@Param("orderId") Integer orderId);
+	
+	/**
+	 * 移动端 押金
+	 * @param id
+	 * @param page
+	 * @return
+	 */
+	List<DepositVo> queryMobileDeposit(@Param("memberId") Integer memberId, @Param("page") Pagination page);
 
 
 }

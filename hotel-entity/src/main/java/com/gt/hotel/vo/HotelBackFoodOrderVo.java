@@ -82,4 +82,7 @@ public class HotelBackFoodOrderVo {
     
     @ApiModelProperty("菜品提供方")
     private String foodProvidesName;
+    
+    @ApiModelProperty("菜品合并名")
+    private String mergedFoodName;
 }

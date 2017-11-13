@@ -54,7 +54,7 @@ import io.swagger.annotations.ApiOperation;
  * @author Reverien9@gmail.com 
  * 2017年10月25日 下午12:04:18
  */
-@Api(tags = "酒店移动端")
+@Api(tags = "酒店移动端 首页")
 @RestController
 @RequestMapping("/mobile/78CDF1")
 public class MobileHotelController extends BaseController {

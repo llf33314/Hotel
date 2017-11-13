@@ -1,6 +1,7 @@
 package com.gt.hotel.web.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderFoodDAO;
+import com.gt.hotel.entity.TFood;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderFood;
 import com.gt.hotel.entity.TOrderFoodDetail;
@@ -27,6 +29,7 @@ import com.gt.hotel.param.FoodMobileParameter.FoodMobileBookOrder;
 import com.gt.hotel.param.FoodMobileParameter.FoodMobileOrder;
 import com.gt.hotel.vo.FoodSettleVo;
 import com.gt.hotel.vo.OrderFoodDetailVo;
+import com.gt.hotel.web.service.TFoodService;
 import com.gt.hotel.web.service.TOrderFoodDetailService;
 import com.gt.hotel.web.service.TOrderFoodService;
 import com.gt.hotel.web.service.TOrderService;
@@ -58,6 +61,9 @@ public class TOrderFoodServiceImpl extends BaseServiceImpl<TOrderFoodDAO, TOrder
 	
 	@Autowired
 	TRoomCategoryService tRoomCategoryService;
+	
+	@Autowired
+	TFoodService tFoodService;
 	
 	@Transactional
 	@Override
@@ -108,6 +114,43 @@ public class TOrderFoodServiceImpl extends BaseServiceImpl<TOrderFoodDAO, TOrder
 		foodSettleVo.setCreateTime(tOrder.getCreateTime());
 		foodSettleVo.setCustomerName(member.getNickname());
 		foodSettleVo.setCustomerPhone(member.getPhone());
+		return foodSettleVo;
+	}
+	
+	@Override
+	public FoodSettleVo queryFoodOrderOne(Integer hotelId, Integer orderId, Member member) {
+		Wrapper<TOrder> ow = new EntityWrapper<>();
+		ow.eq("id", orderId);
+		ow.eq("member_id", member.getId());
+		TOrder tOrder = tOrderService.selectOne(ow);
+		Wrapper<TOrderFood> fw = new EntityWrapper<>();
+		fw.eq("order_id", orderId);
+		TOrderFood tOrderFood = this.selectOne(fw);
+		Wrapper<TOrderFoodDetail> dw = new EntityWrapper<>();
+		dw.eq("order_food_id", tOrderFood.getId());
+		List<TOrderFoodDetail> details = tOrderFoodDetailService.selectList(dw);
+		Wrapper<TFood> foodw = new EntityWrapper<>();
+		foodw.eq("hotel_id", hotelId);
+		List<TFood> foods = tFoodService.selectList(foodw);
+		List<OrderFoodDetailVo> detailVos = new ArrayList<>();
+		List<Integer> deliverys = new ArrayList<>();
+		for(TOrderFoodDetail d : details) {
+			OrderFoodDetailVo dv = new OrderFoodDetailVo();
+			BeanUtils.copyProperties(d, dv);
+			detailVos.add(dv);
+			for(TFood f : foods) {
+				if(f.getId().equals(d.getFoodId())) {
+					deliverys.add(f.getDeliveryTime());
+				}
+			}
+		}
+		FoodSettleVo foodSettleVo = new FoodSettleVo();
+		foodSettleVo.setOrderId(tOrder.getId());
+		foodSettleVo.setCreateTime(tOrder.getCreateTime());
+		foodSettleVo.setCustomerName(tOrderFood.getCustomerName());
+		foodSettleVo.setCustomerPhone(tOrderFood.getCustomerPhone());
+		foodSettleVo.setOrderFoodDetails(detailVos);
+		foodSettleVo.setDeliveryTime(Collections.max(deliverys));
 		return foodSettleVo;
 	}
 

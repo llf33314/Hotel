@@ -38,6 +38,8 @@
 		<result column="guest_type" property="guestType" />
 		<result column="customer_gender" property="customerGender" />
 		<result column="check_standard" property="checkStandard" />
+		<result column="check_out_instructions" property="checkOutInstructions" />
+		<result column="deposit_visible" property="depositVisible" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->

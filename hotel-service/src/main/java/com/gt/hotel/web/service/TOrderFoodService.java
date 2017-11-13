@@ -42,5 +42,14 @@ public interface TOrderFoodService extends BaseService<TOrderFood> {
 	 * @return
 	 */
 	JSONObject moblieHotelFoodPayNotifyUrl(Map<String, Object> param, Integer orderId);
+
+	/**
+	 * 支付订单详情
+	 * @param hotelId
+	 * @param orderId
+	 * @param member
+	 * @return
+	 */
+	FoodSettleVo queryFoodOrderOne(Integer hotelId, Integer orderId, Member member);
 	
 }

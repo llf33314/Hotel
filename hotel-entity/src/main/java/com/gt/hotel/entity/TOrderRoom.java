@@ -161,6 +161,14 @@ public class TOrderRoom extends Model<TOrderRoom> {
 	 * 入住标准 0 全天房 1 特价房 2 钟点房 3 秒杀房 4 团购房
 	 */
 	private Integer checkStandard;
+	/**
+	 * 退房说明
+	 */
+	private String checkOutInstructions;
+	/**
+	 * 押金可见状态 0 true 1 false
+	 */
+	private Integer depositVisible;
 
 
 	@Override
