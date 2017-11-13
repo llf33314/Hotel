@@ -30,6 +30,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.gt.hotel.constant.CommonConst.*;
+
 /**
  * 移动端登录、微信授权拦截器
  * <p>
@@ -61,21 +63,9 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     private THotelService hotelService;
 
     /**
-     *
+     * 路径上获取酒店ID
      */
-    public static final String CURRENT_BUS_ID     = "hotel:current_bus_id";
-    /**
-     *
-     */
-    public static final String CURRENT_HOTEL_INFO = "hotel:current_hotel_info";
-    /**
-     *
-     */
-    public static final String CURRENT_HOTEL_ID   = "hotel:current_hotel_id";
-    /**
-     *
-     */
-    public static final String HOTEL_ID           = "hotelId";
+    public static final String HOTEL_ID = "hotelId";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -160,6 +150,12 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
+    /**
+     * 获取酒店信息
+     *
+     * @param hotelId 酒店ID
+     * @return THotel
+     */
     public THotel findHotelById(Integer hotelId) {
         Wrapper<THotel> wrapper = new EntityWrapper<>();
         wrapper.eq("id", hotelId).eq("mark_modified", 0);
@@ -188,32 +184,33 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
      * @throws Exception
      */
     private String authorizeMember(HttpServletRequest request, Integer busId, String redirectUrl) throws Exception {
-        LOGGER.debug("进入--授权方法！");
         Integer browser = judgeBrowser(request);
         //参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器需要登录
-        JSONObject wxpublic = wxmpApiUtil.getWxPulbicMsg(busId);
-        Integer code = wxpublic.getInteger("code");
+        JSONObject wxPublic = wxmpApiUtil.getWxPulbicMsg(busId);
+        Integer code = wxPublic.getInteger("code");
         //判断商家信息 1是否过期 2公众号是否变更过
         if (code.equals(-1)) {
             //请求错误
             return "";
         } else if (code.equals(0)) {
-            String guoqi = wxpublic.getString("guoqi");
+            String guoqi = wxPublic.getString("guoqi");
             //商家已过期
             if (!StringUtils.isBlank(guoqi)) {
-                Object guoqiUrl = wxpublic.get("guoqiUrl");
-                return "redirect:" + guoqiUrl;
+                Object overdue = wxPublic.get("guoqiUrl");
+                return "redirect:" + overdue;
             }
-            String remoteUcLogin = wxpublic.getString("remoteUcLogin");
+            String remoteUcLogin = wxPublic.getString("remoteUcLogin");
             if (!StringUtils.isBlank(remoteUcLogin)) {
                 return "";
             }
         }
         String otherRedisKey = "hotel" + System.currentTimeMillis();
         Map<String, Object> queryMap = new HashMap<>(3);
-        // redis
-        this.wxmpApiUtil.setRedisStorage(otherRedisKey, redirectUrl, null);
-        LOGGER.debug("otherRedisKey : {} , redirectUrl : {}", otherRedisKey,redirectUrl);
+        // 设置重定向 redis 信息
+        redisCacheUtil.set(otherRedisKey, redirectUrl, 300L);
+        this.wxmpApiUtil.setRedisStorage(otherRedisKey, redirectUrl, 300L);
+        LOGGER.debug("otherRedisKey : {} , redirectUrl : {}", otherRedisKey, redirectUrl);
+        queryMap.put("otherRedisKey", otherRedisKey);
         queryMap.put("browser", browser);
         queryMap.put("busId", busId);
         queryMap.put("uclogin", null);
