@@ -12,15 +12,17 @@ spring:
   restart:
    enabled: true
  redis:
-   host: localhost
+   host: 113.106.202.51
    port: 6379
+   password: gt@123456
+   database: 3
  session:
    store-type: redis
  datasource:
    druid:
-     url: jdbc:mysql://192.168.3.37:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
-     username: root
-     password: 123456
+     url: jdbc:mysql://113.106.202.51:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+     username: gt_hotel
+     password: gt123456
      # 下面为连接池的补充设置，应用到上面所有数据源中
      # 初始化大小，最小，最大
      initial-size: 5
@@ -61,7 +63,7 @@ spring:
 
 ### 设置 Redis session 共享
 redisSession:
-  domainName: localhost
+  domainName: deeptel.com.cn
   cookiePath: /
   cookieName: WXMPJSESSIONID
 

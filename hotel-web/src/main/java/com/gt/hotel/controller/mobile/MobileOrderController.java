@@ -1,5 +1,6 @@
 package com.gt.hotel.controller.mobile;
 
+import com.gt.hotel.annotation.MobileLoginRequired;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.exception.ResponseEntityException;
@@ -81,7 +82,7 @@ public class MobileOrderController extends BaseController {
         return ResponseDTO.createBySuccess();
     }
 
-
+    @MobileLoginRequired
     @GetMapping(value = "/{hotelId}/test", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO test(@PathVariable Integer hotelId) {
         System.out.println("hotelId : " + hotelId);

@@ -3,15 +3,6 @@ package com.gt.hotel.config;
 import com.gt.hotel.interceptor.MobileAuthenticationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import com.gt.hotel.interceptor.SecurityInterceptor;
 import org.springframework.web.servlet.config.annotation.*;
 
 /**
@@ -22,6 +13,13 @@ import org.springframework.web.servlet.config.annotation.*;
  */
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
+
+
+    @Bean
+    MobileAuthenticationInterceptor mobileAuthenticationInterceptor(){
+        return new MobileAuthenticationInterceptor();
+    }
+
 
     // 快速解决页面转向问题
     @Override
@@ -55,7 +53,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 //        addInterceptor.addPathPatterns("/**");
 //        addInterceptor.excludePathPatterns("/backstage/home", "/error", "/v2/**", "/webjars/**", "/swagger-resources/**");
         //        super.addInterceptors(registry);
-        registry.addInterceptor(new MobileAuthenticationInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(mobileAuthenticationInterceptor()).addPathPatterns("/**");
         super.addInterceptors(registry);
     }
 

@@ -1,9 +1,8 @@
 package com.gt.hotel.entity;
 
-import java.io.Serializable;
-
-import java.util.Date;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -27,6 +26,7 @@ public class THotelSetting extends Model<THotelSetting> {
     /**
      * 酒店ID
      */
+    @TableId(value = "id", type = IdType.INPUT)
     private Integer hotelId;
     /**
      * 支付方式(1：在线支付 | 2：到店支付 | 3：1&2)  默认 在线支付

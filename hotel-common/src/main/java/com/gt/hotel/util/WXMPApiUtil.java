@@ -396,6 +396,8 @@ public class WXMPApiUtil {
         return result;
     }
 
+
+
     public static void main(String[] args) {
         try {
         	Map<String, Object> param = new HashMap<String, Object>();
