@@ -40,7 +40,7 @@ public class RedisSessionConfig {
     public DefaultCookieSerializer defaultCookieSerializer() {
         LOG.debug("domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath);
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
-        //	cookieSerializer.setDomainName( domainName );
+        cookieSerializer.setDomainName(domainName);
         cookieSerializer.setCookieName(cookieName);
         cookieSerializer.setCookiePath(cookiePath);
         return cookieSerializer;
