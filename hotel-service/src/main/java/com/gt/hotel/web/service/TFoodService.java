@@ -24,6 +24,8 @@ public interface TFoodService extends BaseService<TFood> {
 	 * @return
 	 */
 	Page<FoodVo> queryFood(@Param("param") FoodMobileParameter.FoodMobileQuery param, @Param("hotelId") Integer hotelId);
+	
+	Page<FoodVo> queryFoodNoPage(@Param("param") FoodMobileParameter.FoodMobileQuery param, @Param("hotelId") Integer hotelId);
 
 	
 }

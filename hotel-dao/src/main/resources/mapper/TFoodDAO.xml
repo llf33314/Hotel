@@ -71,4 +71,5 @@
 			AND supper_enable = #{param.supperEnable}
 		</if>
 	</select>
+	
 </mapper>

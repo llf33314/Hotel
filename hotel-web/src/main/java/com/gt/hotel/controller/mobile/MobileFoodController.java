@@ -1,5 +1,7 @@
 package com.gt.hotel.controller.mobile;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.ibatis.annotations.Param;
@@ -15,16 +17,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
+import com.gt.api.util.KeysUtil;
 import com.gt.hotel.base.BaseController;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.FoodMobileParameter;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
+import com.gt.hotel.vo.FoodSettleVo;
 import com.gt.hotel.vo.FoodVo;
 import com.gt.hotel.web.service.TFoodService;
 import com.gt.hotel.web.service.THotelService;
+import com.gt.hotel.web.service.TOrderFoodService;
+import com.gt.hotel.web.service.TOrderService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,24 +55,37 @@ public class MobileFoodController extends BaseController {
     @Autowired
     THotelService tHotelService;
     
+    @Autowired
+    TOrderService tOrderService;
+    
+    @Autowired
+    TOrderFoodService tOrderFoodService;
+    
+    @Autowired
+    WebServerConfigurationProperties properties;
+    
     @ApiOperation(value = "菜品列表", notes = "菜品列表")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<FoodVo>> moblieHotelR(@PathVariable("hotelId") Integer hotelId, 
+    public ResponseDTO<Page<FoodVo>> moblieHotelFoodR(@PathVariable("hotelId") Integer hotelId, 
     		@ModelAttribute FoodMobileParameter.FoodMobileQuery query) {
     	if(!StringUtils.isEmpty(query.getKeyword())) {
     		query.setKeyword("%"+query.getKeyword()+"%");
     	}
-    	Page<FoodVo> page = tFoodService.queryFood(query, hotelId);
+    	Page<FoodVo> page = tFoodService.queryFoodNoPage(query, hotelId);
         return ResponseDTO.createBySuccess(page);
     }
 
-    @SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "去结算", notes = "去结算")
 	@PostMapping(value = "{hotelId}/settlement", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO phoneSettingCU(@PathVariable("hotelId") Integer hotelId, 
+	public ResponseDTO moblieHotelFoodSettlement(@PathVariable("hotelId") Integer hotelId, 
 			@Validated @RequestBody @Param("参数") FoodMobileParameter.FoodMobileOrder order, 
 			BindingResult bindingResult, HttpServletRequest request) {
-    	THotel hotel = tHotelService.selectById(hotelId);
+    	ResponseDTO msg = InvalidParameterII(bindingResult);
+    	if(msg != null) {
+    		return msg;
+    	}
+//    	THotel hotel = tHotelService.selectById(hotelId);
 //    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
     	//test
     	Member member = new Member();
@@ -72,12 +95,91 @@ public class MobileFoodController extends BaseController {
     	member.setPublicId(492);
     	member.setCardid("15338");
     	//test
-		ResponseDTO msg = InvalidParameterII(bindingResult);
-        if(msg != null) {
-        	return msg;
-        }
-        
-		return ResponseDTO.createBySuccess();
+    	order.setHotelId(hotelId);
+		return ResponseDTO.createBySuccess(tOrderFoodService.mobileFoodOrderBook(member, order));
 	}
-
+	
+	@ApiOperation(value = "支付订单详情", notes = "支付订单详情")
+    @GetMapping(value = "{hotelId}/order/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<FoodSettleVo> moblieHotelFoodOrderR(@PathVariable("hotelId") Integer hotelId,
+    		@PathVariable("orderId") Integer orderId, HttpServletRequest request) {
+//		THotel hotel = tHotelService.selectById(hotelId);
+//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+    	//test
+    	Member member = new Member();
+    	member.setId(1071);
+    	member.setBusid(33);
+    	member.setPhone("13433550667");
+    	member.setPublicId(492);
+    	member.setCardid("15338");
+    	//test
+        return ResponseDTO.createBySuccess(tOrderFoodService.queryFoodOrderOne(hotelId, orderId, member));
+    }
+    
+    @SuppressWarnings("rawtypes")
+    @ApiOperation(value = "支付", notes = "支付")
+    @PostMapping(value = "{hotelId}/pay", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO moblieHotelFoodPay(@PathVariable("hotelId") Integer hotelId, 
+    		@Validated @RequestBody @Param("参数") FoodMobileParameter.FoodMobileBookOrder order, 
+    		BindingResult bindingResult, HttpServletRequest request) {
+    	ResponseDTO msg = InvalidParameterII(bindingResult);
+    	if(msg != null) {
+    		return msg;
+    	}
+//    	THotel hotel = tHotelService.selectById(hotelId);
+//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+    	//test
+    	Member member = new Member();
+    	member.setId(1071);
+    	member.setBusid(33);
+    	member.setPhone("13433550667");
+    	member.setPublicId(492);
+    	member.setCardid("15338");
+    	//test
+    	order.setHotelId(hotelId);
+    	tOrderFoodService.mobileFoodOrderBookPay(member, order);
+    	return ResponseDTO.createBySuccess(order.getOrderId());
+    }
+    
+    @ApiOperation(value = "支付跳转(支付接口成功后调用此接口)", notes = "支付跳转(支付接口成功后调用此接口)")
+    @GetMapping(value = "{hotelId}/payJump/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ModelAndView moblieHotelFoodPay(@PathVariable("hotelId") Integer hotelId,  
+    		@PathVariable("orderId") Integer orderId,
+    		HttpServletRequest request, ModelAndView modelAndView) {
+    	TOrder tOrder = tOrderService.selectById(orderId);
+    	JSONObject SubQrPayParams = new JSONObject();
+    	SubQrPayParams.put("totalFee", tOrder.getRealPrice());
+    	SubQrPayParams.put("model", CommonConst.PAY_MODEL_FOOD);
+    	SubQrPayParams.put("busId", tOrder.getBusId());
+    	SubQrPayParams.put("appidType", 0);
+    	SubQrPayParams.put("orderNum", tOrder.getOrderNum());
+    	SubQrPayParams.put("desc", "酒店订餐");
+    	SubQrPayParams.put("isreturn", 0);
+    	SubQrPayParams.put("notifyUrl", getHost(request)+"/mobile/78CDF1/food/"+hotelId+"/notifyUrl/"+orderId);
+    	SubQrPayParams.put("isSendMessage", 0);
+//    	SubQrPayParams.put("sendUrl", "");
+    	SubQrPayParams.put("payWay", 0);
+    	SubQrPayParams.put("sourceType", 1);
+		try {
+			String obj;
+			obj = KeysUtil.getEncString(SubQrPayParams.toJSONString());
+			modelAndView.setViewName("redirect:" + properties.getWxmpService().getApiMap().get("payapi").toString()+obj);
+		} catch (Exception e) {
+			e.printStackTrace();
+			modelAndView.setViewName("/error");
+		}
+    	return modelAndView;
+    }
+    
+    @ApiOperation(value = "支付异步回调", notes = "支付异步回调", hidden = true)
+    @PostMapping(value = "{hotelId}/notifyUrl/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public JSONObject moblieHotelFoodPayNotifyUrl(@PathVariable("hotelId") Integer hotelId,
+    		@PathVariable("orderId") Integer orderId, Map<String, Object> param,
+    		HttpServletRequest request) {
+    	JSONObject json = new JSONObject();
+		json.put("code", -1);
+		json.put("msg", "支付失败");
+		json = tOrderFoodService.moblieHotelFoodPayNotifyUrl(param, orderId);
+		return json;
+    }
 }

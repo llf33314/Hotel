@@ -51,7 +51,7 @@ public class TOrderFoodDetail extends Model<TOrderFoodDetail> {
 
 	@Override
 	protected Serializable pkVal() {
-		return this.orderFoodId;
+		return this.id;
 	}
 
 }

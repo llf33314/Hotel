@@ -1,16 +1,17 @@
 package com.gt.hotel.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
 import com.gt.entityBo.ErpRefundBo;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 多粉接口
@@ -200,7 +201,7 @@ public class WXMPApiUtil {
     }
 
     /**
-     * 发送短信
+     * 发送短信(旧接口)
      *
      * @param busid   商家ID
      * @param phone   手机号
@@ -208,7 +209,7 @@ public class WXMPApiUtil {
      * @return
      * @throws SignException
      */
-    public boolean sendMsg(Integer busid, String phone, String content)
+    public JSONObject sendMsg(Integer busid, String phone, String content)
             throws SignException {
         Map<String, Object> OldApiSms = new HashMap<String, Object>();
         OldApiSms.put("mobiles", phone);
@@ -216,17 +217,30 @@ public class WXMPApiUtil {
         OldApiSms.put("company", "(多粉平台)");
         OldApiSms.put("busId", busid);
         OldApiSms.put("model", 7);
-        Map<String, Object> paramObj = new HashMap<String, Object>();
-        paramObj.put("reqdata", OldApiSms);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSMSOld");
-        String result = SignHttpUtils.postByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
-        System.err.println(result);
-        if (result != null) {
-            JSONObject json = JSONObject.parseObject(result);
-            return (json.getInteger("code") != null && json.getInteger("code") == 0);
-        } else {
-            return false;
-        }
+        String result = SignHttpUtils.postByHttp(url, OldApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
+        return JSONObject.parseObject(result);
+    }
+    
+    /**
+     * 发送短信(模板接口)
+     * @param mobile 手机号码,可多个号码
+     * @param paramsStr 内容
+     * @param busId 商家ID
+     * @param tmplId 短信模板id
+     * @return
+     * @throws SignException
+     */
+    public JSONObject sendSmsNew(String mobile, String paramsStr, Integer busId, Long tmplId) throws SignException {
+        Map<String, Object> NewApiSms = new HashMap<String, Object>();
+        NewApiSms.put("mobile", mobile);
+        NewApiSms.put("paramsStr", paramsStr);
+        NewApiSms.put("busId", busId);
+        NewApiSms.put("model", 7);
+        NewApiSms.put("tmplId", tmplId);
+        String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSmsNew");
+        String result = SignHttpUtils.postByHttp(url, NewApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
+		return JSONObject.parseObject(result);
     }
 
     /**
@@ -395,26 +409,38 @@ public class WXMPApiUtil {
         JSONObject result = getCApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("getWxPulbicMsg"));
         return result;
     }
+    
+    
 
 
 
     public static void main(String[] args) {
         try {
         	Map<String, Object> param = new HashMap<String, Object>();
-//        	param.put("style", 1198);
+//        	param.put("style", 1200);
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
 //        	param.put("pushName", "hotel:test");
 //        	param.put("pushMsg", "test");
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/socket/getSocketApi.do";
 //        	String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
 
-        	param.put("cardNo", "13433550667");
-        	param.put("busId", 33);
-        	param.put("shopId", 29);
-        	String url = "http://member.yifriend.net" + "/memberAPI/member/findMemberCard";
-        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
+//        	param.put("cardNo", "13433550667");
+//        	param.put("busId", 33);
+//        	param.put("shopId", 29);
+//        	String url = "http://member.yifriend.net" + "/memberAPI/member/findMemberCard";
+//        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
+//
+//        	System.err.println(result);
+        	
+        	String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
+            String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
+            Map<String,Object> params = new HashMap<>();
+            params.put("busId",33);
+            params.put("ids","1071");
+            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
+            System.err.println(result);
 
-        	System.err.println(result);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

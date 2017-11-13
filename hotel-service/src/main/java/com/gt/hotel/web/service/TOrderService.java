@@ -1,17 +1,21 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
+import org.joda.time.DateTime;
+
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.HotelOrderParameter.CheckInParam;
 import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
+import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
-import org.joda.time.DateTime;
-
-import java.util.List;
 
 /**
  * <p>
@@ -94,5 +98,30 @@ public interface TOrderService extends BaseService<TOrder> {
      * @param endTime   离店日期
      */
     void mobileCheckNewOrder(Integer busId, Integer hid, Integer cid, DateTime startTime, DateTime endTime);
+
+    /**
+     * 移动端 房间订单列表
+     * @param member
+     * @param hotelPage
+     * @return
+     */
+    Page<HotelBackRoomOrderVo> queryMobileRoomOrder(Member member, HotelPage hotelPage);
+
+    /**
+     * 移动端 餐饮订单列表
+     * @param member
+     * @param hotelPage
+     * @return
+     */
+	Page<HotelBackFoodOrderVo> queryMobileFoodOrder(Member member, HotelPage hotelPage);
+
+	/**
+	 * 移动端 押金
+	 * @param member
+	 * @param hotelPage
+	 * @return
+	 */
+	Page<DepositVo> queryMobileDeposit(Member member, HotelPage hotelPage);
+
 
 }

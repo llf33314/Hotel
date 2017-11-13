@@ -63,6 +63,9 @@
 		<if test="param.id != null">
 			AND a.id = #{param.id} 
 		</if>
+		<if test="param.memberId != null">
+			AND a.member_id = #{param.memberId} 
+		</if>
 		<if test="param.hotelId != null">
 			AND a.hotel_id = #{param.hotelId} 
 		</if>
@@ -88,13 +91,17 @@
 		SELECT a.id, a.order_num orderNum, a.hotel_id hotelId, a.bus_id busId, a.member_id memberId, a.pay_type payType, a.pay_status payStatus,
 			a.pay_time payTime, a.order_status orderStatus, a.create_time createTime, a.real_price realPrice, a.bill_price billPrice, a.fb,
 			a.integral, a.order_coupons_id orderCouponsId, a.receivable_price receivablePrice, a.remark, a.completion_time completionTime,
-			b.hotel_name hotelName, b.customer_name customerName, b.customer_phone customerPhone, b.room_num roomNum, c.food_provides_name foodProvidesName 
+			b.hotel_name hotelName, b.customer_name customerName, b.customer_phone customerPhone, b.room_num roomNum, c.food_provides_name foodProvidesName,
+			GROUP_CONCAT(c.food_name) mergedFoodName 
 		FROM t_order a 
 		JOIN t_order_food b ON a.id = b.order_id 
 		LEFT JOIN t_order_food_detail c ON b.id = c.order_food_id 
 		WHERE a.mark_modified = 0 
 		<if test="busid != null">
 			AND a.bus_id = #{busid} 
+		</if>
+		<if test="param.memberId != null">
+			AND a.member_id = #{param.memberId} 
 		</if>
 		<if test="param.hotelId != null">
 			AND a.hotel_id = #{param.hotelId} 
@@ -114,7 +121,8 @@
 		<if test="param.keyword != null">
 			AND (b.customer_name = #{param.keyword} OR b.customer_phone = #{param.keyword}) 
 		</if>
-	</select>
+		GROUP BY a.id 
+	</select> 
 	
 	<select id="queryRoomOrderOneRooms" resultType="com.gt.hotel.vo.OrderRoomCustomerVo">
 		SELECT b.category_id categoryId, c.`name` categoryName, b.id roomId, b.number roomNum 
@@ -122,5 +130,16 @@
 		JOIN t_room b ON a.room_num = b.number 
 		JOIN t_room_category c ON b.category_id = c.id 
 		WHERE a.order_id = #{orderId} 
+	</select>
+	
+	<select id="queryMobileDeposit" resultType="com.gt.hotel.vo.DepositVo">
+		SELECT a.id orderId, b.deposit, b.check_out_instructions checkOutInstructions, a.pay_time payTime, IF((a.order_status = 4 AND a.pay_status = 3),0,1) isRefund 
+		FROM t_order a 
+		JOIN t_order_room b ON a.id = b.order_id 
+		WHERE b.deposit_visible = 0 AND a.mark_modified = 0 AND b.mark_modified = 0 
+		<if test="memberId != null">
+			AND a.member_id = #{memberId} 
+		</if>
+		ORDER BY a.id DESC
 	</select>
 </mapper>
