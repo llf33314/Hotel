@@ -12,14 +12,16 @@ spring:
   restart:
    enabled: true
  redis:
-   host: localhost
+   host: 113.106.202.51
    port: 6379
+   password: gt@123456
+   database: 3
  session:
    store-type: redis
  datasource:
    druid:
      url: jdbc:mysql://113.106.202.51:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
-     username: root
+     username: gt_hotel
      password: gt123456
      # 下面为连接池的补充设置，应用到上面所有数据源中
      # 初始化大小，最小，最大
@@ -61,7 +63,7 @@ spring:
 
 ### 设置 Redis session 共享
 redisSession:
-  domainName: localhost
+  domainName: deeptel.com.cn
   cookiePath: /
   cookieName: WXMPJSESSIONID
 
@@ -111,6 +113,9 @@ hotel:
         findWxShopListByBusId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do #根据商家ID获取所有门店
         getWxPulbicMsg: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getWxPulbicMsg.do  # 获取WxPulbic对象
         payapi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/payapi.do?obj=  #  1、支付(支付宝公众号多粉钱包)
+        refundErp: ${hotel.webserver.WxmpService.serviceUrl}/memberAPI/member/refundErp #会员结算退款
+        setRedisStorage: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/redis/SetExApi.do  # 存储redis重定向地址
+        authorizeMember: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody= # 授权地址
     ShortService:
       signKey: goodtom2016@shortUrl.
       serviceUrl: http://short.duofee.com
@@ -119,9 +124,8 @@ hotel:
         getShortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl  # 获取短连接
     MemberService:
       signKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
-      serviceUrl: http://member.yifriend.net
+      serviceUrl: https://member.deeptel.com.cn
       ApiMap: # Api接口列表
-        authorizeMember: ${hotel.webserver.MemberService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody= # 授权地址
         findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard   # 获取会员信息
         findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId   # 包含会员信息、微信卡券、多粉卡券
         wxmemberPayRefund: ${hotel.webserver.MemberService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do  # 微信退款

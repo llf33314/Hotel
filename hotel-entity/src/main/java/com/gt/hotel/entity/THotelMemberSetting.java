@@ -1,8 +1,8 @@
 package com.gt.hotel.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
-
-import io.swagger.annotations.ApiModelProperty;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -22,6 +22,9 @@ import java.util.Date;
 public class THotelMemberSetting extends Model<THotelMemberSetting> {
 
     private static final long serialVersionUID = 1L;
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 酒店ID

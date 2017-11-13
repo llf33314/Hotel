@@ -1,15 +1,13 @@
 package com.gt.hotel.entity;
 
-import java.io.Serializable;
-
-import java.util.Date;
 import com.baomidou.mybatisplus.activerecord.Model;
-import java.io.Serializable;
-
-import com.baomidou.mybatisplus.annotations.Version;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -24,6 +22,9 @@ import lombok.experimental.Accessors;
 public class TOrderRoom extends Model<TOrderRoom> {
 
     private static final long serialVersionUID = 1L;
+
+	@TableId(value = "id", type = IdType.AUTO)
+	private Integer id;
 
     /**
      * 订单ID

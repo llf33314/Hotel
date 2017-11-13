@@ -12,6 +12,8 @@ public enum ResponseEnums {
     ERROR(1, "错误"),
     AUTHENTICATION(10, "非法认证"),
     JWT_TOKEN_EXPIRED(11, "TOKEN失效"),
+    DATA_DOES_NOT_EXIST(12, "数据不存在"),
+    BAD_REQUEST(13, "非法请求"),
 
     // 1000-1999 定义常见业务错误信息载体
     NEED_LOGIN(1001, "需要登录"),
@@ -21,7 +23,7 @@ public enum ResponseEnums {
     ORDER_STATUS_ERROR(1005, "订单状态错误"),
     PAY_STATUS_ERROR(1006, "支付状态错误"),
     REFUNDS_ERROR(1008, "退款失败"),
-    FAILED_TO_OBTAIN_MEMBER_INFORMATION(1007,"获取会员信息失败"),
+    FAILED_TO_OBTAIN_MEMBER_INFORMATION(1007, "获取会员信息失败"),
 
     INFRASTRUCTRUE_ERROR(1998, "设施保存失败"),
     IMAGE_ERROR(1999, "图片保存失败"),

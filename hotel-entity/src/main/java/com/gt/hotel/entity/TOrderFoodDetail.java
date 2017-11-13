@@ -1,14 +1,12 @@
 package com.gt.hotel.entity;
 
-import java.io.Serializable;
-
 import com.baomidou.mybatisplus.activerecord.Model;
-import java.io.Serializable;
-
-import com.baomidou.mybatisplus.annotations.Version;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -24,7 +22,9 @@ public class TOrderFoodDetail extends Model<TOrderFoodDetail> {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+	@TableId(value = "id", type = IdType.AUTO)
+	private Integer id;
+
 	private Integer orderFoodId;
 	private Integer foodId;
     /**

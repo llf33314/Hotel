@@ -1,17 +1,16 @@
 package com.gt.hotel.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
 import com.gt.entityBo.ErpRefundBo;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 多粉接口
@@ -73,14 +72,14 @@ public class WXMPApiUtil {
      * 对照彭江丽的接口文档
      *
      * @param param 参数
-     * @param url  路径
+     * @param url   路径
      * @return
      * @throws SignException
      */
     private JSONObject getPApi(Object param, String url) throws SignException {
-    	String s = SignHttpUtils.WxmppostByHttp(url, param, webServerConfigurationProperties.getMemberService().getSignKey());
-    	JSONObject result = JSONObject.parseObject(s);
-    	return result;
+        String s = SignHttpUtils.WxmppostByHttp(url, param, webServerConfigurationProperties.getMemberService().getSignKey());
+        JSONObject result = JSONObject.parseObject(s);
+        return result;
     }
 
     /**
@@ -211,36 +210,37 @@ public class WXMPApiUtil {
      */
     public JSONObject sendMsg(Integer busid, String phone, String content)
             throws SignException {
-        Map<String, Object> OldApiSms = new HashMap<String, Object>();
-        OldApiSms.put("mobiles", phone);
-        OldApiSms.put("content", content);
-        OldApiSms.put("company", "(多粉平台)");
-        OldApiSms.put("busId", busid);
-        OldApiSms.put("model", 7);
+        Map<String, Object> oldApiSms = new HashMap<String, Object>();
+        oldApiSms.put("mobiles", phone);
+        oldApiSms.put("content", content);
+        oldApiSms.put("company", "(多粉平台)");
+        oldApiSms.put("busId", busid);
+        oldApiSms.put("model", 7);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSMSOld");
-        String result = SignHttpUtils.postByHttp(url, OldApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
+        String result = SignHttpUtils.postByHttp(url, oldApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
         return JSONObject.parseObject(result);
     }
-    
+
     /**
      * 发送短信(模板接口)
-     * @param mobile 手机号码,可多个号码
+     *
+     * @param mobile    手机号码,可多个号码
      * @param paramsStr 内容
-     * @param busId 商家ID
-     * @param tmplId 短信模板id
+     * @param busId     商家ID
+     * @param tmplId    短信模板id
      * @return
      * @throws SignException
      */
     public JSONObject sendSmsNew(String mobile, String paramsStr, Integer busId, Long tmplId) throws SignException {
-        Map<String, Object> NewApiSms = new HashMap<String, Object>();
-        NewApiSms.put("mobile", mobile);
-        NewApiSms.put("paramsStr", paramsStr);
-        NewApiSms.put("busId", busId);
-        NewApiSms.put("model", 7);
-        NewApiSms.put("tmplId", tmplId);
+        Map<String, Object> newApiSms = new HashMap<String, Object>();
+        newApiSms.put("mobile", mobile);
+        newApiSms.put("paramsStr", paramsStr);
+        newApiSms.put("busId", busId);
+        newApiSms.put("model", 7);
+        newApiSms.put("tmplId", tmplId);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSmsNew");
-        String result = SignHttpUtils.postByHttp(url, NewApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
-		return JSONObject.parseObject(result);
+        String result = SignHttpUtils.postByHttp(url, newApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
+        return JSONObject.parseObject(result);
     }
 
     /**
@@ -351,49 +351,54 @@ public class WXMPApiUtil {
 
     /**
      * 会员结算退款
+     *
      * @param bo
      * @return
      * @throws SignException
      */
     public JSONObject memberRefundErp(ErpRefundBo bo)
-    		throws SignException {
-    	JSONObject result = getPApi(bo, "/memberAPI/member/refundErp");
-    	return result;
+            throws SignException {
+        JSONObject result = getPApi(bo, webServerConfigurationProperties.getWxmpService().getApiMap().get("refundErp"));
+        return result;
     }
 
     /**
      * 根据粉丝id获取粉丝信息
-     * @param memberId 会员ID
-     * @return
+     *
+     * @param cardNo 会员卡
+     * @param busId  商家ID
+     * @param shopId 门店ID
+     * @return JSONObject 会员卡信息
      * @throws SignException
      */
     public JSONObject findMemberCard(String cardNo, Integer busId, Integer shopId) throws SignException {
-    	Map<String, Object> param = new HashMap<>();
-    	param.put("cardNo", cardNo);
-    	param.put("busId", busId);
-    	param.put("shopId", shopId);
-    	JSONObject result = getPApi(param, webServerConfigurationProperties.getMemberService().getApiMap().get("findMemberCard"));
-    	return result;
+        Map<String, Object> param = new HashMap<>();
+        param.put("cardNo", cardNo);
+        param.put("busId", busId);
+        param.put("shopId", shopId);
+        JSONObject result = getPApi(param, webServerConfigurationProperties.getMemberService().getApiMap().get("findMemberCard"));
+        return result;
     }
 
     /**
      * socket推送人
-     * @param pushName 推送人（不能为null）
+     *
+     * @param pushName  推送人（不能为null）
      * @param pushStyle 推送属性（有属性的要填，没有属性的不用填）
-     * @param pushMsg 推送内容
+     * @param pushMsg   推送内容
      * @return
      * @throws SignException
      */
     public JSONObject getSocketApi(String pushName, String pushStyle, String pushMsg)
-    		throws SignException {
-    	JSONObject param = new JSONObject();
-    	param.put("pushName", pushName);
-    	if(pushStyle != null) {
-    		param.put("pushStyle", pushStyle);
-    	}
-		param.put("pushMsg", pushMsg);
-    	JSONObject result = getCApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("socketPush"));
-    	return result;
+            throws SignException {
+        JSONObject param = new JSONObject();
+        param.put("pushName", pushName);
+        if (pushStyle != null) {
+            param.put("pushStyle", pushStyle);
+        }
+        param.put("pushMsg", pushMsg);
+        JSONObject result = getCApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("socketPush"));
+        return result;
     }
 
     /**
@@ -409,12 +414,32 @@ public class WXMPApiUtil {
         JSONObject result = getCApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("getWxPulbicMsg"));
         return result;
     }
-    
-    
+
+
+    /**
+     * 设置redsi 存储
+     *
+     * @param otherRedisKey rediskey
+     * @param redirectUrl   重定向地址
+     * @param setime        时效
+     * @return JSONObject
+     * @throws SignException
+     */
+    public JSONObject setRedisStorage(String otherRedisKey, String redirectUrl, Integer setime) throws SignException {
+        if (setime == null || setime == 0) {
+            setime = 300;
+        }
+        JSONObject redisMap = new JSONObject();
+        redisMap.put("redisKey", otherRedisKey);
+        redisMap.put("redisValue", redirectUrl);
+        redisMap.put("setime", setime);
+        return getLApi(redisMap, webServerConfigurationProperties.getWxmpService().getApiMap().get("setRedisStorage"));
+    }
+
 
     public static void main(String[] args) {
         try {
-        	Map<String, Object> param = new HashMap<String, Object>();
+            Map<String, Object> param = new HashMap<String, Object>();
 //        	param.put("style", 1200);
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
 //        	param.put("pushName", "hotel:test");
@@ -429,16 +454,16 @@ public class WXMPApiUtil {
 //        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
 //
 //        	System.err.println(result);
-        	
-        	String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
+
+            String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
             String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
-            Map<String,Object> params = new HashMap<>();
-            params.put("busId",33);
-            params.put("ids","1071");
+            Map<String, Object> params = new HashMap<>();
+            params.put("busId", 33);
+            params.put("ids", "1071");
             String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
             System.err.println(result);
 
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -300,6 +300,7 @@
                 <!-- 是否替换资源中的属性 -->
                 <filtering>true</filtering>
                 <includes>
+                    <include>**/*DAO.xml</include>
                     <include>**/*.properties</include>
                     <include>**/*.dtd</include>
                     <include>application.yml</include>

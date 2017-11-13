@@ -1,15 +1,13 @@
 package com.gt.hotel.entity;
 
-import java.io.Serializable;
-
-import java.util.Date;
 import com.baomidou.mybatisplus.activerecord.Model;
-import java.io.Serializable;
-
-import com.baomidou.mybatisplus.annotations.Version;
-
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -25,9 +23,11 @@ public class TActivityDetail extends Model<TActivityDetail> {
 
     private static final long serialVersionUID = 1L;
 
+
     /**
      * 活动ID
      */
+	@TableId(value = "id", type = IdType.INPUT)
 	private Integer activityId;
     /**
      * 活动类型 1 特价房 2 钟点房 3 秒杀房 4 团购房

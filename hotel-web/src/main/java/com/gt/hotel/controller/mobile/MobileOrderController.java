@@ -1,5 +1,9 @@
 package com.gt.hotel.controller.mobile;
 
+import com.alibaba.fastjson.JSONObject;
+import com.gt.api.bean.session.Member;
+import com.gt.api.util.SessionUtils;
+import com.gt.hotel.annotation.MobileLoginRequired;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.exception.ResponseEntityException;
@@ -81,10 +85,14 @@ public class MobileOrderController extends BaseController {
         return ResponseDTO.createBySuccess();
     }
 
-
+    @MobileLoginRequired
     @GetMapping(value = "/{hotelId}/test", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO test(@PathVariable Integer hotelId) {
+    public ResponseDTO test(HttpServletRequest request, @PathVariable Integer hotelId) {
         System.out.println("hotelId : " + hotelId);
+        Integer busId = (Integer) request.getSession().getAttribute("hotel:current_bus_id");
+
+        Member member = SessionUtils.getLoginMember(request, busId);
+        LOGGER.info("member: {}", JSONObject.toJSON(member));
         System.out.println(webServerConfigurationProperties.getWxmpService());
         System.out.println(webServerConfigurationProperties.getWxmpService().getApiMap().get("dictKey"));
         System.out.println(webServerConfigurationProperties.getShortService());
