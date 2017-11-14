@@ -1,5 +1,22 @@
 package com.gt.hotel.interceptor;
 
+import java.lang.reflect.Method;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -14,21 +31,6 @@ import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.RedisCacheUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 移动端登录、微信授权拦截器
@@ -87,6 +89,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         Method method = handlerMethod.getMethod();
         // 判断接口是否需要登录
         MobileLoginRequired annotation = method.getAnnotation(MobileLoginRequired.class);
+    	System.err.println(annotation);
         // 移动端有 @MobileLoginRequired 注解，需要验证
         if (annotation != null) {
             LOGGER.debug("sessionId : {} ", request.getSession().getId());

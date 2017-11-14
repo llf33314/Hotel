@@ -444,8 +444,9 @@ public class WXMPApiUtil {
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
 //        	param.put("pushName", "hotel:test");
 //        	param.put("pushMsg", "test");
-//        	String url = "https://deeptel.com.cn" + "/8A5DA52E/socket/getSocketApi.do";
-//        	String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
+        	param.put("busId", 33);
+        	String url = "https://deeptel.com.cn" + "/8A5DA52E/busUserApi/getWxPulbicMsg.do";
+        	String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
 
 //        	param.put("cardNo", "13433550667");
 //        	param.put("busId", 33);
@@ -453,15 +454,15 @@ public class WXMPApiUtil {
 //        	String url = "http://member.yifriend.net" + "/memberAPI/member/findMemberCard";
 //        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
 //
-//        	System.err.println(result);
+        	System.err.println(result);
 
-            String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
-            String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
-            Map<String, Object> params = new HashMap<>();
-            params.put("busId", 33);
-            params.put("ids", "1071");
-            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
-            System.err.println(result);
+//            String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
+//            String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("busId", 33);
+//            params.put("ids", "1071");
+//            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
+//            System.err.println(result);
 
 
         } catch (Exception e) {

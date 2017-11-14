@@ -1,13 +1,15 @@
 package com.gt.hotel.entity;
 
+import java.io.Serializable;
+
+import java.util.Date;
 import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.enums.IdType;
+import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotations.Version;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * <p>
@@ -15,7 +17,7 @@ import java.util.Date;
  * </p>
  *
  * @author 
- * @since 2017-10-27
+ * @since 2017-11-14
  */
 @Data
 @Accessors(chain = true)
@@ -26,48 +28,47 @@ public class THotelSetting extends Model<THotelSetting> {
     /**
      * 酒店ID
      */
-    @TableId(value = "id", type = IdType.INPUT)
-    private Integer hotelId;
+	private Integer hotelId;
     /**
      * 支付方式(1：在线支付 | 2：到店支付 | 3：1&2)  默认 在线支付
      */
-    private Integer payMode;
+	private Integer payMode;
     /**
      * 是否开启短信通知 默认 1 不开启 0 开启
      */
-    private Integer smsEnable;
+	private Integer smsEnable;
     /**
      * 接收短信的手机号
      */
-    private String  smsPhone;
+	private String smsPhone;
     /**
      * 酒店公告 1 不开启 0 开启
      */
-    private Integer noticeEnable;
+	private Integer noticeEnable;
     /**
      * 公告内容
      */
-    private String  bulletin;
+	private String bulletin;
     /**
      * 是否显示剩余房间数 默认 1 关闭 0 开启
      */
-    private Integer remnantRoomEnable;
+	private Integer remnantRoomEnable;
     /**
      * 开启客房订餐 0 开启  1 不开启 默认1
      */
-    private Integer roomReservationEnable;
+	private Integer roomReservationEnable;
     /**
      * 餐饮支付方式 1 在线 2 到付 3 在线&到付
      */
-    private Integer foodPayMode;
+	private Integer foodPayMode;
     /**
      * 预约退房 0 开启 1 关闭  默认1
      */
-    private Integer reservationCheckOutEnable;
+	private Integer reservationCheckOutEnable;
     /**
      * 预约退房 接收短信的手机号
      */
-    private String  reservationCheckOutPhone;
+	private String reservationCheckOutPhone;
     /**
      * 发票支持的类目 1 办公用品 2 住宿费 3 餐费 4 培训费 5 打球费 6 健身费 存储方式 1,2,3,4,5 or 1,2,3 来自sys_dictionary.dict_type_id = 4
      */
@@ -75,24 +76,24 @@ public class THotelSetting extends Model<THotelSetting> {
     /**
      * 创建者ID
      */
-    private Integer createdBy;
+	private Integer createdBy;
     /**
      * 创建时间
      */
-    private Date    createdAt;
+	private Date createdAt;
     /**
      * 最后修改人 ID
      */
-    private Integer updatedBy;
+	private Integer updatedBy;
     /**
      * 最后修改时间
      */
 	private Date updatedAt;
 
 
-    @Override
-    protected Serializable pkVal() {
-        return this.hotelId;
-    }
+	@Override
+	protected Serializable pkVal() {
+		return this.hotelId;
+	}
 
 }
