@@ -27,6 +27,8 @@
 		<result column="created_at" property="createdAt" />
 		<result column="updated_by" property="updatedBy" />
 		<result column="updated_at" property="updatedAt" />
+		<result column="fb_discount" property="fbDiscount" />
+		<result column="integral_discount" property="integralDiscount" />
 	</resultMap>
 
 	<!-- 通用查询结果列 -->
@@ -34,13 +36,14 @@
 		id, order_num, hotel_id, bus_id, member_id, pay_type, pay_status,
 		pay_time, order_status, create_time, real_price, bill_price, fb,
 		integral, order_coupons_id, receivable_price, remark, completion_time,
-		mark_modified, created_by, created_at, updated_by, updated_at
+		mark_modified, created_by, created_at, updated_by, updated_at, fb_discount, integral_discount
 	</sql>
 	<sql id="Base_Column_List_VO">
 		t_order.id, t_order.order_num orderNum, t_order.hotel_id hotelId, t_order.bus_id busId, t_order.member_id memberId, t_order.pay_type payType, t_order.pay_status payStatus,
 		t_order.pay_time payTime, t_order.order_status orderStatus, t_order.create_time createTime, t_order.real_price realPrice, t_order.bill_price billPrice, t_order.fb,
 		t_order.integral, t_order.order_coupons_id orderCouponsId, t_order.receivable_price receivablePrice, t_order.remark, t_order.completion_time completionTime,
-		t_order.mark_modified markModified, t_order.created_by createdBy, t_order.created_at createdAt, t_order.updated_by updatedBy, t_order.updated_at updatedAt 
+		t_order.mark_modified markModified, t_order.created_by createdBy, t_order.created_at createdAt, t_order.updated_by updatedBy, t_order.updated_at updatedAt,
+		fb_discount fbDiscount, integral_discount integralDiscount  
 	</sql>
 
 	<select id="queryRoomOrder" resultType="com.gt.hotel.vo.HotelBackRoomOrderVo">

@@ -9,11 +9,12 @@
 		<result column="order_num" property="orderNum" />
 		<result column="coupons_id" property="couponsId" />
 		<result column="coupons_num" property="couponsNum" />
+		<result column="coupons_discount" property="couponsDiscount" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, order_id, order_num, coupons_id, coupons_num
+        id, order_id, order_num, coupons_id, coupons_num, coupons_discount
     </sql>
 
 </mapper>

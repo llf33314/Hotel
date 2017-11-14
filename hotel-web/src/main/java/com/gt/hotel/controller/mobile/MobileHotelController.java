@@ -80,6 +80,7 @@ public class MobileHotelController extends BaseController {
     @Autowired
     TOrderRoomService tOrderRoomService;
 
+    @MobileLoginRequired
     @ApiOperation(value = "首页", notes = "首页")
     @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("hotelId") Integer hotelId, ModelAndView model) {
@@ -104,7 +105,7 @@ public class MobileHotelController extends BaseController {
         return model;
     }
 
-    @MobileLoginRequired
+//    @MobileLoginRequired
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
@@ -211,21 +212,5 @@ public class MobileHotelController extends BaseController {
 		}
     	return ResponseDTO.createBySuccess();
     }
-
-    @SuppressWarnings("rawtypes")
-	@ApiOperation(value = "立即预定", notes = "立即预定")
-	@PostMapping(value = "/book", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO roomBook(HotelOrderParameter.BookOrder order, HttpServletRequest request) {
-		
-		//TODO book order
-		
-		
-		
-		
-		
-		
-		
-		return ResponseDTO.createBySuccess();
-	}
     
 }

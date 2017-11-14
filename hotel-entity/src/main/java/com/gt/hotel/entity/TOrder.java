@@ -117,6 +117,14 @@ public class TOrder extends Model<TOrder> {
      * 最后修改时间
      */
 	private Date updatedAt;
+	/**
+	 * 粉币折扣金额
+	 */
+	private Integer fbDiscount;
+	/**
+	 * 积分折扣金额
+	 */
+	private Integer integralDiscount;
 
 
 	@Override

@@ -81,10 +81,7 @@ public class MobileFoodController extends BaseController {
 	public ResponseDTO moblieHotelFoodSettlement(@PathVariable("hotelId") Integer hotelId, 
 			@Validated @RequestBody @Param("参数") FoodMobileParameter.FoodMobileOrder order, 
 			BindingResult bindingResult, HttpServletRequest request) {
-    	ResponseDTO msg = InvalidParameterII(bindingResult);
-    	if(msg != null) {
-    		return msg;
-    	}
+    	InvalidParameter(bindingResult);
 //    	THotel hotel = tHotelService.selectById(hotelId);
 //    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
     	//test
