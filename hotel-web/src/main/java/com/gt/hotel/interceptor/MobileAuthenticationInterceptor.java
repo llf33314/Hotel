@@ -25,7 +25,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +69,15 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
      */
     public static final String HOTEL_ID = "hotelId";
 
+    /**
+     * 进入方法前，判断接口是否需要登录
+     * 如果需要登录，告诉前端，前端执行并判断
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 如果不是映射到方法直接通过
@@ -106,7 +117,9 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
                     request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
                 }
-                return findMemberByBusId(request, response, busId);
+                if(!findMemberByBusId(request, response, busId)){
+                    throw new ResponseEntityException(ResponseEnums.NEED_LOGIN,authorizeMember(request,busId,"sss"));
+                }
             } else {
                 if (hotelId != null) {
                     THotel hotel = findHotelById(hotelId);
@@ -115,7 +128,9 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     request.getSession().setAttribute(CURRENT_HOTEL_INFO, JSONObject.toJSONString(hotel));
                     request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
                     request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
-                    return findMemberByBusId(request, response, hotel.getBusId());
+                    if(!findMemberByBusId(request, response, busId)){
+                        throw new ResponseEntityException(ResponseEnums.NEED_LOGIN);
+                    }
                 } else {
                     throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
                 }
@@ -143,8 +158,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             String redirectUrl = request.getRequestURL() + "";
             LOGGER.info("会员信息为空，进去登录或授权 , 参数: busId : {} , redirectUrl : {} ", busId, redirectUrl);
             // 会员信息为空 重定向授权
-            // 重定向到授权/登录地址 重定向地址 为什么不加密?
-            response.sendRedirect(authorizeMember(request, busId, redirectUrl));
+            // 重定向授权地址 需要加入重定向地址
             return false;
         }
         return true;
@@ -177,7 +191,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     /**
      * 授权获取会员信息并重定向回来
      *
-     * @param request
+     * @param request     HttpServletRequest
      * @param busId       商家ID
      * @param redirectUrl 重定向地址
      * @return URL地址
@@ -237,17 +251,13 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         return result;
     }
 
-    public static void main(String[] args) {
-        Map<String, String> map = new HashMap<>(2);
-        map.put("1", "23");
-        map.put("2", "Map存储超过了");
-        map.put("3", "Map存储超过了3");
-        map.put("4", "Map存储超过了2");
-
-        System.out.println(map.get("1"));
-        System.out.println(map.get("2"));
-        System.out.println(map.get("4"));
-        System.out.println(map.size());
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        String url = "https://deeptel.com.cn//phoneLoginController/33/79B4DE7C/phonelogin.do?returnKey=hotel1510621956750#1231saldaslkdjaldj#31142222";
+        String urlencode = URLEncoder.encode(url,"utf-8");
+        String urldecode = URLDecoder.decode(urlencode,"utf-8");
+        System.out.println("原始地址："+url);
+        System.out.println("加密后的地址："+urlencode);
+        System.out.println("解密后的地址："+urldecode);
     }
 
 
