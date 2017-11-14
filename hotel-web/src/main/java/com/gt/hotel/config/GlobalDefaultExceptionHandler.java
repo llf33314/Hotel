@@ -4,6 +4,7 @@ import com.gt.hotel.dto.ResponseErrorDTO;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.BaseException;
 import com.gt.hotel.exception.BusinessException;
+import com.gt.hotel.exception.NeedLoginException;
 import com.gt.hotel.exception.ResponseEntityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,8 @@ public class GlobalDefaultExceptionHandler {
         logger.error("异常原因：{} , 异常信息：{} , 请求地址：{}", e.getCause(), e.getMessage(), request.getRequestURL(), e);
         if (e instanceof ResponseEntityException || e instanceof BusinessException) {
             return ResponseErrorDTO.createByErrorCodeMessage(e.getCode(), e.getMessage(), e.getRedirectUrl());
+        } else if (e instanceof NeedLoginException) {
+            return ResponseErrorDTO.createByErrorCodeMessage(e.getCode(), e.getMessage(), ((NeedLoginException) e).getBusId(), e.getRedirectUrl());
         } else {
             return ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.ERROR.getCode(), e.getMessage(), e.getRedirectUrl());
         }

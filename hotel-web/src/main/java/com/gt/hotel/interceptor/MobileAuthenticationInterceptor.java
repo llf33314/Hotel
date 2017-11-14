@@ -1,6 +1,5 @@
 package com.gt.hotel.interceptor;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -9,6 +8,7 @@ import com.gt.api.util.SessionUtils;
 import com.gt.hotel.annotation.MobileLoginRequired;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.enums.ResponseEnums;
+import com.gt.hotel.exception.NeedLoginException;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.RedisCacheUtil;
@@ -29,7 +29,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.gt.hotel.constant.CommonConst.*;
@@ -118,11 +117,11 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
                     request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
                 }
-                if (!findMemberByBusId(request, response, busId)) {
-//                    String redirectUrl = request.getRequestURL().toString();
-//                    redirectUrl = URLEncoder.encode("&return=" + redirectUrl, "utf-8");
+                // 获取会员信息
+                Member member = SessionUtils.getLoginMember(request, busId);
+                if (member == null) {
                     String url = authorizeMember(request, busId);
-                    throw new ResponseEntityException(ResponseEnums.NEED_LOGIN, url);
+                    throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId, url);
                 }
             } else {
                 if (hotelId != null) {
@@ -132,38 +131,16 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     request.getSession().setAttribute(CURRENT_HOTEL_INFO, JSONObject.toJSONString(hotel));
                     request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
                     request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
-                    if (!findMemberByBusId(request, response, busId)) {
-//                        String redirectUrl = request.getRequestURL().toString();
-//                        redirectUrl = URLEncoder.encode("&return=" + redirectUrl, "utf-8");
+                    // 获取会员信息
+                    Member member = SessionUtils.getLoginMember(request, busId);
+                    if (member == null) {
                         String url = authorizeMember(request, busId);
-                        throw new ResponseEntityException(ResponseEnums.NEED_LOGIN, url);
+                        throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId, url);
                     }
                 } else {
                     throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
                 }
             }
-        }
-        return true;
-    }
-
-    /**
-     * 获取(商家粉丝)会员信息
-     * <p>
-     * 获取失败后，会自动重定向至授权or登录地址
-     *
-     * @param request  HttpServletRequest
-     * @param response HttpServletResponse
-     * @param busId    商家ID
-     * @return boolean
-     * @throws Exception
-     */
-    private boolean findMemberByBusId(HttpServletRequest request, HttpServletResponse response, Integer busId) throws Exception {
-        // 获取会员信息
-        Member member = SessionUtils.getLoginMember(request, busId);
-        if (member == null) {
-            // 会员信息无法获取 则需要重新授权
-            // 会员信息为空 重定向授权
-            return false;
         }
         return true;
     }
@@ -195,9 +172,8 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     /**
      * 授权获取会员信息并重定向回来
      *
-     * @param request     HttpServletRequest
-     * @param busId       商家ID
-     * @param redirectUrl 重定向地址
+     * @param request HttpServletRequest
+     * @param busId   商家ID
      * @return URL地址
      * @throws Exception
      */
@@ -222,18 +198,15 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                 return "";
             }
         }
-        String otherRedisKey = "hotel" + System.currentTimeMillis();
-        Map<String, Object> queryMap = new HashMap<>(3);
-        // 设置重定向 redis 信息
-//        LOGGER.debug("otherRedisKey : {} , redirectUrl : {}", otherRedisKey, redirectUrl);
+        return webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMemberNew");
+        /*Map<String, Object> queryMap = new HashMap<>(3);
         String redirectUrl = URLEncoder.encode(request.getRequestURL().toString(), "utf-8");
         queryMap.put("browser", browser);
         queryMap.put("busId", busId);
         queryMap.put("uclogin", null);
         queryMap.put("returnUrl", redirectUrl);
         String params = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
-        LOGGER.info("授权地址：{}{}", webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMember") + params, JSON.toJSONString(queryMap));
-        return webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMemberNew") + params;
+        LOGGER.info("授权地址：{}{}", webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMember") + params, JSON.toJSONString(queryMap));*/
     }
 
     /**

@@ -17,11 +17,15 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  */
 @JsonSerialize(typing = DEFAULT_TYPING)
 public class ResponseErrorDTO<T> extends ResponseDTO<T> implements Serializable {
+
     @Getter
     private String redirectUrl;
+    @Getter
+    private Integer busId;
 
-    private ResponseErrorDTO(int status, String msg, T data, String url) {
+    private ResponseErrorDTO(int status, String msg, T data, Integer busId, String url) {
         super(status, msg, data);
+        this.busId = busId;
         this.redirectUrl = url;
     }
 
@@ -37,10 +41,13 @@ public class ResponseErrorDTO<T> extends ResponseDTO<T> implements Serializable 
         return createByErrorCodeMessage(errorCode, errorMessage, null, url);
     }
 
-    public static <T> ResponseErrorDTO<T> createByErrorCodeMessage(int errorCode, String errorMessage, T data, String url) {
-        return new ResponseErrorDTO<>(errorCode, errorMessage, data, url);
+    public static <T> ResponseErrorDTO<T> createByErrorCodeMessage(int errorCode, String errorMessage, Integer busId, String url) {
+        return createByErrorCodeMessage(errorCode, errorMessage, null, busId, url);
     }
 
+    public static <T> ResponseErrorDTO<T> createByErrorCodeMessage(int errorCode, String errorMessage, T data, Integer busId, String url) {
+        return new ResponseErrorDTO<>(errorCode, errorMessage, data, busId, url);
+    }
 
 
     public static void main(String[] args) {
