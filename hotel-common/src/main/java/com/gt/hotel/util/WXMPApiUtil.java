@@ -425,9 +425,9 @@ public class WXMPApiUtil {
      * @return JSONObject
      * @throws SignException
      */
-    public JSONObject setRedisStorage(String otherRedisKey, String redirectUrl, Integer setime) throws SignException {
+    public JSONObject setRedisStorage(String otherRedisKey, String redirectUrl, Long setime) throws SignException {
         if (setime == null || setime == 0) {
-            setime = 300;
+            setime = 300L;
         }
         JSONObject redisMap = new JSONObject();
         redisMap.put("redisKey", otherRedisKey);

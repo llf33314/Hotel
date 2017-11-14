@@ -9,6 +9,21 @@ package com.gt.hotel.constant;
  */
 public final class CommonConst {
 
+    /****************************** 会话(Session)信息 ******************************/
+    /**
+     * 当前商家ID
+     */
+    public static final String CURRENT_BUS_ID     = "hotel:current_bus_id";
+    /**
+     * 当前酒店信息
+     */
+    public static final String CURRENT_HOTEL_INFO = "hotel:current_hotel_info";
+    /**
+     * 当前酒店ID
+     */
+    public static final String CURRENT_HOTEL_ID   = "hotel:current_hotel_id";
+
+
     /****************************** 模块类型 ******************************/
 
     /**

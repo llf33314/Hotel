@@ -3,6 +3,7 @@ package com.gt.hotel.dto;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gt.hotel.enums.ResponseEnums;
+import lombok.Getter;
 
 import java.io.Serializable;
 
@@ -16,12 +17,12 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  */
 @JsonSerialize(typing = DEFAULT_TYPING)
 public class ResponseErrorDTO<T> extends ResponseDTO<T> implements Serializable {
-
-    private String url;
+    @Getter
+    private String redirectUrl;
 
     private ResponseErrorDTO(int status, String msg, T data, String url) {
         super(status, msg, data);
-        this.url = url;
+        this.redirectUrl = url;
     }
 
     public static <T> ResponseErrorDTO<T> createByError() {
@@ -40,13 +41,11 @@ public class ResponseErrorDTO<T> extends ResponseDTO<T> implements Serializable 
         return new ResponseErrorDTO<>(errorCode, errorMessage, data, url);
     }
 
-    public String getUrl() {
-        return url;
-    }
+
 
     public static void main(String[] args) {
         ResponseErrorDTO<Object> error = ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getMsg());
-        System.out.println(" url " + error.getUrl());
+        System.out.println(" url " + error.getRedirectUrl());
         System.out.println(JSONObject.toJSON(error));
     }
 

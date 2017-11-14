@@ -1,6 +1,12 @@
 package com.gt.hotel.interceptor;
 
+import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
+import static com.gt.hotel.constant.CommonConst.CURRENT_HOTEL_ID;
+import static com.gt.hotel.constant.CommonConst.CURRENT_HOTEL_INFO;
+
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,22 +69,19 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     private THotelService hotelService;
 
     /**
-     *
+     * 路径上获取酒店ID
      */
-    public static final String CURRENT_BUS_ID     = "hotel:current_bus_id";
-    /**
-     *
-     */
-    public static final String CURRENT_HOTEL_INFO = "hotel:current_hotel_info";
-    /**
-     *
-     */
-    public static final String CURRENT_HOTEL_ID   = "hotel:current_hotel_id";
-    /**
-     *
-     */
-    public static final String HOTEL_ID           = "hotelId";
+    public static final String HOTEL_ID = "hotelId";
 
+    /**
+     * 进入方法前，判断接口是否需要登录
+     * 如果需要登录，告诉前端，前端执行并判断
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 如果不是映射到方法直接通过
@@ -119,7 +122,9 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
                     request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
                 }
-                return findMemberByBusId(request, response, busId);
+                if(!findMemberByBusId(request, response, busId)){
+                    throw new ResponseEntityException(ResponseEnums.NEED_LOGIN,authorizeMember(request,busId,"sss"));
+                }
             } else {
                 if (hotelId != null) {
                     THotel hotel = findHotelById(hotelId);
@@ -128,7 +133,9 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     request.getSession().setAttribute(CURRENT_HOTEL_INFO, JSONObject.toJSONString(hotel));
                     request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
                     request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
-                    return findMemberByBusId(request, response, hotel.getBusId());
+                    if(!findMemberByBusId(request, response, busId)){
+                        throw new ResponseEntityException(ResponseEnums.NEED_LOGIN);
+                    }
                 } else {
                     throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
                 }
@@ -156,13 +163,18 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             String redirectUrl = request.getRequestURL() + "";
             LOGGER.info("会员信息为空，进去登录或授权 , 参数: busId : {} , redirectUrl : {} ", busId, redirectUrl);
             // 会员信息为空 重定向授权
-            // 重定向到授权/登录地址 重定向地址 为什么不加密?
-            response.sendRedirect(authorizeMember(request, busId, redirectUrl));
+            // 重定向授权地址 需要加入重定向地址
             return false;
         }
         return true;
     }
 
+    /**
+     * 获取酒店信息
+     *
+     * @param hotelId 酒店ID
+     * @return THotel
+     */
     public THotel findHotelById(Integer hotelId) {
         Wrapper<THotel> wrapper = new EntityWrapper<>();
         wrapper.eq("id", hotelId).eq("mark_modified", 0);
@@ -184,39 +196,40 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     /**
      * 授权获取会员信息并重定向回来
      *
-     * @param request
+     * @param request     HttpServletRequest
      * @param busId       商家ID
      * @param redirectUrl 重定向地址
      * @return URL地址
      * @throws Exception
      */
     private String authorizeMember(HttpServletRequest request, Integer busId, String redirectUrl) throws Exception {
-        LOGGER.debug("进入--授权方法！");
         Integer browser = judgeBrowser(request);
         //参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器需要登录
-        JSONObject wxpublic = wxmpApiUtil.getWxPulbicMsg(busId);
-        Integer code = wxpublic.getInteger("code");
+        JSONObject wxPublic = wxmpApiUtil.getWxPulbicMsg(busId);
+        Integer code = wxPublic.getInteger("code");
         //判断商家信息 1是否过期 2公众号是否变更过
         if (code.equals(-1)) {
             //请求错误
             return "";
         } else if (code.equals(0)) {
-            String guoqi = wxpublic.getString("guoqi");
+            String guoqi = wxPublic.getString("guoqi");
             //商家已过期
             if (!StringUtils.isBlank(guoqi)) {
-                Object guoqiUrl = wxpublic.get("guoqiUrl");
-                return "redirect:" + guoqiUrl;
+                Object overdue = wxPublic.get("guoqiUrl");
+                return "redirect:" + overdue;
             }
-            String remoteUcLogin = wxpublic.getString("remoteUcLogin");
+            String remoteUcLogin = wxPublic.getString("remoteUcLogin");
             if (!StringUtils.isBlank(remoteUcLogin)) {
                 return "";
             }
         }
         String otherRedisKey = "hotel" + System.currentTimeMillis();
         Map<String, Object> queryMap = new HashMap<>(3);
-        // redis
-        this.wxmpApiUtil.setRedisStorage(otherRedisKey, redirectUrl, null);
-        LOGGER.debug("otherRedisKey : {} , redirectUrl : {}", otherRedisKey,redirectUrl);
+        // 设置重定向 redis 信息
+        redisCacheUtil.set(otherRedisKey, redirectUrl, 300L);
+        this.wxmpApiUtil.setRedisStorage(otherRedisKey, redirectUrl, 300L);
+        LOGGER.debug("otherRedisKey : {} , redirectUrl : {}", otherRedisKey, redirectUrl);
+        queryMap.put("otherRedisKey", otherRedisKey);
         queryMap.put("browser", browser);
         queryMap.put("busId", busId);
         queryMap.put("uclogin", null);
@@ -243,17 +256,13 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         return result;
     }
 
-    public static void main(String[] args) {
-        Map<String, String> map = new HashMap<>(2);
-        map.put("1", "23");
-        map.put("2", "Map存储超过了");
-        map.put("3", "Map存储超过了3");
-        map.put("4", "Map存储超过了2");
-
-        System.out.println(map.get("1"));
-        System.out.println(map.get("2"));
-        System.out.println(map.get("4"));
-        System.out.println(map.size());
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        String url = "https://deeptel.com.cn//phoneLoginController/33/79B4DE7C/phonelogin.do?returnKey=hotel1510621956750#1231saldaslkdjaldj#31142222";
+        String urlencode = URLEncoder.encode(url,"utf-8");
+        String urldecode = URLDecoder.decode(urlencode,"utf-8");
+        System.out.println("原始地址："+url);
+        System.out.println("加密后的地址："+urlencode);
+        System.out.println("解密后的地址："+urldecode);
     }
 
 
