@@ -64,6 +64,7 @@ spring:
 ### 设置 Redis session 共享
 redisSession:
   domainName: deeptel.com.cn
+#  domainName: yifriend.net
   cookiePath: /
   cookieName: WXMPJSESSIONID
 
@@ -116,6 +117,7 @@ hotel:
         refundErp: ${hotel.webserver.WxmpService.serviceUrl}/memberAPI/member/refundErp #会员结算退款
         setRedisStorage: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/redis/SetExApi.do  # 存储redis重定向地址
         authorizeMember: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody= # 授权地址
+        authorizeMemberNew: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMemberNew.do?queryBody= # 新的授权地址
     ShortService:
       signKey: goodtom2016@shortUrl.
       serviceUrl: http://short.duofee.com

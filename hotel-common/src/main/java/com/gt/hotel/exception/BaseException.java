@@ -26,6 +26,10 @@ public class BaseException extends RuntimeException {
      * 重定向地址
      */
     private String redirectUrl;
+    /**
+     * 数据包 Json
+     */
+    private String data;
 
     public BaseException(String message) {
         super(message);
