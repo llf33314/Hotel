@@ -38,6 +38,10 @@ public class TOrderCoupons extends Model<TOrderCoupons> {
      * 优惠券数量
      */
 	private Integer couponsNum;
+	/**
+	 * 优惠券折扣金额
+	 */
+	private Integer couponsDiscount;
 
 
 	@Override

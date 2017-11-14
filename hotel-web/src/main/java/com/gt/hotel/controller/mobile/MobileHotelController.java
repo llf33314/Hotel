@@ -212,21 +212,5 @@ public class MobileHotelController extends BaseController {
 		}
     	return ResponseDTO.createBySuccess();
     }
-
-    @SuppressWarnings("rawtypes")
-	@ApiOperation(value = "立即预定", notes = "立即预定")
-	@PostMapping(value = "/book", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO roomBook(HotelOrderParameter.BookOrder order, HttpServletRequest request) {
-		
-		//TODO book order
-		
-		
-		
-		
-		
-		
-		
-		return ResponseDTO.createBySuccess();
-	}
     
 }
