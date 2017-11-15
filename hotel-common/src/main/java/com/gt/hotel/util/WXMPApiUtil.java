@@ -409,7 +409,7 @@ public class WXMPApiUtil {
      * @throws SignException
      */
     public JSONObject getWxPulbicMsg(Integer busId) throws SignException {
-        JSONObject param = new JSONObject();
+        Map<String, Object> param = new HashMap<>();
         param.put("busId", busId);
         JSONObject result = getCApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("getWxPulbicMsg"));
         return result;
@@ -444,9 +444,9 @@ public class WXMPApiUtil {
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
 //        	param.put("pushName", "hotel:test");
 //        	param.put("pushMsg", "test");
-        	param.put("busId", 33);
-        	String url = "https://deeptel.com.cn" + "/8A5DA52E/busUserApi/getWxPulbicMsg.do";
-        	String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
+            param.put("busId", 33);
+            String url = "https://deeptel.com.cn" + "/8A5DA52E/busUserApi/getWxPulbicMsg.do";
+            String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
 
 //        	param.put("cardNo", "13433550667");
 //        	param.put("busId", 33);
@@ -454,7 +454,7 @@ public class WXMPApiUtil {
 //        	String url = "http://member.yifriend.net" + "/memberAPI/member/findMemberCard";
 //        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
 //
-        	System.err.println(result);
+            System.err.println(result);
 
 //            String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
 //            String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";

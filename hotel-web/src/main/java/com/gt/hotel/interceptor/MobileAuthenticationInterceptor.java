@@ -133,10 +133,10 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
                     request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
                     // 获取会员信息
-                    Member member = SessionUtils.getLoginMember(request, busId);
+                    Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
                     if (member == null) {
-                        String url = authorizeMember(request, busId);
-                        throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId, url);
+                        String url = authorizeMember(request, hotel.getBusId());
+                        throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.getBusId(), url);
                     }
                 } else {
                     throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
