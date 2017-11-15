@@ -30,7 +30,6 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.param.HotelMobileParameter;
-import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
 import com.gt.hotel.util.WXMPApiUtil;
@@ -105,7 +104,7 @@ public class MobileHotelController extends BaseController {
         return model;
     }
 
-//    @MobileLoginRequired
+    @MobileLoginRequired
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {

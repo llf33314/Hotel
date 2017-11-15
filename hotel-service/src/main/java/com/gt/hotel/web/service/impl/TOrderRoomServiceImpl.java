@@ -1,12 +1,14 @@
 package com.gt.hotel.web.service.impl;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.api.bean.session.Member;
@@ -111,6 +113,39 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	@Override
 	public MobileRoomOrderVo queryMobileRoomOrderOne(Integer hotelId, Integer orderId, Member member) {
 		return tOrderRoomDAO.queryMobileRoomOrderOne(hotelId, orderId, member.getId());
+	}
+
+	@Transactional
+	@Override
+	public JSONObject moblieHotelRoomPayNotifyUrl(Map<String, Object> param, Integer orderId) {
+		JSONObject json = new JSONObject();
+    	if(param.get("out_trade_no") == null) {
+    		throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+    	}
+    	int payType = Integer.valueOf(param.get("payType").toString());
+    	Date date = new Date();
+    	Wrapper<TOrder> wrapper = new EntityWrapper<>();
+    	wrapper.eq("id", orderId);
+    	wrapper.eq("order_num", param.get("out_trade_no"));
+		TOrder tOrder = orderService.selectOne(wrapper);
+    	tOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
+    	tOrder.setPayTime(date);
+		tOrder.setPayType(payType == 0 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
+		if(!tOrder.updateById()) {
+			throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+		}
+		Wrapper<TOrderRoom> fwrapper = new EntityWrapper<>();
+		fwrapper.eq("order_id", orderId);
+		fwrapper.eq("order_num", param.get("out_trade_no"));
+		TOrderRoom orderRoom = orderRoomService.selectOne(fwrapper);
+		orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
+		orderRoom.setPayTime(date);
+		if(!orderRoom.updateById()) {
+			throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+		}
+		json.put("code", 0);
+		json.put("msg", "支付成功");
+		return json;
 	}
 	
 }

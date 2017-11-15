@@ -4,6 +4,10 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.vo.MobileRoomOrderVo;
+
+import java.util.Map;
+
+import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseService;
 
@@ -34,5 +38,13 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @return
 	 */
 	MobileRoomOrderVo queryMobileRoomOrderOne(Integer hotelId, Integer orderId, Member member);
+
+	/**
+	 * 支付异步回调
+	 * @param param
+	 * @param orderId
+	 * @return
+	 */
+	JSONObject moblieHotelRoomPayNotifyUrl(Map<String, Object> param, Integer orderId);;
 
 }
