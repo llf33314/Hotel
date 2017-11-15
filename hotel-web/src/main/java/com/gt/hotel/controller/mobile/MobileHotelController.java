@@ -22,6 +22,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
+import com.gt.api.util.SessionUtils;
 import com.gt.hotel.annotation.MobileLoginRequired;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -79,7 +80,7 @@ public class MobileHotelController extends BaseController {
     @Autowired
     TOrderRoomService tOrderRoomService;
 
-    @MobileLoginRequired
+//    @MobileLoginRequired
     @ApiOperation(value = "首页", notes = "首页")
     @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("hotelId") Integer hotelId, ModelAndView model) {
@@ -125,7 +126,8 @@ public class MobileHotelController extends BaseController {
     public ResponseDTO<Page<MobileRoomCategoryVo>> mobileRoomCategoryR(@PathVariable("hotelId") Integer hotelId, 
     		@ModelAttribute RoomCategoryParameter.MobileQueryRoomCategory req, HttpServletRequest request) {
     	THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+    	Member member1 = SessionUtils.getLoginMember(request, hotel.getBusId());
+    	System.err.println(JSONObject.toJSONString(member1));
     	//test
     	Member member = new Member();
     	member.setId(1071);

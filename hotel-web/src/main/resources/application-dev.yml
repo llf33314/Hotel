@@ -63,7 +63,7 @@ spring:
 
 ### 设置 Redis session 共享
 redisSession:
-  domainName: deeptel.com.cn
+  domainName: .deeptel.com.cn
 #  domainName: yifriend.net
   cookiePath: /
   cookieName: WXMPJSESSIONID

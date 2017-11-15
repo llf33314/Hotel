@@ -94,6 +94,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.setAllowCredentials(true);
         return corsConfiguration;
     }
 

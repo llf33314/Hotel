@@ -99,7 +99,6 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             Map attribute = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
             // hotelId
             Integer hotelId = MapUtils.getInteger(attribute, HOTEL_ID);
-            System.err.println("check:{"+busId+"}");
             if (busId != null && busId > 0 && "null".equals(busId)) {
                 // 访问地址的酒店ID 与 redis 内存储的hotelid 不匹配，则重新获取
                 if (!hotelId.equals(sessionHotelId)) {
@@ -120,6 +119,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                 }
                 // 获取会员信息
                 Member member = SessionUtils.getLoginMember(request, busId);
+                System.err.println("check:{"+member+"}");
                 if (member == null) {
                     String url = authorizeMember(request, busId);
                     throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId, url);
@@ -134,6 +134,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
                     // 获取会员信息
                     Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+                    System.err.println(member);
                     if (member == null) {
                         String url = authorizeMember(request, hotel.getBusId());
                         throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.getBusId(), url);
