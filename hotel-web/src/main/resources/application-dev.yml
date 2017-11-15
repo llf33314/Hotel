@@ -1,21 +1,35 @@
-######################## Spring Profile 切换环境 ########################
-## 切换日志环境、数据源等配置
-#  默认的profile为dev，其他环境通过指定启动参数使用不同的profile，比如：
-#   测试环境：java -jar my-spring-boot.jar --spring.profiles.active=test
-#   生产环境：java -jar my -spring-boot.jar --spring.profiles.active=prod
-#  注意 "---" 表示：一组配置
-# 开发环境配置
+#============================================#
+#===== Development Environment Settings =====#
+#============================================#
 spring:
-# profiles: dev
-#自动重启默认开发时开启
  devtools:
   restart:
    enabled: true
+# 202.51 redis 6379      ----->主
+#  202.51 sentinel 26379  ---->哨兵1
+#  202.50 redis 9379      ----->从
+#  202.50 sentinel 29379  ---->哨兵2
+#  202.53 redis 9379      ----->从
+#  202.53 sentinel 29379  ---->哨兵3
  redis:
    host: 113.106.202.51
    port: 6379
    password: gt@123456
    database: 3
+   timeout: 20000
+   cluster:
+       nodes: 113.106.202.50:9379,113.106.202.53:9379
+       maxRedirects: 6
+   sentinel:
+     # comma-separated list of host:port pairs  哨兵的配置列表
+     nodes: 113.106.202.51:26379,113.106.202.50:29379,113.106.202.53:29379
+     # name of Redis server  哨兵监听的Redis server的名称
+     master: mymaster
+   pool:
+     max-wait: -1
+     min-idle: 0
+     max-active: 8
+     max-idle: 8
  session:
    store-type: redis
  datasource:
@@ -58,23 +72,25 @@ spring:
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
      aop-patterns: com.gt.hotel.*.service.*
 
-############################# 开发环境配置 #############################
-
-
-### 设置 Redis session 共享
+#============================================#
+#========== Redis Session Settings ==========#
+#============================================#
 redisSession:
   domainName: .deeptel.com.cn
 #  domainName: yifriend.net
   cookiePath: /
   cookieName: WXMPJSESSIONID
 
-######################## swagger ########################
+#============================================#
+#============= swagger Settings =============#
+#============================================#
 # 是否开启Swagger接口展示
 swagger:
   show: true
 
-
-### WXMP 配置属性 ###
+#============================================#
+#=============== WXMP Settings ==============#
+#============================================#
 wxmp:
   imageurl:
     prefixurl: http://maint.duofriend.com/upload

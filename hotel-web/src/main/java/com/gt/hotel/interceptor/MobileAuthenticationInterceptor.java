@@ -48,8 +48,10 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
 
 
     private static final Logger LOGGER        = LoggerFactory.getLogger(MobileAuthenticationInterceptor.class);
-    // 微信地授权 取会员信息 重定向3次
-    private static       int    redirectCount = 3;
+    /**
+     * 微信地授权 取会员信息 重定向3次
+     */
+    private              int    redirectCount = 3;
 
     @Autowired
     private RedisCacheUtil redisCacheUtil;
@@ -90,7 +92,6 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         MobileLoginRequired annotation = method.getAnnotation(MobileLoginRequired.class);
         // 移动端有 @MobileLoginRequired 注解，需要验证
         if (annotation != null) {
-            LOGGER.debug("sessionId : {} ", request.getSession().getId());
             // 酒店信息
             String hotelInfoJson = (String) request.getSession().getAttribute(CURRENT_HOTEL_INFO);
             // 从session中获取 当前商家ID

@@ -1,5 +1,19 @@
 package com.gt.hotel.interceptor;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.gt.hotel.util.RedisCacheUtil;
+import com.gt.hotel.util.WXMPApiUtil;
+import com.gt.hotel.web.service.THotelService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,33 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.gt.api.bean.session.Member;
-import com.gt.api.util.SessionUtils;
-import com.gt.hotel.base.BaseController;
-import com.gt.hotel.entity.THotel;
-import com.gt.hotel.util.RedisCacheUtil;
-import com.gt.hotel.util.WXMPApiUtil;
-import com.gt.hotel.web.service.THotelService;
-
 /**
  * 拦截器
  * @author Reverien9@gmail.com
  * 2017年11月8日 下午2:54:16
  */
-@Component
+//@Component
 public class SecurityInterceptor extends HandlerInterceptorAdapter {
 	
 	protected static final Logger logger = LoggerFactory.getLogger(SecurityInterceptor.class);
