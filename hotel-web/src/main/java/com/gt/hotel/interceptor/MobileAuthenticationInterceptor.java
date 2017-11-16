@@ -100,7 +100,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             Map attribute = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
             // hotelId
             Integer hotelId = MapUtils.getInteger(attribute, HOTEL_ID);
-            if (busId != null && busId > 0 && "null".equals(busId)) {
+            if (busId != null && busId > 0) {
                 // 访问地址的酒店ID 与 redis 内存储的hotelid 不匹配，则重新获取
                 if (!hotelId.equals(sessionHotelId)) {
                     // 数据库查询
