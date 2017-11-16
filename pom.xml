@@ -39,8 +39,8 @@
         <dev.lib.mybatis>1.1.1</dev.lib.mybatis>
         <dev.lib.druid-spring-boot-starter>1.1.2</dev.lib.druid-spring-boot-starter>
         <dev.lib.mysql>5.1.39</dev.lib.mysql>
-        <dev.lib.mybatis-plus>2.1.0</dev.lib.mybatis-plus>
-        <dev.lib.mybatisplus-spring-boot-starter>1.0.4</dev.lib.mybatisplus-spring-boot-starter>
+        <dev.lib.mybatis-plus>2.1.5</dev.lib.mybatis-plus>
+        <dev.lib.mybatisplus-spring-boot-starter>1.0.5</dev.lib.mybatisplus-spring-boot-starter>
         <dev.lib.velocity>1.7</dev.lib.velocity>
         <dev.lib.commons-lang3>3.5</dev.lib.commons-lang3>
         <dev.lib.nekohtml>1.9.22</dev.lib.nekohtml>
@@ -55,7 +55,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.5.RELEASE</version>
+        <version>1.5.8.RELEASE</version>
     </parent>
 
 

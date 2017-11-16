@@ -16,7 +16,7 @@ spring:
    port: 6379
    password: gt@123456
    database: 3
-   timeout: 20000
+   timeout: 1000
    cluster:
        nodes: 113.106.202.50:9379,113.106.202.53:9379
        maxRedirects: 6
@@ -28,8 +28,8 @@ spring:
    pool:
      max-wait: -1
      min-idle: 0
-     max-active: 8
-     max-idle: 8
+     max-active: 200
+     max-idle: 20
  session:
    store-type: redis
  datasource:
@@ -71,6 +71,14 @@ spring:
        # 如果spring.datasource.druid.aop-patterns要代理的类没有定义interface请设置spring.aop.proxy-target-class=true
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
      aop-patterns: com.gt.hotel.*.service.*
+
+#====================================================#
+#=============== Mybatis-Plus Settings ==============#
+#====================================================#
+mybatis-plus:
+  global-config:
+    #刷新mapper 调试神器
+    refresh-mapper: true
 
 #============================================#
 #========== Redis Session Settings ==========#
@@ -146,7 +154,8 @@ hotel:
       ApiMap: # Api接口列表
         findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard   # 获取会员信息
         findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId   # 包含会员信息、微信卡券、多粉卡券
-        wxmemberPayRefund: ${hotel.webserver.MemberService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do  # 微信退款
+        wxmemberPayRefund: ${hotel.webserver.MemberService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do # 微信退款
+
 
 
 
