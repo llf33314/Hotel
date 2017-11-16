@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -103,7 +104,7 @@ public class MobileRoomController extends BaseController {
 	
 	@ApiOperation(value = "支付订单详情", notes = "支付订单详情")
     @GetMapping(value = "{hotelId}/order/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<MobileRoomOrderVo> moblieHotelFoodOrderR(
+    public ResponseDTO<MobileRoomOrderVo> moblieHotelRoomOrderR(
     		@PathVariable("hotelId") Integer hotelId,
     		@PathVariable("orderId") Integer orderId, 
     		HttpServletRequest request) {
@@ -113,7 +114,7 @@ public class MobileRoomController extends BaseController {
 	
 	@ApiOperation(value = "立即支付", notes = "立即支付")
     @GetMapping(value = "{hotelId}/pay/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ModelAndView moblieHotelFoodPay(
+    public ModelAndView moblieHotelRoomPay(
     		@PathVariable("hotelId") Integer hotelId,  
     		@PathVariable("orderId") Integer orderId,
     		HttpServletRequest request, 
@@ -145,7 +146,7 @@ public class MobileRoomController extends BaseController {
 	
 	@ApiOperation(value = "支付异步回调", notes = "支付异步回调", hidden = true)
     @PostMapping(value = "{hotelId}/notifyUrl/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public JSONObject moblieHotelFoodPayNotifyUrl(@PathVariable("hotelId") Integer hotelId,
+    public JSONObject moblieHotelRoomPayNotifyUrl(@PathVariable("hotelId") Integer hotelId,
     		@PathVariable("orderId") Integer orderId, Map<String, Object> param,
     		HttpServletRequest request) {
     	JSONObject json = new JSONObject();
@@ -153,6 +154,23 @@ public class MobileRoomController extends BaseController {
 		json.put("msg", "支付失败");
 		json = tOrderRoomService.moblieHotelRoomPayNotifyUrl(param, orderId);
 		return json;
+    }
+	
+	@ApiOperation(value = "价格计算", notes = "价格计算")
+    @GetMapping(value = "{hotelId}/getPrice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<Integer> moblieHotelRoomGetPrice(
+    		@PathVariable("hotelId") Integer hotelId,
+    		@ModelAttribute RoomMobileParameter.BookParam bookParam,
+    		HttpServletRequest request) {
+		Member member = getMember(request);
+		Integer price = 0;
+		try {
+			price = tOrderRoomService.MobilePriceCalculation(hotelId, member, bookParam);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseDTO.createByErrorMessage("价格计算出错");
+		}
+        return ResponseDTO.createBySuccess(price);
     }
 	
 }

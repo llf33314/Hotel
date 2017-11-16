@@ -134,20 +134,22 @@ public class MobileHotelController extends BaseController {
     	try {
     		if(member != null && member.getId() != null) {
     			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-    			JSONObject card = json.getJSONObject("data");
-    			Integer cardType = card.getInteger("ctId");
-    			List<MobileRoomCategoryVo> l = page.getRecords();
-    			for(MobileRoomCategoryVo m : l) {	//会员
-    				switch (cardType) {
-    				case CommonConst.CARD_TYPE_POINT_CARD:
-    					break;
-    				case CommonConst.CARD_TYPE_DISCOUNT_CARD:
-    					m.setDisplayPrice(Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue());
-    					break;
-    				case CommonConst.CARD_TYPE_VALUE_CARD:
-    					break;
-    				default:
-    					break;
+    			if(json != null) {
+    				JSONObject card = json.getJSONObject("data");
+    				Integer cardType = card.getInteger("ctId");
+    				List<MobileRoomCategoryVo> l = page.getRecords();
+    				for(MobileRoomCategoryVo m : l) {	//会员
+    					switch (cardType) {
+    					case CommonConst.CARD_TYPE_POINT_CARD:
+    						break;
+    					case CommonConst.CARD_TYPE_DISCOUNT_CARD:
+    						m.setDisplayPrice(Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue());
+    						break;
+    					case CommonConst.CARD_TYPE_VALUE_CARD:
+    						break;
+    					default:
+    						break;
+    					}
     				}
     			}
     		}

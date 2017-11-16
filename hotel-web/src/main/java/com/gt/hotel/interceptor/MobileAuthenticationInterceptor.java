@@ -94,14 +94,16 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
 //        if (annotation != null) {
     	// 酒店信息
     	
+    	SessionUtils.getLoginMember(request, 33);
+    	
     	//test
-    	Member member1 = new Member();
-    	member1.setId(1071);
-    	member1.setBusid(33);
-    	member1.setPhone("13433550667");
-    	member1.setPublicId(492);
-    	member1.setCardid("15338");
-    	SessionUtils.setLoginMember(request, member1);
+//    	Member member1 = new Member();
+//    	member1.setId(1071);
+//    	member1.setBusid(33);
+//    	member1.setPhone("13433550667");
+//    	member1.setPublicId(492);
+//    	member1.setCardid("15338");
+//    	SessionUtils.setLoginMember(request, member1);
     	//test
     	
     	String hotelInfoJson = (String) request.getSession().getAttribute(CURRENT_HOTEL_INFO);

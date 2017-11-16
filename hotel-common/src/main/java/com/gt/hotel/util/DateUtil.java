@@ -2,9 +2,14 @@ package com.gt.hotel.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -279,6 +284,36 @@ public class DateUtil {
         return dayOfWeek.getDisplayName(TextStyle.FULL, Locale.SIMPLIFIED_CHINESE);
     }
 
+    /**
+     * 两个日期相差的天数
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static int differentDays(Date beginDate, Date EndDate) {
+    	Calendar cal1 = Calendar.getInstance();
+    	cal1.setTime(beginDate);
+    	Calendar cal2 = Calendar.getInstance();
+    	cal2.setTime(EndDate);
+    	int day1= cal1.get(Calendar.DAY_OF_YEAR);
+    	int day2 = cal2.get(Calendar.DAY_OF_YEAR);
+    	int year1 = cal1.get(Calendar.YEAR);
+    	int year2 = cal2.get(Calendar.YEAR);
+    	if(year1 != year2) {
+    		int timeDistance = 0 ;
+    		for(int i = year1 ; i < year2 ; i ++){
+    			if(i%4==0 && i%100!=0 || i%400==0){
+    				timeDistance += 366;
+    			}else{
+    				timeDistance += 365;
+    			}
+    		}
+    		return timeDistance + (day2-day1) ;
+    	}else{
+    		return day2-day1;
+    	}
+    }
+    
     public static void main(String[] args) {
         System.out.println(stringToTimestamp("2016-05-05T15:22:09"));
         System.out.println(stringToTimestamp("2016-05-05 15:22:09"));

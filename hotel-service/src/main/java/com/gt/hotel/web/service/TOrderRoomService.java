@@ -45,6 +45,14 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @param orderId
 	 * @return
 	 */
-	JSONObject moblieHotelRoomPayNotifyUrl(Map<String, Object> param, Integer orderId);;
+	JSONObject moblieHotelRoomPayNotifyUrl(Map<String, Object> param, Integer orderId);
+
+	/**
+	 * 价格计算
+	 * @param member
+	 * @param bookParam
+	 * @return
+	 */
+	Integer MobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception;
 
 }

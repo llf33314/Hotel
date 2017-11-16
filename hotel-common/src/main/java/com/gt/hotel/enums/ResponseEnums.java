@@ -23,9 +23,10 @@ public enum ResponseEnums {
     OPERATING_ERROR(1004, "操作失败"),
     ORDER_STATUS_ERROR(1005, "订单状态错误"),
     PAY_STATUS_ERROR(1006, "支付状态错误"),
-    REFUNDS_ERROR(1008, "退款失败"),
     FAILED_TO_OBTAIN_MEMBER_INFORMATION(1007, "获取会员信息失败"),
-    BOOK_FAILED(1008, "下单失败"),
+    REFUNDS_ERROR(1008, "退款失败"),
+    BOOK_FAILED(1009, "下单失败"),
+    PRICE_FAILED(1010, "价格错误"),
 
     INFRASTRUCTRUE_ERROR(1998, "设施保存失败"),
     IMAGE_ERROR(1999, "图片保存失败"),

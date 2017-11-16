@@ -1,5 +1,8 @@
 package com.gt.hotel.web.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
@@ -21,12 +25,17 @@ import com.gt.hotel.entity.TOrderCoupons;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
+import com.gt.hotel.util.DateUtil;
+import com.gt.hotel.util.WXMPApiUtil;
+import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderCouponsService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
+import com.gt.hotel.web.service.TRoomCategoryService;
 
 /**
  * <p>
@@ -54,9 +63,26 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	@Autowired
 	TOrderRoomDAO tOrderRoomDAO;
 
+	@Autowired
+    WXMPApiUtil wXMPApiUtil;
+
+	@Autowired
+	TRoomCategoryService tRoomCategoryService;
+
+	@Autowired
+	THotelService tHotelService;
+	
 	@Transactional
 	@Override
 	public Integer MobileBookOrder(THotel hotel, Member member, BookParam bookParam) {
+		try {
+			if(!bookParam.getPayPrice().equals(MobilePriceCalculation(hotel.getId(), member, bookParam))) {
+				throw new ResponseEntityException(ResponseEnums.PRICE_FAILED);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
+		}
 		Date date = new Date();
 		TOrder order = new TOrder();
 		TOrderRoom orderRoom = new TOrderRoom();
@@ -146,6 +172,62 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		json.put("code", 0);
 		json.put("msg", "支付成功");
 		return json;
+	}
+
+	@Override
+	public Integer MobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception {
+		Integer price = 0;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(bookParam.getRoomInTime());
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		int ordinaryDays = 0;
+		int weekendDays = 0;
+		for(int i=0;i<days;i++) {
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+			int week = cal.get(Calendar.DAY_OF_WEEK);
+			if(week == Calendar.FRIDAY || week == Calendar.SATURDAY) {
+				weekendDays++;				
+			}else {
+				ordinaryDays++;
+			}
+		}
+		/* 会员 */
+		THotel hotel = tHotelService.selectById(hotelId);
+		MobileQueryRoomCategory req = new MobileQueryRoomCategory();
+		req.setCategoryId(bookParam.getCategoryId());
+		req.setRoomInTime(sdf.format(bookParam.getRoomInTime()));
+		req.setRoomOutTime(sdf.format(bookParam.getRoomOutTime()));
+		Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
+		JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+		JSONObject card = json.getJSONObject("data");
+		for(MobileRoomCategoryVo m : page.getRecords()) {
+			if(m.getId().equals(bookParam.getCategoryId())) {
+				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
+				if(card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
+					price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
+				}
+			}
+		}
+		
+		price += bookParam.getDeposit();
+		price *= bookParam.getNumber();
+		return price;
+	}
+	
+	public static void main(String[] args) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Integer days = DateUtil.differentDays(sdf.parse("2017-11-11 00:00:00"), sdf.parse("2017-11-18 00:00:00"));
+		System.err.println(days);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(sdf.parse("2017-11-11 00:00:00"));
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		for(int i=0;i<days;i++) {
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+			System.out.println(sdf.format(cal.getTime()));
+			System.out.println(cal.get(Calendar.DAY_OF_WEEK));
+		}
 	}
 	
 }
