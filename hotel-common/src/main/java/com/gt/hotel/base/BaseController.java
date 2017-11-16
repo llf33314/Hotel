@@ -67,11 +67,11 @@ public abstract class BaseController {
      * @param session HttpSession
      * @return int
      */
-    public Integer getLoginUserId(HttpSession session) {
-        Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
-        return 33;
-    }
-    public BusUser getLoginUserId(HttpServletRequest request) {
+//    public Integer getLoginUserId(HttpSession session) {
+//        Object o = session.getAttribute(CommonSessionConst.CURRENT_BUS_USER);
+//        return 33;
+//    }
+    public BusUser getLoginUser(HttpServletRequest request) {
     	return SessionUtils.getLoginUser(request);
     }
     

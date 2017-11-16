@@ -1,5 +1,36 @@
 package com.gt.hotel.controller.back;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -29,28 +60,10 @@ import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TAuthorizationService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
 
 /**
  * 酒店后台-ERP设置
@@ -88,12 +101,12 @@ public class HotelErpSetController extends BaseController {
     @ApiOperation(value = "保存 ERP前台设置", notes = "保存 ERP前台设置")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO erpSettingCU(@Validated @Param("参数") @RequestBody ERPParameter.ERPSave save, BindingResult bindingResult, HttpSession session) {
+    public ResponseDTO erpSettingCU(@Validated @Param("参数") @RequestBody ERPParameter.ERPSave save, BindingResult bindingResult, HttpServletRequest request) {
     	ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
-        Integer busid = getLoginUserId(session);
+        Integer busid = getLoginUser(request).getId();
         tHotelService.SaveHotelERP(busid, save);
         return ResponseDTO.createBySuccess();
     }
@@ -104,12 +117,12 @@ public class HotelErpSetController extends BaseController {
     @PostMapping(value = "{hotelId}/roomPermanent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
     public ResponseDTO roomPermanentCU(@Valid @Param("参数") @RequestBody RoomParameter.RoomPermanent per, 
-    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, BindingResult bindingResult, HttpSession session) {
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, BindingResult bindingResult, HttpServletRequest request) {
     	ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
-        Integer busId = getLoginUserId(session);
+        Integer busId = getLoginUser(request).getId();
         tRoomCategoryService.SaveRoomPermanent(busId, per);
         return ResponseDTO.createBySuccess();
     }
@@ -126,8 +139,8 @@ public class HotelErpSetController extends BaseController {
     @DeleteMapping(value = "{hotelId}/roomPermanent", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
     public ResponseDTO roomPermanentD(@RequestBody @ApiParam("长包房设置ID 数组") List<Integer> ids, 
-    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpSession session) {
-        Integer busId = getLoginUserId(session);
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
+        Integer busId = getLoginUser(request).getId();
         tRoomCategoryService.delRoomPermanent(busId, ids);
         return ResponseDTO.createBySuccess();
     }
@@ -202,8 +215,8 @@ public class HotelErpSetController extends BaseController {
     @PostMapping(value = "{hotelId}/author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
     public ResponseDTO authorDCU(@RequestBody @ApiParam("授权管理ID 数组") List<ERPParameter.AuthorSave> authors, 
-    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpSession session) {
-        Integer busid = getLoginUserId(session);
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
+        Integer busid = getLoginUser(request).getId();
         tAuthorizationService.saveAuthor(busid, authors);
         return ResponseDTO.createBySuccess();
     }
@@ -212,8 +225,8 @@ public class HotelErpSetController extends BaseController {
     @DeleteMapping(value = "{hotelId}/author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
     public ResponseDTO authorD(@RequestBody @ApiParam("授权管理ID 数组") List<Integer> ids, 
-    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpSession session) {
-        Integer busId = getLoginUserId(session);
+    		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
+        Integer busId = getLoginUser(request).getId();
         tAuthorizationService.delAuthor(busId, ids);
         return ResponseDTO.createBySuccess();
     }
@@ -281,7 +294,7 @@ public class HotelErpSetController extends BaseController {
     @SuppressWarnings("rawtypes")
     public ResponseDTO authorClose(@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, 
     		@Param("授权ID") @PathVariable("authorId") Integer authorId, HttpServletRequest request) {
-    	BusUser busUser = getLoginUserId(request);
+    	BusUser busUser = getLoginUser(request);
     	Wrapper<TAuthorization> wrapper = new EntityWrapper<>();
     	wrapper.eq("id", authorId);
 		TAuthorization entity = new TAuthorization();

@@ -12,7 +12,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -95,8 +93,8 @@ public class HotelController extends BaseController {
 
     @ApiOperation(value = "门店列表", notes = "门店列表")
     @GetMapping(value = "queryShop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<List<HotelShopInfo>> shopR(HttpSession session) {
-        Integer busid = getLoginUserId(session);
+    public ResponseDTO<List<HotelShopInfo>> shopR(HttpServletRequest request) {
+        Integer busid = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops = null;
         try {
             JSONObject json = WXMPApiUtil.queryWxShopByBusId(busid);
@@ -123,8 +121,8 @@ public class HotelController extends BaseController {
 
     @ApiOperation(value = "酒店列表", notes = "酒店列表")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<HotelVo>> hotelR(HotelQuery hpage, HttpSession session) {
-        Integer busid = getLoginUserId(session);
+    public ResponseDTO<Page<HotelVo>> hotelR(HotelQuery hpage, HttpServletRequest request) {
+        Integer busid = getLoginUser(request).getId();
         Page<HotelVo> page = tHotelService.queryHotelHome(busid, hpage);
         return ResponseDTO.createBySuccess(page);
     }
@@ -132,12 +130,12 @@ public class HotelController extends BaseController {
     @ApiOperation(value = "新增或更新酒店", notes = "新增或更新酒店")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
+    public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel, BindingResult bindingResult, HttpServletRequest request) {
     	ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
-        Integer busid = getLoginUserId(session);
+        Integer busid = getLoginUser(request).getId();
         Date date = new Date();
         THotel e = new THotel();
         BeanUtils.copyProperties(hotel, e);
@@ -176,8 +174,8 @@ public class HotelController extends BaseController {
     @ApiOperation(value = "删除 酒店", notes = "删除 酒店")
     @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO roomCategoryD(@RequestBody @ApiParam("酒店ID 数组") List<Integer> ids, HttpSession session) {
-        Integer busid = getLoginUserId(session);
+    public ResponseDTO roomCategoryD(@RequestBody @ApiParam("酒店ID 数组") List<Integer> ids, HttpServletRequest request) {
+        Integer busid = getLoginUser(request).getId();
         Wrapper<THotel> wrapper = new EntityWrapper<>();
         wrapper.in("id", ids);
         THotel h = new THotel();

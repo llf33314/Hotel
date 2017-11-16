@@ -3,7 +3,7 @@ package com.gt.hotel.controller.back;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
@@ -78,12 +78,12 @@ public class HotelMobileController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO phoneSettingCU(
 			@Validated @RequestBody @Param("参数") HotelMobileParameter.MobileSaveOrUpdate setting, BindingResult bindingResult,
-			HttpSession session) {
+			HttpServletRequest request) {
 		ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
-		Integer busid = getLoginUserId(session);
+		Integer busid = getLoginUser(request).getId();
 		tHotelSettingService.saveSetting(busid, setting);
 		return ResponseDTO.createBySuccess();
 	}
@@ -115,12 +115,12 @@ public class HotelMobileController extends BaseController {
 	@PostMapping(value = "{hotelId}/food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO foodCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.FoodSaveOrUpdate food,
-			@PathVariable("hotelId") Integer hotelId, BindingResult bindingResult, HttpSession session) {
+			@PathVariable("hotelId") Integer hotelId, BindingResult bindingResult, HttpServletRequest request) {
 		ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
-		Integer busid = getLoginUserId(session);
+		Integer busid = getLoginUser(request).getId();
 		Date date = new Date();
 		TFood f = new TFood();
 		BeanUtils.copyProperties(food, f);
@@ -163,8 +163,8 @@ public class HotelMobileController extends BaseController {
 	@DeleteMapping(value = "{hotelId}/food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO foodD(@RequestBody @ApiParam("订餐ID 数组") List<Integer> ids,
-			@PathVariable("hotelId") Integer hotelId, HttpSession session) {
-		Integer busid = getLoginUserId(session);
+			@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		TFood f = new TFood();
 		Wrapper<TFood> wrapper = new EntityWrapper<>();
 		f.setUpdatedAt(new Date());

@@ -36,6 +36,8 @@ public class WebServerConfigurationProperties {
         private String materialUrl;
         
         private String socketUrl;
+        
+        private String wxmpLogin;
 
         private Map<String,String> ApiMap;
     }

@@ -70,8 +70,8 @@ public class MobileOrderController extends BaseController {
      * @return ResponseDTO 数据包
      */
     @GetMapping(value = "/{hid}/{cid}/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO createNewOrder(HttpSession session, @PathVariable Integer hid, @PathVariable Integer cid, @RequestParam String checkInTime, @RequestParam String checkOutTime) {
-        Integer userId = this.getLoginUserId(session);
+    public ResponseDTO createNewOrder(HttpServletRequest request, @PathVariable Integer hid, @PathVariable Integer cid, @RequestParam String checkInTime, @RequestParam String checkOutTime) {
+        Integer userId = this.getLoginUser(request).getId();
 //        入住时间
         DateTime inTime = DateTime.parse(checkInTime);
 //        离店时间

@@ -1,5 +1,25 @@
 package com.gt.hotel.controller.back;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -10,21 +30,10 @@ import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.param.ActivityParamter;
 import com.gt.hotel.vo.ActivityVo;
 import com.gt.hotel.web.service.TActivityService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 酒店后台-活动设置
@@ -55,12 +64,12 @@ public class HotelActivityController extends BaseController {
     @ApiOperation(value = "编辑 活动", notes = "编辑 活动")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO activityCU(@Validated @Param("参数") @RequestBody ActivityParamter.ActivitySaveOrUpdate arooms, BindingResult bindingResult, HttpSession session) {
+    public ResponseDTO activityCU(@Validated @Param("参数") @RequestBody ActivityParamter.ActivitySaveOrUpdate arooms, BindingResult bindingResult, HttpServletRequest request) {
     	ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
-        Integer busid = getLoginUserId(session);
+        Integer busid = getLoginUser(request).getId();
         tActivityService.editActivity(busid, arooms);
         return ResponseDTO.createBySuccess();
     }
@@ -75,12 +84,12 @@ public class HotelActivityController extends BaseController {
     @ApiOperation(value = "删除 活动", notes = "删除 活动")
     @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO activityD(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
+    public ResponseDTO activityD(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpServletRequest request) {
         Wrapper<TActivity> wrapper = new EntityWrapper<>();
         TActivity entity = new TActivity();
         entity.setMarkModified(CommonConst.DELETED);
         entity.setUpdatedAt(new Date());
-        entity.setUpdatedBy(getLoginUserId(session));
+        entity.setUpdatedBy(getLoginUser(request).getId());
         wrapper.in("id", ids);
         if (tActivityService.update(entity, wrapper))
             return ResponseDTO.createBySuccess();
@@ -91,12 +100,12 @@ public class HotelActivityController extends BaseController {
     @ApiOperation(value = "停止 活动", notes = "停止 活动")
     @PostMapping(value = "stop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO activitySTOP(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
+    public ResponseDTO activitySTOP(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpServletRequest request) {
         Wrapper<TActivity> wrapper = new EntityWrapper<>();
         TActivity entity = new TActivity();
         entity.setPublishStatus(CommonConst.ACTIVITY_STOP);
         entity.setUpdatedAt(new Date());
-        entity.setUpdatedBy(getLoginUserId(session));
+        entity.setUpdatedBy(getLoginUser(request).getId());
         wrapper.in("id", ids);
         if (tActivityService.update(entity, wrapper))
             return ResponseDTO.createBySuccess();
@@ -107,7 +116,7 @@ public class HotelActivityController extends BaseController {
     @ApiOperation(value = "开始 活动", notes = "开始 活动")
     @PostMapping(value = "open", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO activityOPEN(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpSession session) {
+    public ResponseDTO activityOPEN(@RequestBody @ApiParam("活动ID 数组") List<Integer> ids, HttpServletRequest request) {
     	Date date = new Date();
     	Wrapper<TActivity> wrapper = new EntityWrapper<>();
     	wrapper.in("id", ids);
@@ -124,7 +133,7 @@ public class HotelActivityController extends BaseController {
     			a.setPublishStatus(CommonConst.ACTIVITY_PROCESSING);
     		}
     		a.setUpdatedAt(date);
-    		a.setUpdatedBy(getLoginUserId(session));
+    		a.setUpdatedBy(getLoginUser(request).getId());
     		asII.add(a);
     	}
 		if (tActivityService.updateAllColumnBatchById(asII)) {
