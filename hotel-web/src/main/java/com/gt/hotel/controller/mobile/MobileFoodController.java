@@ -82,16 +82,7 @@ public class MobileFoodController extends BaseController {
 			@Validated @RequestBody @Param("参数") FoodMobileParameter.FoodMobileOrder order, 
 			BindingResult bindingResult, HttpServletRequest request) {
     	InvalidParameter(bindingResult);
-//    	THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+    	Member member = getMember(request);
     	order.setHotelId(hotelId);
 		return ResponseDTO.createBySuccess(tOrderFoodService.mobileFoodOrderBook(member, order));
 	}
@@ -100,16 +91,7 @@ public class MobileFoodController extends BaseController {
     @GetMapping(value = "{hotelId}/order/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<FoodSettleVo> moblieHotelFoodOrderR(@PathVariable("hotelId") Integer hotelId,
     		@PathVariable("orderId") Integer orderId, HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+		Member member = getMember(request);
         return ResponseDTO.createBySuccess(tOrderFoodService.queryFoodOrderOne(hotelId, orderId, member));
     }
     
@@ -123,16 +105,7 @@ public class MobileFoodController extends BaseController {
     	if(msg != null) {
     		return msg;
     	}
-//    	THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+    	Member member = getMember(request);
     	order.setHotelId(hotelId);
     	tOrderFoodService.mobileFoodOrderBookPay(member, order);
     	return ResponseDTO.createBySuccess(order.getOrderId());

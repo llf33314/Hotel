@@ -75,15 +75,7 @@ public class MobileRoomController extends BaseController {
     		@PathVariable("categoryId") Integer categoryId, 
     		HttpServletRequest request) {
     	THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+    	Member member = getMember(request);
     	MemberCard memberCard = null;
     	
     	try {
@@ -104,15 +96,7 @@ public class MobileRoomController extends BaseController {
 			BindingResult bindingResult, HttpServletRequest request) {
     	InvalidParameter(bindingResult);
     	THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+    	Member member = getMember(request);
     	tOrderRoomService.MobileBookOrder(hotel, member, bookParam);
 		return ResponseDTO.createBySuccess();
 	}
@@ -123,16 +107,7 @@ public class MobileRoomController extends BaseController {
     		@PathVariable("hotelId") Integer hotelId,
     		@PathVariable("orderId") Integer orderId, 
     		HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+		Member member = getMember(request);
         return ResponseDTO.createBySuccess(tOrderRoomService.queryMobileRoomOrderOne(hotelId, orderId, member));
     }
 	

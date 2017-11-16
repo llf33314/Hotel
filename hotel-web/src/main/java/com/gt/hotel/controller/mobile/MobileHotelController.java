@@ -22,7 +22,6 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
-import com.gt.api.util.SessionUtils;
 import com.gt.hotel.annotation.MobileLoginRequired;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -82,10 +81,9 @@ public class MobileHotelController extends BaseController {
 
     @MobileLoginRequired
     @ApiOperation(value = "首页", notes = "首页")
-    @GetMapping(value = "{busId}/{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView moblieHome(
     		HttpServletRequest request, 
-    		@PathVariable("busId") Integer busId, 
     		@PathVariable("hotelId") Integer hotelId, 
     		ModelAndView model) {
 //    	THotel hotel = tHotelService.selectById(hotelId);
@@ -105,22 +103,22 @@ public class MobileHotelController extends BaseController {
 //    	        return model;
 //    		}
 //    	}
+    	//test
+//    	Member member = new Member();
+//    	member.setId(1071);
+//    	member.setBusid(33);
+//    	member.setPhone("13433550667");
+//    	member.setPublicId(492);
+//    	member.setCardid("15338");
+    	//test
     	model.setViewName("/index.html");
         return model;
     }
 
     @MobileLoginRequired
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
-    @GetMapping(value = "{busId}/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-//		SessionUtils.setLoginMember(request, member);
-    	//test
     	MobileHotelVo setting = tHotelSettingService.queryHotelSettingOne(hotelId);
         return ResponseDTO.createBySuccess(setting);
     }
@@ -131,37 +129,28 @@ public class MobileHotelController extends BaseController {
     public ResponseDTO<Page<MobileRoomCategoryVo>> mobileRoomCategoryR(@PathVariable("hotelId") Integer hotelId, 
     		@ModelAttribute RoomCategoryParameter.MobileQueryRoomCategory req, HttpServletRequest request) {
     	THotel hotel = tHotelService.selectById(hotelId);
-    	Member member1 = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	System.err.println(JSONObject.toJSONString(member1));
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+    	Member member = getMember(request);
     	Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
     	try {
-    	if(member != null && member.getId() != null) {
-    		JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-    		JSONObject card = json.getJSONObject("data");
-    		Integer cardType = card.getInteger("ctId");
-    		List<MobileRoomCategoryVo> l = page.getRecords();
-    		for(MobileRoomCategoryVo m : l) {	//会员
-				switch (cardType) {
-				case CommonConst.CARD_TYPE_POINT_CARD:
-					break;
-				case CommonConst.CARD_TYPE_DISCOUNT_CARD:
-					m.setDisplayPrice(Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue());
-					break;
-				case CommonConst.CARD_TYPE_VALUE_CARD:
-					break;
-				default:
-					break;
-				}
+    		if(member != null && member.getId() != null) {
+    			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+    			JSONObject card = json.getJSONObject("data");
+    			Integer cardType = card.getInteger("ctId");
+    			List<MobileRoomCategoryVo> l = page.getRecords();
+    			for(MobileRoomCategoryVo m : l) {	//会员
+    				switch (cardType) {
+    				case CommonConst.CARD_TYPE_POINT_CARD:
+    					break;
+    				case CommonConst.CARD_TYPE_DISCOUNT_CARD:
+    					m.setDisplayPrice(Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue());
+    					break;
+    				case CommonConst.CARD_TYPE_VALUE_CARD:
+    					break;
+    				default:
+    					break;
+    				}
+    			}
     		}
-    	}
     	} catch (Exception e) {
     		e.printStackTrace();
     		return ResponseDTO.createByErrorMessage("会员信息获取失败");

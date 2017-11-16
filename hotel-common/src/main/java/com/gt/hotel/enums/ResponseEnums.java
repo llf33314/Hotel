@@ -10,6 +10,7 @@ public enum ResponseEnums {
     // 100 以内 均为常见错误 例如短信验证 手机号码校验 邮箱发送
     SUCCESS(0, "成功"),
     ERROR(1, "错误"),
+    MAX_REDIRECT(5,"重定向次数最大值"),
     AUTHENTICATION(10, "非法认证"),
     JWT_TOKEN_EXPIRED(11, "TOKEN失效"),
     DATA_DOES_NOT_EXIST(12, "数据不存在"),

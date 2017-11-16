@@ -1,14 +1,15 @@
 package com.gt.hotel.base;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.gt.api.bean.session.BusUser;
-import com.gt.api.util.SessionUtils;
-import com.gt.hotel.constant.CommonSessionConst;
-import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.util.RedisCacheUtil;
-import com.gt.hotel.util.WXMPApiUtil;
+import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
+
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.Member;
+import com.gt.api.util.SessionUtils;
+import com.gt.hotel.constant.CommonSessionConst;
+import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.util.RedisCacheUtil;
+import com.gt.hotel.util.WXMPApiUtil;
 
 /**
  * BaseController
@@ -68,6 +73,16 @@ public abstract class BaseController {
     }
     public BusUser getLoginUserId(HttpServletRequest request) {
     	return SessionUtils.getLoginUser(request);
+    }
+    
+    /**
+     * 获取会员
+     * @param request
+     * @return
+     */
+    public Member getMember(HttpServletRequest request) {
+    	Integer busId = (Integer) request.getSession().getAttribute(CURRENT_BUS_ID);
+    	return SessionUtils.getLoginMember(request, busId);
     }
     
     /**

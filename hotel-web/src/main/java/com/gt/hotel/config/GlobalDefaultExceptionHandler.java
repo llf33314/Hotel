@@ -52,7 +52,7 @@ public class GlobalDefaultExceptionHandler {
      * @param e       BaseException
      * @return ResponseErrorDTO
      */
-//    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ExceptionHandler(value = BaseException.class)
     public ResponseErrorDTO defaultCustomErrorHandler(HttpServletRequest request, BaseException e) {
