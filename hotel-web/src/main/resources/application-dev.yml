@@ -117,6 +117,7 @@ hotel:
       imageUrl: http://maint.duofriend.com/upload
       materialUrl: https://suc.deeptel.com.cn
       socketUrl: https://socket.deeptel.com.cn
+      wxmpLogin: ${hotel.webserver.WxmpService.serviceUrl}/user/tologin.do #商家后台登录
       ApiMap: # Api接口列表
         dictKey: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/dictApi/getDictApi.do   # 获取字典信息
         isErpCount: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getIsErpCount.do # 根据商家ID判断是否开通某个erp

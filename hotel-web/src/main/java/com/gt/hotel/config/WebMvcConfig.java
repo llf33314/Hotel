@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.gt.hotel.interceptor.BackAuthenticationInterceptor;
 import com.gt.hotel.interceptor.MobileAuthenticationInterceptor;
 
 /**
@@ -22,10 +23,14 @@ import com.gt.hotel.interceptor.MobileAuthenticationInterceptor;
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
-
     @Bean
     MobileAuthenticationInterceptor mobileAuthenticationInterceptor() {
         return new MobileAuthenticationInterceptor();
+    }
+    
+    @Bean
+    BackAuthenticationInterceptor backAuthenticationInterceptor() {
+    	return new BackAuthenticationInterceptor();
     }
 
 
@@ -58,6 +63,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(mobileAuthenticationInterceptor()).addPathPatterns("/mobile/**");
+        registry.addInterceptor(backAuthenticationInterceptor()).addPathPatterns("/back/**");
         super.addInterceptors(registry);
     }
 
