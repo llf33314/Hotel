@@ -80,10 +80,14 @@ public class MobileHotelController extends BaseController {
     @Autowired
     TOrderRoomService tOrderRoomService;
 
-//    @MobileLoginRequired
+    @MobileLoginRequired
     @ApiOperation(value = "首页", notes = "首页")
-    @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("hotelId") Integer hotelId, ModelAndView model) {
+    @GetMapping(value = "{busId}/{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ModelAndView moblieHome(
+    		HttpServletRequest request, 
+    		@PathVariable("busId") Integer busId, 
+    		@PathVariable("hotelId") Integer hotelId, 
+    		ModelAndView model) {
 //    	THotel hotel = tHotelService.selectById(hotelId);
 //    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
 //    	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
@@ -107,7 +111,7 @@ public class MobileHotelController extends BaseController {
 
     @MobileLoginRequired
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
-    @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{busId}/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
     	//test
     	Member member = new Member();
@@ -121,6 +125,7 @@ public class MobileHotelController extends BaseController {
         return ResponseDTO.createBySuccess(setting);
     }
 
+    @MobileLoginRequired
     @ApiOperation(value = "首页房型列表", notes = "首页房型列表")
     @GetMapping(value = "{hotelId}/roomCategory", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<MobileRoomCategoryVo>> mobileRoomCategoryR(@PathVariable("hotelId") Integer hotelId, 
@@ -164,6 +169,7 @@ public class MobileHotelController extends BaseController {
         return ResponseDTO.createBySuccess(page);
     }
     
+    @MobileLoginRequired
     @ApiOperation(value = "首页房型 活动 列表", notes = "首页房型 活动 列表")
     @GetMapping(value = "{hotelId}/activity", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<MobileActivityVo>> mobileActivityR(@PathVariable("hotelId") Integer hotelId) {
@@ -171,6 +177,7 @@ public class MobileHotelController extends BaseController {
     	return ResponseDTO.createBySuccess(page);
     }
     
+    @MobileLoginRequired
     @ApiOperation(value = "首页房型 活动 房型 列表", notes = "首页房型 活动 房型 列表")
     @GetMapping(value = "{hotelId}/activity/{activityId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<MobileActivityRoomCategoryVo>> mobileActivityRoomR(@PathVariable("hotelId") Integer hotelId, 
@@ -179,6 +186,7 @@ public class MobileHotelController extends BaseController {
     	return ResponseDTO.createBySuccess(page);
     }
     
+    @MobileLoginRequired
     @ApiOperation(value = "已入住订单", notes = "已入住订单")
     @GetMapping(value = "{hotelId}/checkInOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<MobileActivityRoomCategoryVo>> checkInOrder(@PathVariable("hotelId") Integer hotelId, 
@@ -187,6 +195,7 @@ public class MobileHotelController extends BaseController {
     	return ResponseDTO.createBySuccess(page);
     }
     
+    @MobileLoginRequired
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@ApiOperation(value = "预约退房", notes = "预约退房")
     @PostMapping(value = "{hotelId}/checkOut", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
