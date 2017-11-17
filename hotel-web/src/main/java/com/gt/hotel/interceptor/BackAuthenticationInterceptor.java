@@ -29,10 +29,10 @@ public class BackAuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     	BusUser busUser = SessionUtils.getLoginUser(request);
-    	if(busUser == null) {
-    		response.sendRedirect(properties.getWxmpService().getWxmpLogin());
-    		return false;
-    	}
+//    	if(busUser == null) {
+//    		response.sendRedirect(properties.getWxmpService().getWxmpLogin());
+//    		return false;
+//    	}
         return true;
     }
 

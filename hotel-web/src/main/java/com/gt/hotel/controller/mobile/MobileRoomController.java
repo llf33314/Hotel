@@ -33,6 +33,7 @@ import com.gt.hotel.param.RoomMobileParameter;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
@@ -81,7 +82,9 @@ public class MobileRoomController extends BaseController {
     	
     	try {
     		JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-    		memberCard = JSONObject.toJavaObject(json.getJSONObject("data"), MemberCard.class);
+    		if(json != null && json.getInteger("code").equals(0)) {
+    			memberCard = JSONObject.toJavaObject(json.getJSONObject("data"), MemberCard.class);
+    		}
 		} catch (SignException e) {
 			throw new ResponseEntityException(ResponseEnums.FAILED_TO_OBTAIN_MEMBER_INFORMATION);
 		}
@@ -94,7 +97,8 @@ public class MobileRoomController extends BaseController {
 	public ResponseDTO moblieRoomSubmit(
 			@PathVariable("hotelId") Integer hotelId, 
 			@Validated @RequestBody RoomMobileParameter.BookParam bookParam, 
-			BindingResult bindingResult, HttpServletRequest request) {
+			BindingResult bindingResult, 
+			HttpServletRequest request) {
     	InvalidParameter(bindingResult);
     	THotel hotel = tHotelService.selectById(hotelId);
     	Member member = getMember(request);
@@ -158,12 +162,12 @@ public class MobileRoomController extends BaseController {
 	
 	@ApiOperation(value = "价格计算", notes = "价格计算")
     @GetMapping(value = "{hotelId}/getPrice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Integer> moblieHotelRoomGetPrice(
+    public ResponseDTO<RoomOrderPriceVO> moblieHotelRoomGetPrice(
     		@PathVariable("hotelId") Integer hotelId,
     		@ModelAttribute RoomMobileParameter.BookParam bookParam,
     		HttpServletRequest request) {
 		Member member = getMember(request);
-		Integer price = 0;
+		RoomOrderPriceVO price = null;
 		try {
 			price = tOrderRoomService.MobilePriceCalculation(hotelId, member, bookParam);
 		} catch (Exception e) {

@@ -73,10 +73,12 @@
 		SELECT a.id orderId, b.customer_name customerName, b.customer_phone customerPhone, b.room_in_time roomInTime, 
 			b.room_out_time roomOutTime, b.category_name categoryName, b.number, a.pay_type payType, a.remark, a.hotel_id hotelId, 
 			c.`name`, c.phone, c.address, c.latitude, c.longitude, a.fb, a.integral, a.fb_discount fbDiscount, a.integral_discount integralDiscount,
-			b.deposit, d.coupons_discount couponsDiscount, d.coupons_id couponsId, d.coupons_num couponsNum, a.real_price realPrice 
+			b.deposit, d.coupons_discount couponsDiscount, d.coupons_id couponsId, d.coupons_num couponsNum, a.real_price realPrice,
+			b.activity_id activityId 
 		FROM t_order a 
 		JOIN t_order_room b ON a.id = b.order_id 
 		JOIN t_hotel c ON a.hotel_id = c.id 
+		LEFT JOIN t_order_coupons d ON a.id = d.order_id 
 		WHERE a.id = #{orderId} AND a.member_id = #{memberId} AND a.hotel_id = #{hotelId}
 	</select>
 	

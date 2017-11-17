@@ -4,6 +4,7 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomOrderPriceVO;
 
 import java.util.Map;
 
@@ -53,6 +54,6 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @param bookParam
 	 * @return
 	 */
-	Integer MobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception;
+	RoomOrderPriceVO MobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception;
 
 }

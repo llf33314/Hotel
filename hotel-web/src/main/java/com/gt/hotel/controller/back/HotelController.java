@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -47,6 +46,7 @@ import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 import com.gt.hotel.param.HotelParameter;
 import com.gt.hotel.param.HotelParameter.HotelQuery;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.QrCodeUtil;
 import com.gt.hotel.util.ShortUrlUtil;
 import com.gt.hotel.util.WXMPApiUtil;
@@ -88,8 +88,8 @@ public class HotelController extends BaseController {
     @Autowired
     ShortUrlUtil shortUrlUtil;
 
-    @Value("${wxmp.imageurl.prefixurl}")
-    private String IMAGE_PREFIX;
+    @Autowired
+    private WebServerConfigurationProperties properties;
 
     @ApiOperation(value = "门店列表", notes = "门店列表")
     @GetMapping(value = "queryShop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -109,7 +109,7 @@ public class HotelController extends BaseController {
                 _s.setName(shop.getBusinessName());
                 _s.setTel(shop.getTelephone());
                 _s.setAddr(shop.getAddress());
-                _s.setImage(IMAGE_PREFIX + shop.getImageUrl());
+                _s.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
                 s.add(_s);
             }
             return ResponseDTO.createBySuccess(s);

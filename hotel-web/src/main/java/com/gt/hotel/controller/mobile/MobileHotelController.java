@@ -134,7 +134,7 @@ public class MobileHotelController extends BaseController {
     	try {
     		if(member != null && member.getId() != null) {
     			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-    			if(json != null) {
+    			if(json != null && json.getInteger("code").equals(0)) {
     				JSONObject card = json.getJSONObject("data");
     				Integer cardType = card.getInteger("ctId");
     				List<MobileRoomCategoryVo> l = page.getRecords();
@@ -155,7 +155,7 @@ public class MobileHotelController extends BaseController {
     		}
     	} catch (Exception e) {
     		e.printStackTrace();
-    		return ResponseDTO.createByErrorMessage("会员信息获取失败");
+//    		return ResponseDTO.createByErrorMessage("会员信息获取失败");
     	}
         return ResponseDTO.createBySuccess(page);
     }
