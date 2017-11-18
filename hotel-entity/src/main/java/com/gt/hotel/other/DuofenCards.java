@@ -37,6 +37,7 @@ public class DuofenCards {
     
     private int timeType;
     
+    @ApiModelProperty("折扣率")
     private double discount;
     
     @ApiModelProperty("商户名字")

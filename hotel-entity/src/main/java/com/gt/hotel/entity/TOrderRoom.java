@@ -173,7 +173,7 @@ public class TOrderRoom extends Model<TOrderRoom> {
 	/**
 	 * 钟点房入住时间 HH:mm:ss
 	 */
-	private Integer hourRoomCheckInTime;
+	private Date hourRoomCheckInTime;
 
 
 	@Override

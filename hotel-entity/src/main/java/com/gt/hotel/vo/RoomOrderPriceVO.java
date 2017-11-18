@@ -22,6 +22,9 @@ public class RoomOrderPriceVO {
 	
 	@ApiModelProperty("优惠券扣除")
 	private Integer couponPrice = 0;
+
+	@ApiModelProperty("优惠券数量")
+	private Integer couponCount = 0;
 	
 	@ApiModelProperty("支付价")
 	private Integer payPrice = 0;

@@ -1,5 +1,6 @@
 package com.gt.hotel.web.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +20,7 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderRoomDAO;
 import com.gt.hotel.entity.TActivityDetail;
+import com.gt.hotel.entity.TActivityRoom;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderCoupons;
@@ -36,6 +38,7 @@ import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.TActivityDetailService;
+import com.gt.hotel.web.service.TActivityRoomService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderCouponsService;
 import com.gt.hotel.web.service.TOrderRoomService;
@@ -61,6 +64,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	
 	@Autowired
 	TActivityDetailService activityDetailService;
+	
+	@Autowired
+	TActivityRoomService activityRoomService;
 	
 	@Autowired
 	TOrderRoomService orderRoomService;
@@ -126,6 +132,12 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		orderRoom.setCreatedAt(date);
 		orderRoom.setCreatedBy(member.getId());
 		orderRoom.setUpdatedBy(member.getId());
+		try {
+			orderRoom.setHourRoomCheckInTime(new SimpleDateFormat("HH:mm:ss").parse(bookParam.getHourRoomCheckInTime()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
+		}
 		if(!orderRoomService.insert(orderRoom)) {
 			throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
 		}
@@ -195,8 +207,10 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	public RoomOrderPriceVO MobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception {
 		RoomOrderPriceVO orderPriceVO = new RoomOrderPriceVO();
 		Integer price = 0;
+		/* 日期 */
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
+		days = days == 0 ? 1 : days;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(bookParam.getRoomInTime());
 		cal.add(Calendar.DAY_OF_YEAR, -1);
@@ -211,41 +225,30 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 				ordinaryDays++;
 			}
 		}
-		/* 会员 */
-		THotel hotel = tHotelService.selectById(hotelId);
+		/* 日期 */
 		MobileQueryRoomCategory req = new MobileQueryRoomCategory();
 		req.setCategoryId(bookParam.getCategoryId());
 		req.setRoomInTime(sdf.format(bookParam.getRoomInTime()));
 		req.setRoomOutTime(sdf.format(bookParam.getRoomOutTime()));
+		THotel hotel = tHotelService.selectById(hotelId);
 		Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
 		JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
 		JSONObject card = json.getJSONObject("data");
+		
 		for(MobileRoomCategoryVo m : page.getRecords()) {
 			if(m.getId().equals(bookParam.getCategoryId())) {
 				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
 				orderPriceVO.setRoomPrice(price);
+				price = activityCalculate(bookParam, price, orderPriceVO, days);
 				if(card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
-					price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
-					orderPriceVO.setRoomPrice(price);
-					MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
-					if(bookParam.getCouponsCode() != null) {	//卡券
-						price = DuofenCardsCalculate(memberCard, price, bookParam.getCouponsCode(), orderPriceVO) * days;
+					if(bookParam.getActivityId() == null) {
+						price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
 						orderPriceVO.setRoomPrice(price);
 					}
-					if(bookParam.getIntegral() != null) {	//积分
-						if(price > memberCard.getJifenStartMoney() * 100) {
-							price -= memberCard.getJifenMoeny() * 100 * days;
-							orderPriceVO.setRoomPrice(price);
-							orderPriceVO.setIntegralPrice(memberCard.getJifenMoeny() * 100);
-						}
-					}
-					if(bookParam.getFb() != null) {	//粉币
-						if(price > memberCard.getFenbiStartMoney() * 100) {
-							price -= memberCard.getFenbiMoeny() * 100 * days;
-							orderPriceVO.setRoomPrice(price);
-							orderPriceVO.setFenbiPrice(memberCard.getFenbiMoeny() * 100 * days);
-						}
-					}
+					MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
+					price = DuofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
+					price = IntegralCalculate(bookParam, memberCard, price, orderPriceVO);
+					price = FenBiCalculate(bookParam, memberCard, price, orderPriceVO);
 				}
 			}
 		}
@@ -256,18 +259,87 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		return orderPriceVO;
 	}
 
-	private int DuofenCardsCalculate(MemberCard memberCard, Integer price, String CouponsCode, RoomOrderPriceVO orderPriceVO) {
-		for(DuofenCards dc : memberCard.getDuofenCards()) {
-			if(dc.getCode().equals(CouponsCode)) {
-				if(price > (dc.getCash_least_cost() * 100)) {
+	/**
+	 * 活动 计算
+	 * @param bookParam
+	 * @param price
+	 * @param orderPriceVO
+	 * @param days 
+	 */
+
+	private Integer activityCalculate(BookParam bookParam, Integer price, RoomOrderPriceVO orderPriceVO, Integer days) {
+		if(bookParam.getActivityId() != null) {
+			Wrapper<TActivityRoom> arw = new EntityWrapper<>();
+			arw.eq("activity_id", bookParam.getActivityId());
+			arw.eq("category_id", bookParam.getCategoryId());
+			TActivityRoom ar = activityRoomService.selectOne(arw);
+			price = ar.getActivityPrice() * days;
+			orderPriceVO.setRoomPrice(price);
+		}
+		return price;
+	}
+	
+
+	/**
+	 * 积分 计算
+	 * @param bookParam
+	 * @param memberCard
+	 * @param price
+	 * @param orderPriceVO
+	 * @param days
+	 */
+	private Integer IntegralCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
+		if(bookParam.getIntegral() != null) {
+			if(price >= memberCard.getJifenStartMoney() * 100) {
+				price -= memberCard.getJifenMoeny() * 100;
+				orderPriceVO.setIntegralPrice(memberCard.getJifenMoeny() * 100);
+			}
+		}
+		return price;
+	}
+	
+	/**
+	 * 粉币 计算
+	 * @param bookParam
+	 * @param memberCard
+	 * @param price
+	 * @param orderPriceVO
+	 * @param days
+	 */
+	private Integer FenBiCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
+		if(bookParam.getFb() != null) {
+			if(price >= memberCard.getFenbiStartMoney() * 100) {
+				price -= memberCard.getFenbiMoeny() * 100;
+				orderPriceVO.setFenbiPrice(memberCard.getFenbiMoeny() * 100);
+			}
+		}
+		return price;
+	}
+
+	/**
+	 * 卡券 计算
+	 * @param memberCard
+	 * @param price
+	 * @param CouponsCode
+	 * @param orderPriceVO
+	 * @return
+	 */
+	private Integer DuofenCardsCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
+		if(bookParam.getCouponsCode() != null) {
+			for(DuofenCards dc : memberCard.getDuofenCards()) {
+				if(dc.getCode().equals(bookParam.getCouponsCode())) {
 					if(dc.getCard_type() == 0) {
 						int temp = price;
 						price = Double.valueOf(price * dc.getDiscount() / 10).intValue();
 						orderPriceVO.setCouponPrice(temp - price);
+						orderPriceVO.setCouponCount(1);
 					}else {
-						int dcCount = DuofenCardsCount(dc, price);
-						price = price - dc.getReduce_cost() * 100 * dcCount;
-						orderPriceVO.setCouponPrice(dc.getReduce_cost() * 100 * dcCount);
+						if(price > (dc.getCash_least_cost() * 100)) {
+							int dcCount = DuofenCardsCount(dc, price);
+							price -= dc.getReduce_cost() * 100 * dcCount;
+							orderPriceVO.setCouponPrice(dc.getReduce_cost() * 100 * dcCount);
+							orderPriceVO.setCouponCount(dcCount);
+						}
 					}
 				}
 			}

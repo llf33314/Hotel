@@ -143,7 +143,8 @@ hotel:
         getShortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl  # 获取短连接
     MemberService:
       signKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
-      serviceUrl: https://member.deeptel.com.cn
+#      serviceUrl: https://member.deeptel.com.cn
+      serviceUrl: http://member.yifriend.net
       ApiMap: # Api接口列表
         findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard   # 获取会员信息
         findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId   # 包含会员信息、微信卡券、多粉卡券

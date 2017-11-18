@@ -4,7 +4,8 @@
 
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TOrderRoom">
-		<id column="order_id" property="orderId" />
+		<id column="id" property="id" />
+		<result column="order_id" property="orderId" />
 		<result column="order_num" property="orderNum" />
 		<result column="hotel_id" property="hotelId" />
 		<result column="hotel_name" property="hotelName" />
@@ -40,11 +41,12 @@
 		<result column="check_standard" property="checkStandard" />
 		<result column="check_out_instructions" property="checkOutInstructions" />
 		<result column="deposit_visible" property="depositVisible" />
+		<result column="hour_room_check_in_time" property="hourRoomCheckInTime" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender, check_standard
+        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender, check_standard, hour_room_check_in_time
     </sql>
     
     <sql id="Base_Column_List_VO">
@@ -66,7 +68,8 @@
 		t_order_room.mark_modified markModified, t_order_room.created_by
 		createdBy, t_order_room.created_at createdAt, t_order_room.updated_by
 		updatedBy, t_order_room.updated_at updatedAt, t_order_room.guest_type guestType, 
-		t_order_room.customer_gender customerGender, check_standard checkStandard 
+		t_order_room.customer_gender customerGender, check_standard checkStandard,
+		hour_room_check_in_time hourRoomCheckInTime 
 	</sql>
 
 	<select id="queryMobileRoomOrderOne" resultType="com.gt.hotel.vo.MobileRoomOrderVo">

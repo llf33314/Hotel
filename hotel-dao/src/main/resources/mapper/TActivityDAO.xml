@@ -86,7 +86,7 @@
 		SELECT c.id, a.activity_num activityNum, a.hotel_id hotelId, a.begin_time beginTime, a.end_time endTime, a.available_time availableTime, a.restriction_enable restrictionEnable, 
 		 	a.restriction_number restrictionNumber, a.show_room_enable showRoomEnable, a.number_threshold numberThreshold, a.activity_rules activityRules,
 		 	b.activity_type activityType, b.check_in_time checkInTime, b.check_in_period checkInPeriod, b.check_out_period checkOutPeriod, b.min_purchase_number minPurchaseNumber, 
-			c.category_id categoryId, c.category_name categoryName, c.room_id roomId, c.room_num roomNum, c.rack_rate rackRate, c.id, c.activity_price activity_price,
+			c.category_id categoryId, c.category_name categoryName, c.room_id roomId, c.room_num roomNum, c.rack_rate rackRate, c.activity_id activityId, c.activity_price activity_price,
 			(COUNT(c.id)-COUNT(d.number)) remainder, e.deposit 
 		FROM t_activity a 
 		JOIN t_activity_detail b ON a.id = b.activity_id 
