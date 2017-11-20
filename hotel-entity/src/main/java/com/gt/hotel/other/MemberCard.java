@@ -23,11 +23,13 @@ public class MemberCard {
     @ApiModelProperty("等级")
     private String gradeName;
     
+    @ApiModelProperty("积分抵扣下限金额")
     private int jifenStartMoney;
     
     @ApiModelProperty("会员类型id")
     private int ctId;
     
+    @ApiModelProperty("粉币抵扣下限金额")
     private int fenbiStartMoney;
     
     @ApiModelProperty("昵称")
@@ -50,6 +52,7 @@ public class MemberCard {
     @ApiModelProperty("剩余次数")
     private int frequency;
     
+    @ApiModelProperty("粉币兑换率")
     private double fenbiRatio;
     
     @ApiModelProperty("积分最高抵扣金额")
@@ -61,6 +64,7 @@ public class MemberCard {
     @ApiModelProperty("手机号码")
     private String phone;
     
+    @ApiModelProperty("积分兑换率")
     private int jifenRatio;
     
     @ApiModelProperty("积分值")

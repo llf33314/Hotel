@@ -85,4 +85,10 @@ public class MobileRoomOrderVo {
 	
 	@ApiModelProperty(value = "总金额（实收金额）")
 	private Integer realPrice;
+	
+	@ApiModelProperty(value = "活动ID")
+	private Integer activityId;
+	
+	@ApiModelProperty(value = "活动详情")
+	private ActivityDetailVo activityDetailVo;
 }

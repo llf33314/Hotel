@@ -5,8 +5,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,14 +28,16 @@ public class RoomMobileParameter {
 		
 		@NotEmpty(message = "房型名称不能为空")
 		@ApiModelProperty(value = "房型名称", required = true)
-		private Integer categoryName;
+		private String categoryName;
 	    
 		@ApiModelProperty(value = "入住时间", required = true)
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+//		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 		private Date roomInTime;
 
 		@ApiModelProperty(value = "离店时间", required = true)
-		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+//		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+		@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 		private Date roomOutTime;
 		
 		@NotNull(message = "门市价不能为空")
@@ -51,12 +52,12 @@ public class RoomMobileParameter {
 		@ApiModelProperty(value = "客房数量", required = true)
 		private Integer number;
 		
-		@ApiModelProperty(value = "客户姓名", required = true)
-		@NotEmpty(message = "客户姓名不能为空")
+		@ApiModelProperty(value = "客户姓名")
+//		@NotEmpty(message = "客户姓名不能为空")
 		private String customerName;
 
-		@ApiModelProperty(value = "手机号码", required = true)
-		@NotEmpty(message = "手机号码不能为空")
+		@ApiModelProperty(value = "手机号码")
+//		@NotEmpty(message = "手机号码不能为空")
 		private String customerPhone;
 		
 		@ApiModelProperty(value = "备注")
@@ -78,8 +79,8 @@ public class RoomMobileParameter {
 		@ApiModelProperty("显示价格")
 	    private Integer displayPrice;
 		
-		@ApiModelProperty(value = "优惠券ID")
-		private Integer couponsId;
+		@ApiModelProperty(value = "优惠券Code")
+		private String couponsCode;
 		
 		@ApiModelProperty(value = "优惠券数量")
 		private Integer couponsNum;
@@ -99,5 +100,9 @@ public class RoomMobileParameter {
 		
 		@ApiModelProperty(value = "优惠券折扣金额")
 		private Integer couponsDiscount;
+		
+		@ApiModelProperty(value = "钟点房入住时间 HH:mm:ss")
+//		@JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
+		private String hourRoomCheckInTime;
 	}
 }

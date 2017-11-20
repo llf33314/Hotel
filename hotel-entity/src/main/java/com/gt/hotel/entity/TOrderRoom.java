@@ -170,6 +170,10 @@ public class TOrderRoom extends Model<TOrderRoom> {
 	 * 押金可见状态 0 true 1 false
 	 */
 	private Integer depositVisible;
+	/**
+	 * 钟点房入住时间 HH:mm:ss
+	 */
+	private Date hourRoomCheckInTime;
 
 
 	@Override

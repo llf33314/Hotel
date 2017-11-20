@@ -90,4 +90,7 @@ public class MobileActivityRoomCategoryVo {
 
     @ApiModelProperty(value = "图片")
     private String path;
+    
+    @ApiModelProperty(value = "押金")
+    private String deposit;
 }
