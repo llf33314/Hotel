@@ -84,5 +84,10 @@
 		LEFT JOIN t_order_coupons d ON a.id = d.order_id 
 		WHERE a.id = #{orderId} AND a.member_id = #{memberId} AND a.hotel_id = #{hotelId}
 	</select>
-	
+
+	<select id="queryMobileRoomOrderSUM" resultType="Integer">
+		SELECT SUM(bill_price) 
+		FROM t_order 
+		WHERE member_id = #{memberId} AND order_status = 3 
+	</select>	
 </mapper>

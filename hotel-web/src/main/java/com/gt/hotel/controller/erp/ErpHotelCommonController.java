@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -94,6 +95,14 @@ public class ErpHotelCommonController extends BaseController {
     	return ResponseDTO.createBySuccess(json);
     }
     
+    @ApiOperation(value = "erp退出登录", notes = "erp退出登录")
+    @GetMapping(value = "logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<JSONObject> logout(HttpServletRequest request) {
+    	Cookie cookie = new Cookie("WXMPJSESSIONID", null);
+    	cookie.setMaxAge(0);
+    	return ResponseDTO.createBySuccess();
+    }
+    
     @ApiOperation(value = "配置", notes = "配置")
     @GetMapping(value = "config", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<ConfigVO> config(HttpServletRequest request) {
@@ -105,5 +114,6 @@ public class ErpHotelCommonController extends BaseController {
     	vo.setMaterialUrl(properties.getWxmpService().getMaterialUrl());
     	return ResponseDTO.createBySuccess(vo);
     }
+    
     
 }

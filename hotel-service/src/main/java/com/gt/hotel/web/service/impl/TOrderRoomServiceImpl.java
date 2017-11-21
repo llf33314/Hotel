@@ -371,5 +371,10 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		}
 		return dcCount;
 	}
+
+	@Override
+	public Integer queryMobileRoomOrderSUM(Integer memberId) {
+		return tOrderRoomDAO.queryMobileRoomOrderSUM(memberId);
+	}
 	
 }

@@ -94,11 +94,12 @@
 		SELECT a.id, a.order_num orderNum, a.hotel_id hotelId, a.bus_id busId, a.member_id memberId, a.pay_type payType, a.pay_status payStatus,
 			a.pay_time payTime, a.order_status orderStatus, a.create_time createTime, a.real_price realPrice, a.bill_price billPrice, a.fb,
 			a.integral, a.order_coupons_id orderCouponsId, a.receivable_price receivablePrice, a.remark, a.completion_time completionTime,
-			b.hotel_name hotelName, b.customer_name customerName, b.customer_phone customerPhone, b.room_num roomNum, c.food_provides_name foodProvidesName,
+			d.name hotelName, b.customer_name customerName, b.customer_phone customerPhone, b.room_num roomNum, c.food_provides_name foodProvidesName,
 			GROUP_CONCAT(c.food_name) mergedFoodName 
 		FROM t_order a 
 		JOIN t_order_food b ON a.id = b.order_id 
 		LEFT JOIN t_order_food_detail c ON b.id = c.order_food_id 
+		JOIN t_hotel d ON d.id = a.hotel_id 
 		WHERE a.mark_modified = 0 
 		<if test="busid != null">
 			AND a.bus_id = #{busid} 

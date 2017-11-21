@@ -88,6 +88,9 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "房型名称")
 		private String categoryName;
 		
+		@ApiModelProperty(value = "会员ID")
+		private String memberId;
+		
 		@ApiModelProperty(value = "客户姓名", required = true)
 		@NotEmpty(message = "客户姓名不能为空")
 		private String customerName;
