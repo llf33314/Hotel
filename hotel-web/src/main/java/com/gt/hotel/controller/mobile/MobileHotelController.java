@@ -27,6 +27,7 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.param.HotelMobileParameter;
@@ -37,6 +38,8 @@ import com.gt.hotel.vo.MobileActivityRoomCategoryVo;
 import com.gt.hotel.vo.MobileActivityVo;
 import com.gt.hotel.vo.MobileHotelVo;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
+import com.gt.hotel.vo.SysDictionaryVo;
+import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TActivityService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
@@ -79,6 +82,9 @@ public class MobileHotelController extends BaseController {
     @Autowired
     TOrderRoomService tOrderRoomService;
 
+    @Autowired
+    SysDictionaryService sysDictionaryService;
+    
     @MobileLoginRequired
     @ApiOperation(value = "首页", notes = "首页")
     @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -180,30 +186,47 @@ public class MobileHotelController extends BaseController {
     @MobileLoginRequired
     @ApiOperation(value = "已入住订单", notes = "已入住订单")
     @GetMapping(value = "{hotelId}/checkInOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<MobileActivityRoomCategoryVo>> checkInOrder(@PathVariable("hotelId") Integer hotelId, 
-    		@PathVariable("activityId") Integer activityId, @ModelAttribute HotelPage hotelPage) {
-    	Page<MobileActivityRoomCategoryVo> page = null;
+    public ResponseDTO<Page<com.gt.hotel.vo.HotelBackRoomOrderVo>> checkInOrder(
+    		@PathVariable("hotelId") Integer hotelId, 
+    		HttpServletRequest request) {
+    	Member member = getMember(request);
+    	Page<com.gt.hotel.vo.HotelBackRoomOrderVo> page = tOrderService.checkInOrder(member);
     	return ResponseDTO.createBySuccess(page);
     }
+    
+    @ApiOperation(value = "查询 发票列表", notes = "查询 发票列表")
+	@GetMapping(value = "{hotelId}/invoice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<Page<SysDictionaryVo>> mobileInvoiceR(
+			@PathVariable("hotelId") Integer hotelId) {
+		Page<SysDictionaryVo> page = sysDictionaryService.MobileQueryDictionary(CommonConst.DICT_INVOICE, hotelId);
+		return ResponseDTO.createBySuccess(page);
+	}
     
     @MobileLoginRequired
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@ApiOperation(value = "预约退房", notes = "预约退房")
     @PostMapping(value = "{hotelId}/checkOut", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO mobilecheckOut(@PathVariable("hotelId") Integer hotelId, 
-    		@RequestBody HotelMobileParameter.CheckOutParam param, BindingResult bindingResult) {
+    public ResponseDTO mobilecheckOut(
+    		@PathVariable("hotelId") Integer hotelId, 
+    		@RequestBody HotelMobileParameter.CheckOutParam param, 
+    		BindingResult bindingResult) {
     	ResponseDTO msg = InvalidParameterII(bindingResult);
     	if(msg != null) {
     		return msg;
     	}
+    	Wrapper<THotelSetting> hw = new EntityWrapper<>();
+    	hw.eq("hotel_id", hotelId);
+		THotelSetting hotelset = tHotelSettingService.selectOne(hw);
     	Wrapper wrapper = new EntityWrapper<>();
     	wrapper.eq("order_num", param.getOrderNum());
     	TOrder o = tOrderService.selectOne(wrapper);
     	TOrderRoom or = tOrderRoomService.selectOne(wrapper);
     	String content = "收到客人预约退房通知，请查看。订单号："+param.getOrderNum()+"，退房房号："
-    			+param.getRoomNum()+"，姓名："+or.getCustomerName()+"，手机："+or.getCustomerPhone()+"，发票抬头："+param.getInvoiceHead();
+    			+param.getRoomNum()+"，姓名："+or.getCustomerName()+"，手机："+or.getCustomerPhone()+"，发票抬头："
+    			+param.getInvoiceHead()+"，发票类目："+param.getInvoiceCategory();
 		try {
-			JSONObject result = wXMPApiUtil.sendMsg(o.getBusId(), or.getCustomerPhone(), content);
+//			JSONObject result = wXMPApiUtil.sendMsg(o.getBusId(), hotelset.getReservationCheckOutPhone(), content);
+			JSONObject result = wXMPApiUtil.sendSmsNew(hotelset.getReservationCheckOutPhone(), content, o.getBusId(), 58761l);
 			if(!result.getInteger("code").equals(0)) {
 				return ResponseDTO.createByError();
 			}

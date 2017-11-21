@@ -91,6 +91,8 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	public Integer MobileBookOrder(THotel hotel, Member member, BookParam bookParam) {
 		try {
 			RoomOrderPriceVO orderPriceVO = MobilePriceCalculation(hotel.getId(), member, bookParam);
+			System.err.println(bookParam.getPayPrice());
+			System.err.println(orderPriceVO.getPayPrice());
 			if(!bookParam.getPayPrice().equals(orderPriceVO.getPayPrice())) {
 				throw new ResponseEntityException(ResponseEnums.PRICE_FAILED);
 			}
@@ -130,30 +132,35 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		orderRoom.setFrom(CommonConst.SOURCE_MOBILE);
 		orderRoom.setGuestType(0);
 		orderRoom.setCreatedAt(date);
+		orderRoom.setCreateTime(date);
 		orderRoom.setCreatedBy(member.getId());
 		orderRoom.setUpdatedBy(member.getId());
-		try {
-			orderRoom.setHourRoomCheckInTime(new SimpleDateFormat("HH:mm:ss").parse(bookParam.getHourRoomCheckInTime()));
-		} catch (ParseException e) {
-			e.printStackTrace();
-			throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
+		if(bookParam.getHourRoomCheckInTime() != null) {
+			try {
+				orderRoom.setHourRoomCheckInTime(new SimpleDateFormat("HH:mm:ss").parse(bookParam.getHourRoomCheckInTime()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+				throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
+			}
 		}
 		if(!orderRoomService.insert(orderRoom)) {
 			throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
 		}
-		
-		coupons.setOrderId(order.getId());
-		coupons.setOrderNum(order.getOrderNum());
-		coupons.setCouponsCode(bookParam.getCouponsCode());
-		if(!couponsService.insert(coupons)) {
-			throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
-		}
-		Wrapper<TOrder> wrapper = new EntityWrapper<>();
-		wrapper.eq("id", order.getId());
-		TOrder orderII = new TOrder();
-		orderII.setOrderCouponsId(coupons.getId());
-		if(!orderService.update(orderII, wrapper)) {
-			throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
+		if(bookParam.getCouponsCode() != null) {
+			coupons.setOrderId(order.getId());
+			coupons.setOrderNum(order.getOrderNum());
+			coupons.setCouponsCode(bookParam.getCouponsCode());
+			coupons.setCouponsNum(bookParam.getCouponsNum() == null ? 0 : bookParam.getCouponsNum());
+			if(!couponsService.insert(coupons)) {
+				throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
+			}
+			Wrapper<TOrder> wrapper = new EntityWrapper<>();
+			wrapper.eq("id", order.getId());
+			TOrder orderII = new TOrder();
+			orderII.setOrderCouponsId(coupons.getId());
+			if(!orderService.update(orderII, wrapper)) {
+				throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
+			}
 		}
 		return order.getId();
 	}
@@ -161,12 +168,16 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	@Override
 	public MobileRoomOrderVo queryMobileRoomOrderOne(Integer hotelId, Integer orderId, Member member) {
 		MobileRoomOrderVo mobileRoomOrderVo = tOrderRoomDAO.queryMobileRoomOrderOne(hotelId, orderId, member.getId());
-		ActivityDetailVo activityDetailVo = new ActivityDetailVo();
-		Wrapper<TActivityDetail> wrapper = new EntityWrapper<>();
-		wrapper.eq("activity_id", mobileRoomOrderVo.getActivityId());
-		TActivityDetail activityDetail = activityDetailService.selectOne(wrapper);
-		BeanUtils.copyProperties(activityDetail, activityDetailVo);
-		mobileRoomOrderVo.setActivityDetailVo(activityDetailVo);
+		if(mobileRoomOrderVo.getActivityId() != null) {
+			ActivityDetailVo activityDetailVo = new ActivityDetailVo();
+			Wrapper<TActivityDetail> wrapper = new EntityWrapper<>();
+			wrapper.eq("activity_id", mobileRoomOrderVo.getActivityId());
+			TActivityDetail activityDetail = activityDetailService.selectOne(wrapper);
+			if(activityDetail != null) {
+				BeanUtils.copyProperties(activityDetail, activityDetailVo);
+			}
+			mobileRoomOrderVo.setActivityDetailVo(activityDetailVo);
+		}
 		return mobileRoomOrderVo;
 	}
 

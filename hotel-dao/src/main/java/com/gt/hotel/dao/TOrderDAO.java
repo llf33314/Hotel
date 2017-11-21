@@ -58,6 +58,13 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 * @return
 	 */
 	List<DepositVo> queryMobileDeposit(@Param("memberId") Integer memberId, @Param("page") Pagination page);
+	
+	/**
+	 * 已入住订单
+	 * @param memberId
+	 * @return
+	 */
+	List<com.gt.hotel.vo.HotelBackRoomOrderVo> checkInOrder(@Param("memberId") Integer memberId);
 
 
 }

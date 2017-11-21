@@ -37,6 +37,10 @@ spring:
      url: jdbc:mysql://113.106.202.51:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
      username: gt_hotel
      password: gt123456
+#     url: jdbc:mysql://localhost:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+#     username: root
+#     password: 123456
+     connectionInitSqls: set names utf8mb4
      # 下面为连接池的补充设置，应用到上面所有数据源中
      # 初始化大小，最小，最大
      initial-size: 5

@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -102,8 +101,9 @@ public class MobileRoomController extends BaseController {
     	InvalidParameter(bindingResult);
     	THotel hotel = tHotelService.selectById(hotelId);
     	Member member = getMember(request);
-    	tOrderRoomService.MobileBookOrder(hotel, member, bookParam);
-		return ResponseDTO.createBySuccess();
+    	JSONObject json = new JSONObject();
+    	json.put("orderId", tOrderRoomService.MobileBookOrder(hotel, member, bookParam));
+		return ResponseDTO.createBySuccess(json);
 	}
 	
 	@ApiOperation(value = "支付订单详情", notes = "支付订单详情")
@@ -161,10 +161,10 @@ public class MobileRoomController extends BaseController {
     }
 	
 	@ApiOperation(value = "价格计算", notes = "价格计算")
-    @GetMapping(value = "{hotelId}/getPrice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "{hotelId}/getPrice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<RoomOrderPriceVO> moblieHotelRoomGetPrice(
     		@PathVariable("hotelId") Integer hotelId,
-    		@ModelAttribute RoomMobileParameter.BookParam bookParam,
+    		@RequestBody RoomMobileParameter.BookParam bookParam,
     		HttpServletRequest request) {
 		Member member = getMember(request);
 		RoomOrderPriceVO price = null;

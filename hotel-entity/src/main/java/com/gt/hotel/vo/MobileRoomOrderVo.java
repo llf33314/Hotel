@@ -15,6 +15,9 @@ public class MobileRoomOrderVo {
 	@ApiModelProperty(value = "订单ID")
 	private Integer orderId;
 	
+	@ApiModelProperty(value = "订单号")
+	private String orderNum;
+	
 	@ApiModelProperty(value = "客户姓名")
 	private String customerName;
 	
@@ -30,7 +33,7 @@ public class MobileRoomOrderVo {
 	private Date roomOutTime;
 	
 	@ApiModelProperty(value = "房型名称")
-	private Integer categoryName;
+	private String categoryName;
 	
 	@ApiModelProperty(value = "客房数量")
 	private Integer number;

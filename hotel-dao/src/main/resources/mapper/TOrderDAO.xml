@@ -145,4 +145,10 @@
 		</if>
 		ORDER BY a.id DESC
 	</select>
+	
+	<select id="checkInOrder" resultType="com.gt.hotel.vo.HotelBackRoomOrderVo">
+		SELECT id, order_num 
+		FROM t_order 
+		WHERE order_status = 4 AND mark_modified = 0 AND member_id = #{memberId}
+	</select>
 </mapper>

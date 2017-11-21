@@ -26,4 +26,6 @@ public interface SysDictionaryDAO extends BaseMapper<SysDictionary> {
      */
     List<SysDictionaryVo> queryInvoice(@Param("dictId") Integer dictId, @Param("page") Pagination page);
 
+	List<SysDictionaryVo> queryInvoice(@Param("dictId") Integer dictId);
+
 }

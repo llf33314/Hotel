@@ -10,6 +10,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.SessionUtils;
+import com.gt.hotel.enums.ResponseEnums;
+import com.gt.hotel.exception.NeedLoginException;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 
 /**
@@ -29,10 +31,11 @@ public class BackAuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     	BusUser busUser = SessionUtils.getLoginUser(request);
-//    	if(busUser == null) {
+    	if(busUser == null) {
 //    		response.sendRedirect(properties.getWxmpService().getWxmpLogin());
 //    		return false;
-//    	}
+    		throw new NeedLoginException(ResponseEnums.NEED_LOGIN, null, properties.getWxmpService().getWxmpLogin());
+    	}
         return true;
     }
 
