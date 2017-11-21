@@ -29,11 +29,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * ERP 
+ * 酒店ERP - 库存管理
  * @author Reverien9@gmail.com
- * 2017年11月17日 上午9:07:30
+ * 2017年11月21日 上午10:52:35
  */
-@Api(tags = "酒店ERP - 库存管理")
+@Api(tags = "酒店ERP 库存管理")
 @RestController
 @RequestMapping("/erp/inventory")
 public class ErpHotelInventoryController extends BaseController {

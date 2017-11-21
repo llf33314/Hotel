@@ -29,11 +29,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * ERP 
+ * 酒店ERP - 统计报表
  * @author Reverien9@gmail.com
- * 2017年11月17日 上午9:07:30
+ * 2017年11月21日 上午10:52:56
  */
-@Api(tags = "酒店ERP - 统计报表")
+@Api(tags = "酒店ERP 统计报表")
 @RestController
 @RequestMapping("/erp/report")
 public class ErpHotelReportController extends BaseController {
