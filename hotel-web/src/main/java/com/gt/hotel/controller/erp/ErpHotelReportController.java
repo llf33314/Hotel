@@ -33,10 +33,10 @@ import io.swagger.annotations.ApiOperation;
  * @author Reverien9@gmail.com
  * 2017年11月17日 上午9:07:30
  */
-@Api(tags = "酒店ERP")
+@Api(tags = "酒店ERP - 统计报表")
 @RestController
-@RequestMapping("/erp/hotel")
-public class ErpHotelController extends BaseController {
+@RequestMapping("/erp/report")
+public class ErpHotelReportController extends BaseController {
 	
 	@Autowired
     private WXMPApiUtil WXMPApiUtil;
@@ -44,7 +44,7 @@ public class ErpHotelController extends BaseController {
 	@Autowired
     private WebServerConfigurationProperties properties;
 
-    private static final Logger logger = LoggerFactory.getLogger(ErpHotelController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ErpHotelReportController.class);
 
     @ApiOperation(value = "门店列表", notes = "门店列表")
     @GetMapping(value = "queryShop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
