@@ -29,6 +29,7 @@ import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
@@ -276,6 +277,13 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		}
 		page.setRecords(l);
 		return page;
+	}
+
+	@Override
+	public BusinessConditionsVo erpGetBusinessConditions(Integer busid, Integer shopId, String now) {
+		String nowStart = now + " 00:00:00";
+		String nowEnd = now + " 23:59:59";
+		return tOrderDAO.erpGetBusinessConditions(busid, shopId, nowStart, nowEnd);
 	}
 
 }

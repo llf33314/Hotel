@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
+import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
@@ -66,5 +67,23 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 */
 	List<com.gt.hotel.vo.HotelBackRoomOrderVo> checkInOrder(@Param("memberId") Integer memberId);
 
+	/**
+	 * 酒店营业状况
+	 * @param busId
+	 * @param nowStart
+	 * @param nowEnd
+	 * @return
+	 */
+	BusinessConditionsVo erpGetBusinessConditions(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("nowStart") String nowStart, @Param("nowEnd") String nowEnd);
+
+	/**
+	 * 
+	 * @param busId
+	 * @param shopId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	List<TOrder> getTotalRevenue(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 
 }
