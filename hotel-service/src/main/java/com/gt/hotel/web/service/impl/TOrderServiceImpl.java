@@ -33,6 +33,7 @@ import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.IncomeDetailsVo;
 import com.gt.hotel.vo.OrderRoomCustomerVo;
 import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderRoomService;
@@ -284,6 +285,14 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		String nowStart = now + " 00:00:00";
 		String nowEnd = now + " 23:59:59";
 		return tOrderDAO.erpGetBusinessConditions(busid, shopId, nowStart, nowEnd);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer shopId, HotelPage hpage) {
+		Page<IncomeDetailsVo> page = hpage.initPage();
+		page.setRecords(tOrderDAO.getIncomeDetailsByDate(busId, shopId, hpage, page));
+		return page;
 	}
 
 }

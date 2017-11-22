@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class IncomeDetailsVo {
 	
-	@ApiModelProperty("入住率(%)")
+	@ApiModelProperty("其他")
     private Integer otherPrice = 0;
 
 	@ApiModelProperty("商品消费")

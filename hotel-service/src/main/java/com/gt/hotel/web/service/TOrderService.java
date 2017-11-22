@@ -17,6 +17,7 @@ import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.IncomeDetailsVo;
 
 /**
  * <p>
@@ -139,6 +140,14 @@ public interface TOrderService extends BaseService<TOrder> {
 	 * @return
 	 */
 	BusinessConditionsVo erpGetBusinessConditions(Integer busid, Integer shopId, String format);
+
+	/**
+	 * 收入明细
+	 * @param shopId
+	 * @param hpage
+	 * @return
+	 */
+	Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer shopId, HotelPage hpage);
 
 
 }

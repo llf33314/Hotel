@@ -18,8 +18,6 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.param.HotelPage;
-import com.gt.hotel.properties.WebServerConfigurationProperties;
-import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.CheackInListRevenueVo;
 import com.gt.hotel.vo.IncomeDetailsVo;
@@ -40,20 +38,14 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/erp/report")
 public class ErpHotelReportController extends BaseController {
-	
-	@Autowired
-    private WXMPApiUtil WXMPApiUtil;
-	
-	@Autowired
-    private WebServerConfigurationProperties properties;
-	
 	@Autowired
 	TOrderService orderService;
 	
 	@Autowired
 	TOrderRoomService orderRoomService;
 
-    private static final Logger logger = LoggerFactory.getLogger(ErpHotelReportController.class);
+    @SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(ErpHotelReportController.class);
 
     @ApiOperation(value = "酒店营业状况(支出需对接进销存后)", notes = "酒店营业状况(支出需对接进销存后)")
     @GetMapping(value = "businessConditions", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -82,8 +74,8 @@ public class ErpHotelReportController extends BaseController {
     		@ModelAttribute HotelPage hpage,
     		HttpServletRequest request) {
     	Integer busId = getLoginUser(request).getId();
-    	//TODO 651654165
-    	return ResponseDTO.createBySuccess();
+    	Page<IncomeDetailsVo> page = orderService.erpGetIncomeDetails(busId, shopId, hpage);
+    	return ResponseDTO.createBySuccess(page);
     }
     
     @ApiOperation(value = "近一周入住率", notes = "近一周入住率")
