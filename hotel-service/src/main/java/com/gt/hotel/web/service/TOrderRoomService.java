@@ -56,4 +56,11 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 */
 	RoomOrderPriceVO MobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception;
 
+	/**
+	 * 会员消费总额
+	 * @param memberId
+	 * @return
+	 */
+	Integer queryMobileRoomOrderSUM(Integer memberId);
+
 }

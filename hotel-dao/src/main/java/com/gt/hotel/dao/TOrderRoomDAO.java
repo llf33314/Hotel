@@ -25,4 +25,11 @@ public interface TOrderRoomDAO extends BaseMapper<TOrderRoom> {
 	 */
 	MobileRoomOrderVo queryMobileRoomOrderOne(@Param("hotelId") Integer hotelId, @Param("orderId") Integer orderId, @Param("memberId") Integer memberId);
 
+	/**
+	 * 会员消费总额
+	 * @param memberId
+	 * @return
+	 */
+	Integer queryMobileRoomOrderSUM(Integer memberId);
+
 }

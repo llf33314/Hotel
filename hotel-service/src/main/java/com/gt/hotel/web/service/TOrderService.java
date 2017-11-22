@@ -123,5 +123,12 @@ public interface TOrderService extends BaseService<TOrder> {
 	 */
 	Page<DepositVo> queryMobileDeposit(Member member, HotelPage hotelPage);
 
+	/**
+	 * 已入住订单
+	 * @param member
+	 * @return
+	 */
+	Page<HotelBackRoomOrderVo> checkInOrder(Member member);
+
 
 }

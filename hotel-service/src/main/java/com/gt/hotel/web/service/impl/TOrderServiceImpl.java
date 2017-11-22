@@ -32,6 +32,7 @@ import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.OrderRoomCustomerVo;
 import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
@@ -249,6 +250,32 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		Page<DepositVo> page = hotelPage.initPage();
 		page.setRecords(tOrderDAO.queryMobileDeposit(member.getId(), page));
 		return null;
+	}
+
+	@Override
+	public Page<com.gt.hotel.vo.HotelBackRoomOrderVo> checkInOrder(Member member) {
+		Page<com.gt.hotel.vo.HotelBackRoomOrderVo> page = new Page<>();
+		List<HotelBackRoomOrderVo> l = tOrderDAO.checkInOrder(member.getId());
+		List<Integer> ids = new ArrayList<>();
+		for(HotelBackRoomOrderVo r : l) {
+			ids.add(r.getId());
+		}
+		Wrapper<TOrderRoomCustomer> wrapper = new EntityWrapper<>();
+		wrapper.in("order_id", ids);
+		List<TOrderRoomCustomer> rl = tOrderRoomCustomerService.selectList(wrapper);
+		for(HotelBackRoomOrderVo r : l) {
+			List<OrderRoomCustomerVo> rooms = new ArrayList<>();
+			for(TOrderRoomCustomer or : rl) {
+				if(or.getOrderId().equals(r.getId())) {
+					OrderRoomCustomerVo orv = new OrderRoomCustomerVo();
+					BeanUtils.copyProperties(or, orv);
+					rooms.add(orv);
+				}
+			}
+			r.setRooms(rooms);
+		}
+		page.setRecords(l);
+		return page;
 	}
 
 }
