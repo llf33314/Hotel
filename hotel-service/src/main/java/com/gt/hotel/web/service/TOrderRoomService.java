@@ -6,6 +6,9 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseService;
+import com.alibaba.fastjson.JSONObject;
+import com.gt.api.bean.session.Member;
+import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
@@ -13,6 +16,8 @@ import com.gt.hotel.vo.CheackInListRevenueVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.vo.RoomCheackInCountVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -31,7 +36,7 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @param bookParam
 	 * @return 订单ID
 	 */
-	Integer MobileBookOrder(THotel hotel, Member member, BookParam bookParam);
+	Integer mobileBookOrder(THotel hotel, Member member, BookParam bookParam);
 
 	/**
 	 * 移动端 房间 支付订单详情
@@ -56,7 +61,7 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @param bookParam
 	 * @return
 	 */
-	RoomOrderPriceVO MobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception;
+	RoomOrderPriceVO mobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception;
 
 	/**
 	 * 会员消费总额

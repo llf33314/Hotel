@@ -97,9 +97,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	
 	@Transactional
 	@Override
-	public Integer MobileBookOrder(THotel hotel, Member member, BookParam bookParam) {
+	public Integer mobileBookOrder(THotel hotel, Member member, BookParam bookParam) {
 		try {
-			RoomOrderPriceVO orderPriceVO = MobilePriceCalculation(hotel.getId(), member, bookParam);
+			RoomOrderPriceVO orderPriceVO = mobilePriceCalculation(hotel.getId(), member, bookParam);
 			System.err.println(bookParam.getPayPrice());
 			System.err.println(orderPriceVO.getPayPrice());
 			if(!bookParam.getPayPrice().equals(orderPriceVO.getPayPrice())) {
@@ -224,7 +224,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	}
 
 	@Override
-	public RoomOrderPriceVO MobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception {
+	public RoomOrderPriceVO mobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception {
 		RoomOrderPriceVO orderPriceVO = new RoomOrderPriceVO();
 		Integer price = 0;
 		/* 日期 */
@@ -266,9 +266,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 						orderPriceVO.setRoomPrice(price);
 					}
 					MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
-					price = DuofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
-					price = IntegralCalculate(bookParam, memberCard, price, orderPriceVO);
-					price = FenBiCalculate(bookParam, memberCard, price, orderPriceVO);
+					price = duofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
+					price = integralCalculate(bookParam, memberCard, price, orderPriceVO);
+					price = fenBiCalculate(bookParam, memberCard, price, orderPriceVO);
 				}
 			}
 		}
@@ -308,7 +308,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	 * @param orderPriceVO
 	 * @param days
 	 */
-	private Integer IntegralCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
+	private Integer integralCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
 		if(bookParam.getIntegral() != null) {
 			if(price >= memberCard.getJifenStartMoney() * 100) {
 				price -= memberCard.getJifenMoeny() * 100;
@@ -326,7 +326,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	 * @param orderPriceVO
 	 * @param days
 	 */
-	private Integer FenBiCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
+	private Integer fenBiCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
 		if(bookParam.getFb() != null) {
 			if(price >= memberCard.getFenbiStartMoney() * 100) {
 				price -= memberCard.getFenbiMoeny() * 100;
@@ -344,7 +344,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	 * @param orderPriceVO
 	 * @return
 	 */
-	private Integer DuofenCardsCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
+	private Integer duofenCardsCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
 		if(bookParam.getCouponsCode() != null) {
 			for(DuofenCards dc : memberCard.getDuofenCards()) {
 				if(dc.getCode().equals(bookParam.getCouponsCode())) {
@@ -355,7 +355,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 						orderPriceVO.setCouponCount(1);
 					}else {
 						if(price > (dc.getCash_least_cost() * 100)) {
-							int dcCount = DuofenCardsCount(dc, price);
+							int dcCount = duofenCardsCount(dc, price);
 							price -= dc.getReduce_cost() * 100 * dcCount;
 							orderPriceVO.setCouponPrice(dc.getReduce_cost() * 100 * dcCount);
 							orderPriceVO.setCouponCount(dcCount);
@@ -367,7 +367,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		return price;
 	}
 	
-	private int DuofenCardsCount(DuofenCards dc, Integer price) {
+	private int duofenCardsCount(DuofenCards dc, Integer price) {
 		int dcCount = 0;
 		int temp = price;
 		for(int i=0;i<dc.getCountId();i++) {

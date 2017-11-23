@@ -1,18 +1,15 @@
 package com.gt.hotel.config;
 
+import com.gt.hotel.interceptor.BackAuthenticationInterceptor;
+import com.gt.hotel.interceptor.MobileAuthenticationInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import com.gt.hotel.interceptor.BackAuthenticationInterceptor;
-import com.gt.hotel.interceptor.MobileAuthenticationInterceptor;
+import org.springframework.web.servlet.config.annotation.*;
 
 /**
  * SpringMVC 配置类
@@ -27,10 +24,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     MobileAuthenticationInterceptor mobileAuthenticationInterceptor() {
         return new MobileAuthenticationInterceptor();
     }
-    
+
     @Bean
     BackAuthenticationInterceptor backAuthenticationInterceptor() {
-    	return new BackAuthenticationInterceptor();
+        return new BackAuthenticationInterceptor();
     }
 
 
@@ -39,6 +36,22 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("/nav.html");
         registry.addViewController("/error").setViewName("/error/defaultError.html");
+    }
+
+    /**
+     * Total customization - see below for explanation.
+     * issue: fix HttpMediaTypeNotAcceptableException: Could not find acceptable representation
+     */
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.favorPathExtension(false).
+                favorParameter(true).
+                parameterName("mediaType").
+                ignoreAcceptHeader(true).
+                useJaf(false).
+                defaultContentType(MediaType.APPLICATION_JSON).
+                mediaType("xml", MediaType.APPLICATION_XML).
+                mediaType("json", MediaType.APPLICATION_JSON);
     }
 
     /**
@@ -56,7 +69,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        //		super.addResourceHandlers(registry);
+        super.addResourceHandlers(registry);
     }
 
 
@@ -88,7 +101,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         bean.setOrder(0);
         return bean;
     }
-
 
 
 }
