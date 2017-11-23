@@ -2,14 +2,17 @@ package com.gt.hotel.web.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -18,6 +21,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
+import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.dao.TOrderRoomDAO;
 import com.gt.hotel.entity.TActivityDetail;
 import com.gt.hotel.entity.TActivityRoom;
@@ -34,8 +38,10 @@ import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.ActivityDetailVo;
+import com.gt.hotel.vo.CheackInListRevenueVo;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomCheackInCountVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.TActivityDetailService;
 import com.gt.hotel.web.service.TActivityRoomService;
@@ -61,6 +67,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	
 	@Autowired
 	TOrderService orderService;
+	
+	@Autowired
+	TOrderDAO orderDAO;
 	
 	@Autowired
 	TActivityDetailService activityDetailService;
@@ -375,6 +384,59 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	@Override
 	public Integer queryMobileRoomOrderSUM(Integer memberId) {
 		return tOrderRoomDAO.queryMobileRoomOrderSUM(memberId);
+	}
+
+	@Override
+	public RoomCheackInCountVo roomCheckInCount(Integer busId, Integer shopId) {
+		return tOrderRoomDAO.roomCheckInCount(busId, shopId);
+	}
+
+	@Override
+	public List<CheackInListRevenueVo> erpGetOccupancyRevenue(String now, Integer busId, Integer shopId) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<CheackInListRevenueVo> l = new ArrayList<>();
+		List<String> dates = new ArrayList<>();
+    	Date date = new Date();
+    	if(!StringUtils.isEmpty(now)) {
+    		try {
+				date = sdf.parse(now);
+			} catch (ParseException e) {
+				throw new ResponseEntityException(ResponseEnums.ERROR);
+			}
+    	}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		for(int i=0;i<7;i++) {
+			cal.add(Calendar.DAY_OF_YEAR, -1);
+			dates.add(sdf.format(cal.getTime()));
+		}
+		String startDate = dates.get(dates.size() - 1);
+		String endDate = dates.get(0);
+		List<TOrderRoom> ors = tOrderRoomDAO.getCheckInRoom(busId, shopId, startDate, endDate);
+		List<TOrder> os = orderDAO.getTotalRevenue(busId, shopId, startDate, endDate);
+		int roomCount = tOrderRoomDAO.roomCheckInCount(busId, shopId).getRoomCount();
+		for(String day : dates) {
+			CheackInListRevenueVo cil = new CheackInListRevenueVo();
+			Integer checkInRoomCount = 0;
+			Integer totalRevenue = 0;
+			for(TOrderRoom or : ors) {
+				if(sdf.format(or.getRoomInTime()).equals(day)) {
+					checkInRoomCount += or.getNumber();
+				}
+			}
+			for(TOrder o : os) {
+				if(sdf.format(o.getPayTime()).equals(day)) {
+					totalRevenue += o.getRealPrice();
+				}
+			}
+			cil.setCheckInRoomCount(checkInRoomCount);
+			cil.setTotalRevenue(totalRevenue);
+			cil.setOccupancyRate(Double.valueOf(Math.rint((checkInRoomCount / (double) roomCount * 100))).intValue());
+			cil.setDate(day);
+			l.add(cil);
+		}
+		return l;
 	}
 	
 }

@@ -14,15 +14,15 @@ import lombok.Data;
 public class BusinessConditionsVo {
 	
 	@ApiModelProperty("本日预抵店")
-    private Integer PreAarrived;
+    private Integer preAarrived = 0;
 
 	@ApiModelProperty("本日新增预订")
-    private Integer newBookign;
+    private Integer newBooking = 0;
 	
 	@ApiModelProperty("本日收入")
-    private Integer income;
+    private Integer income = 0;
 	
 	@ApiModelProperty("本日支出")
-    private Integer expenditure;
+    private Integer expenditure = 0;
 
 }

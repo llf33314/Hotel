@@ -89,5 +89,26 @@
 		SELECT SUM(bill_price) 
 		FROM t_order 
 		WHERE member_id = #{memberId} AND order_status = 3 
+	</select>
+	
+	<select id="roomCheckInCount" resultType="com.gt.hotel.vo.RoomCheackInCountVo">
+		SELECT 
+		(SELECT SUM(a.room_count)
+		FROM t_room_category a 
+		JOIN t_hotel b ON a.hotel_id = b.id
+		WHERE b.shop_id = #{shopId} AND b.bus_id = #{busId} AND a.mark_modified = 0) roomCount, 
+		(SELECT SUM(c.number)
+		FROM t_order a 
+		JOIN t_hotel b ON a.hotel_id = b.id 
+		JOIN t_order_room c ON a.id = c.order_id 
+		WHERE b.shop_id = #{shopId} AND b.bus_id = #{busId} AND a.order_status = 4) checkInRoomCount;
 	</select>	
+	
+	<select id="getCheckInRoom" resultType="com.gt.hotel.entity.TOrderRoom">
+		SELECT <include refid="Base_Column_List_VO"/> 
+		FROM t_order_room a 
+		JOIN t_order b ON a.order_id = b.id 
+		JOIN t_hotel c ON b.hotel_id = c.id 
+		WHERE a.room_in_time BETWEEN #{startDate} AND #{endDate} AND b.mark_modified = 0 AND b.order_status = 4 AND c.shop_id = #{shopId} AND c.bus_id = #{busId};
+	</select>
 </mapper>

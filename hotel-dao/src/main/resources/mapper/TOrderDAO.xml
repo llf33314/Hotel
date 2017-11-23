@@ -152,4 +152,34 @@
 		FROM t_order 
 		WHERE order_status = 4 AND mark_modified = 0 AND member_id = #{memberId}
 	</select>
+	
+	<select id="erpGetBusinessConditions" resultType="com.gt.hotel.vo.BusinessConditionsVo">
+		SELECT 
+			(SELECT COUNT(b.order_id)  
+				FROM t_order a JOIN t_order_room b ON a.id = b.order_id JOIN t_hotel c ON a.hotel_id = c.id 
+				WHERE b.room_in_time BETWEEN #{nowStart} AND #{nowEnd} AND a.mark_modified = 0 AND a.bus_id = #{busId} AND c.shop_id = #{shopId}) preAarrived, 
+			(SELECT COUNT(a.id)  
+				FROM t_order a JOIN t_hotel c ON a.hotel_id = c.id 
+				WHERE a.create_time BETWEEN #{nowStart} AND #{nowEnd} AND a.mark_modified = 0 AND a.bus_id = #{busId} AND c.shop_id = #{shopId}) newBooking,
+			(SELECT SUM(a.real_price)  
+				FROM t_order a JOIN t_hotel c ON a.hotel_id = c.id
+				JOIN t_order_room b ON a.id = b.order_id 
+				WHERE a.mark_modified = 0 AND a.pay_status = 1 AND a.pay_time BETWEEN #{nowStart} AND #{nowEnd} AND a.bus_id = #{busId} AND c.shop_id = #{shopId}) income;
+	</select>
+	
+	<select id="getTotalRevenue" resultType="com.gt.hotel.entity.TOrder">
+		SELECT <include refid="Base_Column_List_VO" />  
+		FROM t_order b 
+		JOIN t_hotel c ON b.hotel_id = c.id 
+		WHERE b.pay_time BETWEEN #{startDate} AND #{endDate} AND b.pay_status = 1 AND b.mark_modified = 0 AND c.shop_id = #{shopId} AND c.bus_id = #{busId};	
+	</select>
+	
+	<select id="getIncomeDetailsByDate" resultType="com.gt.hotel.entity.IncomeDetailsVo">
+		SELECT DATE_FORMAT(b.pay_time, '%Y-%m-%d') date, SUM(b.real_price) roomPrice 
+		FROM t_order_room a 
+		JOIN t_order b ON a.order_id = b.id 
+		JOIN t_hotel c ON b.hotel_id = c.id 
+		WHERE b.pay_status = 1 AND a.mark_modified = 0 AND c.shop_id = #{shopId} AND c.bus_id = #{busId} 
+		GROUP BY DATE_FORMAT(b.pay_time, '%Y-%m-%d');
+	</select>
 </mapper>
