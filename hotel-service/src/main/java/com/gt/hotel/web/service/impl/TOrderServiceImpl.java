@@ -291,7 +291,9 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 	@Override
 	public Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer shopId, HotelPage hpage) {
 		Page<IncomeDetailsVo> page = hpage.initPage();
-		page.setRecords(tOrderDAO.getIncomeDetailsByDate(busId, shopId, hpage, page));
+		List<IncomeDetailsVo> l = tOrderDAO.getIncomeDetailsByDate(busId, shopId, hpage, page);
+		//TODO 暂缺 商品消费 & 其他 
+		page.setRecords(l);
 		return page;
 	}
 

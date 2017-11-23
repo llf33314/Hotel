@@ -24,6 +24,7 @@ import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
+import com.gt.hotel.web.service.TRoomCategoryService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,6 +51,9 @@ public class ErpHotelBookingController extends BaseController {
 	
 	@Autowired
 	TOrderRoomService orderRoomService;
+	
+	@Autowired
+	TRoomCategoryService roomCategoryService;
 
     @ApiOperation(value = "房间订单 列表", notes = "房间订单 列表")
     @GetMapping(value = "roomOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -108,5 +112,6 @@ public class ErpHotelBookingController extends BaseController {
 		HotelBackRoomOrderVo order = orderService.queryRoomOrderOne(orderId);
 		return ResponseDTO.createBySuccess(order);
 	}
+	
 	
 }

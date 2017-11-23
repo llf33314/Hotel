@@ -1,16 +1,17 @@
 package com.gt.hotel.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
 import com.gt.entityBo.ErpRefundBo;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 多粉接口
@@ -436,23 +437,110 @@ public class WXMPApiUtil {
         return getLApi(redisMap, webServerConfigurationProperties.getWxmpService().getApiMap().get("setRedisStorage"));
     }
 
+    /**
+     * 根据商家ID查询 商户号对象
+     * @param busId
+     * @return com.gt.api.bean.session.WxPublicUsers
+     * @throws SignException
+     */
+    public JSONObject selectByUserId(Integer busId) throws SignException {
+    	JSONObject re = new JSONObject();
+    	re.put("reqdata", busId);
+    	return getLApi(re, webServerConfigurationProperties.getWxmpService().getApiMap().get("selectByUserId"));
+    }
 
+    /**
+     * 商家/员工  获取管理的ERP列表
+     * @param loginStyle 登录人属性0是员工，1是老板（必填）
+     * @param userId 登录人的ID（必填）
+     * @return /hotel-entity/src/main/java/com/gt/hotel/other/MenusLevelList.java
+     * @throws SignException
+     */
+    public JSONObject getErpListApi(Integer loginStyle, Integer userId) throws SignException {
+    	Map<String, Object> param = new HashMap<>();
+    	param.put("loginStyle", loginStyle);
+    	param.put("userId", userId);
+		return getCApi(param , webServerConfigurationProperties.getWxmpService().getApiMap().get("getErpListApi"));
+	}
+    
+    /**
+     * 商家/员工获取ERP列表菜单
+     * @param style 登录人属性0是员工，1是老板（必填）
+     * @param userId 登录人的ID（必填）
+     * @param loginuc 登陆属性 0是电脑端，1是UC端
+     * @param levelModel 菜单版本，登陆第一次不需要传，切换菜单时，请传该参数
+     * @return /hotel-entity/src/main/java/com/gt/hotel/other/ErpMenus.java
+     * @throws SignException
+     */
+    public JSONObject getMenus(Integer style, Integer userId, Integer loginuc, String levelModel) throws SignException {
+    	Map<String, Object> param = new HashMap<>();
+    	param.put("style", style);
+    	param.put("userId", userId);
+    	param.put("loginuc", loginuc);
+    	param.put("erpstyle", 9);
+    	if(levelModel != null) {
+    		param.put("levelModel", levelModel);
+    	}
+    	return getCApi(param , webServerConfigurationProperties.getWxmpService().getApiMap().get("getMenus"));
+    }
+    
+    /**
+     * erp商家是否有商城功能
+     * @param style 登录人属性0是员工，1是老板（必填）
+     * @param userId 登录人的ID（必填）
+     * @return error	Integer	0 代表商家有商城菜单，其余代表没有商城  message	String	提示消息（为什么没有商城的原因）
+     * @throws SignException
+     */
+    public JSONObject getMall(Integer style, Integer userId) throws SignException {
+    	Map<String, Object> param = new HashMap<>();
+    	param.put("style", style);
+    	param.put("userId", userId);
+    	return getCApi(param , webServerConfigurationProperties.getWxmpService().getApiMap().get("getMall"));
+    }
+    
+    /**
+     * erp三级菜单接口
+     * @param pidUrl 父类菜单的url
+     * @param sonUrls 子类菜单的url,多个用,区分
+     * @param loginStyle 登录人属性0是员工，1是老板（必填）
+     * @param userId 登录人的ID（必填）
+     * @return /hotel-entity/src/main/java/com/gt/hotel/other/Menuslist.java
+     * @throws SignException
+     */
+    public JSONObject getMenusThree(String pidUrl, String sonUrls, String loginStyle, String userId) throws SignException {
+    	Map<String, Object> param = new HashMap<>();
+    	param.put("pidUrl", pidUrl);
+    	param.put("sonUrls", sonUrls);
+    	param.put("loginStyle", loginStyle);
+    	param.put("userId", userId);
+    	param.put("erpstyle", 9);
+    	return getCApi(param , webServerConfigurationProperties.getWxmpService().getApiMap().get("getMenusThree"));
+    }
+    
+    
+    
     public static void main(String[] args) {
         try {
             Map<String, Object> param = new HashMap<String, Object>();
-//        	param.put("style", 1200);
+//        	param.put("style", 1193);
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
-//        	param.put("pushName", "hotel:test");
-//        	param.put("pushMsg", "test");
-//            param.put("busId", 33);
-//            String url = "https://deeptel.com.cn" + "/8A5DA52E/busUserApi/getWxPulbicMsg.do";
-//            String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
+        	param.put("loginStyle", "1");
+        	param.put("userId", 33);
+        	param.put("loginuc", 0);
+        	param.put("pidUrl", "/erporder/iframe.do");
+        	param.put("sonUrls", "/erporder/takeway/index.do");
+        	param.put("erpstyle", 1);
+//        	param.put("levelModel", 1);
+//            param.put("reqdata", 33);
+            String url = "https://deeptel.com.cn" + "/8A5DA52E/ErploginApi/getMenusThree.do";
+            String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
+//            JSONObject result = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(param), url, JSONObject.class, "WXMP2017");
 
-        	param.put("cardNo", "13433550667");
-        	param.put("busId", 33);
-        	param.put("shopId", 29);
-        	String url = "http://member.yifriend.net" + "/memberAPI/member/findMemberCard";
-        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
+//        	param.put("cardNo", "13433550667");
+//        	param.put("memberId", 1071);
+//        	param.put("shopId", 29);
+//        	String url = "http://member.yifriend.net" + "/memberAPI/member/findCardByMembeId";
+//        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
 //
             System.err.println(result);
 

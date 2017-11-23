@@ -1,10 +1,11 @@
 package com.gt.hotel.properties;
 
-import lombok.Data;
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import lombok.Data;
 
 /**
  * @author zhangmz
@@ -22,6 +23,8 @@ public class WebServerConfigurationProperties {
     private ShortService shortService;
 
     private MemberService memberService;
+
+    private JxcService jxcService;
 
 
     @Data
@@ -60,6 +63,19 @@ public class WebServerConfigurationProperties {
         private String serviceUrl;
 
         private Map<String,String> ApiMap;
+    }
+    
+    @Data
+    @Component
+    public static class JxcService {
+    	
+    	private String serviceUrl;
+
+    	private String account;
+    	
+    	private String pwd;
+    	
+    	private Map<String,String> ApiMap;
     }
 
 }
