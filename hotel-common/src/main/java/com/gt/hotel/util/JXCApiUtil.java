@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -42,24 +43,35 @@ public class JXCApiUtil {
 	
 	private final static String CHARSET = "utf-8";  
 	private final static int CODE_1 = 1001;	//调用成功并返回请求数据
+	@SuppressWarnings("unused")
 	private final static int CODE_2 = 1002;	//异常(包括请求数据、系统运行异常等)
-	private final static int CODE_3 = 1003;	//未登录状态，无权操作
-	private final static int CODE_4 = 1004;	//TOKEN过期
+	private final static int CODE_3 = 1005;	//未登录状态，无权操作
+	private final static int CODE_4 = 1006;	//TOKEN过期
+	private final static String TOKEN_KEY = "hotel:jxc:token";
 
     @Autowired
     private WebServerConfigurationProperties properties;
+    
+    private void setJXCToken(HttpServletRequest request, String token) {
+    	request.getSession().setAttribute(TOKEN_KEY, token);
+    }
+    
+    private String getJXCToken(HttpServletRequest request) {
+    	return request.getSession().getAttribute(TOKEN_KEY).toString();
+    }
     
     /**
      * 进销存登录 返回token
      * @return
      */
-    private String login() {
+    private String login(HttpServletRequest request) {
     	Map<String, String> map = new HashMap<>();
     	map.put("account", properties.getJxcService().getAccount());
     	map.put("pwd", properties.getJxcService().getPwd());
 		String result = doPost(properties.getJxcService().getApiMap().get("login"), map , null);
 		JSONObject json = JSONObject.parseObject(result);
 		if(json.getIntValue("code") == CODE_1) {
+			setJXCToken(request, json.getJSONObject("data").getString("token"));
 			return json.getJSONObject("data").getString("token");
 		}else {
 			return null;
@@ -73,22 +85,69 @@ public class JXCApiUtil {
      * @param search 搜索条件 （商品名称or条形码or自定义编码）
      * @param pageIndex 页数
      * @param pageCount 条数
-     * @return
+     * @return {"code":100X,"msg": "","data": com.gt.hotel.other.jxc.JxcInventory} 
      */
-    public JSONObject allProducts(String shopIds, String proTypes, String search, String pageIndex, String pageCount) {
+    public JSONObject allProducts(String shopIds, String proTypes, String search, String pageIndex, String pageCount, HttpServletRequest request) {
     	Map<String, String> map = new HashMap<>();
     	map.put("shopIds", shopIds);
     	map.put("proTypes", proTypes);
     	map.put("search", search);
     	map.put("pageIndex", pageIndex);
     	map.put("pageCount", pageCount);
-		String token = null;//TODO 暂时……
-		String result = doPost(properties.getJxcService().getApiMap().get("allProducts"), map , token);
-    	JSONObject json = JSONObject.parseObject(result);
-		return json;
+    	return jxcRequest(map, "allProducts", request);
     }
     
-	public String doPost(String url, Map<String,String> map, String token){  
+    /**
+     * 库存总数查询
+     * @param shopIds 门店ID 多个用","分割
+     * @param request
+     * @return {"code":100X,"msg": "","data": "库存总数"} 
+     */
+    public JSONObject amountSum(String shopIds, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<>();
+    	map.put("shopIds", shopIds);
+    	return jxcRequest(map, "amountSum", request);
+    }
+    
+    /**
+     * 商品类别查询
+     * @param rootUid 总账号ID(int)
+     * @param request
+     * @return 商品类别集合 com.gt.hotel.other.jxc.ProductType
+     */
+    public JSONObject getProTypes(String rootUid, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<>();
+    	map.put("rootUid", rootUid);
+    	return jxcRequest(map, "getProTypes", request);
+    }
+    
+    /**
+     * 发货、退货(商城.ERP)
+     * @param orders json字符串 [{uId:'1', uType: '', uName: '', rootUid: '', shopId: '', type: '', remark: '', products: [{id: '', amount: '', price: ''}]}]
+     * @param request
+     * @return 批量操作，只返回成功或失败信息 1为入库(退货);0: 发货
+     */
+    public JSONObject operation(String orders, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<>();
+    	map.put("orders", orders);
+    	return jxcRequest(map, "operation", request);
+    }
+    
+    /**
+     * 库存查询(根据商品ID)
+     * @param shopIds 门店ID 多个用","分割
+     * @param proIds 商品ID 多个用","分割
+     * @param request
+     * @return 数组第一个元素为查询的商品ID,第二个元素为对应库存总数
+     */
+    public JSONObject inventoryByProduct(String shopIds, String proIds, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<>();
+    	map.put("shopIds", shopIds);
+    	map.put("proIds", proIds);
+    	return jxcRequest(map, "inventoryByProduct", request);
+    }
+    
+	private String doPost(String url, Map<String,String> map, String token){  
     	HttpClient httpClient = null;  
     	HttpPost httpPost = null;  
     	String result = null;  
@@ -119,6 +178,22 @@ public class JXCApiUtil {
     	return result;  
     }  
     
+	/**
+	 * 请求结果
+	 * @param map 参数集
+	 * @param urlName 路径名
+	 * @param request
+	 * @return
+	 */
+	private JSONObject jxcRequest(Map<String, String> map, String urlName, HttpServletRequest request) {
+		JSONObject json = JSONObject.parseObject(doPost(properties.getJxcService().getApiMap().get(urlName), map , getJXCToken(request)));
+    	if(json.getIntValue("code") == CODE_3 || json.getIntValue("code") == CODE_4) {
+    		return JSONObject.parseObject(doPost(properties.getJxcService().getApiMap().get(urlName), map , login(request)));
+    	}else {
+    		return json;
+    	}
+	}
+	
     public static void main(String[] args) {
         try {
         	JXCApiUtil j = new JXCApiUtil();
