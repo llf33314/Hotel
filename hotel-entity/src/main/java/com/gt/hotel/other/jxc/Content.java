@@ -2,8 +2,6 @@
   * Copyright 2017 bejson.com 
   */
 package com.gt.hotel.other.jxc;
-import java.util.Date;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,13 +18,13 @@ public class Content {
 	@ApiModelProperty("库存数")
     private double amountSum;
    
-    private Date attrIds;
+    private String attrIds;
     
     private String attrNames;
     
     private String barCode;
     
-    private int createDate;
+    private long createDate;
     
     private String createDateStr;
     
@@ -38,5 +36,8 @@ public class Content {
     
     @ApiModelProperty("商品基本信息")
     private Product product;
+    
+    @ApiModelProperty("成本价")
+    private int movePrice;
 
 }
