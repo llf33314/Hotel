@@ -26,7 +26,7 @@ public class MpGenerator {
 	// 生成*.java 的文件路径
 	public static final String outPutJavaModel = outPutBaseDir + "src/main/java";
 	// 需要生成的表
-	public static final String[] generatorTableName = new String[] { "t_activity_detail" };
+	public static final String[] generatorTableName = new String[] { "t_agreement_organization", "t_package", "t_package_room" };
 	// 作者
 	private static final String author = "";
 	// 去除表前缀 例如：bus_user 填入bus 生成的 user
@@ -49,11 +49,11 @@ public class MpGenerator {
 	// 驱动
 	public static final String driverName = "com.mysql.jdbc.Driver";
 	// url
-	public static final String url = "jdbc:mysql://localhost:3306/gt_hotel?characterEncoding=utf8";
+	public static final String url = "jdbc:mysql://113.106.202.51:3306/gt_hotel?characterEncoding=utf8";
 	// 数据库用户名
-	public static final String username = "root";
+	public static final String username = "gt_hotel";
 	// 密码
-	public static final String password = "123456";
+	public static final String password = "gt123456";
 
 	public static final String baseService = "com.gt.hotel.base.BaseService";
 
