@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,7 +59,7 @@ public class ErpHotelManagerController extends BaseController {
     @ApiOperation(value = "协议单位or中介列表", notes = "协议单位or中介列表")
     @GetMapping(value = "organization/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<AgreementOrganizationVo>> organizationR(
-    		@ApiParam("门店ID") Integer shopId,
+    		@ApiParam("门店ID")@PathVariable("shopId") Integer shopId,
     		@ModelAttribute AgreementParamter.AgreementQuery query, 
     		BindingResult bindingResult) {
     	InvalidParameter(bindingResult);
@@ -119,7 +120,7 @@ public class ErpHotelManagerController extends BaseController {
     
     @ApiOperation(value = "套餐房间 列表", notes = "套餐房间 列表")
     @GetMapping(value = "package/{shopId}/{packageId}/packageRoom", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<List<PackageRoomVo>> packageR(
+    public ResponseDTO<List<PackageRoomVo>> packageRoomR(
     		@ApiParam("门店ID") Integer shopId,
     		@ApiParam("组织ID") Integer packageId) {
         return ResponseDTO.createBySuccess(packageRoomService.erpQueryPackageRoom(shopId, packageId));

@@ -41,8 +41,8 @@ public class WebServerConfigurationProperties {
         private String socketUrl;
         
         private String wxmpLogin;
-
-        private Map<String,String> ApiMap;
+        
+        private Map<String,String> apiMap;
     }
 
     @Data

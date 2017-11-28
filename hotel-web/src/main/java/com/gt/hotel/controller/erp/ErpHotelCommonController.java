@@ -10,23 +10,29 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.sign.SignBean;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.sign.SignUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.THotelMemberSetting;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.HotelShopInfo;
@@ -35,7 +41,11 @@ import com.gt.hotel.param.RoomCategoryParameter;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.ConfigVO;
+import com.gt.hotel.vo.HotelMemberSettingVo;
+import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.web.service.THotelMemberSettingService;
+import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
 import io.swagger.annotations.Api;
@@ -60,6 +70,12 @@ public class ErpHotelCommonController extends BaseController {
 
 	@Autowired
 	TRoomCategoryService roomCategoryService;
+	
+	@Autowired
+	THotelService hotelService;
+	
+	@Autowired
+	THotelMemberSettingService hotelMemberSettingService;
 
     private static final Logger logger = LoggerFactory.getLogger(ErpHotelCommonController.class);
 
@@ -128,12 +144,38 @@ public class ErpHotelCommonController extends BaseController {
 	@ApiOperation(value = "房间类型列表", notes = "房间类型列表")
 	@GetMapping(value = "roomCategory/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<RoomCategoryVo>> getRoomCategory(
+			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
 			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param, 
 			BindingResult bindingResult) {
 		InvalidParameter(bindingResult);
 //		param.setPageSize(9999);
 		Page<RoomCategoryVo> page = roomCategoryService.queryRoomCategory(param);
 		return ResponseDTO.createBySuccess(page);
+	}
+	
+	@ApiOperation(value = "酒店信息", notes = "酒店信息")
+	@GetMapping(value = "hotel/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<HotelVo> getHotel(
+			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+			BindingResult bindingResult) {
+		InvalidParameter(bindingResult);
+		Wrapper<THotel> arg0 = new EntityWrapper<>();
+		arg0.eq("shop_id", shopId);
+		THotel th = hotelService.selectOne(arg0);
+        HotelVo h = new HotelVo();
+        BeanUtils.copyProperties(th, h);
+
+        Wrapper<THotelMemberSetting> wrapper = new EntityWrapper<>();
+        wrapper.eq("hotel_id", th.getId());
+        List<THotelMemberSetting> hmss = hotelMemberSettingService.selectList(wrapper);
+        List<HotelMemberSettingVo> hmsv = new ArrayList<>();
+        for (THotelMemberSetting hms : hmss) {
+            HotelMemberSettingVo v = new HotelMemberSettingVo();
+            BeanUtils.copyProperties(hms, v);
+            hmsv.add(v);
+        }
+        h.setMemberSetting(hmsv);
+		return ResponseDTO.createBySuccess(h);
 	}
 	
 }
