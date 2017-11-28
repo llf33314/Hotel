@@ -317,10 +317,9 @@ public class HotelOrderController extends BaseController {
 		return ResponseDTO.createBySuccess();
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "房间订单  结账退房 操作", notes = "房间订单  结账退房 操作")
 	@PostMapping(value = "{orderId}/checkOut", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO checkOut(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, 
+	public ResponseDTO<String> checkOut(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, 
 			@RequestBody HotelOrderParameter.RefundsParam refundsP, 
 			HttpServletRequest request) {
 		Integer busid = getLoginUser(request).getId();
