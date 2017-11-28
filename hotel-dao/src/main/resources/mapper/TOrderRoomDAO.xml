@@ -4,7 +4,8 @@
 
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TOrderRoom">
-		<id column="order_id" property="orderId" />
+		<id column="id" property="id" />
+		<result column="order_id" property="orderId" />
 		<result column="order_num" property="orderNum" />
 		<result column="hotel_id" property="hotelId" />
 		<result column="hotel_name" property="hotelName" />
@@ -40,11 +41,12 @@
 		<result column="check_standard" property="checkStandard" />
 		<result column="check_out_instructions" property="checkOutInstructions" />
 		<result column="deposit_visible" property="depositVisible" />
+		<result column="hour_room_check_in_time" property="hourRoomCheckInTime" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender, check_standard
+        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender, check_standard, hour_room_check_in_time
     </sql>
     
     <sql id="Base_Column_List_VO">
@@ -66,18 +68,47 @@
 		t_order_room.mark_modified markModified, t_order_room.created_by
 		createdBy, t_order_room.created_at createdAt, t_order_room.updated_by
 		updatedBy, t_order_room.updated_at updatedAt, t_order_room.guest_type guestType, 
-		t_order_room.customer_gender customerGender, check_standard checkStandard 
+		t_order_room.customer_gender customerGender, check_standard checkStandard,
+		hour_room_check_in_time hourRoomCheckInTime 
 	</sql>
 
 	<select id="queryMobileRoomOrderOne" resultType="com.gt.hotel.vo.MobileRoomOrderVo">
 		SELECT a.id orderId, b.customer_name customerName, b.customer_phone customerPhone, b.room_in_time roomInTime, 
 			b.room_out_time roomOutTime, b.category_name categoryName, b.number, a.pay_type payType, a.remark, a.hotel_id hotelId, 
 			c.`name`, c.phone, c.address, c.latitude, c.longitude, a.fb, a.integral, a.fb_discount fbDiscount, a.integral_discount integralDiscount,
-			b.deposit, d.coupons_discount couponsDiscount, d.coupons_id couponsId, d.coupons_num couponsNum, a.real_price realPrice 
+			b.deposit, IFNULL(d.coupons_discount, 0) couponsDiscount, IFNULL(d.coupons_id, 0) couponsId, IFNULL(d.coupons_num, 0) couponsNum, a.real_price realPrice,
+			b.activity_id activityId 
 		FROM t_order a 
 		JOIN t_order_room b ON a.id = b.order_id 
 		JOIN t_hotel c ON a.hotel_id = c.id 
+		LEFT JOIN t_order_coupons d ON a.id = d.order_id 
 		WHERE a.id = #{orderId} AND a.member_id = #{memberId} AND a.hotel_id = #{hotelId}
 	</select>
+
+	<select id="queryMobileRoomOrderSUM" resultType="Integer">
+		SELECT SUM(bill_price) 
+		FROM t_order 
+		WHERE member_id = #{memberId} AND order_status = 3 
+	</select>
 	
+	<select id="roomCheckInCount" resultType="com.gt.hotel.vo.RoomCheackInCountVo">
+		SELECT 
+		(SELECT SUM(a.room_count)
+		FROM t_room_category a 
+		JOIN t_hotel b ON a.hotel_id = b.id
+		WHERE b.shop_id = #{shopId} AND b.bus_id = #{busId} AND a.mark_modified = 0) roomCount, 
+		(SELECT SUM(c.number)
+		FROM t_order a 
+		JOIN t_hotel b ON a.hotel_id = b.id 
+		JOIN t_order_room c ON a.id = c.order_id 
+		WHERE b.shop_id = #{shopId} AND b.bus_id = #{busId} AND a.order_status = 4) checkInRoomCount;
+	</select>	
+	
+	<select id="getCheckInRoom" resultType="com.gt.hotel.entity.TOrderRoom">
+		SELECT <include refid="Base_Column_List_VO"/> 
+		FROM t_order_room a 
+		JOIN t_order b ON a.order_id = b.id 
+		JOIN t_hotel c ON b.hotel_id = c.id 
+		WHERE a.room_in_time BETWEEN #{startDate} AND #{endDate} AND b.mark_modified = 0 AND b.order_status = 4 AND c.shop_id = #{shopId} AND c.bus_id = #{busId};
+	</select>
 </mapper>

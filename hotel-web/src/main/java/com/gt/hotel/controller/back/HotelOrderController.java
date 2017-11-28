@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,8 @@ public class HotelOrderController extends BaseController {
 	@ApiOperation(value = "删除 房间&餐饮订单(共用)", notes = "删除 房间&餐饮订单(共用)")
     @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO orderD(@RequestBody @ApiParam("订单ID 数组") List<Integer> ids, HttpSession session) {
-        Integer busid = getLoginUserId(session);
+    public ResponseDTO orderD(@RequestBody @ApiParam("订单ID 数组") List<Integer> ids, HttpServletRequest request) {
+        Integer busid = getLoginUser(request).getId();
         Wrapper<TOrder> wrapper = new EntityWrapper<>();
         wrapper.in("id", ids);
         TOrder h = new TOrder();
@@ -87,8 +86,8 @@ public class HotelOrderController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "订单  确认 操作", notes = "订单  确认 操作")
 	@PostMapping(value = "{orderId}/confirm", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO orderConfirm(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
-		Integer busid = getLoginUserId(session);
+	public ResponseDTO orderConfirm(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		TOrder order = tOrderService.selectById(orderId);
 		if(!order.getOrderStatus().equals(CommonConst.ORDER_PROCESSING)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
@@ -108,8 +107,8 @@ public class HotelOrderController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "订单  取消 操作", notes = "订单  取消 操作")
 	@PostMapping(value = "{orderId}/cancel", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO orderCancel(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
-		Integer busid = getLoginUserId(session);
+	public ResponseDTO orderCancel(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		TOrder order = tOrderService.selectById(orderId);
 		if(!order.getOrderStatus().equals(CommonConst.ORDER_PROCESSING) && !order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
@@ -129,8 +128,8 @@ public class HotelOrderController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "订单  完成 操作", notes = "订单  完成 操作")
 	@PostMapping(value = "{orderId}/complete", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO foodOrderComplete(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpSession session) {
-		Integer busid = getLoginUserId(session);
+	public ResponseDTO foodOrderComplete(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		TOrder order = tOrderService.selectById(orderId);
 		if(!order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)
 				|| !order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED)
@@ -153,10 +152,10 @@ public class HotelOrderController extends BaseController {
 	@ApiOperation(value = "订单  退款 操作", notes = "订单  退款 操作(占位)")
 	@PostMapping(value = "{orderId}/refunds", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO orderRefunds(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId,
-			HttpSession session, HttpServletRequest request) {
-		Integer busid = getLoginUserId(session);
+			HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID)) {
+		if(!(order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID) && order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED))) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
 		try {
@@ -186,11 +185,10 @@ public class HotelOrderController extends BaseController {
 //					if(resultII.getInteger("code").equals(0)) {
 						Wrapper<TOrder> wrapper = new EntityWrapper<>();
 						wrapper.eq("id", orderId);
-						Date date = new Date();
 						TOrder newOrder = new TOrder();
 						newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+						newOrder.setRefundAmount(order.getRealPrice());
 						newOrder.setUpdatedBy(busid);
-						newOrder.setUpdatedAt(date);
 						if(!tOrderService.update(newOrder, wrapper)) {
 							return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 						}else {
@@ -215,11 +213,10 @@ public class HotelOrderController extends BaseController {
 				if(result.getInteger("code").equals(0)) {
 					Wrapper<TOrder> wrapper = new EntityWrapper<>();
 					wrapper.eq("id", orderId);
-					Date date = new Date();
 					TOrder newOrder = new TOrder();
 					newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+					newOrder.setRefundAmount(order.getRealPrice());
 					newOrder.setUpdatedBy(busid);
-					newOrder.setUpdatedAt(date);
 					if(!tOrderService.update(newOrder, wrapper)) {
 						return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 					}else {
@@ -236,7 +233,7 @@ public class HotelOrderController extends BaseController {
 		return ResponseDTO.createBySuccess();
 	}
 	
-	@ApiOperation(value = "支付宝  退款 回调", notes = "支付宝  退款 回调")
+	@ApiOperation(value = "支付宝  退款 回调", notes = "支付宝  退款 回调", hidden = true)
 	@PostMapping(value = "{orderId}/aliPayCallBack", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void aliPayCallBack(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId,
 			@RequestBody Map<String,Object> param,
@@ -258,6 +255,7 @@ public class HotelOrderController extends BaseController {
 					wrapper.eq("id", orderId);
 					TOrder newOrder = new TOrder();
 					newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+					newOrder.setRefundAmount(order.getRealPrice());
 					if(tOrderService.update(newOrder, wrapper)) {
 						wxmpApiUtil.getSocketApi("hotel:socket", null, "success");
 					}
@@ -273,8 +271,8 @@ public class HotelOrderController extends BaseController {
 	@ApiOperation(value = "房间订单列表", notes = "房间订单列表")
 	@GetMapping(value = "room", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<HotelBackRoomOrderVo>> roomOrderR(HotelOrderParameter.RoomOrderQuery param,
-			HttpSession session) {
-		Integer busid = getLoginUserId(session);
+			HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		Page<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrder(busid, param);
 		return ResponseDTO.createBySuccess(page);
 	}
@@ -290,12 +288,12 @@ public class HotelOrderController extends BaseController {
 	@ApiOperation(value = "添加线下订单", notes = "添加线下订单")
 	@PostMapping(value = "AddOffLineOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO AddOffLineOrder(@Validated @RequestBody HotelOrderParameter.OffLineOrder order, 
-			BindingResult bindingResult, HttpSession session) {
+			BindingResult bindingResult, HttpServletRequest request) {
 		ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
-		Integer busid = getLoginUserId(session);
+		Integer busid = getLoginUser(request).getId();
 		tOrderService.AddOffLineOrder(busid, order);
 		return ResponseDTO.createBySuccess();
 	}
@@ -305,7 +303,7 @@ public class HotelOrderController extends BaseController {
 	@PostMapping(value = "{orderId}/checkIn", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<QueryRoomCategoryOne> checkIn(@PathVariable("orderId") Integer orderId, 
 			@Validated @RequestBody HotelOrderParameter.CheckInParam param, 
-			BindingResult bindingResult, HttpSession session) {
+			BindingResult bindingResult, HttpServletRequest request) {
 		ResponseDTO msg = InvalidParameterII(bindingResult);
 		if(msg != null) {
 			return msg;
@@ -314,20 +312,20 @@ public class HotelOrderController extends BaseController {
 		if(!order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
 		}
-		Integer busid = getLoginUserId(session);
+		Integer busid = getLoginUser(request).getId();
 		tOrderService.checkIn(busid, orderId, param);
 		return ResponseDTO.createBySuccess();
 	}
 	
 	@SuppressWarnings("rawtypes")
-	@ApiOperation(value = "房间订单  结账退房 操作(占位)", notes = "房间订单  结账退房 操作(占位)")
+	@ApiOperation(value = "房间订单  结账退房 操作", notes = "房间订单  结账退房 操作")
 	@PostMapping(value = "{orderId}/checkOut", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO checkOut(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, 
 			@RequestBody HotelOrderParameter.RefundsParam refundsP, 
-			HttpSession session, HttpServletRequest request) {
-		Integer busid = getLoginUserId(session);
+			HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getPayStatus().equals(CommonConst.ORDER_CONFIRMED) || !order.getPayStatus().equals(CommonConst.ORDER_CANCALLED)) {
+		if(!(order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN) && order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID)) ) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
 		try {
@@ -357,11 +355,11 @@ public class HotelOrderController extends BaseController {
 //					if(resultII.getInteger("code").equals(0)) {
 						Wrapper<TOrder> wrapper = new EntityWrapper<>();
 						wrapper.eq("id", orderId);
-						Date date = new Date();
 						TOrder newOrder = new TOrder();
 						newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
 						newOrder.setUpdatedBy(busid);
-						newOrder.setUpdatedAt(date);
+						newOrder.setRefundAmount(refundsP.getRefundFee());
+						newOrder.setRefundReason(refundsP.getRefundReason());
 						if(!tOrderService.update(newOrder, wrapper)) {
 							return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 						}else {
@@ -386,11 +384,10 @@ public class HotelOrderController extends BaseController {
 				if(result.getInteger("code").equals(0)) {
 					Wrapper<TOrder> wrapper = new EntityWrapper<>();
 					wrapper.eq("id", orderId);
-					Date date = new Date();
 					TOrder newOrder = new TOrder();
 					newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
 					newOrder.setUpdatedBy(busid);
-					newOrder.setUpdatedAt(date);
+					newOrder.setRefundAmount(refundsP.getRefundFee());
 					if(!tOrderService.update(newOrder, wrapper)) {
 						return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 					}else {
@@ -412,8 +409,8 @@ public class HotelOrderController extends BaseController {
 	@ApiOperation(value = "餐饮订单列表", notes = "餐饮订单列表")
 	@GetMapping(value = "food", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<HotelBackFoodOrderVo>> foodOrderR(HotelOrderParameter.FoodOrderQuery param,
-			HttpSession session) {
-		Integer busid = getLoginUserId(session);
+			HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		if(param.getKeyword() != null && param.getKeyword().trim().length() == 0) {
 			param.setKeyword(null); 
 		}
@@ -426,12 +423,11 @@ public class HotelOrderController extends BaseController {
 	@ApiOperation(value = "房间订单导出", notes = "房间订单导出")
 	@GetMapping(value = "roomExport", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void roomOrderExport(HotelOrderParameter.RoomOrderQuery param,
-			HttpServletRequest request, HttpServletResponse response,
-			HttpSession session) {
+			HttpServletRequest request, HttpServletResponse response) {
 		OutputStream outputStream = null;
 		HSSFWorkbook wb = null;
 		try {
-			Integer busid = getLoginUserId(session);
+			Integer busid = getLoginUser(request).getId();
 			List<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrderExport(busid, param);
 			String[] titles = new String[]{"订单号", "酒店名称", "姓名", "手机号", "入住时间", "离店时间", "房间类型", "预订间数", 
 					"门市价", "订单状态", "支付状态", "支付方式", "住客类型", "入住标准", "证件类型", "证件号码", "性别", "消费金额", 
@@ -513,13 +509,12 @@ public class HotelOrderController extends BaseController {
 	@ApiOperation(value = "餐饮订单导出", notes = "餐饮订单导出")
 	@GetMapping(value = "foodExport", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void foodOrderExport(HotelOrderParameter.FoodOrderQuery param,
-			HttpServletRequest request, HttpServletResponse response,
-			HttpSession session) {
+			HttpServletRequest request, HttpServletResponse response) {
 		
 		OutputStream outputStream = null;
 		HSSFWorkbook wb = null;
 	    try {
-	    	Integer busid = getLoginUserId(session);
+	    	Integer busid = getLoginUser(request).getId();
 	    	List<HotelBackFoodOrderVo> page = tOrderService.queryFoodOrderExport(busid, param);
 	        String[] titles = new String[]{"订单编号", "酒店名称", "预订人", "电话", "房号", "订单总额(元)", "下单时间", "菜品提供方", "订单状态", "支付状态", "支付方式"};
 	        String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomNum", 

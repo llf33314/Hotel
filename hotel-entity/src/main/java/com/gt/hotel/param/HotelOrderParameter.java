@@ -1,12 +1,5 @@
 package com.gt.hotel.param;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.gt.hotel.vo.OrderCouponsVo;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +7,12 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gt.hotel.vo.OrderCouponsVo;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * 
@@ -88,6 +85,9 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "房型名称")
 		private String categoryName;
 		
+		@ApiModelProperty(value = "会员ID")
+		private String memberId;
+		
 		@ApiModelProperty(value = "客户姓名", required = true)
 		@NotEmpty(message = "客户姓名不能为空")
 		private String customerName;
@@ -111,7 +111,7 @@ public class HotelOrderParameter {
 		@NotEmpty(message = "酒店名称不能为空")
 		private String hotelName;
 		
-		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
+		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金", required = true)
 		@NotNull(message = "支付类型不能为空")
 		private Integer payType;
 		
@@ -211,7 +211,7 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "酒店名称", required = true)
 		private String hotelName;
 
-		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金", required = true)
+		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金", required = true)
 		private Integer payType;
 
 		@ApiModelProperty(value = "入住时间", required = true)
@@ -265,6 +265,9 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "退款金额", required = true)
 		@NotNull(message = "退款金额不能为空")
 		private Integer refundFee;
+		
+		@ApiModelProperty(value = "退款说明")
+		private String refundReason;
 	}
 
 }

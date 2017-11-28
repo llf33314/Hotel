@@ -29,9 +29,12 @@ import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.IncomeDetailsVo;
+import com.gt.hotel.vo.OrderRoomCustomerVo;
 import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
@@ -249,6 +252,49 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		Page<DepositVo> page = hotelPage.initPage();
 		page.setRecords(tOrderDAO.queryMobileDeposit(member.getId(), page));
 		return null;
+	}
+
+	@Override
+	public Page<com.gt.hotel.vo.HotelBackRoomOrderVo> checkInOrder(Member member) {
+		Page<com.gt.hotel.vo.HotelBackRoomOrderVo> page = new Page<>();
+		List<HotelBackRoomOrderVo> l = tOrderDAO.checkInOrder(member.getId());
+		List<Integer> ids = new ArrayList<>();
+		for(HotelBackRoomOrderVo r : l) {
+			ids.add(r.getId());
+		}
+		Wrapper<TOrderRoomCustomer> wrapper = new EntityWrapper<>();
+		wrapper.in("order_id", ids);
+		List<TOrderRoomCustomer> rl = tOrderRoomCustomerService.selectList(wrapper);
+		for(HotelBackRoomOrderVo r : l) {
+			List<OrderRoomCustomerVo> rooms = new ArrayList<>();
+			for(TOrderRoomCustomer or : rl) {
+				if(or.getOrderId().equals(r.getId())) {
+					OrderRoomCustomerVo orv = new OrderRoomCustomerVo();
+					BeanUtils.copyProperties(or, orv);
+					rooms.add(orv);
+				}
+			}
+			r.setRooms(rooms);
+		}
+		page.setRecords(l);
+		return page;
+	}
+
+	@Override
+	public BusinessConditionsVo erpGetBusinessConditions(Integer busid, Integer shopId, String now) {
+		String nowStart = now + " 00:00:00";
+		String nowEnd = now + " 23:59:59";
+		return tOrderDAO.erpGetBusinessConditions(busid, shopId, nowStart, nowEnd);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer shopId, HotelPage hpage) {
+		Page<IncomeDetailsVo> page = hpage.initPage();
+		List<IncomeDetailsVo> l = tOrderDAO.getIncomeDetailsByDate(busId, shopId, hpage, page);
+		//TODO 暂缺 商品消费 & 其他 
+		page.setRecords(l);
+		return page;
 	}
 
 }

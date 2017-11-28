@@ -46,7 +46,7 @@ public class TOrder extends Model<TOrder> {
      */
 	private Integer memberId;
     /**
-     * 支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金
+     * 支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金
      */
 	private Integer payType;
     /**
@@ -125,7 +125,14 @@ public class TOrder extends Model<TOrder> {
 	 * 积分折扣金额
 	 */
 	private Integer integralDiscount;
-
+	/**
+	 * 退还金额(退换的押金)
+	 */
+	private Integer refundAmount;
+	/**
+	 * 退款说明
+	 */
+	private String refundReason;
 
 	@Override
 	protected Serializable pkVal() {

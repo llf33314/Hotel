@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TAgreementOrganizationDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TAgreementOrganization">
+		<id column="id" property="id" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="name" property="name" />
+		<result column="contact" property="contact" />
+		<result column="phone" property="phone" />
+		<result column="tel" property="tel" />
+		<result column="contract_num" property="contractNum" />
+		<result column="remark" property="remark" />
+		<result column="module" property="module" />
+		<result column="package_id" property="packageId" />
+		<result column="status" property="status" />
+		<result column="rejected_reason" property="rejectedReason" />
+		<result column="mark_modified" property="markModified" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, hotel_id, name, contact, phone, tel, contract_num, remark, module,
+		package_id, status, rejected_reason, mark_modified, created_by,
+		created_at, updated_by, updated_at
+	</sql>
+
+	<sql id="Base_Column_List_Vo">
+		a.id, a.hotel_id, a.name, a.contact, a.phone, a.tel, a.contract_num,
+		a.remark, a.module, a.package_id, a.status, a.rejected_reason,
+		a.mark_modified, a.created_by, a.created_at, a.updated_by,
+		a.updated_at
+	</sql>
+
+	<select id="erpQueryAgreementOrganization" resultType="com.gt.hotel.vo.AgreementOrganizationVo">
+		SELECT c.`name` packageName, <include refid="Base_Column_List_Vo" />
+		FROM t_agreement_organization a 
+		JOIN t_hotel b ON a.hotel_id = b.id 
+		JOIN t_package c ON c.id = a.package_id 
+		WHERE a.mark_modified = 0 
+		<if test="shopId != null">
+			AND b.shop_id = #{shopId} 
+		</if>
+		<if test="param.status != null">
+			AND a.`status` = #{param.status} 
+		</if>
+		<if test="param.id != null">
+			AND a.id = #{param.id}
+		</if>
+		<if test="param.busId != null">
+			AND b.bus_id = #{param.busId}
+		</if>
+		<if test="param.module != null">
+			AND a.module = #{param.module}
+		</if>
+		
+	</select>
+</mapper>

@@ -9,9 +9,12 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
+import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.IncomeDetailsVo;
 import com.gt.hotel.vo.OrderRoomCustomerVo;
 
 /**
@@ -58,6 +61,41 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
 	 * @return
 	 */
 	List<DepositVo> queryMobileDeposit(@Param("memberId") Integer memberId, @Param("page") Pagination page);
+	
+	/**
+	 * 已入住订单
+	 * @param memberId
+	 * @return
+	 */
+	List<com.gt.hotel.vo.HotelBackRoomOrderVo> checkInOrder(@Param("memberId") Integer memberId);
 
+	/**
+	 * 酒店营业状况
+	 * @param busId
+	 * @param nowStart
+	 * @param nowEnd
+	 * @return
+	 */
+	BusinessConditionsVo erpGetBusinessConditions(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("nowStart") String nowStart, @Param("nowEnd") String nowEnd);
+
+	/**
+	 * 
+	 * @param busId
+	 * @param shopId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	List<TOrder> getTotalRevenue(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("startDate") String startDate, @Param("endDate") String endDate);
+	
+	/**
+	 * 收入明细
+	 * @param busId
+	 * @param shopId
+	 * @param hpage
+	 * @param page
+	 * @return
+	 */
+	List<IncomeDetailsVo> getIncomeDetailsByDate(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("param") HotelPage hpage, @Param("page") Pagination page);
 
 }

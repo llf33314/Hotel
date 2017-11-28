@@ -1,15 +1,23 @@
 package com.gt.hotel.web.service;
 
-import com.gt.hotel.entity.THotel;
-import com.gt.hotel.entity.TOrderRoom;
-import com.gt.hotel.param.RoomMobileParameter.BookParam;
-import com.gt.hotel.vo.MobileRoomOrderVo;
-
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseService;
+import com.alibaba.fastjson.JSONObject;
+import com.gt.api.bean.session.Member;
+import com.gt.hotel.base.BaseService;
+import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.TOrderRoom;
+import com.gt.hotel.param.RoomMobileParameter.BookParam;
+import com.gt.hotel.vo.CheackInListRevenueVo;
+import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomCheackInCountVo;
+import com.gt.hotel.vo.RoomOrderPriceVO;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -28,7 +36,7 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @param bookParam
 	 * @return 订单ID
 	 */
-	Integer MobileBookOrder(THotel hotel, Member member, BookParam bookParam);
+	Integer mobileBookOrder(THotel hotel, Member member, BookParam bookParam);
 
 	/**
 	 * 移动端 房间 支付订单详情
@@ -45,6 +53,37 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @param orderId
 	 * @return
 	 */
-	JSONObject moblieHotelRoomPayNotifyUrl(Map<String, Object> param, Integer orderId);;
+	JSONObject moblieHotelRoomPayNotifyUrl(Map<String, Object> param, Integer orderId);
+
+	/**
+	 * 价格计算
+	 * @param member
+	 * @param bookParam
+	 * @return
+	 */
+	RoomOrderPriceVO mobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception;
+
+	/**
+	 * 会员消费总额
+	 * @param memberId
+	 * @return
+	 */
+	Integer queryMobileRoomOrderSUM(Integer memberId);
+
+	/**
+	 * 客房入住数
+	 * @param busId
+	 * @param shopId
+	 * @return
+	 */
+	RoomCheackInCountVo roomCheckInCount(Integer busId, Integer shopId);
+
+	/**
+	 * 近一周入住率
+	 * @param busId
+	 * @param shopId
+	 * @return
+	 */
+	List<CheackInListRevenueVo> erpGetOccupancyRevenue(String now, Integer busId, Integer shopId);
 
 }

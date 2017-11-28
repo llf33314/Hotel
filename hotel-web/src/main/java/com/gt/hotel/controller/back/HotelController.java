@@ -1,36 +1,5 @@
 package com.gt.hotel.controller.back;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -49,6 +18,7 @@ import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 import com.gt.hotel.param.HotelParameter;
 import com.gt.hotel.param.HotelParameter.HotelQuery;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.QrCodeUtil;
 import com.gt.hotel.util.ShortUrlUtil;
 import com.gt.hotel.util.WXMPApiUtil;
@@ -57,10 +27,29 @@ import com.gt.hotel.vo.LinkVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 酒店管理-新增酒店
@@ -83,38 +72,39 @@ public class HotelController extends BaseController {
 
     @Autowired
     private WXMPApiUtil WXMPApiUtil;
-    
+
     @Autowired
-    THotelMemberSettingService hotelMemberSettingService; 
-    
+    THotelMemberSettingService hotelMemberSettingService;
+
     @Autowired
     ShortUrlUtil shortUrlUtil;
 
-    @Value("${wxmp.imageurl.prefixurl}")
-    private String IMAGE_PREFIX;
+    @Autowired
+    private WebServerConfigurationProperties properties;
 
     @ApiOperation(value = "门店列表", notes = "门店列表")
     @GetMapping(value = "queryShop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<List<HotelShopInfo>> shopR(HttpSession session) {
-        Integer busid = getLoginUserId(session);
-        List<HotelWsWxShopInfoExtend> shops = null;
+    public ResponseDTO<List<HotelShopInfo>> shopR(HttpServletRequest request) {
+        Integer busId = getLoginUser(request).getId();
+        List<HotelWsWxShopInfoExtend> shops;
         try {
-            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busid);
-            if (json.getBoolean("success")) {
+            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busId);
+            List<HotelShopInfo> hotelShopInfoList = null;
+            if (json.getBoolean(CommonConst.SUCCESS)) {
                 shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
                         HotelWsWxShopInfoExtend.class);
+                hotelShopInfoList = new ArrayList<>();
+                for (HotelWsWxShopInfoExtend shop : shops) {
+                    HotelShopInfo shopInfo = new HotelShopInfo();
+                    shopInfo.setShopid(shop.getId());
+                    shopInfo.setName(shop.getBusinessName());
+                    shopInfo.setTel(shop.getTelephone());
+                    shopInfo.setAddr(shop.getAddress());
+                    shopInfo.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
+                    hotelShopInfoList.add(shopInfo);
+                }
             }
-            List<HotelShopInfo> s = new ArrayList<>();
-            for (HotelWsWxShopInfoExtend shop : shops) {
-                HotelShopInfo _s = new HotelShopInfo();
-                _s.setShopid(shop.getId());
-                _s.setName(shop.getBusinessName());
-                _s.setTel(shop.getTelephone());
-                _s.setAddr(shop.getAddress());
-                _s.setImage(IMAGE_PREFIX + shop.getImageUrl());
-                s.add(_s);
-            }
-            return ResponseDTO.createBySuccess(s);
+            return ResponseDTO.createBySuccess(hotelShopInfoList);
         } catch (SignException e) {
             logger.error("签名错误：{}", e.getMessage());
             throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
@@ -123,21 +113,21 @@ public class HotelController extends BaseController {
 
     @ApiOperation(value = "酒店列表", notes = "酒店列表")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<HotelVo>> hotelR(HotelQuery hpage, HttpSession session) {
-        Integer busid = getLoginUserId(session);
-        Page<HotelVo> page = tHotelService.queryHotelHome(busid, hpage);
+    public ResponseDTO<Page<HotelVo>> hotelR(HotelQuery hpage, HttpServletRequest request) {
+        Integer busId = getLoginUser(request).getId();
+        Page<HotelVo> page = tHotelService.queryHotelHome(busId, hpage);
         return ResponseDTO.createBySuccess(page);
     }
 
     @ApiOperation(value = "新增或更新酒店", notes = "新增或更新酒店")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel, BindingResult bindingResult, HttpSession session) {
-    	ResponseDTO msg = InvalidParameterII(bindingResult);
-        if(msg != null) {
-        	return msg;
+    public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel, BindingResult bindingResult, HttpServletRequest request) {
+        ResponseDTO msg = InvalidParameterII(bindingResult);
+        if (msg != null) {
+            return msg;
         }
-        Integer busid = getLoginUserId(session);
+        Integer busid = getLoginUser(request).getId();
         Date date = new Date();
         THotel e = new THotel();
         BeanUtils.copyProperties(hotel, e);
@@ -153,22 +143,22 @@ public class HotelController extends BaseController {
         e.setUpdatedBy(busid);
         e.setUpdatedAt(date);
         boolean f = e.insertOrUpdate();
-        
+
         if (e.getId() == null) {
-        	THotelSetting hs = new THotelSetting();
-        	hs.setHotelId(e.getId());
-        	f &= tHotelSettingService.insert(hs);
-        	
-        	List<THotelMemberSetting> hotelMemberSettings = new ArrayList<>();
-        	for(int i = 0;i < 4;i++) {
-        		THotelMemberSetting hotelMemberSetting = new THotelMemberSetting();
-        		hotelMemberSetting.setHotelId(e.getId());
-        		hotelMemberSetting.setVipLevel(i+1);
-        		hotelMemberSettings.add(hotelMemberSetting);
-        	}
-        	f &= hotelMemberSettingService.insertBatch(hotelMemberSettings);
+            THotelSetting hs = new THotelSetting();
+            hs.setHotelId(e.getId());
+            f &= tHotelSettingService.insert(hs);
+
+            List<THotelMemberSetting> hotelMemberSettings = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                THotelMemberSetting hotelMemberSetting = new THotelMemberSetting();
+                hotelMemberSetting.setHotelId(e.getId());
+                hotelMemberSetting.setVipLevel(i + 1);
+                hotelMemberSettings.add(hotelMemberSetting);
+            }
+            f &= hotelMemberSettingService.insertBatch(hotelMemberSettings);
         }
-        
+
         if (f) return ResponseDTO.createBySuccess();
         else return ResponseDTO.createByError();
     }
@@ -176,8 +166,8 @@ public class HotelController extends BaseController {
     @ApiOperation(value = "删除 酒店", notes = "删除 酒店")
     @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO roomCategoryD(@RequestBody @ApiParam("酒店ID 数组") List<Integer> ids, HttpSession session) {
-        Integer busid = getLoginUserId(session);
+    public ResponseDTO roomCategoryD(@RequestBody @ApiParam("酒店ID 数组") List<Integer> ids, HttpServletRequest request) {
+        Integer busid = getLoginUser(request).getId();
         Wrapper<THotel> wrapper = new EntityWrapper<>();
         wrapper.in("id", ids);
         THotel h = new THotel();
@@ -191,29 +181,29 @@ public class HotelController extends BaseController {
     @ApiOperation(value = "链接", notes = "链接")
     @GetMapping(value = "{hotelId}/link", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<LinkVo> link(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
-    	String url = getHost(request) + "/mobile/78CDF1" + hotelId + "/home/";
-    	LinkVo link = new LinkVo();
-    	link.setLongUrl(url);
-    	link.setShortUrl(shortUrlUtil.getShorUrl(url));
-    	return ResponseDTO.createBySuccess(link);
+        String url = getHost(request) + "/mobile/78CDF1" + hotelId + "/home/";
+        LinkVo link = new LinkVo();
+        link.setLongUrl(url);
+        link.setShortUrl(shortUrlUtil.getShorUrl(url));
+        return ResponseDTO.createBySuccess(link);
     }
-    
+
     @ApiOperation(value = "二维码", notes = "二维码")
     @GetMapping(value = "/qrcode", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void qrcode(String url, HttpServletResponse response) {
-    	OutputStream outputStream;
-		try {
-			outputStream = new BufferedOutputStream(response.getOutputStream());
-			BufferedImage bi = QrCodeUtil.encode(url, null, "H", null, outputStream, 500, 500, 1);
-			response.setHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode("二维码.jpg", "UTF-8") + "\"");  
-			response.setContentType("application/octet-stream");
-			outputStream = new BufferedOutputStream(response.getOutputStream());
-			ImageIO.write(bi, "jpg", outputStream);
-			outputStream.flush();  
-			outputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        OutputStream outputStream;
+        try {
+            outputStream = new BufferedOutputStream(response.getOutputStream());
+            BufferedImage bi = QrCodeUtil.encode(url, null, "H", null, outputStream, 500, 500, 1);
+            response.setHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode("二维码.jpg", "UTF-8") + "\"");
+            response.setContentType("application/octet-stream");
+            outputStream = new BufferedOutputStream(response.getOutputStream());
+            ImageIO.write(bi, "jpg", outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    
+
 }

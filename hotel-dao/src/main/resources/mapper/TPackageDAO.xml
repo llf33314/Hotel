@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gt.hotel.dao.TPackageDAO">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TPackage">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="shop_id" property="shopId" />
+		<result column="remark" property="remark" />
+		<result column="module" property="module" />
+		<result column="mark_modified" property="markModified" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, hotel_id, shop_id, remark, module, mark_modified, created_by, created_at, updated_by, updated_at
+    </sql>
+
+	<select id="erpQueryPackage" resultType="com.gt.hotel.vo.PackageVo">
+		SELECT <include refid="Base_Column_List" /> 
+		FROM t_package a 
+		WHERE a.mark_modified = 0 
+		<if test="shopId != null">
+			AND shop_id = #{shopId} 
+		</if> 
+		<if test="param.id != null">
+			AND a.id = #{param.id}
+		</if>
+	</select>
+</mapper>

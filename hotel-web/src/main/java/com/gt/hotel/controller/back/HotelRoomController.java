@@ -3,7 +3,7 @@ package com.gt.hotel.controller.back;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,12 +71,12 @@ public class HotelRoomController extends BaseController {
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<QueryRoomCategoryOne> roomCategoryCU(
 			@Validated @RequestBody @ApiParam("参数") CategorySaveOrUpdate roomCategory, BindingResult bindingResult,
-			HttpSession session) {
+			HttpServletRequest request) {
 		ResponseDTO msg = InvalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
-		Integer busid = getLoginUserId(session);
+		Integer busid = getLoginUser(request).getId();
 		Integer id = tRoomCategoryService.roomCategoryCU(busid, roomCategory);
 		QueryRoomCategoryOne q = new QueryRoomCategoryOne();
 		q.setCategoryId(id);
@@ -94,8 +94,8 @@ public class HotelRoomController extends BaseController {
 	@ApiOperation(value = "删除 房型", notes = "删除 房型")
 	@DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
-	public ResponseDTO roomCategoryD(@RequestBody @ApiParam("房型ID 数组") List<Integer> ids, HttpSession session) {
-		Integer busid = getLoginUserId(session);
+	public ResponseDTO roomCategoryD(@RequestBody @ApiParam("房型ID 数组") List<Integer> ids, HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		tRoomCategoryService.delRoomCategory(busid, ids);
 		return ResponseDTO.createBySuccess();
 	}
@@ -135,8 +135,8 @@ public class HotelRoomController extends BaseController {
 	@PostMapping(value = "{categoryId}/room", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO roomCU(@RequestBody List<RoomParameter.RoomSaveOrUpdate> rooms,
-			@PathVariable("categoryId") Integer categoryId, HttpSession session) {
-		Integer busid = getLoginUserId(session);
+			@PathVariable("categoryId") Integer categoryId, HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		tRoomCategoryService.editRooms(busid, categoryId, rooms);
 		return ResponseDTO.createBySuccess();
 	}
@@ -157,8 +157,8 @@ public class HotelRoomController extends BaseController {
 	@PostMapping(value = "{categoryId}/calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO roomCalendarCU(@PathVariable("categoryId") Integer categoryId,
-			@RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, HttpSession session) {
-		Integer busid = getLoginUserId(session);
+			@RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
 		Date date = new Date();
 		TRoomCalendar calendar = new TRoomCalendar();
 		BeanUtils.copyProperties(cal, calendar);

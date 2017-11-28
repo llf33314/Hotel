@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gt.hotel.enums.ResponseEnums;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  * @author zhangmz
  * @create 2017/6/21
  */
+@ToString
 @JsonSerialize(typing = DEFAULT_TYPING)
 public class ResponseErrorDTO<T> extends ResponseDTO<T> implements Serializable {
 

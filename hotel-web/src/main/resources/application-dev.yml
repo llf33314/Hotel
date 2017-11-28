@@ -16,7 +16,7 @@ spring:
    port: 6379
    password: gt@123456
    database: 3
-   timeout: 20000
+   timeout: 1000
    cluster:
        nodes: 113.106.202.50:9379,113.106.202.53:9379
        maxRedirects: 6
@@ -28,8 +28,8 @@ spring:
    pool:
      max-wait: -1
      min-idle: 0
-     max-active: 8
-     max-idle: 8
+     max-active: 200
+     max-idle: 20
  session:
    store-type: redis
  datasource:
@@ -37,6 +37,10 @@ spring:
      url: jdbc:mysql://113.106.202.51:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
      username: gt_hotel
      password: gt123456
+#     url: jdbc:mysql://localhost:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+#     username: root
+#     password: 123456
+     connectionInitSqls: set names utf8mb4
      # 下面为连接池的补充设置，应用到上面所有数据源中
      # 初始化大小，最小，最大
      initial-size: 5
@@ -72,11 +76,19 @@ spring:
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
      aop-patterns: com.gt.hotel.*.service.*
 
+#====================================================#
+#=============== Mybatis-Plus Settings ==============#
+#====================================================#
+mybatis-plus:
+  global-config:
+    #刷新mapper 调试神器
+    refresh-mapper: true
+
 #============================================#
 #========== Redis Session Settings ==========#
 #============================================#
 redisSession:
-  domainName: .deeptel.com.cn
+  domainName: deeptel.com.cn
 #  domainName: yifriend.net
   cookiePath: /
   cookieName: WXMPJSESSIONID
@@ -117,6 +129,7 @@ hotel:
       imageUrl: http://maint.duofriend.com/upload
       materialUrl: https://suc.deeptel.com.cn
       socketUrl: https://socket.deeptel.com.cn
+      wxmpLogin: ${hotel.webserver.WxmpService.serviceUrl}/user/tologin.do #商家后台登录
       ApiMap: # Api接口列表
         dictKey: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/dictApi/getDictApi.do   # 获取字典信息
         isErpCount: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getIsErpCount.do # 根据商家ID判断是否开通某个erp
@@ -134,6 +147,12 @@ hotel:
         setRedisStorage: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/redis/SetExApi.do  # 存储redis重定向地址
         authorizeMember: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody= # 授权地址
         authorizeMemberNew: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMemberNew.do?queryBody= # 新的授权地址
+        selectByUserId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/wxpublicapi/6F6D9AD2/79B4DE7C/selectByUserId.do # 根据商家ID查询 商户号对象
+        getErpListApi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getErpListApi.do # 商家/员工  获取管理的ERP列表
+        getMenus: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenus.do # 商家/员工获取ERP列表菜单
+        getMall: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMall.do # erp商家是否有商城功能
+        getMenusThree: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenusThree.do # erp三级菜单接口
+        wxmemberPayRefund: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do  # 微信退款
     ShortService:
       signKey: goodtom2016@shortUrl.
       serviceUrl: http://short.duofee.com
@@ -146,7 +165,17 @@ hotel:
       ApiMap: # Api接口列表
         findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard   # 获取会员信息
         findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId   # 包含会员信息、微信卡券、多粉卡券
-        wxmemberPayRefund: ${hotel.webserver.MemberService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do  # 微信退款
+    JxcService:
+        serviceUrl: https://jxc.deeptel.com.cn
+        account: erp_5
+        pwd: 123456
+        login: ${hotel.webserver.JxcService.serviceUrl}/erp/b/login
+        allProducts: ${hotel.webserver.JxcService.serviceUrl}/erp/query/allProducts # 查询已入库的商品信息
+        amountSum: ${hotel.webserver.JxcService.serviceUrl}/erp/statistics/amountSum # 库存总数查询
+        getProTypes: ${hotel.webserver.JxcService.serviceUrl}/erp/query/getProTypes # 商品类别查询
+        operation: ${hotel.webserver.JxcService.serviceUrl}/erp/order/inventory/operation # 发货、退货(商城.ERP)
+        inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct # 库存查询(根据商品ID)
+
 
 
 

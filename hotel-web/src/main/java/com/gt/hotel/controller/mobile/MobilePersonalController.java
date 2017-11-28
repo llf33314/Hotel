@@ -60,16 +60,7 @@ public class MobilePersonalController extends BaseController {
 	@ApiOperation(value = "我的 首页", notes = "我的 首页")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Member> moblieMyHome(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+		Member member = getMember(request);
         return ResponseDTO.createBySuccess(member);
     }
     
@@ -81,16 +72,7 @@ public class MobilePersonalController extends BaseController {
     		@PathVariable("hotelId") Integer hotelId, 
     		@ModelAttribute HotelPage hotelPage, 
     		HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+		Member member = getMember(request);
         return ResponseDTO.createBySuccess(tOrderService.queryMobileRoomOrder(member, hotelPage));
     }
 	
@@ -103,16 +85,7 @@ public class MobilePersonalController extends BaseController {
 			@PathVariable("hotelId") Integer hotelId, 
 			@PathVariable("orderId") Integer orderId, 
 			HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+		Member member = getMember(request);
 		TOrder order = tOrderService.selectById(orderId);
 		if(!order.getOrderStatus().equals(CommonConst.ORDER_PROCESSING) && !order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
@@ -136,16 +109,7 @@ public class MobilePersonalController extends BaseController {
     		@PathVariable("hotelId") Integer hotelId, 
     		@ModelAttribute HotelPage hotelPage, 
     		HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+		Member member = getMember(request);
         return ResponseDTO.createBySuccess(tOrderService.queryMobileFoodOrder(member, hotelPage));
     }
 	
@@ -159,16 +123,7 @@ public class MobilePersonalController extends BaseController {
     		@PathVariable("hotelId") Integer hotelId, 
     		@ModelAttribute HotelPage hotelPage, 
     		HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+		Member member = getMember(request);
         return ResponseDTO.createBySuccess(tOrderService.queryMobileDeposit(member, hotelPage));
     }
 	
@@ -179,16 +134,7 @@ public class MobilePersonalController extends BaseController {
     		@PathVariable("hotelId") Integer hotelId, 
     		@PathVariable("orderId") Integer orderId, 
     		HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-		//test
+		Member member = getMember(request);
     	Wrapper<TOrderRoom> wrapper = new EntityWrapper<>();
     	wrapper.eq("order_id", orderId);
 		TOrderRoom entity = new TOrderRoom();
@@ -211,16 +157,7 @@ public class MobilePersonalController extends BaseController {
 			@PathVariable("hotelId") Integer hotelId, 
 			@ModelAttribute HotelPage hotelPage, 
 			HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-		//test
-		Member member = new Member();
-		member.setId(1071);
-		member.setBusid(33);
-		member.setPhone("13433550667");
-		member.setPublicId(492);
-		member.setCardid("15338");
-		//test
+		//TODO 我的房卡（暂无）
 		return ResponseDTO.createBySuccess();
 	}
 	
@@ -232,15 +169,7 @@ public class MobilePersonalController extends BaseController {
 			@PathVariable("hotelId") Integer hotelId, 
 			HttpServletRequest request) {
 		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-		//test
-		Member member = new Member();
-		member.setId(1071);
-		member.setBusid(33);
-		member.setPhone("13433550667");
-		member.setPublicId(492);
-		member.setCardid("15338");
-		//test
+		Member member = getMember(request);
 		JSONObject json = new JSONObject();
 		json.put("shop", property.getWxmpService().getServiceUrl() + "/mallPage/"+hotel.getShopId()+"/79B4DE7C/getPageIds.do");
 		json.put("memberCard", property.getWxmpService().getServiceUrl() + "/phoneMemberController/"+member.getPublicId()+"/79B4DE7C/findMember.do");

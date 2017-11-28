@@ -13,9 +13,11 @@ import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.IncomeDetailsVo;
 
 /**
  * <p>
@@ -122,6 +124,30 @@ public interface TOrderService extends BaseService<TOrder> {
 	 * @return
 	 */
 	Page<DepositVo> queryMobileDeposit(Member member, HotelPage hotelPage);
+
+	/**
+	 * 已入住订单
+	 * @param member
+	 * @return
+	 */
+	Page<HotelBackRoomOrderVo> checkInOrder(Member member);
+
+	/**
+	 * 酒店营业状况
+	 * @param busid
+	 * @param shopId
+	 * @param format "yyyy-MM-dd"
+	 * @return
+	 */
+	BusinessConditionsVo erpGetBusinessConditions(Integer busid, Integer shopId, String format);
+
+	/**
+	 * 收入明细
+	 * @param shopId
+	 * @param hpage
+	 * @return
+	 */
+	Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer shopId, HotelPage hpage);
 
 
 }

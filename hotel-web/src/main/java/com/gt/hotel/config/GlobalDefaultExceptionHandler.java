@@ -8,11 +8,9 @@ import com.gt.hotel.exception.NeedLoginException;
 import com.gt.hotel.exception.ResponseEntityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,8 +49,7 @@ public class GlobalDefaultExceptionHandler {
      * @param e       BaseException
      * @return ResponseErrorDTO
      */
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
+    @ResponseBody()
     @ExceptionHandler(value = BaseException.class)
     public ResponseErrorDTO defaultCustomErrorHandler(HttpServletRequest request, BaseException e) {
         logger.error("异常原因：{} , 异常信息：{} , 请求地址：{}", e.getCause(), e.getMessage(), request.getRequestURL(), e);

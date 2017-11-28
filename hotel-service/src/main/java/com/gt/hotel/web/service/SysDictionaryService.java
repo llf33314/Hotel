@@ -25,5 +25,14 @@ public interface SysDictionaryService extends BaseService<SysDictionary> {
      */
     Page<SysDictionaryVo> queryDictionary(Integer dictId, HotelPage param);
 
+    /**
+     * 移动端查询 字典 列表
+     *
+     * @param dictName 字典名
+     * @param param
+     * @return
+     */
+	Page<SysDictionaryVo> MobileQueryDictionary(Integer dictInvoice, Integer hotelId);
+
 
 }

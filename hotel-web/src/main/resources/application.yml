@@ -1,10 +1,9 @@
-####### 使用YML语法形式配置，注意分号后面需要加空格
-####### 例如：port: 8088
-######################## 容器 ########################
+#====================================================#
+#================== Spring Settings =================#
+#====================================================#
 server:
  port: 80
  context-path: /
-######################## Spring 全局设置 ########################
 spring:
  application:
   name: hotel
@@ -26,7 +25,9 @@ spring:
 # 默认情况下，日志文件的大小达到10MB时会切分一次，产生新的日志文件，默认级别为：ERROR、WARN、INFO
 # file: logs/hotel.log #日志文件名
 
-######################## mybatis-plus ########################
+#====================================================#
+#=============== Mybatis-Plus Settings ==============#
+#====================================================#
 mybatis-plus:
  mapper-locations: classpath*:mapper/*.xml
  type-aliases-package: com.gt.hotel.entity
@@ -38,7 +39,7 @@ mybatis-plus:
    #驼峰下划线转换
    db-column-underline: true
    #刷新mapper 调试神器
-   refresh-mapper: true
+   refresh-mapper: false
    #数据库大写下划线转换
    capital-mode: false
    #序列接口实现类配置
@@ -56,8 +57,5 @@ mybatis-plus:
 
 
 
-######################## Logback ########################
-
-# debug: true
 
 

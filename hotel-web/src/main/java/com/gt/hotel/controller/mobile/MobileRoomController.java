@@ -1,21 +1,5 @@
 package com.gt.hotel.controller.mobile;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
@@ -32,13 +16,22 @@ import com.gt.hotel.param.RoomMobileParameter;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 import com.gt.hotel.web.service.TRoomCategoryService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * 酒店移动端 订房
@@ -75,20 +68,14 @@ public class MobileRoomController extends BaseController {
     		@PathVariable("categoryId") Integer categoryId, 
     		HttpServletRequest request) {
     	THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+    	Member member = getMember(request);
     	MemberCard memberCard = null;
     	
     	try {
     		JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-    		memberCard = JSONObject.toJavaObject(json.getJSONObject("data"), MemberCard.class);
+    		if(json != null && json.getInteger("code").equals(0)) {
+    			memberCard = JSONObject.toJavaObject(json.getJSONObject("data"), MemberCard.class);
+    		}
 		} catch (SignException e) {
 			throw new ResponseEntityException(ResponseEnums.FAILED_TO_OBTAIN_MEMBER_INFORMATION);
 		}
@@ -100,45 +87,30 @@ public class MobileRoomController extends BaseController {
 	@PostMapping(value = "{hotelId}/submit", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO moblieRoomSubmit(
 			@PathVariable("hotelId") Integer hotelId, 
-			@Validated @RequestBody RoomMobileParameter.BookParam bookParam, 
-			BindingResult bindingResult, HttpServletRequest request) {
+			@Validated @RequestBody RoomMobileParameter.BookParam bookParam,
+			BindingResult bindingResult, 
+			HttpServletRequest request) {
     	InvalidParameter(bindingResult);
     	THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
-    	tOrderRoomService.MobileBookOrder(hotel, member, bookParam);
-		return ResponseDTO.createBySuccess();
+    	Member member = getMember(request);
+    	JSONObject json = new JSONObject();
+    	json.put("orderId", tOrderRoomService.mobileBookOrder(hotel, member, bookParam));
+		return ResponseDTO.createBySuccess(json);
 	}
 	
 	@ApiOperation(value = "支付订单详情", notes = "支付订单详情")
     @GetMapping(value = "{hotelId}/order/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<MobileRoomOrderVo> moblieHotelFoodOrderR(
+    public ResponseDTO<MobileRoomOrderVo> moblieHotelRoomOrderR(
     		@PathVariable("hotelId") Integer hotelId,
     		@PathVariable("orderId") Integer orderId, 
     		HttpServletRequest request) {
-//		THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-    	//test
-    	Member member = new Member();
-    	member.setId(1071);
-    	member.setBusid(33);
-    	member.setPhone("13433550667");
-    	member.setPublicId(492);
-    	member.setCardid("15338");
-    	//test
+		Member member = getMember(request);
         return ResponseDTO.createBySuccess(tOrderRoomService.queryMobileRoomOrderOne(hotelId, orderId, member));
     }
 	
 	@ApiOperation(value = "立即支付", notes = "立即支付")
     @GetMapping(value = "{hotelId}/pay/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ModelAndView moblieHotelFoodPay(
+    public ModelAndView moblieHotelRoomPay(
     		@PathVariable("hotelId") Integer hotelId,  
     		@PathVariable("orderId") Integer orderId,
     		HttpServletRequest request, 
@@ -170,7 +142,7 @@ public class MobileRoomController extends BaseController {
 	
 	@ApiOperation(value = "支付异步回调", notes = "支付异步回调", hidden = true)
     @PostMapping(value = "{hotelId}/notifyUrl/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public JSONObject moblieHotelFoodPayNotifyUrl(@PathVariable("hotelId") Integer hotelId,
+    public JSONObject moblieHotelRoomPayNotifyUrl(@PathVariable("hotelId") Integer hotelId,
     		@PathVariable("orderId") Integer orderId, Map<String, Object> param,
     		HttpServletRequest request) {
     	JSONObject json = new JSONObject();
@@ -178,6 +150,25 @@ public class MobileRoomController extends BaseController {
 		json.put("msg", "支付失败");
 		json = tOrderRoomService.moblieHotelRoomPayNotifyUrl(param, orderId);
 		return json;
+    }
+	
+	@ApiOperation(value = "价格计算", notes = "价格计算")
+    @PostMapping(value = "{hotelId}/getPrice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<RoomOrderPriceVO> moblieHotelRoomGetPrice(
+    		@PathVariable("hotelId") Integer hotelId,
+    		@RequestBody RoomMobileParameter.BookParam bookParam,
+    		HttpServletRequest request) {
+		Member member = getMember(request);
+		RoomOrderPriceVO price = null;
+		try {
+			System.err.println(bookParam);
+			price = tOrderRoomService.mobilePriceCalculation(hotelId, member, bookParam);
+			System.err.println(price);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseDTO.createByErrorMessage("价格计算出错");
+		}
+        return ResponseDTO.createBySuccess(price);
     }
 	
 }
