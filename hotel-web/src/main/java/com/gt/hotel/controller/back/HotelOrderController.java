@@ -155,7 +155,7 @@ public class HotelOrderController extends BaseController {
 			HttpServletRequest request) {
 		Integer busid = getLoginUser(request).getId();
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID)) {
+		if(!(order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID) && order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED))) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
 		try {
@@ -185,11 +185,10 @@ public class HotelOrderController extends BaseController {
 //					if(resultII.getInteger("code").equals(0)) {
 						Wrapper<TOrder> wrapper = new EntityWrapper<>();
 						wrapper.eq("id", orderId);
-						Date date = new Date();
 						TOrder newOrder = new TOrder();
 						newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+						newOrder.setRefundAmount(order.getRealPrice());
 						newOrder.setUpdatedBy(busid);
-						newOrder.setUpdatedAt(date);
 						if(!tOrderService.update(newOrder, wrapper)) {
 							return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 						}else {
@@ -214,11 +213,10 @@ public class HotelOrderController extends BaseController {
 				if(result.getInteger("code").equals(0)) {
 					Wrapper<TOrder> wrapper = new EntityWrapper<>();
 					wrapper.eq("id", orderId);
-					Date date = new Date();
 					TOrder newOrder = new TOrder();
 					newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+					newOrder.setRefundAmount(order.getRealPrice());
 					newOrder.setUpdatedBy(busid);
-					newOrder.setUpdatedAt(date);
 					if(!tOrderService.update(newOrder, wrapper)) {
 						return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 					}else {
@@ -235,7 +233,7 @@ public class HotelOrderController extends BaseController {
 		return ResponseDTO.createBySuccess();
 	}
 	
-	@ApiOperation(value = "支付宝  退款 回调", notes = "支付宝  退款 回调")
+	@ApiOperation(value = "支付宝  退款 回调", notes = "支付宝  退款 回调", hidden = true)
 	@PostMapping(value = "{orderId}/aliPayCallBack", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void aliPayCallBack(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId,
 			@RequestBody Map<String,Object> param,
@@ -257,6 +255,7 @@ public class HotelOrderController extends BaseController {
 					wrapper.eq("id", orderId);
 					TOrder newOrder = new TOrder();
 					newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+					newOrder.setRefundAmount(order.getRealPrice());
 					if(tOrderService.update(newOrder, wrapper)) {
 						wxmpApiUtil.getSocketApi("hotel:socket", null, "success");
 					}
@@ -319,14 +318,14 @@ public class HotelOrderController extends BaseController {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	@ApiOperation(value = "房间订单  结账退房 操作(占位)", notes = "房间订单  结账退房 操作(占位)")
+	@ApiOperation(value = "房间订单  结账退房 操作", notes = "房间订单  结账退房 操作")
 	@PostMapping(value = "{orderId}/checkOut", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO checkOut(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, 
 			@RequestBody HotelOrderParameter.RefundsParam refundsP, 
 			HttpServletRequest request) {
 		Integer busid = getLoginUser(request).getId();
 		TOrder order = tOrderService.selectById(orderId);
-		if(!order.getPayStatus().equals(CommonConst.ORDER_CONFIRMED) || !order.getPayStatus().equals(CommonConst.ORDER_CANCALLED)) {
+		if(!(order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN) && order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID)) ) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
 		}
 		try {
@@ -356,11 +355,11 @@ public class HotelOrderController extends BaseController {
 //					if(resultII.getInteger("code").equals(0)) {
 						Wrapper<TOrder> wrapper = new EntityWrapper<>();
 						wrapper.eq("id", orderId);
-						Date date = new Date();
 						TOrder newOrder = new TOrder();
 						newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
 						newOrder.setUpdatedBy(busid);
-						newOrder.setUpdatedAt(date);
+						newOrder.setRefundAmount(refundsP.getRefundFee());
+						newOrder.setRefundReason(refundsP.getRefundReason());
 						if(!tOrderService.update(newOrder, wrapper)) {
 							return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 						}else {
@@ -385,11 +384,10 @@ public class HotelOrderController extends BaseController {
 				if(result.getInteger("code").equals(0)) {
 					Wrapper<TOrder> wrapper = new EntityWrapper<>();
 					wrapper.eq("id", orderId);
-					Date date = new Date();
 					TOrder newOrder = new TOrder();
 					newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
 					newOrder.setUpdatedBy(busid);
-					newOrder.setUpdatedAt(date);
+					newOrder.setRefundAmount(refundsP.getRefundFee());
 					if(!tOrderService.update(newOrder, wrapper)) {
 						return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 					}else {
