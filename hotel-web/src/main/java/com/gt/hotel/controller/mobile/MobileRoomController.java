@@ -1,21 +1,5 @@
 package com.gt.hotel.controller.mobile;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
@@ -37,9 +21,17 @@ import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 import com.gt.hotel.web.service.TRoomCategoryService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * 酒店移动端 订房
@@ -95,14 +87,14 @@ public class MobileRoomController extends BaseController {
 	@PostMapping(value = "{hotelId}/submit", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO moblieRoomSubmit(
 			@PathVariable("hotelId") Integer hotelId, 
-			@Validated @RequestBody RoomMobileParameter.BookParam bookParam, 
+			@Validated @RequestBody RoomMobileParameter.BookParam bookParam,
 			BindingResult bindingResult, 
 			HttpServletRequest request) {
     	InvalidParameter(bindingResult);
     	THotel hotel = tHotelService.selectById(hotelId);
     	Member member = getMember(request);
     	JSONObject json = new JSONObject();
-    	json.put("orderId", tOrderRoomService.MobileBookOrder(hotel, member, bookParam));
+    	json.put("orderId", tOrderRoomService.mobileBookOrder(hotel, member, bookParam));
 		return ResponseDTO.createBySuccess(json);
 	}
 	
@@ -170,7 +162,7 @@ public class MobileRoomController extends BaseController {
 		RoomOrderPriceVO price = null;
 		try {
 			System.err.println(bookParam);
-			price = tOrderRoomService.MobilePriceCalculation(hotelId, member, bookParam);
+			price = tOrderRoomService.mobilePriceCalculation(hotelId, member, bookParam);
 			System.err.println(price);
 		} catch (Exception e) {
 			e.printStackTrace();

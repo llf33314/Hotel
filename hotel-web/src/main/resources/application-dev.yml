@@ -16,7 +16,7 @@ spring:
    port: 6379
    password: gt@123456
    database: 3
-   timeout: 20000
+   timeout: 1000
    cluster:
        nodes: 113.106.202.50:9379,113.106.202.53:9379
        maxRedirects: 6
@@ -28,8 +28,8 @@ spring:
    pool:
      max-wait: -1
      min-idle: 0
-     max-active: 8
-     max-idle: 8
+     max-active: 200
+     max-idle: 20
  session:
    store-type: redis
  datasource:
@@ -75,6 +75,14 @@ spring:
        # 如果spring.datasource.druid.aop-patterns要代理的类没有定义interface请设置spring.aop.proxy-target-class=true
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
      aop-patterns: com.gt.hotel.*.service.*
+
+#====================================================#
+#=============== Mybatis-Plus Settings ==============#
+#====================================================#
+mybatis-plus:
+  global-config:
+    #刷新mapper 调试神器
+    refresh-mapper: true
 
 #============================================#
 #========== Redis Session Settings ==========#
@@ -153,8 +161,7 @@ hotel:
         getShortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl  # 获取短连接
     MemberService:
       signKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
-#      serviceUrl: https://member.deeptel.com.cn
-      serviceUrl: http://member.yifriend.net
+      serviceUrl: https://member.deeptel.com.cn
       ApiMap: # Api接口列表
         findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard   # 获取会员信息
         findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId   # 包含会员信息、微信卡券、多粉卡券
@@ -168,6 +175,7 @@ hotel:
         getProTypes: ${hotel.webserver.JxcService.serviceUrl}/erp/query/getProTypes # 商品类别查询
         operation: ${hotel.webserver.JxcService.serviceUrl}/erp/order/inventory/operation # 发货、退货(商城.ERP)
         inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct # 库存查询(根据商品ID)
+
 
 
 

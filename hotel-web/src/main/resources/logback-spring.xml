@@ -75,6 +75,7 @@
 
     <logger name="org.springframework" level="INFO"/>
     <logger name="com.netflix" level="WARN"/>
+    <logger name="com.baomidou.mybatisplus.MybatisConfiguration" level="INFO"/>
     <logger name="org" level="INFO"/>
     <logger name="springfox.documentation" level="INFO"/>
 

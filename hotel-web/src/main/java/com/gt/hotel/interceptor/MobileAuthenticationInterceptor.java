@@ -1,37 +1,38 @@
 package com.gt.hotel.interceptor;
 
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.gt.api.bean.session.Member;
-import com.gt.api.util.SessionUtils;
-import com.gt.hotel.annotation.MobileLoginRequired;
-import com.gt.hotel.entity.THotel;
-import com.gt.hotel.enums.ResponseEnums;
-import com.gt.hotel.exception.NeedLoginException;
-import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.properties.WebServerConfigurationProperties;
-import com.gt.hotel.util.RedisCacheUtil;
-import com.gt.hotel.util.WXMPApiUtil;
-import com.gt.hotel.web.service.THotelService;
+import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
+import static com.gt.hotel.constant.CommonConst.CURRENT_HOTEL_ID;
+import static com.gt.hotel.constant.CommonConst.CURRENT_HOTEL_INFO;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Map;
-
-import static com.gt.hotel.constant.CommonConst.*;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.gt.api.bean.session.Member;
+import com.gt.api.exception.SignException;
+import com.gt.api.util.SessionUtils;
+import com.gt.hotel.entity.THotel;
+import com.gt.hotel.enums.ResponseEnums;
+import com.gt.hotel.exception.NeedLoginException;
+import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
+import com.gt.hotel.util.WXMPApiUtil;
+import com.gt.hotel.web.service.THotelService;
 
 /**
  * 移动端登录、微信授权拦截器
@@ -50,11 +51,11 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     private static final Logger LOGGER        = LoggerFactory.getLogger(MobileAuthenticationInterceptor.class);
     /**
      * 微信地授权 取会员信息 重定向3次
-     */
+     *//*
     private              int    redirectCount = 3;
 
     @Autowired
-    private RedisCacheUtil redisCacheUtil;
+    private RedisCacheUtil redisCacheUtil;*/
 
     @Autowired
     private WXMPApiUtil wxmpApiUtil;
@@ -160,7 +161,30 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    /**
+    private String authorizeMember(HttpServletRequest request, Integer busId) throws SignException {
+    	//参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器需要登录
+        JSONObject wxPublic = wxmpApiUtil.getWxPulbicMsg(busId);
+        Integer code = wxPublic.getInteger("code");
+        //判断商家信息 1是否过期 2公众号是否变更过
+        if (code.equals(-1)) {
+            //请求错误
+            return "";
+        } else if (code.equals(0)) {
+            String guoqi = wxPublic.getString("guoqi");
+            //商家已过期
+            if (!StringUtils.isBlank(guoqi)) {
+                Object overdue = wxPublic.get("guoqiUrl");
+                return "redirect:" + overdue;
+            }
+            String remoteUcLogin = wxPublic.getString("remoteUcLogin");
+            if (!StringUtils.isBlank(remoteUcLogin)) {
+                return "";
+            }
+        }
+        return webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMemberNew");
+	}
+
+	/**
      * 获取酒店信息
      *
      * @param hotelId 酒店ID
@@ -187,13 +211,11 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     /**
      * 授权获取会员信息并重定向回来
      *
-     * @param request HttpServletRequest
-     * @param busId   商家ID
+     * @param busId 商家ID
      * @return URL地址
      * @throws Exception
      */
-    private String authorizeMember(HttpServletRequest request, Integer busId) throws Exception {
-        Integer browser = judgeBrowser(request);
+    private String authorizeMember(Integer busId) throws Exception {
         //参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器需要登录
         JSONObject wxPublic = wxmpApiUtil.getWxPulbicMsg(busId);
         Integer code = wxPublic.getInteger("code");
@@ -214,14 +236,6 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             }
         }
         return webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMemberNew");
-        /*Map<String, Object> queryMap = new HashMap<>(3);
-        String redirectUrl = URLEncoder.encode(request.getRequestURL().toString(), "utf-8");
-        queryMap.put("browser", browser);
-        queryMap.put("busId", busId);
-        queryMap.put("uclogin", null);
-        queryMap.put("returnUrl", redirectUrl);
-        String params = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
-        LOGGER.info("授权地址：{}{}", webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMember") + params, JSON.toJSONString(queryMap));*/
     }
 
     /**

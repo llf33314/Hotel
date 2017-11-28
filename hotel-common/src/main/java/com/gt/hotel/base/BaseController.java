@@ -23,7 +23,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.Member;
 import com.gt.api.util.SessionUtils;
-import com.gt.hotel.constant.CommonSessionConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.util.RedisCacheUtil;
@@ -129,9 +128,9 @@ public abstract class BaseController {
      * @return
      * @throws Exception
      */
-    protected String authorizeMember(HttpServletRequest request, Map<String, Object> map) throws Exception {
-     /*   map.put("busId", 33);
-        map.put("requestUrl", "http://shuzheng.tunnel.qydev.com/login");*/
+   protected String authorizeMember(HttpServletRequest request, Map<String, Object> map) throws Exception {
+//        map.put("busId", 33);
+//        map.put("requestUrl", "http://shuzheng.tunnel.qydev.com/login");
         logger.debug("进入--授权方法！");
         
         Integer busId = Integer.valueOf(map.get("busId").toString());

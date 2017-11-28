@@ -1,24 +1,20 @@
 package com.gt.hotel.controller.mobile;
 
-import com.alibaba.fastjson.JSONObject;
-import com.gt.api.bean.session.Member;
-import com.gt.api.util.SessionUtils;
-import com.gt.hotel.annotation.MobileLoginRequired;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * 移动端订单管理
@@ -69,7 +65,7 @@ public class MobileOrderController extends BaseController {
      * @param checkOutTime 离店时间
      * @return ResponseDTO 数据包
      */
-    @GetMapping(value = "/{hid}/{cid}/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    /*@GetMapping(value = "/{hid}/{cid}/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO createNewOrder(HttpServletRequest request, @PathVariable Integer hid, @PathVariable Integer cid, @RequestParam String checkInTime, @RequestParam String checkOutTime) {
         Integer userId = this.getLoginUser(request).getId();
 //        入住时间
@@ -98,6 +94,6 @@ public class MobileOrderController extends BaseController {
         System.out.println(webServerConfigurationProperties.getShortService());
         System.out.println(webServerConfigurationProperties.getMemberService());
         return ResponseDTO.createBySuccess();
-    }
+    }*/
 
 }
