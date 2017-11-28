@@ -1,17 +1,17 @@
 package com.gt.hotel.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
 import com.gt.entityBo.ErpRefundBo;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 多粉接口
@@ -20,7 +20,7 @@ import com.gt.hotel.properties.WebServerConfigurationProperties;
  * 2017年11月7日 上午10:36:52
  */
 @Component
-public class WXMPApiUtil {
+public final class WXMPApiUtil {
 
     @Autowired
     private WebServerConfigurationProperties webServerConfigurationProperties;
@@ -164,6 +164,15 @@ public class WXMPApiUtil {
         return result;
     }
 
+    /**
+     * 获取门店下的所有员工列表
+     * @param shopId 门店ID
+     * @param name  员工名称
+     * @param phone 手机号
+     * @param page 当前分页
+     * @param pageSize 每页显示
+     * @return JSONObject
+     */
     public JSONObject getAllStaffShopId(Integer shopId, String name, String phone, Integer page, Integer pageSize) {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("shopId", shopId);
@@ -178,6 +187,39 @@ public class WXMPApiUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * 授权获取会员信息并重定向回来
+     * <pre>
+     *     这个方法返回的是授权的地址
+     * </pre>
+     *
+     * @param busId 商家ID
+     * @return URL地址
+     * @throws Exception
+     */
+    public String authorizeMember(Integer busId) throws Exception {
+        //参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器需要登录
+        JSONObject wxPublic = getWxPulbicMsg(busId);
+        Integer code = wxPublic.getInteger("code");
+        //判断商家信息 1是否过期 2公众号是否变更过
+        if (code.equals(-1)) {
+            //请求错误
+            return "";
+        } else if (code.equals(0)) {
+            String guoqi = wxPublic.getString("guoqi");
+            //商家已过期
+            if (!StringUtils.isBlank(guoqi)) {
+                Object overdue = wxPublic.get("guoqiUrl");
+                return "redirect:" + overdue;
+            }
+            String remoteUcLogin = wxPublic.getString("remoteUcLogin");
+            if (!StringUtils.isBlank(remoteUcLogin)) {
+                return "";
+            }
+        }
+        return webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMemberNew");
     }
 
     /**
