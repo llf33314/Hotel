@@ -134,6 +134,18 @@ public class HotelBackRoomOrderVo {
     @ApiModelProperty("入住标准 0 全天房 1 特价房 2 钟点房 3 秒杀房 4 团购房")
     private Integer checkStandard;
     
+    @ApiModelProperty("粉币折扣金额")
+	private Integer fbDiscount;
+
+    @ApiModelProperty("积分折扣金额")
+	private Integer integralDiscount;
+
+    @ApiModelProperty("优惠券折扣金额")
+    private Integer couponsDiscount;
+    
+    @ApiModelProperty("退还金额(退换的押金)")
+	private Integer refundAmount;
+    
     @ApiModelProperty("房间列表")
     private List<OrderRoomCustomerVo> rooms;
 }

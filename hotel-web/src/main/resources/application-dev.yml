@@ -37,6 +37,10 @@ spring:
      url: jdbc:mysql://113.106.202.51:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
      username: gt_hotel
      password: gt123456
+#     url: jdbc:mysql://localhost:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+#     username: root
+#     password: 123456
+     connectionInitSqls: set names utf8mb4
      # 下面为连接池的补充设置，应用到上面所有数据源中
      # 初始化大小，最小，最大
      initial-size: 5
@@ -148,6 +152,7 @@ hotel:
         getMenus: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenus.do # 商家/员工获取ERP列表菜单
         getMall: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMall.do # erp商家是否有商城功能
         getMenusThree: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenusThree.do # erp三级菜单接口
+        wxmemberPayRefund: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do  # 微信退款
     ShortService:
       signKey: goodtom2016@shortUrl.
       serviceUrl: http://short.duofee.com
@@ -160,8 +165,6 @@ hotel:
       ApiMap: # Api接口列表
         findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard   # 获取会员信息
         findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId   # 包含会员信息、微信卡券、多粉卡券
-        wxmemberPayRefund: ${hotel.webserver.MemberService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do # 微信退款
-        wxmemberPayRefund: ${hotel.webserver.MemberService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do  # 微信退款
     JxcService:
         serviceUrl: https://jxc.deeptel.com.cn
         account: erp_5
