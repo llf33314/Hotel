@@ -11,7 +11,6 @@ import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.NeedLoginException;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
-import com.gt.hotel.util.RedisCacheUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
 import org.apache.commons.collections.MapUtils;
@@ -50,11 +49,11 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     private static final Logger LOGGER        = LoggerFactory.getLogger(MobileAuthenticationInterceptor.class);
     /**
      * 微信地授权 取会员信息 重定向3次
-     */
+     *//*
     private              int    redirectCount = 3;
 
     @Autowired
-    private RedisCacheUtil redisCacheUtil;
+    private RedisCacheUtil redisCacheUtil;*/
 
     @Autowired
     private WXMPApiUtil wxmpApiUtil;
@@ -122,7 +121,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                 Member member = SessionUtils.getLoginMember(request, busId);
                 if (member == null) {
                     LOGGER.warn("member is null");
-                    String url = authorizeMember(request, busId);
+                    String url = authorizeMember(busId);
                     throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId, url);
                 }
             } else {
@@ -137,7 +136,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                     Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
                     if (member == null) {
                         LOGGER.warn("member is null");
-                        String url = authorizeMember(request, hotel.getBusId());
+                        String url = authorizeMember(hotel.getBusId());
                         throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.getBusId(), url);
                     }
                 } else {
@@ -175,13 +174,11 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     /**
      * 授权获取会员信息并重定向回来
      *
-     * @param request HttpServletRequest
-     * @param busId   商家ID
+     * @param busId 商家ID
      * @return URL地址
      * @throws Exception
      */
-    private String authorizeMember(HttpServletRequest request, Integer busId) throws Exception {
-        Integer browser = judgeBrowser(request);
+    private String authorizeMember(Integer busId) throws Exception {
         //参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器需要登录
         JSONObject wxPublic = wxmpApiUtil.getWxPulbicMsg(busId);
         Integer code = wxPublic.getInteger("code");
@@ -202,14 +199,6 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             }
         }
         return webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMemberNew");
-        /*Map<String, Object> queryMap = new HashMap<>(3);
-        String redirectUrl = URLEncoder.encode(request.getRequestURL().toString(), "utf-8");
-        queryMap.put("browser", browser);
-        queryMap.put("busId", busId);
-        queryMap.put("uclogin", null);
-        queryMap.put("returnUrl", redirectUrl);
-        String params = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
-        LOGGER.info("授权地址：{}{}", webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMember") + params, JSON.toJSONString(queryMap));*/
     }
 
     /**

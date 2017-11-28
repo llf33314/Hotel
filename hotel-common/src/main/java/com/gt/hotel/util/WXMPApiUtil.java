@@ -203,19 +203,19 @@ public class WXMPApiUtil {
     /**
      * 发送短信(旧接口)
      *
-     * @param busid   商家ID
+     * @param busId   商家ID
      * @param phone   手机号
      * @param content 内容
      * @return
      * @throws SignException
      */
-    public JSONObject sendMsg(Integer busid, String phone, String content)
+    public JSONObject sendMsg(Integer busId, String phone, String content)
             throws SignException {
         Map<String, Object> oldApiSms = new HashMap<String, Object>();
         oldApiSms.put("mobiles", phone);
         oldApiSms.put("content", content);
         oldApiSms.put("company", "(多粉平台)");
-        oldApiSms.put("busId", busid);
+        oldApiSms.put("busId", busId);
         oldApiSms.put("model", 7);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSMSOld");
         String result = SignHttpUtils.postByHttp(url, oldApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
@@ -267,32 +267,31 @@ public class WXMPApiUtil {
     /**
      * 根据商家ID获取所有门店
      *
-     * @param busid 商家ID
+     * @param busId 商家ID
      * @return
      * @throws SignException
      */
-    public JSONObject queryWxShopByBusId(Integer busid)
+    public JSONObject queryWxShopByBusId(Integer busId)
             throws SignException {
         JSONObject param = new JSONObject();
-        param.put("reqdata", busid);
-        return getLApi(param,
-                webServerConfigurationProperties.getWxmpService().getApiMap().get("findWxShopListByBusId"));
+        param.put("reqdata", busId);
+        return getLApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("findWxShopListBybusId"));
     }
 
     /**
      * 查询会员
      *
      * @param shopid 门店id
-     * @param busid  商家id
+     * @param busId  商家id
      * @param number 卡号或手机号
      * @return JSONObject
      * @throws SignException
      */
-    public JSONObject queryMember(Integer shopid, Integer busid, String number)
+    public JSONObject queryMember(Integer shopid, Integer busId, String number)
             throws SignException {
         Map<String, Object> paramObj = new HashMap<String, Object>();
         paramObj.put("shopId", shopid);
-        paramObj.put("busId", busid);
+        paramObj.put("busId", busId);
         paramObj.put("cardNo", number);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("findMemberCard");
         String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getMemberService().getSignKey());
@@ -462,7 +461,7 @@ public class WXMPApiUtil {
     	param.put("userId", userId);
 		return getCApi(param , webServerConfigurationProperties.getWxmpService().getApiMap().get("getErpListApi"));
 	}
-    
+
     /**
      * 商家/员工获取ERP列表菜单
      * @param style 登录人属性0是员工，1是老板（必填）
@@ -483,7 +482,7 @@ public class WXMPApiUtil {
     	}
     	return getCApi(param , webServerConfigurationProperties.getWxmpService().getApiMap().get("getMenus"));
     }
-    
+
     /**
      * erp商家是否有商城功能
      * @param style 登录人属性0是员工，1是老板（必填）
@@ -497,7 +496,7 @@ public class WXMPApiUtil {
     	param.put("userId", userId);
     	return getCApi(param , webServerConfigurationProperties.getWxmpService().getApiMap().get("getMall"));
     }
-    
+
     /**
      * erp三级菜单接口
      * @param pidUrl 父类菜单的url
@@ -516,9 +515,9 @@ public class WXMPApiUtil {
     	param.put("erpstyle", 9);
     	return getCApi(param , webServerConfigurationProperties.getWxmpService().getApiMap().get("getMenusThree"));
     }
-    
-    
-    
+
+
+
     public static void main(String[] args) {
         try {
             Map<String, Object> param = new HashMap<String, Object>();

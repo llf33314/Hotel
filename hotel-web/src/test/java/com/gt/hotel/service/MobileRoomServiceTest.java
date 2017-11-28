@@ -1,15 +1,14 @@
 package com.gt.hotel.service;
 
-import java.text.SimpleDateFormat;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.BasicTest;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.TOrderRoomService;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.text.SimpleDateFormat;
 
 /**
  * 
@@ -38,7 +37,7 @@ public class MobileRoomServiceTest extends BasicTest {
     	bookParam.setRoomOutTime(sdf.parse("2017-11-20 12:00:00"));
     	bookParam.setFb(20);
     	bookParam.setIntegral(200);
-		RoomOrderPriceVO price = tOrderRoomService.MobilePriceCalculation(2, member1, bookParam);
+		RoomOrderPriceVO price = tOrderRoomService.mobilePriceCalculation(2, member1, bookParam);
 		System.err.println(price);
 	}
 	

@@ -1,15 +1,17 @@
 package com.gt.hotel.base;
 
-import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
-
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.Member;
+import com.gt.api.exception.SignException;
+import com.gt.api.util.SessionUtils;
+import com.gt.hotel.constant.CommonConst;
+import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.util.RedisCacheUtil;
+import com.gt.hotel.util.WXMPApiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +20,15 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.gt.api.bean.session.BusUser;
-import com.gt.api.bean.session.Member;
-import com.gt.api.util.SessionUtils;
-import com.gt.hotel.constant.CommonSessionConst;
-import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.util.RedisCacheUtil;
-import com.gt.hotel.util.WXMPApiUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
 
 /**
  * BaseController
@@ -129,9 +130,9 @@ public abstract class BaseController {
      * @return
      * @throws Exception
      */
-    protected String authorizeMember(HttpServletRequest request, Map<String, Object> map) throws Exception {
-     /*   map.put("busId", 33);
-        map.put("requestUrl", "http://shuzheng.tunnel.qydev.com/login");*/
+   /* protected String authorizeMember(HttpServletRequest request, Map<String, Object> map) throws Exception {
+     *//*   map.put("busId", 33);
+        map.put("requestUrl", "http://shuzheng.tunnel.qydev.com/login");*//*
         logger.debug("进入--授权方法！");
         
         Integer busId = Integer.valueOf(map.get("busId").toString());
@@ -165,7 +166,7 @@ public abstract class BaseController {
         logger.info("queryMap=" + JSON.toJSONString(queryMap));
         String params = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
         return "redirect:" + memberUrl + "/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody=" + params;
-    }
+    }*/
     
     /**
      * 判断浏览器

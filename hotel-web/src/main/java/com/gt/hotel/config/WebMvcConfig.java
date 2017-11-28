@@ -85,8 +85,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
      * 跨域配置
      * 默认设置全局跨域配置
      * TODO: 部署服务器需要注释掉。因为，nginx已配置跨域。否则会起冲突
-     *
-     * @param registry Corsregistry
      */
     @Bean
     public FilterRegistrationBean corsFilter() {
