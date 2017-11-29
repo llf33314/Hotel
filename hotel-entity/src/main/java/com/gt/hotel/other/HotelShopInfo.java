@@ -9,7 +9,7 @@ import lombok.Data;
 public class HotelShopInfo {
 
     @ApiModelProperty("门店ID")
-    private Integer shopid;
+    private Integer shopId;
 
     @ApiModelProperty("门店名称")
     private String name;

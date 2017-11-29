@@ -289,21 +289,15 @@ public final class WXMPApiUtil {
     /**
      * 根据ID获取门店信息
      *
-     * @param shopid 门店ID
+     * @param shopId 门店ID
      * @return
      * @throws SignException
      */
-    public JSONObject getShopById(Integer shopid) throws SignException {
-        Map<String, Object> paramObj = new HashMap<String, Object>();
-        paramObj.put("reqdata", shopid);
+    public JSONObject getShopInfoById(Integer shopId) throws SignException {
+        JSONObject paramObj = new JSONObject();
+        paramObj.put("reqdata", shopId);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("findShopInfoByShopId");
-        String result = SignHttpUtils.WxmppostByHttp(url, paramObj, webServerConfigurationProperties.getWxmpService().getSignKey());
-        System.err.println(result);
-        JSONObject json = null;
-        if (result != null && result.trim().length() > 0) {
-            json = JSONObject.parseObject(result);
-        }
-        return json;
+        return getLApi(paramObj, url);
     }
 
     /**

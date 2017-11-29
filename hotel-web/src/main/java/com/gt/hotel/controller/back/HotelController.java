@@ -1,32 +1,5 @@
 package com.gt.hotel.controller.back;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -51,10 +24,28 @@ import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.vo.LinkVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 酒店管理-新增酒店
@@ -73,7 +64,7 @@ public class HotelController extends BaseController {
     private THotelService tHotelService;
 
     @Autowired
-    private WXMPApiUtil WXMPApiUtil;
+    private WXMPApiUtil wxmpApiUtil;
 
     @Autowired
     THotelMemberSettingService hotelMemberSettingService;
@@ -90,15 +81,14 @@ public class HotelController extends BaseController {
         Integer busId = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops;
         try {
-            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busId);
+            JSONObject json = wxmpApiUtil.queryWxShopByBusId(busId);
             List<HotelShopInfo> hotelShopInfoList = null;
             if (json.getBoolean(CommonConst.SUCCESS)) {
-                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
-                        HotelWsWxShopInfoExtend.class);
+                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),HotelWsWxShopInfoExtend.class);
                 hotelShopInfoList = new ArrayList<>();
                 for (HotelWsWxShopInfoExtend shop : shops) {
                     HotelShopInfo shopInfo = new HotelShopInfo();
-                    shopInfo.setShopid(shop.getId());
+                    shopInfo.setShopId(shop.getId());
                     shopInfo.setName(shop.getBusinessName());
                     shopInfo.setTel(shop.getTelephone());
                     shopInfo.setAddr(shop.getAddress());
@@ -112,6 +102,8 @@ public class HotelController extends BaseController {
             throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
         }
     }
+
+
 
     @ApiOperation(value = "酒店列表", notes = "酒店列表")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -34,7 +34,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     // 快速解决页面转向问题
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("/nav.html");
+        registry.addViewController("/").setViewName("/index.html");
         registry.addViewController("/error").setViewName("/error/defaultError.html");
     }
 

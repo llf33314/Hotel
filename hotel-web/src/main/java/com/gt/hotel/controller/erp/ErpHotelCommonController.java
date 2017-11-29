@@ -1,26 +1,5 @@
 package com.gt.hotel.controller.erp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -47,10 +26,24 @@ import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * 酒店ERP - 通用
@@ -63,17 +56,17 @@ import io.swagger.annotations.ApiParam;
 public class ErpHotelCommonController extends BaseController {
 	
 	@Autowired
-    private WXMPApiUtil WXMPApiUtil;
+    private WXMPApiUtil wxmpApiUtil;
 	
 	@Autowired
     private WebServerConfigurationProperties properties;
 
 	@Autowired
 	TRoomCategoryService roomCategoryService;
-	
+
 	@Autowired
 	THotelService hotelService;
-	
+
 	@Autowired
 	THotelMemberSettingService hotelMemberSettingService;
 
@@ -85,7 +78,7 @@ public class ErpHotelCommonController extends BaseController {
         Integer busid = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops = null;
         try {
-            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busid);
+            JSONObject json = wxmpApiUtil.queryWxShopByBusId(busid);
             if (json.getBoolean("success")) {
                 shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
                         HotelWsWxShopInfoExtend.class);
@@ -93,7 +86,7 @@ public class ErpHotelCommonController extends BaseController {
             List<HotelShopInfo> s = new ArrayList<>();
             for (HotelWsWxShopInfoExtend shop : shops) {
                 HotelShopInfo _s = new HotelShopInfo();
-                _s.setShopid(shop.getId());
+                _s.setShopId(shop.getId());
                 _s.setName(shop.getBusinessName());
                 _s.setTel(shop.getTelephone());
                 _s.setAddr(shop.getAddress());
@@ -145,7 +138,7 @@ public class ErpHotelCommonController extends BaseController {
 	@GetMapping(value = "roomCategory/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<RoomCategoryVo>> getRoomCategory(
 			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
-			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param, 
+			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param,
 			BindingResult bindingResult) {
 		InvalidParameter(bindingResult);
 //		param.setPageSize(9999);
@@ -175,5 +168,5 @@ public class ErpHotelCommonController extends BaseController {
         h.setMemberSetting(hmsv);
 		return ResponseDTO.createBySuccess(h);
 	}
-	
+
 }
