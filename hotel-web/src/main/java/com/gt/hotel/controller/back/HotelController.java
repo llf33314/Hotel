@@ -51,7 +51,6 @@ import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.vo.LinkVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
-import com.gt.hotel.web.service.THotelSettingService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

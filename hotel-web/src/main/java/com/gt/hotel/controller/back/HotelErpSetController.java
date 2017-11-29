@@ -1,45 +1,11 @@
 package com.gt.hotel.controller.back;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
-import com.gt.api.bean.session.Member;
-import com.gt.api.exception.SignException;
-import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
@@ -60,10 +26,28 @@ import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TAuthorizationService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 酒店后台-ERP设置
@@ -89,7 +73,7 @@ public class HotelErpSetController extends BaseController {
     TAuthorizationService tAuthorizationService;
 
     @Autowired
-    WXMPApiUtil WXMPApiUtil;
+    WXMPApiUtil wxmpApiUtil;
 
     @ApiOperation(value = "查询 酒店ERP对象", notes = "查询酒店ERP对象")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -161,7 +145,7 @@ public class HotelErpSetController extends BaseController {
     		@Param("门店ID") @ModelAttribute WXMPParameter.queryEmployee qe) {
     	Page<Employee> page = qe.initPage();
 //        JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), qe.getPage(), qe.getPageSize());
-        JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), null, null);
+        JSONObject result = wxmpApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), null, null);
         if ("0".equals(result.getString("code"))) {
             JSONObject temp = JSONObject.parseObject(result.getString("data"));
             List<Employee> l = JSONArray.parseArray(temp.getString("staffList"), Employee.class);
@@ -231,6 +215,15 @@ public class HotelErpSetController extends BaseController {
         return ResponseDTO.createBySuccess();
     }
 
+    /**
+     * TODO: 给前端生成二维码 这里只需要生成(全路径)URL地址
+     * TODO: 交给前端生成QRCode 需要修改 有问题测试
+     *
+     * @param hotelId
+     * @param authorId
+     * @param response
+     * @param request
+     */
     @ApiOperation(value = "开启授权", notes = "开启授权")
     @GetMapping(value = "{hotelId}/author/{authorId}/open", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void authorOpen(@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, 
@@ -238,57 +231,16 @@ public class HotelErpSetController extends BaseController {
     	OutputStream outputStream;
 		try {
 			outputStream = new BufferedOutputStream(response.getOutputStream());
-			BufferedImage bi = QrCodeUtil.encode(getHost(request) + "/78CDF1/" + hotelId + "/" + authorId, 
+			BufferedImage bi = QrCodeUtil.encode(getHost(request) + "/mobile/auth/" + hotelId + "/" + authorId,
 					null, "H", null, outputStream, 500, 500, 1);
 			ImageIO.write(bi, "png", outputStream);
-			outputStream.flush();  
+			outputStream.flush();
 			outputStream.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
-    
-    @ApiOperation(value = "首页", notes = "首页")
-    @GetMapping(value = "78CDF1/{hotelId}/{authorId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ModelAndView moblieHome(HttpServletRequest request, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId, 
-    		@Param("授权ID") @PathVariable("authorId") Integer authorId, ModelAndView model) {
-    	Integer busId = tHotelService.selectById(hotelId).getBusId();
-    	Member member = SessionUtils.getLoginMember(request, busId);
-    	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
-    		Map<String, Object> param = new HashMap<>();
-    		param.put("busId", busId);
-    		param.put("requestUrl", getHost(request) + "/78CDF1/" + hotelId + "/" + authorId);
-    		String url = null;
-			try {
-				url = authorizeMember(request, param);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-    		if(!StringUtils.isEmpty(url)) {
-    			model.setViewName(url);
-    	        return model;
-    		}
-    	}
-    	Wrapper<TAuthorization> wrapper = new EntityWrapper<>();
-    	wrapper.eq("id", authorId);
-		TAuthorization entity = new TAuthorization();
-		entity.setScanCodeAuthorization(CommonConst.AUTHORIZED_ENABLED);
-		entity.setUpdatedAt(new Date());
-		entity.setUpdatedBy(busId);
-		entity.setMemberId(member.getId());
-		if(tAuthorizationService.update(entity, wrapper)) {
-			try {
-				WXMPApiUtil.getSocketApi("hotel:backsocket", null, "success");
-			} catch (SignException e) {
-				e.printStackTrace();
-			}
-			model.setViewName("/author/success.html");
-		}else {
-			model.setViewName("/author/fail.html");
-		}
-        return model;
-    }
-    
+
     @ApiOperation(value = "关闭授权", notes = "关闭授权")
     @PostMapping(value = "{hotelId}/author/{authorId}/close", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")

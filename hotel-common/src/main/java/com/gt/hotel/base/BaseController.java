@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -25,6 +24,7 @@ import com.gt.api.bean.session.Member;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.RedisCacheUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 
@@ -41,13 +41,16 @@ public abstract class BaseController {
     protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
     
     @Autowired
-    RedisCacheUtil redisCacheUtil;
+    protected RedisCacheUtil redisCacheUtil;
     
     @Autowired
-    WXMPApiUtil wxmpApiUtil;
+    protected WXMPApiUtil wxmpApiUtil;
+
+    @Autowired
+    private WebServerConfigurationProperties webServerConfigurationProperties;
     
-    @Value("${wxmp.api.memberserverurl}")
-    private String memberUrl;
+//    @Value("${wxmp.api.memberserverurl}")
+//    private String memberUrl;
 
     /**
      * 获取Sessionid
@@ -132,18 +135,21 @@ public abstract class BaseController {
 //        map.put("busId", 33);
 //        map.put("requestUrl", "http://shuzheng.tunnel.qydev.com/login");
         logger.debug("进入--授权方法！");
-        
         Integer busId = Integer.valueOf(map.get("busId").toString());
         Integer browser = judgeBrowser(request);
-        Object uclogin = map.get("uclogin");	//参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器不需要授权   反之其他浏览器需要登录
-        
+        //参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器不需要授权   反之其他浏览器需要登录
+        Object uclogin = map.get("uclogin");
+
         JSONObject wxpublic = wxmpApiUtil.getWxPulbicMsg(busId);
         Integer code = Integer.parseInt(wxpublic.get("code").toString());
-        if (code.equals(-1)) {	//判断商家信息 1是否过期 2公众号是否变更过
-            return "";//请求错误
+        //判断商家信息 1是否过期 2公众号是否变更过
+        if (code.equals(-1)) {
+            //请求错误
+            return "";
         } else if (code.equals(0)) {
             Object guoqi = wxpublic.get("guoqi");
-            if (!StringUtils.isEmpty(guoqi)) {//商家已过期
+            //商家已过期
+            if (!StringUtils.isEmpty(guoqi)) {
                 Object guoqiUrl = wxpublic.get("guoqiUrl");
                 return "redirect:" + guoqiUrl;
             }
@@ -154,7 +160,6 @@ public abstract class BaseController {
         }
         String requestUrl = map.get("requestUrl").toString();
         String otherRedisKey = getCode();
-//        commRedisService.setExApi(otherRedisKey, requestUrl, 5 * 60L);
         redisCacheUtil.set(otherRedisKey, requestUrl, 5*60L);
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("otherRedisKey", "hotel:" + otherRedisKey);
@@ -163,7 +168,8 @@ public abstract class BaseController {
         queryMap.put("uclogin", uclogin);
         logger.info("queryMap=" + JSON.toJSONString(queryMap));
         String params = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
-        return "redirect:" + memberUrl + "/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody=" + params;
+        String authorizeMemberNew = webServerConfigurationProperties.getMemberService().getApiMap().get("authorizeMemberNew");
+        return "redirect:" + authorizeMemberNew + params;
     }
     
     /**
