@@ -162,6 +162,7 @@ public class ErpHotelCommonController extends BaseController {
 		THotel th = hotelService.selectOne(arg0);
         HotelVo h = new HotelVo();
         BeanUtils.copyProperties(th, h);
+        h.setHotelId(th.getId());
 
         Wrapper<THotelMemberSetting> wrapper = new EntityWrapper<>();
         wrapper.eq("hotel_id", th.getId());

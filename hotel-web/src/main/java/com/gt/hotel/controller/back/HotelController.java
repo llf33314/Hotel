@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
@@ -120,11 +121,41 @@ public class HotelController extends BaseController {
         Page<HotelVo> page = tHotelService.queryHotelHome(busId, hpage);
         return ResponseDTO.createBySuccess(page);
     }
+    
+    @ApiOperation(value = "酒店对象", notes = "酒店对象")
+    @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<HotelVo> hotelObjectR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
+    	Integer busId = getLoginUser(request).getId();
+    	HotelVo h = new HotelVo();
+		THotel th = tHotelService.selectById(hotelId);
+        BeanUtils.copyProperties(th, h);
+        h.setHotelId(th.getId());
+        List<HotelWsWxShopInfoExtend> shops;
+        try {
+            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busId);
+            if (json.getBoolean(CommonConst.SUCCESS)) {
+                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(), HotelWsWxShopInfoExtend.class);
+                for (HotelWsWxShopInfoExtend shop : shops) {
+                	if(shop.getId().equals(h.getShopId())) {
+                		h.setShopAddr(shop.getAddress());
+                		h.setShopPhone(shop.getTelephone());
+                		h.setShopName(shop.getBusinessName());
+                	}
+                }
+            }
+            return ResponseDTO.createBySuccess(h);
+        } catch (SignException e) {
+            logger.error("签名错误：{}", e.getMessage());
+            throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
+        }
+    }
 
     @ApiOperation(value = "新增或更新酒店", notes = "新增或更新酒店")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel, BindingResult bindingResult, HttpServletRequest request) {
+    public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel, 
+    		BindingResult bindingResult, 
+    		HttpServletRequest request) {
         ResponseDTO msg = InvalidParameterII(bindingResult);
         if (msg != null) {
             return msg;
