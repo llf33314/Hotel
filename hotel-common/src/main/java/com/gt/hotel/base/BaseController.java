@@ -1,15 +1,18 @@
 package com.gt.hotel.base;
 
-import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
-
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.gt.api.bean.session.BusUser;
+import com.gt.api.bean.session.Member;
+import com.gt.api.exception.SignException;
+import com.gt.api.util.SessionUtils;
+import com.gt.hotel.constant.CommonConst;
+import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
+import com.gt.hotel.util.RedisCacheUtil;
+import com.gt.hotel.util.WXMPApiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +20,15 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.gt.api.bean.session.BusUser;
-import com.gt.api.bean.session.Member;
-import com.gt.api.util.SessionUtils;
-import com.gt.hotel.dto.ResponseDTO;
-import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.properties.WebServerConfigurationProperties;
-import com.gt.hotel.util.RedisCacheUtil;
-import com.gt.hotel.util.WXMPApiUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
 
 /**
  * BaseController
@@ -44,7 +46,7 @@ public abstract class BaseController {
     protected RedisCacheUtil redisCacheUtil;
     
     @Autowired
-    protected WXMPApiUtil wxmpApiUtil;
+    private WXMPApiUtil wxmpApiUtil;
 
     @Autowired
     private WebServerConfigurationProperties webServerConfigurationProperties;
@@ -79,7 +81,7 @@ public abstract class BaseController {
     	return b;
 //    	return SessionUtils.getLoginUser(request);
     }
-    
+
     /**
      * 获取会员
      * @param request

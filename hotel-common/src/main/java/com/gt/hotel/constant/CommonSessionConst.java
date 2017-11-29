@@ -21,4 +21,6 @@ public final class CommonSessionConst {
      * 签名
      */
     public static final String SIGNKEY               = "WXMP2017";
+
+
 }

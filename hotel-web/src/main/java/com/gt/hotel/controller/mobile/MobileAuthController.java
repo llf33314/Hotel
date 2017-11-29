@@ -8,6 +8,7 @@ import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.entity.TAuthorization;
+import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.TAuthorizationService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,9 @@ public class MobileAuthController extends BaseController {
 
     @Autowired
     private TAuthorizationService tAuthorizationService;
+
+    @Autowired
+    private WXMPApiUtil wxmpApiUtil;
 
 
     @ApiOperation(value = "首页", notes = "首页")

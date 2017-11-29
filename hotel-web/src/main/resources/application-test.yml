@@ -16,7 +16,7 @@ spring:
 #   port: 6379
    password: gt@123456
    database: 3
-   timeout: 1000
+   timeout: 20000
    cluster:
        nodes: 113.106.202.51:6379,113.106.202.50:9379,113.106.202.53:9379
        maxRedirects: 3
