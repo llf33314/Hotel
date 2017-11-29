@@ -30,6 +30,7 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.NeedLoginException;
 import com.gt.hotel.exception.ResponseEntityException;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
 
@@ -54,6 +55,9 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private THotelService hotelService;
+
+    @Autowired
+    WebServerConfigurationProperties webServerConfigurationProperties;
 
     /**
      * 路径上获取酒店ID

@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class Unit {
 
-    private int createDate;
+    private long createDate;
 
     private String createDateStr;
     

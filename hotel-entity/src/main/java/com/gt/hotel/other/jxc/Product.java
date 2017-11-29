@@ -17,7 +17,7 @@ public class Product {
 
     private int buyPrice;
 
-    private int createDate;
+    private long createDate;
     
     private String createDateStr;
     

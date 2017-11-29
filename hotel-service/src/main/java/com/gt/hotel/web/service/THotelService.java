@@ -5,6 +5,7 @@ import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.param.ERPParameter.ERPSave;
 import com.gt.hotel.param.HotelParameter.HotelQuery;
+import com.gt.hotel.param.HotelParameter.HotelSaveOrUpdate;
 import com.gt.hotel.vo.HotelVo;
 
 /**
@@ -41,6 +42,12 @@ public interface THotelService extends BaseService<THotel> {
      * @param save
      */
     void SaveHotelERP(Integer busid, ERPSave save);
+
+    /**
+     * 编辑酒店信息
+     * @param busid
+     */
+	void backHotelCU(Integer busid, HotelSaveOrUpdate hotel);
 
 
 }

@@ -169,12 +169,16 @@ hotel:
         serviceUrl: https://jxc.deeptel.com.cn
         account: erp_5
         pwd: 123456
-        login: ${hotel.webserver.JxcService.serviceUrl}/erp/b/login
-        allProducts: ${hotel.webserver.JxcService.serviceUrl}/erp/query/allProducts # 查询已入库的商品信息
-        amountSum: ${hotel.webserver.JxcService.serviceUrl}/erp/statistics/amountSum # 库存总数查询
-        getProTypes: ${hotel.webserver.JxcService.serviceUrl}/erp/query/getProTypes # 商品类别查询
-        operation: ${hotel.webserver.JxcService.serviceUrl}/erp/order/inventory/operation # 发货、退货(商城.ERP)
-        inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct # 库存查询(根据商品ID)
+        ApiMap:
+            login: ${hotel.webserver.JxcService.serviceUrl}/erp/b/login
+            allProducts: ${hotel.webserver.JxcService.serviceUrl}/erp/query/allProducts # 查询已入库的商品信息
+            amountSum: ${hotel.webserver.JxcService.serviceUrl}/erp/statistics/amountSum # 库存总数查询
+            getProTypes: ${hotel.webserver.JxcService.serviceUrl}/erp/query/getProTypes # 商品类别查询
+            operation: ${hotel.webserver.JxcService.serviceUrl}/erp/order/inventory/operation # 发货、退货(商城.ERP)
+            inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct # 库存查询(根据商品ID)
+            invenotry: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/all/invenotry # 查询已入库的商品信息(多单位)
+            productType: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/basic/product/type/ # 商品类别查询【新】
+            refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund # 发货、退货【新】
 
 
 

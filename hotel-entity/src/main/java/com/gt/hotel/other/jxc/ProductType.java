@@ -3,6 +3,8 @@
   */
 package com.gt.hotel.other.jxc;
 
+import java.util.List;
+
 import io.swagger.annotations.Api;
 import lombok.Data;
 
@@ -15,7 +17,7 @@ import lombok.Data;
 @Data
 public class ProductType {
 
-    private int createDate;
+    private long createDate;
 
     private String createDateStr;
     
@@ -28,5 +30,9 @@ public class ProductType {
     private int rootUid;
     
     private boolean status;
+    
+    private boolean sold;
+    
+    private List<ProductType> chlid;
 
 }

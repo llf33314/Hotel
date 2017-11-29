@@ -98,6 +98,25 @@ public class JXCApiUtil {
     }
     
     /**
+     * 查询已入库的商品信息(多单位)
+     * @param shopIds 门店ID 多个用","分割
+     * @param proTypes 商品分类 多个用","分割
+     * @param search 搜索条件 （商品名称or条形码or自定义编码）
+     * @param pageIndex 页数
+     * @param pageCount 条数
+     * @return {"code":100X,"msg": "","data": com.gt.hotel.other.jxc.NewJxcInventory} 
+     */
+    public JSONObject invenotry(String shopIds, String proTypes, String search, String pageIndex, String pageCount, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<>();
+    	map.put("shopIds", shopIds);
+    	map.put("proTypes", proTypes);
+    	map.put("search", search);
+    	map.put("pageIndex", pageIndex);
+    	map.put("pageCount", pageCount);
+    	return jxcRequest(map, "invenotry", request);
+    }
+    
+    /**
      * 库存总数查询
      * @param shopIds 门店ID 多个用","分割
      * @param request
@@ -122,6 +141,16 @@ public class JXCApiUtil {
     }
     
     /**
+     * 商品类别查询 [新]
+     * @param rootUid 总账号ID(int)
+     * @param request
+     * @return 商品类别集合 com.gt.hotel.other.jxc.ProductType
+     */
+    public JSONObject productType(String rootUid, HttpServletRequest request) {
+    	return jxcRequest(rootUid, "getProTypes", request);
+    }
+    
+    /**
      * 发货、退货(商城.ERP)
      * @param orders json字符串 [{uId:'1', uType: '', uName: '', rootUid: '', shopId: '', type: '', remark: '', products: [{id: '', amount: '', price: ''}]}]
      * @param request
@@ -131,6 +160,42 @@ public class JXCApiUtil {
     	Map<String, String> map = new HashMap<>();
     	map.put("orders", orders);
     	return jxcRequest(map, "operation", request);
+    }
+    
+    /**
+     * 发货、退货【新】
+     * @param bid 开单人ID
+     * @param bname 开单人账户
+     * @param cid 创建人ID
+     * @param cname 创建人账户
+     * @param rootUid 商家ID
+     * @param type 类型(1：出库; 0：退货)
+     * @param shopId 门店ID
+     * @param orderId 出库单ID(退货时传入)
+     * @param remark 备注(1~200)
+     * @param ovs 商品列表({amount: 数量 , id: 商品ID , price: 销售/退货单价 , viceUnitId: 副单位(不传则自动按主单位计算) }])
+     * @param request
+     * @return {
+		  "code": 1001,
+		  "data": {
+		    orderId : 12 // 订单ID(出库/退货)
+		  }
+		}
+     */
+    public JSONObject refund(String bid, String bname, String cid, String cname, String rootUid, 
+    		String type, String shopId, String orderId, String remark, String ovs, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<>();
+    	map.put("bid", bid);
+    	map.put("ordbnameers", bname);
+    	map.put("cid", cid);
+    	map.put("cname", cname);
+    	map.put("rootUid", rootUid);
+    	map.put("type", type);
+    	map.put("shopId", shopId);
+    	map.put("orderId", orderId);
+    	map.put("remark", remark);
+    	map.put("ovs", ovs);
+    	return jxcRequest(map, "refund", request);
     }
     
     /**
@@ -192,6 +257,15 @@ public class JXCApiUtil {
     	}else {
     		return json;
     	}
+	}
+	private JSONObject jxcRequest(String param, String urlName, HttpServletRequest request) {
+		Map<String, String> map = new HashMap<>();
+		JSONObject json = JSONObject.parseObject(doPost(properties.getJxcService().getApiMap().get(urlName) + param, map  , getJXCToken(request)));
+		if(json.getIntValue("code") == CODE_3 || json.getIntValue("code") == CODE_4) {
+			return JSONObject.parseObject(doPost(properties.getJxcService().getApiMap().get(urlName), map , login(request)));
+		}else {
+			return json;
+		}
 	}
 	
     public static void main(String[] args) {
