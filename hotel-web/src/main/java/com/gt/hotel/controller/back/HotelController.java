@@ -1,5 +1,32 @@
 package com.gt.hotel.controller.back;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -10,8 +37,6 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.entity.THotelMemberSetting;
-import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.HotelShopInfo;
@@ -27,29 +52,10 @@ import com.gt.hotel.vo.LinkVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 酒店管理-新增酒店
@@ -66,9 +72,6 @@ public class HotelController extends BaseController {
 
     @Autowired
     private THotelService tHotelService;
-
-    @Autowired
-    private THotelSettingService tHotelSettingService;
 
     @Autowired
     private WXMPApiUtil WXMPApiUtil;
@@ -128,39 +131,8 @@ public class HotelController extends BaseController {
             return msg;
         }
         Integer busid = getLoginUser(request).getId();
-        Date date = new Date();
-        THotel e = new THotel();
-        BeanUtils.copyProperties(hotel, e);
-        e.setBusId(busid);
-        e.setId(hotel.getHotelId());
-        e.setPhone(hotel.getTel());
-        e.setAddress(hotel.getAddr());
-        e.setShopId(hotel.getShopId());
-        if (e.getId() == null) {
-            e.setCreatedBy(busid);
-            e.setCreatedAt(date);
-        }
-        e.setUpdatedBy(busid);
-        e.setUpdatedAt(date);
-        boolean f = e.insertOrUpdate();
-
-        if (e.getId() == null) {
-            THotelSetting hs = new THotelSetting();
-            hs.setHotelId(e.getId());
-            f &= tHotelSettingService.insert(hs);
-
-            List<THotelMemberSetting> hotelMemberSettings = new ArrayList<>();
-            for (int i = 0; i < 4; i++) {
-                THotelMemberSetting hotelMemberSetting = new THotelMemberSetting();
-                hotelMemberSetting.setHotelId(e.getId());
-                hotelMemberSetting.setVipLevel(i + 1);
-                hotelMemberSettings.add(hotelMemberSetting);
-            }
-            f &= hotelMemberSettingService.insertBatch(hotelMemberSettings);
-        }
-
-        if (f) return ResponseDTO.createBySuccess();
-        else return ResponseDTO.createByError();
+        tHotelService.backHotelCU(busid, hotel);
+        return ResponseDTO.createBySuccess();
     }
 
     @ApiOperation(value = "删除 酒店", notes = "删除 酒店")

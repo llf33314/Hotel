@@ -1,5 +1,14 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -7,22 +16,17 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.THotelDAO;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.THotelMemberSetting;
+import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.ERPParameter.ERPSave;
 import com.gt.hotel.param.HotelParameter.HotelQuery;
+import com.gt.hotel.param.HotelParameter.HotelSaveOrUpdate;
 import com.gt.hotel.vo.HotelMemberSettingVo;
 import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.gt.hotel.web.service.THotelSettingService;
 
 /**
  * <p>
@@ -38,6 +42,9 @@ public class THotelServiceImpl extends BaseServiceImpl<THotelDAO, THotel> implem
     @Autowired
     THotelDAO tHotelDAO;
 
+    @Autowired
+    THotelSettingService tHotelSettingService;
+    
     @Autowired
     THotelMemberSettingService tHotelMemberSettingService;
 
@@ -91,5 +98,44 @@ public class THotelServiceImpl extends BaseServiceImpl<THotelDAO, THotel> implem
             }
         }
     }
+
+	@Override
+	public void backHotelCU(Integer busid, HotelSaveOrUpdate hotel) {
+		Date date = new Date();
+        THotel e = new THotel();
+        BeanUtils.copyProperties(hotel, e);
+        e.setBusId(busid);
+        e.setId(hotel.getHotelId());
+        e.setPhone(hotel.getTel());
+        e.setAddress(hotel.getAddr());
+        e.setShopId(hotel.getShopId());
+        if (e.getId() == null) {
+            e.setCreatedBy(busid);
+            e.setCreatedAt(date);
+        }
+        e.setUpdatedBy(busid);
+        e.setUpdatedAt(date);
+        if(!e.insertOrUpdate()) {
+        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        }
+
+        if (e.getId() == null) {
+            THotelSetting hs = new THotelSetting();
+            hs.setHotelId(e.getId());
+            if(!tHotelSettingService.insert(hs)) {
+            	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            }
+            List<THotelMemberSetting> hotelMemberSettings = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                THotelMemberSetting hotelMemberSetting = new THotelMemberSetting();
+                hotelMemberSetting.setHotelId(e.getId());
+                hotelMemberSetting.setVipLevel(i + 1);
+                hotelMemberSettings.add(hotelMemberSetting);
+            }
+        	if(!tHotelMemberSettingService.insertBatch(hotelMemberSettings)) {
+        		throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            }
+        }
+	}
 
 }
