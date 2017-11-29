@@ -163,6 +163,42 @@ public class JXCApiUtil {
     }
     
     /**
+     * 发货、退货【新】
+     * @param bid 开单人ID
+     * @param bname 开单人账户
+     * @param cid 创建人ID
+     * @param cname 创建人账户
+     * @param rootUid 商家ID
+     * @param type 类型(1：出库; 0：退货)
+     * @param shopId 门店ID
+     * @param orderId 出库单ID(退货时传入)
+     * @param remark 备注(1~200)
+     * @param ovs 商品列表({amount: 数量 , id: 商品ID , price: 销售/退货单价 , viceUnitId: 副单位(不传则自动按主单位计算) }])
+     * @param request
+     * @return {
+		  "code": 1001,
+		  "data": {
+		    orderId : 12 // 订单ID(出库/退货)
+		  }
+		}
+     */
+    public JSONObject refund(String bid, String bname, String cid, String cname, String rootUid, 
+    		String type, String shopId, String orderId, String remark, String ovs, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<>();
+    	map.put("bid", bid);
+    	map.put("ordbnameers", bname);
+    	map.put("cid", cid);
+    	map.put("cname", cname);
+    	map.put("rootUid", rootUid);
+    	map.put("type", type);
+    	map.put("shopId", shopId);
+    	map.put("orderId", orderId);
+    	map.put("remark", remark);
+    	map.put("ovs", ovs);
+    	return jxcRequest(map, "refund", request);
+    }
+    
+    /**
      * 库存查询(根据商品ID)
      * @param shopIds 门店ID 多个用","分割
      * @param proIds 商品ID 多个用","分割

@@ -178,6 +178,7 @@ hotel:
             inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct # 库存查询(根据商品ID)
             invenotry: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/all/invenotry # 查询已入库的商品信息(多单位)
             productType: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/basic/product/type/ # 商品类别查询【新】
+            refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund # 发货、退货【新】
 
 
 
