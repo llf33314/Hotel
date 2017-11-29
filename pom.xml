@@ -49,7 +49,7 @@
         <dev.lib.jjwt>0.7.0</dev.lib.jjwt>
         <dev.lib.lombok>1.16.18</dev.lib.lombok>
         <dev.lib.joda-time>2.9.9</dev.lib.joda-time>
-        <dev.lib.gt-api>1.3.16-SNAPSHOT</dev.lib.gt-api>
+        <dev.lib.gt-api>1.3.17-SNAPSHOT</dev.lib.gt-api>
     </properties>
 
     <parent>
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>com.gt.member</groupId>
             <artifactId>member_bo</artifactId>
-            <version>1.0.5-SNAPSHOT</version>
+            <version>1.0.6-SNAPSHOT</version>
         </dependency>
 
         <!-- 将内嵌的tomcat容器标记为provided(来自官网) -->

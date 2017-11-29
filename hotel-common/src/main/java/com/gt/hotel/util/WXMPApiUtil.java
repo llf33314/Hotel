@@ -317,7 +317,7 @@ public final class WXMPApiUtil {
             throws SignException {
         JSONObject param = new JSONObject();
         param.put("reqdata", busId);
-        return getLApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("findWxShopListBybusId"));
+        return getLApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("findWxShopListByBusId"));
     }
 
     /**

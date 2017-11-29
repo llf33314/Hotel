@@ -5,18 +5,23 @@ import javax.validation.constraints.NotNull;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Api("协议单位 or 中介 参数")
 public class AgreementParamter {
 	
 	@Api(description = "协议单位 or 中介 列表 参数")
     @Data
+    @EqualsAndHashCode(callSuper=false)
     public static class AgreementQuery extends HotelPage {
         @ApiModelProperty(value = "组织ID")
         private Integer id;
 
         @ApiModelProperty("审核状态 字典类型 7 三种状态 0 待审核 1 已通过 2 不通过 (审核人必须是财务角色)")
     	private Integer status;
+        
+        @ApiModelProperty("busId")
+        private Integer busId;
 
         @ApiModelProperty("模块类型： 0 单位 1 中介")
         @NotNull(message = "模块类型不能为空")
