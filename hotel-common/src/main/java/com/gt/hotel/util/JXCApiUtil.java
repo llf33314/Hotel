@@ -98,6 +98,25 @@ public class JXCApiUtil {
     }
     
     /**
+     * 查询已入库的商品信息(多单位)
+     * @param shopIds 门店ID 多个用","分割
+     * @param proTypes 商品分类 多个用","分割
+     * @param search 搜索条件 （商品名称or条形码or自定义编码）
+     * @param pageIndex 页数
+     * @param pageCount 条数
+     * @return {"code":100X,"msg": "","data": com.gt.hotel.other.jxc.NewJxcInventory} 
+     */
+    public JSONObject invenotry(String shopIds, String proTypes, String search, String pageIndex, String pageCount, HttpServletRequest request) {
+    	Map<String, String> map = new HashMap<>();
+    	map.put("shopIds", shopIds);
+    	map.put("proTypes", proTypes);
+    	map.put("search", search);
+    	map.put("pageIndex", pageIndex);
+    	map.put("pageCount", pageCount);
+    	return jxcRequest(map, "invenotry", request);
+    }
+    
+    /**
      * 库存总数查询
      * @param shopIds 门店ID 多个用","分割
      * @param request
@@ -119,6 +138,16 @@ public class JXCApiUtil {
     	Map<String, String> map = new HashMap<>();
     	map.put("rootUid", rootUid);
     	return jxcRequest(map, "getProTypes", request);
+    }
+    
+    /**
+     * 商品类别查询 [新]
+     * @param rootUid 总账号ID(int)
+     * @param request
+     * @return 商品类别集合 com.gt.hotel.other.jxc.ProductType
+     */
+    public JSONObject productType(String rootUid, HttpServletRequest request) {
+    	return jxcRequest(rootUid, "getProTypes", request);
     }
     
     /**
@@ -192,6 +221,15 @@ public class JXCApiUtil {
     	}else {
     		return json;
     	}
+	}
+	private JSONObject jxcRequest(String param, String urlName, HttpServletRequest request) {
+		Map<String, String> map = new HashMap<>();
+		JSONObject json = JSONObject.parseObject(doPost(properties.getJxcService().getApiMap().get(urlName) + param, map  , getJXCToken(request)));
+		if(json.getIntValue("code") == CODE_3 || json.getIntValue("code") == CODE_4) {
+			return JSONObject.parseObject(doPost(properties.getJxcService().getApiMap().get(urlName), map , login(request)));
+		}else {
+			return json;
+		}
 	}
 	
     public static void main(String[] args) {
