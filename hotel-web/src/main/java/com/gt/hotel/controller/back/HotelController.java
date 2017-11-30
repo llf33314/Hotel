@@ -74,7 +74,7 @@ public class HotelController extends BaseController {
     private THotelService tHotelService;
 
     @Autowired
-    private WXMPApiUtil WXMPApiUtil;
+    private WXMPApiUtil wxmpApiUtil;
 
     @Autowired
     THotelMemberSettingService hotelMemberSettingService;
@@ -91,20 +91,29 @@ public class HotelController extends BaseController {
         Integer busId = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops;
         try {
-            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busId);
+        	Wrapper<THotel> w = new EntityWrapper<>();
+        	w.eq("bus_id", busId);
+        	w.eq("mark_modified", CommonConst.ENABLED);
+			List<THotel> hs = tHotelService.selectList(w);
+			List<Integer> ids = new ArrayList<>();
+			for(THotel h : hs) {
+				ids.add(h.getShopId());
+			}
+            JSONObject json = wxmpApiUtil.queryWxShopByBusId(busId);
             List<HotelShopInfo> hotelShopInfoList = null;
             if (json.getBoolean(CommonConst.SUCCESS)) {
-                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
-                        HotelWsWxShopInfoExtend.class);
+                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),HotelWsWxShopInfoExtend.class);
                 hotelShopInfoList = new ArrayList<>();
                 for (HotelWsWxShopInfoExtend shop : shops) {
                     HotelShopInfo shopInfo = new HotelShopInfo();
-                    shopInfo.setShopid(shop.getId());
+                    shopInfo.setShopId(shop.getId());
                     shopInfo.setName(shop.getBusinessName());
                     shopInfo.setTel(shop.getTelephone());
                     shopInfo.setAddr(shop.getAddress());
                     shopInfo.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
-                    hotelShopInfoList.add(shopInfo);
+                    if(!ids.contains(shop.getId())) {
+                    	hotelShopInfoList.add(shopInfo);
+                    }
                 }
             }
             return ResponseDTO.createBySuccess(hotelShopInfoList);
@@ -113,6 +122,8 @@ public class HotelController extends BaseController {
             throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
         }
     }
+
+
 
     @ApiOperation(value = "酒店列表", notes = "酒店列表")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -124,24 +135,19 @@ public class HotelController extends BaseController {
     
     @ApiOperation(value = "酒店对象", notes = "酒店对象")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<HotelVo> hotelObjectR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
-    	Integer busId = getLoginUser(request).getId();
+    public ResponseDTO<HotelVo> hotelObjectR(@PathVariable("hotelId") Integer hotelId) {
     	HotelVo h = new HotelVo();
 		THotel th = tHotelService.selectById(hotelId);
         BeanUtils.copyProperties(th, h);
         h.setHotelId(th.getId());
-        List<HotelWsWxShopInfoExtend> shops;
         try {
-            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busId);
+        	HotelWsWxShopInfoExtend shop = null;
+            JSONObject json = wxmpApiUtil.getShopInfoById(h.getShopId());
             if (json.getBoolean(CommonConst.SUCCESS)) {
-                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(), HotelWsWxShopInfoExtend.class);
-                for (HotelWsWxShopInfoExtend shop : shops) {
-                	if(shop.getId().equals(h.getShopId())) {
-                		h.setShopAddr(shop.getAddress());
-                		h.setShopPhone(shop.getTelephone());
-                		h.setShopName(shop.getBusinessName());
-                	}
-                }
+                shop = JSONArray.parseObject(json.getJSONObject("data").toJSONString(), HotelWsWxShopInfoExtend.class);
+	    		h.setShopAddr(shop.getAddress());
+	    		h.setShopPhone(shop.getTelephone());
+	    		h.setShopName(shop.getBusinessName());
             }
             return ResponseDTO.createBySuccess(h);
         } catch (SignException e) {
@@ -183,7 +189,7 @@ public class HotelController extends BaseController {
     @ApiOperation(value = "链接", notes = "链接")
     @GetMapping(value = "{hotelId}/link", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<LinkVo> link(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
-        String url = getHost(request) + "/mobile/78CDF1" + hotelId + "/home/";
+        String url = getHost(request) + "/mobile/78CDF1/home/" + hotelId;
         LinkVo link = new LinkVo();
         link.setLongUrl(url);
         link.setShortUrl(shortUrlUtil.getShorUrl(url));

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.api.bean.session.Member;
-import com.gt.api.exception.SignException;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.enums.ResponseEnums;
@@ -58,7 +56,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     WebServerConfigurationProperties webServerConfigurationProperties;
-    
+
     /**
      * 路径上获取酒店ID
      */
@@ -76,30 +74,10 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    	// 如果不是映射到方法直接通过
-//        if (!(handler instanceof HandlerMethod)) {
-//            return true;
-//        }
-//        HandlerMethod handlerMethod = (HandlerMethod) handler;
-//        Method method = handlerMethod.getMethod();
-//        // 判断接口是否需要登录
-//        MobileLoginRequired annotation = method.getAnnotation(MobileLoginRequired.class);
-//        // 移动端有 @MobileLoginRequired 注解，需要验证
-//        if (annotation != null) {
-    	// 酒店信息
-    	
-    	SessionUtils.getLoginMember(request, 33);
-    	
-    	//test
-//    	Member member1 = new Member();
-//    	member1.setId(1071);
-//    	member1.setBusid(33);
-//    	member1.setPhone("13433550667");
-//    	member1.setPublicId(492);
-//    	member1.setCardid("15338");
-//    	SessionUtils.setLoginMember(request, member1);
-    	//test
-    	
+    	String uri = request.getRequestURI();
+    	if(uri.indexOf("/mobile/78CDF1/home/") != -1) {
+    		return true;
+    	}
         // 酒店信息
         String hotelInfoJson = (String) request.getSession().getAttribute(CURRENT_HOTEL_INFO);
         // 从session中获取 当前商家ID
@@ -155,30 +133,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    private String authorizeMember(HttpServletRequest request, Integer busId) throws SignException {
-    	//参数uclogin 如果uclogin不为空值  是指微信端是要通过授权  其他浏览器需要登录
-        JSONObject wxPublic = wxmpApiUtil.getWxPulbicMsg(busId);
-        Integer code = wxPublic.getInteger("code");
-        //判断商家信息 1是否过期 2公众号是否变更过
-        if (code.equals(-1)) {
-            //请求错误
-            return "";
-        } else if (code.equals(0)) {
-            String guoqi = wxPublic.getString("guoqi");
-            //商家已过期
-            if (!StringUtils.isBlank(guoqi)) {
-                Object overdue = wxPublic.get("guoqiUrl");
-                return "redirect:" + overdue;
-            }
-            String remoteUcLogin = wxPublic.getString("remoteUcLogin");
-            if (!StringUtils.isBlank(remoteUcLogin)) {
-                return "";
-            }
-        }
-        return webServerConfigurationProperties.getWxmpService().getApiMap().get("authorizeMemberNew");
-	}
-
-	/**
+    /**
      * 获取酒店信息
      *
      * @param hotelId 酒店ID

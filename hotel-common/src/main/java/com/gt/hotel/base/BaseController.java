@@ -131,9 +131,7 @@ public abstract class BaseController {
      * @return
      * @throws Exception
      */
-   protected String authorizeMember(HttpServletRequest request, Map<String, Object> map) throws Exception {
-//        map.put("busId", 33);
-//        map.put("requestUrl", "http://shuzheng.tunnel.qydev.com/login");
+    protected String authorizeMember(HttpServletRequest request, Map<String, Object> map) throws Exception {
         logger.debug("进入--授权方法！");
         Integer busId = Integer.valueOf(map.get("busId").toString());
         Integer browser = judgeBrowser(request);

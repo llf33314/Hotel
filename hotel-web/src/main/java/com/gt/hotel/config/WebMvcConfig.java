@@ -34,7 +34,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     // 快速解决页面转向问题
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("/nav.html");
+        registry.addViewController("/").setViewName("/index.html");
         registry.addViewController("/error").setViewName("/error/defaultError.html");
     }
 
@@ -62,9 +62,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/pages/")
-                .addResourceLocations("classpath:/templates/")
-                .addResourceLocations("classpath:/static/");
+        		.addResourceLocations("classpath:/static/")
+                .addResourceLocations("classpath:/pages/");
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")

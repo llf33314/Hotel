@@ -63,17 +63,17 @@ import io.swagger.annotations.ApiParam;
 public class ErpHotelCommonController extends BaseController {
 	
 	@Autowired
-    private WXMPApiUtil WXMPApiUtil;
+    private WXMPApiUtil wxmpApiUtil;
 	
 	@Autowired
     private WebServerConfigurationProperties properties;
 
 	@Autowired
 	TRoomCategoryService roomCategoryService;
-	
+
 	@Autowired
 	THotelService hotelService;
-	
+
 	@Autowired
 	THotelMemberSettingService hotelMemberSettingService;
 
@@ -85,20 +85,41 @@ public class ErpHotelCommonController extends BaseController {
         Integer busid = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops = null;
         try {
-            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busid);
+            JSONObject json = wxmpApiUtil.queryWxShopByBusId(busid);
             if (json.getBoolean("success")) {
                 shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
                         HotelWsWxShopInfoExtend.class);
             }
+            Wrapper<THotel> w = new EntityWrapper<>();
+        	w.eq("bus_id", busid);
+			List<THotel> hs = hotelService.selectList(w);
+			List<HotelVo> hvs = new ArrayList<>();
+			List<Integer> sids = new ArrayList<>();
+			for(THotel h : hs) {
+				HotelVo hv = new HotelVo();
+				BeanUtils.copyProperties(h, hv);
+				hv.setHotelId(h.getId());
+				hvs.add(hv);
+				sids.add(h.getShopId());
+			}
+			
             List<HotelShopInfo> s = new ArrayList<>();
             for (HotelWsWxShopInfoExtend shop : shops) {
-                HotelShopInfo _s = new HotelShopInfo();
-                _s.setShopid(shop.getId());
-                _s.setName(shop.getBusinessName());
-                _s.setTel(shop.getTelephone());
-                _s.setAddr(shop.getAddress());
-                _s.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
-                s.add(_s);
+                if(sids.contains(shop.getId())) {
+                	HotelShopInfo hsi = new HotelShopInfo();
+                	hsi.setShopId(shop.getId());
+                	hsi.setName(shop.getBusinessName());
+                	hsi.setTel(shop.getTelephone());
+                	hsi.setAddr(shop.getAddress());
+                	hsi.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
+                	for(HotelVo hv : hvs) {
+                		if(hv.getShopId().equals(shop.getId())) {
+                			hsi.setHotelId(hv.getHotelId());
+                			hsi.setHotelName(hv.getName());
+                			hsi.setLogo(hv.getLogo());                		}
+                	}
+                	s.add(hsi);
+                }
             }
             return ResponseDTO.createBySuccess(s);
         } catch (SignException e) {
@@ -145,7 +166,7 @@ public class ErpHotelCommonController extends BaseController {
 	@GetMapping(value = "roomCategory/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<RoomCategoryVo>> getRoomCategory(
 			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
-			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param, 
+			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param,
 			BindingResult bindingResult) {
 		InvalidParameter(bindingResult);
 //		param.setPageSize(9999);
@@ -176,5 +197,5 @@ public class ErpHotelCommonController extends BaseController {
         h.setMemberSetting(hmsv);
 		return ResponseDTO.createBySuccess(h);
 	}
-	
+
 }
