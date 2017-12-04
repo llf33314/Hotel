@@ -1,10 +1,10 @@
 package com.gt.hotel.vo;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
 import java.util.Date;
 import java.util.List;
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 @Data
 public class ActivityVo {
@@ -100,4 +100,7 @@ public class ActivityVo {
 
     @ApiModelProperty(value = "活动房间 集合")
     private List<ActivityRoomVo> rooms;
+    
+    @ApiModelProperty(value = "活动名称")
+	private String activityName;
 }

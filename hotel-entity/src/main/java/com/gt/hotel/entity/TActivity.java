@@ -93,6 +93,10 @@ public class TActivity extends Model<TActivity> {
      * 最后修改时间
      */
 	private Date updatedAt;
+	/**
+	 * 活动名称
+	 */
+	private String activityName;
 
 
 	@Override

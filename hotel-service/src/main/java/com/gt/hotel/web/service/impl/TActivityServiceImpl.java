@@ -81,15 +81,15 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
         }
         a.setUpdatedAt(date);
         a.setUpdatedBy(busid);
-        long begintime = a.getBeginTime().getTime();
-        long endtime = a.getEndTime().getTime();
-        if(date.getTime() < begintime) {
+//        long begintime = a.getBeginTime().getTime();
+//        long endtime = a.getEndTime().getTime();
+//        if(date.getTime() < begintime) {
         	a.setPublishStatus(CommonConst.ACTIVITY_NOT_START);
-        }else if(date.getTime() > endtime) {
-        	a.setPublishStatus(CommonConst.ACTIVITY_OVER);
-        }else if(date.getTime() > begintime && date.getTime() < endtime){
-        	a.setPublishStatus(CommonConst.ACTIVITY_PROCESSING);
-        }
+//        }else if(date.getTime() > endtime) {
+//        	a.setPublishStatus(CommonConst.ACTIVITY_OVER);
+//        }else if(date.getTime() > begintime && date.getTime() < endtime){
+//        	a.setPublishStatus(CommonConst.ACTIVITY_PROCESSING);
+//        }
         if (!a.insertOrUpdate()) {
             throw new ResponseEntityException("活动保存失败");
         }
@@ -97,6 +97,8 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
         ad.setActivityId(a.getId());
         ad.setUpdatedAt(date);
         ad.setUpdatedBy(busid);
+        System.err.println(a);
+        System.err.println(ad);
         if (arooms.getId() == null) {
             ad.setCreatedAt(date);
             ad.setCreatedBy(busid);

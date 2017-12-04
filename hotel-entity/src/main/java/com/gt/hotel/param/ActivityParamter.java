@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.domain.AfterDomainEventPublication;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -95,6 +96,9 @@ public class ActivityParamter {
 
         @ApiModelProperty(value = "房间")
         private List<ActivityRoomParam> rooms;
+
+        @ApiModelProperty(value = "活动名称", required = true)
+    	private String activityName;
     }
 
     @Data

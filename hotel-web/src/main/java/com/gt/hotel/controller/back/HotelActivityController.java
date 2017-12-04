@@ -69,6 +69,9 @@ public class HotelActivityController extends BaseController {
         if(msg != null) {
         	return msg;
         }
+        if(arooms.getAvailableTime().getTime() < arooms.getBeginTime().getTime()) {
+        	return ResponseDTO.createByErrorMessage("入住时间要大于活动开始时间");
+        }
         Integer busid = getLoginUser(request).getId();
         tActivityService.editActivity(busid, arooms);
         return ResponseDTO.createBySuccess();
