@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.api.bean.session.Member;
-import com.gt.api.exception.SignException;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.enums.ResponseEnums;
@@ -76,6 +74,10 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    	String uri = request.getRequestURI();
+    	if(uri.indexOf("/mobile/78CDF1/home/") != -1) {
+    		return true;
+    	}
         // 酒店信息
         String hotelInfoJson = (String) request.getSession().getAttribute(CURRENT_HOTEL_INFO);
         // 从session中获取 当前商家ID

@@ -1,5 +1,26 @@
 package com.gt.hotel.controller.erp;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -26,24 +47,10 @@ import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * 酒店ERP - 通用
@@ -83,15 +90,36 @@ public class ErpHotelCommonController extends BaseController {
                 shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
                         HotelWsWxShopInfoExtend.class);
             }
+            Wrapper<THotel> w = new EntityWrapper<>();
+        	w.eq("bus_id", busid);
+			List<THotel> hs = hotelService.selectList(w);
+			List<HotelVo> hvs = new ArrayList<>();
+			List<Integer> sids = new ArrayList<>();
+			for(THotel h : hs) {
+				HotelVo hv = new HotelVo();
+				BeanUtils.copyProperties(h, hv);
+				hv.setHotelId(h.getId());
+				hvs.add(hv);
+				sids.add(h.getShopId());
+			}
+			
             List<HotelShopInfo> s = new ArrayList<>();
             for (HotelWsWxShopInfoExtend shop : shops) {
-                HotelShopInfo _s = new HotelShopInfo();
-                _s.setShopId(shop.getId());
-                _s.setName(shop.getBusinessName());
-                _s.setTel(shop.getTelephone());
-                _s.setAddr(shop.getAddress());
-                _s.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
-                s.add(_s);
+                if(sids.contains(shop.getId())) {
+                	HotelShopInfo hsi = new HotelShopInfo();
+                	hsi.setShopId(shop.getId());
+                	hsi.setName(shop.getBusinessName());
+                	hsi.setTel(shop.getTelephone());
+                	hsi.setAddr(shop.getAddress());
+                	hsi.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
+                	for(HotelVo hv : hvs) {
+                		if(hv.getShopId().equals(shop.getId())) {
+                			hsi.setHotelId(hv.getHotelId());
+                			hsi.setHotelName(hv.getName());
+                			hsi.setLogo(hv.getLogo());                		}
+                	}
+                	s.add(hsi);
+                }
             }
             return ResponseDTO.createBySuccess(s);
         } catch (SignException e) {
@@ -155,6 +183,7 @@ public class ErpHotelCommonController extends BaseController {
 		THotel th = hotelService.selectOne(arg0);
         HotelVo h = new HotelVo();
         BeanUtils.copyProperties(th, h);
+        h.setHotelId(th.getId());
 
         Wrapper<THotelMemberSetting> wrapper = new EntityWrapper<>();
         wrapper.eq("hotel_id", th.getId());

@@ -11,6 +11,15 @@ import java.util.List;
 public class HotelVo {
     @ApiModelProperty("门店ID")
     private Integer shopId;
+    
+    @ApiModelProperty("门店名称")
+    private String shopName;
+    
+    @ApiModelProperty("门店电话")
+    private String shopPhone;
+    
+    @ApiModelProperty("门店地址")
+    private String shopAddr;
 
     @ApiModelProperty("酒店ID")
     private Integer hotelId;

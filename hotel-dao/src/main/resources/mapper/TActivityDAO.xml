@@ -21,6 +21,7 @@
 		<result column="created_at" property="createdAt" />
 		<result column="updated_by" property="updatedBy" />
 		<result column="updated_at" property="updatedAt" />
+		<result column="activity_name" property="activityName" />
 	</resultMap>
 
 	<!-- 通用查询结果列 -->
@@ -33,7 +34,7 @@
 		AS numberThreshold, activity_rules AS activityRules,
 		publish_status AS publishStatus, mark_modified AS markModified, created_by AS
 		createdBy, created_at AS
-		createdAt, updated_by AS updatedBy, updated_at AS updatedAt
+		createdAt, updated_by AS updatedBy, updated_at AS updatedAt, activity_name AS activityName
 	</sql>
 
 	<sql id="Base_Column_List_VO">
@@ -45,7 +46,7 @@
 		publish_status AS publishStatus, mark_modified AS markModified,
 		t_activity.created_by AS createdBy, t_activity.created_at AS
 		createdAt, t_activity.updated_by AS updatedBy, t_activity.updated_at
-		AS updatedAt
+		AS updatedAt, t_activity.activity_name AS activityName
 	</sql>
 
 	<select id="queryActivity" resultType="com.gt.hotel.vo.ActivityVo">
@@ -74,7 +75,7 @@
 		SELECT a.id, a.activity_num activityNum, a.hotel_id hotelId, a.begin_time beginTime, a.end_time endTime, a.available_time availableTime, a.restriction_enable restrictionEnable, 
 		 	a.restriction_number restrictionNumber, a.show_room_enable showRoomEnable, a.number_threshold numberThreshold, a.activity_rules activityRules,
 		 	b.activity_type activityType, b.check_in_time checkInTime, b.check_in_period checkInPeriod, b.check_out_period checkOutPeriod, b.min_purchase_number minPurchaseNumber, 
-			c.category_id categoryId, c.category_name categoryName, c.room_id roomId, c.room_num roomNum, c.rack_rate rackRate, c.id, MIN(c.activity_price) activity_price 
+			c.category_id categoryId, c.category_name categoryName, c.room_id roomId, c.room_num roomNum, c.rack_rate rackRate, c.id, MIN(c.activity_price) activity_price, a.activity_name activityName 
 		FROM t_activity a 
 		JOIN t_activity_detail b ON a.id = b.activity_id 
 		LEFT JOIN t_activity_room c ON a.id = c.activity_id 
@@ -87,7 +88,7 @@
 		 	a.restriction_number restrictionNumber, a.show_room_enable showRoomEnable, a.number_threshold numberThreshold, a.activity_rules activityRules,
 		 	b.activity_type activityType, b.check_in_time checkInTime, b.check_in_period checkInPeriod, b.check_out_period checkOutPeriod, b.min_purchase_number minPurchaseNumber, 
 			c.category_id categoryId, c.category_name categoryName, c.room_id roomId, c.room_num roomNum, c.rack_rate rackRate, c.activity_id activityId, c.activity_price activity_price,
-			(COUNT(c.id)-COUNT(d.number)) remainder, e.deposit 
+			(COUNT(c.id)-COUNT(d.number)) remainder, e.deposit, a.activity_name activityName 
 		FROM t_activity a 
 		JOIN t_activity_detail b ON a.id = b.activity_id 
 		LEFT JOIN t_activity_room c ON a.id = c.activity_id

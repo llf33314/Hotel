@@ -23,4 +23,13 @@ public class HotelShopInfo {
     @ApiModelProperty("图片地址")
     private String image;
 
+    @ApiModelProperty("酒店ID")
+    private Integer hotelId;
+    
+    @ApiModelProperty("酒店名称")
+    private String hotelName;
+    
+    @ApiModelProperty("酒店logo")
+    private String logo;
+    
 }

@@ -1,12 +1,13 @@
 package com.gt.hotel.entity;
 
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableId;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.activerecord.Model;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -14,9 +15,10 @@ import java.util.Date;
  * </p>
  *
  * @author 
- * @since 2017-11-18
+ * @since 2017-12-01
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class TActivityDetail extends Model<TActivityDetail> {
 
@@ -25,7 +27,6 @@ public class TActivityDetail extends Model<TActivityDetail> {
     /**
      * 活动ID
      */
-    @TableId
 	private Integer activityId;
     /**
      * 活动类型 1 特价房 2 钟点房 3 秒杀房 4 团购房

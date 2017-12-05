@@ -1,17 +1,18 @@
 package com.gt.hotel.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
 import com.gt.api.util.sign.SignHttpUtils;
 import com.gt.entityBo.ErpRefundBo;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 多粉接口
@@ -559,16 +560,16 @@ public final class WXMPApiUtil {
             Map<String, Object> param = new HashMap<String, Object>();
 //        	param.put("style", 1193);
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
-        	param.put("loginStyle", "1");
-        	param.put("userId", 33);
-        	param.put("loginuc", 0);
-        	param.put("pidUrl", "/erporder/iframe.do");
-        	param.put("sonUrls", "/erporder/takeway/index.do");
-        	param.put("erpstyle", 1);
+//        	param.put("loginStyle", "1");
+//        	param.put("userId", 33);
+//        	param.put("loginuc", 0);
+//        	param.put("pidUrl", "/erporder/iframe.do");
+//        	param.put("sonUrls", "/erporder/takeway/index.do");
+//        	param.put("erpstyle", 1);
 //        	param.put("levelModel", 1);
 //            param.put("reqdata", 33);
-            String url = "https://deeptel.com.cn" + "/8A5DA52E/ErploginApi/getMenusThree.do";
-            String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
+//            String url = "https://deeptel.com.cn" + "/8A5DA52E/ErploginApi/getMenusThree.do";
+//            String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
 //            JSONObject result = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(param), url, JSONObject.class, "WXMP2017");
 
 //        	param.put("cardNo", "13433550667");
@@ -577,15 +578,15 @@ public final class WXMPApiUtil {
 //        	String url = "http://member.yifriend.net" + "/memberAPI/member/findCardByMembeId";
 //        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
 //
-            System.err.println(result);
-
-//            String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
-//            String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("busId", 33);
-//            params.put("ids", "1071");
-//            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
 //            System.err.println(result);
+
+            String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
+            String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
+            Map<String, Object> params = new HashMap<>();
+            params.put("busId", 33);
+            params.put("ids", "1071");
+            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
+            System.err.println(result);
 
 
         } catch (Exception e) {

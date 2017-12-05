@@ -67,6 +67,13 @@ public class HotelCommonController extends BaseController {
         Integer busId = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops;
         try {
+        	Wrapper<THotel> w = new EntityWrapper<>();
+        	w.eq("bus_id", busId);
+			List<THotel> hs = tHotelService.selectList(w);
+			List<Integer> ids = new ArrayList<>();
+			for(THotel h : hs) {
+				ids.add(h.getShopId());
+			}
             JSONObject json = wxmpApiUtil.queryWxShopByBusId(busId);
             List<HotelShopInfo> hotelShopInfoList = null;
             if (json.getBoolean(CommonConst.SUCCESS)) {
@@ -79,7 +86,9 @@ public class HotelCommonController extends BaseController {
                     shopInfo.setTel(shop.getTelephone());
                     shopInfo.setAddr(shop.getAddress());
                     shopInfo.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
-                    hotelShopInfoList.add(shopInfo);
+                    if(!ids.contains(shop.getId())) {
+                    	hotelShopInfoList.add(shopInfo);
+                    }
                 }
             }
             return ResponseDTO.createBySuccess(hotelShopInfoList);

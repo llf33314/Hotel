@@ -1,6 +1,9 @@
 package com.gt.hotel.controller.mobile;
 
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
+import com.gt.api.util.SessionUtils;
 import com.gt.hotel.annotation.MobileLoginRequired;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -33,6 +38,7 @@ import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.param.HotelMobileParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
+import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.MobileActivityRoomCategoryVo;
 import com.gt.hotel.vo.MobileActivityVo;
@@ -85,39 +91,35 @@ public class MobileHotelController extends BaseController {
     @Autowired
     SysDictionaryService sysDictionaryService;
     
+    @Autowired
+    WebServerConfigurationProperties property;
+    
     @MobileLoginRequired
     @ApiOperation(value = "首页", notes = "首页")
-    @GetMapping(value = "{hotelId}/home", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "home/{hotelId}")
     public ModelAndView moblieHome(
     		HttpServletRequest request, 
     		@PathVariable("hotelId") Integer hotelId, 
     		ModelAndView model) {
-//    	THotel hotel = tHotelService.selectById(hotelId);
-//    	Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-//    	if(StringUtils.isEmpty(member) || StringUtils.isEmpty(member.getId())) {
-//    		Map<String, Object> param = new HashMap<>();
-//    		param.put("busId", hotel.getBusId());
-//    		param.put("requestUrl", getHost(request) + "/mobile/78CDF1" + hotelId + "/home/");
-//    		String url = null;
-//			try {
-//				url = authorizeMember(request, param);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//    		if(!StringUtils.isEmpty(url)) {
-//    			model.setViewName(url);
-//    	        return model;
-//    		}
-//    	}
-    	//test
-//    	Member member = new Member();
-//    	member.setId(1071);
-//    	member.setBusid(33);
-//    	member.setPhone("13433550667");
-//    	member.setPublicId(492);
-//    	member.setCardid("15338");
-    	//test
-    	model.setViewName("/index.html");
+    	try {
+    		THotel hotel = tHotelService.selectById(hotelId);
+    		Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
+    		System.err.println(member);
+    		if (member == null) {
+    			Map<String, Object> queryMap = new HashMap<>();
+    	        queryMap.put("browser", judgeBrowser(request));
+    	        queryMap.put("busId", hotel.getBusId());
+    	        queryMap.put("uclogin", null);
+    	        queryMap.put("returnUrl", getHost(request) + "/mobile/78CDF1/home/" + hotelId);
+    			String param = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
+    			model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
+    			System.err.println(property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
+    		}else {
+    			model.setViewName("redirect:/#/book/roomSet/"+hotel.getId());
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
         return model;
     }
 
