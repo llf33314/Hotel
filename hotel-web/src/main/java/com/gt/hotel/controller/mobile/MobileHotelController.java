@@ -212,7 +212,7 @@ public class MobileHotelController extends BaseController {
     		@PathVariable("hotelId") Integer hotelId, 
     		@RequestBody HotelMobileParameter.CheckOutParam param, 
     		BindingResult bindingResult) {
-    	ResponseDTO msg = InvalidParameterII(bindingResult);
+    	ResponseDTO msg = invalidParameterII(bindingResult);
     	if(msg != null) {
     		return msg;
     	}

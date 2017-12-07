@@ -9,10 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * 日期处理相关工具类
@@ -224,20 +221,20 @@ public class DateUtil {
      * @return long 时间戳，单位：秒
      */
     public static long nowToTimestamp() {
-        long timestamp = new Date().getTime();
+        long timestamp = System.currentTimeMillis();
         return timestamp / 1000;
     }
 
     /**
      * 和当前时间比较（Date格式）
      *
-     * @param date
+     * @param date1 比较日期
      * @return 负数：之前；0：当前；正数：之后
      */
     public static int compareDateWithNow(Date date1) {
         Date date2 = new Date();
-        int rnum = date1.compareTo(date2);
-        return rnum;
+        int rNum = date1.compareTo(date2);
+        return rNum;
     }
 
     /**
@@ -290,11 +287,11 @@ public class DateUtil {
      * @param date2
      * @return
      */
-    public static int differentDays(Date beginDate, Date EndDate) {
+    public static int differentDays(Date beginDate, Date endDate) {
     	Calendar cal1 = Calendar.getInstance();
     	cal1.setTime(beginDate);
     	Calendar cal2 = Calendar.getInstance();
-    	cal2.setTime(EndDate);
+    	cal2.setTime(endDate);
     	int day1= cal1.get(Calendar.DAY_OF_YEAR);
     	int day2 = cal2.get(Calendar.DAY_OF_YEAR);
     	int year1 = cal1.get(Calendar.YEAR);

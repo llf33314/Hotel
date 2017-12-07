@@ -1,7 +1,6 @@
 package com.gt.hotel.config.redis;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -22,18 +21,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @date 2017/07/16
  */
+@Slf4j
 @Configuration
 @EnableCaching
 public class RedisCacheConfig extends CachingConfigurerSupport {
 
-    /**
-     * 日志
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(RedisCacheConfig.class);
-
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory cf) {
-        LOG.debug("注入RedisTemplate");
+        log.debug("注入RedisTemplate");
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(cf);
         redisTemplate.setDefaultSerializer(new StringRedisSerializer());

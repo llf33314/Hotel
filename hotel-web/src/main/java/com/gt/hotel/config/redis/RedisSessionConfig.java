@@ -1,12 +1,15 @@
 package com.gt.hotel.config.redis;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.DefaultCookieSerializer;
+import org.springframework.stereotype.Component;
 
 /**
  * RedisSession配置Config 默认session超时时间 1小时 3600秒
@@ -15,21 +18,13 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
  * @version 1.0.0
  * @date 2017/07/16
  */
+@Slf4j
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
 public class RedisSessionConfig {
 
-    /**
-     * 日志
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(RedisSessionConfig.class);
-    // 注入配置属性 根据环境配置切换
-    @Value("${redisSession.cookieName}")
-    private String cookieName;
-    @Value("${redisSession.cookiePath}")
-    private String cookiePath;
-    @Value("${redisSession.domainName}")
-    private String domainName;
+    @Autowired
+    private RedisSessionProperties redisSessionProperties;
 
     /**
      * 设置Cookie作用于
@@ -38,12 +33,26 @@ public class RedisSessionConfig {
      */
     @Bean(name = "defaultCookieSerializer")
     public DefaultCookieSerializer defaultCookieSerializer() {
-        LOG.debug("domainName:{},cookieName:{},cookiePath:{} ", domainName, cookieName, cookiePath);
+        log.info(" domainName : {} , cookieName : {} , cookiePath : {} ", redisSessionProperties.getDomainName(), redisSessionProperties.getCookieName(), redisSessionProperties.getCookiePath());
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
-        cookieSerializer.setDomainName(domainName);
-        cookieSerializer.setCookieName(cookieName);
-        cookieSerializer.setCookiePath(cookiePath);
+        cookieSerializer.setDomainName(redisSessionProperties.getDomainName());
+        cookieSerializer.setCookieName(redisSessionProperties.getCookieName());
+        cookieSerializer.setCookiePath(redisSessionProperties.getCookiePath());
         return cookieSerializer;
     }
 
+    /**
+     * 内部类注入
+     */
+    @Getter
+    @Setter
+    @Component
+    @ConfigurationProperties(prefix = "redisSession")
+    static class RedisSessionProperties {
+        private String cookieName;
+        private String cookiePath;
+        private String domainName;
+    }
 }
+
+

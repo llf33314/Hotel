@@ -168,7 +168,7 @@ public class ErpHotelCommonController extends BaseController {
 			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
 			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param,
 			BindingResult bindingResult) {
-		InvalidParameter(bindingResult);
+		invalidParameter(bindingResult);
 //		param.setPageSize(9999);
 		Page<RoomCategoryVo> page = roomCategoryService.queryRoomCategory(param);
 		return ResponseDTO.createBySuccess(page);

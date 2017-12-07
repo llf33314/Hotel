@@ -31,7 +31,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     }
 
 
-    // 快速解决页面转向问题
+    /**
+     * 快速解决页面转向问题
+     */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("/index.html");
@@ -62,7 +64,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-        		.addResourceLocations("classpath:/static/")
+                .addResourceLocations("classpath:/static/")
                 .addResourceLocations("classpath:/pages/");
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
@@ -83,7 +85,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     /**
      * 跨域配置
      * 默认设置全局跨域配置
-     * TODO: 部署服务器需要注释掉。因为，nginx已配置跨域。否则会起冲突
      */
     @Bean
     public FilterRegistrationBean corsFilter() {

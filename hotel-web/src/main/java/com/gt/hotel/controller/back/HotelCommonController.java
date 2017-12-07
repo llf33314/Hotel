@@ -19,6 +19,7 @@ import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -39,6 +40,7 @@ import java.util.List;
  * @date 2017/11/28
  * @since API信息
  */
+@Slf4j
 @Api(tags = "公共API接口信息")
 @RequestMapping("/back/common/")
 @RestController
@@ -93,10 +95,10 @@ public class HotelCommonController extends BaseController {
             }
             return ResponseDTO.createBySuccess(hotelShopInfoList);
         } catch (SignException e) {
-            logger.error("签名错误：{}", e.getMessage());
+            log.error("签名错误：{}", e.getMessage());
             throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
         } catch (Exception e) {
-            logger.error("门店列表获取失败", e);
+            log.error("门店列表获取失败", e);
             throw new ResponseEntityException(ResponseEnums.SYSTEM_ERROR);
         }
     }
@@ -124,7 +126,7 @@ public class HotelCommonController extends BaseController {
                     hotelInfoVo.setShopImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
                     hotelInfoVo.setShopTel(shop.getTelephone());
                     hotelInfoVo.setShopName(shop.getBusinessName());
-                    logger.info(shop.toString());
+                    log.info(shop.toString());
                     // 填充酒店信息 根据门店ID获取酒店信息
                     Wrapper<THotel> wrapper = new EntityWrapper<>();
                     wrapper.eq("shop_id", shopId).eq("bus_id", busId).eq("mark_modified", 0);
@@ -133,18 +135,18 @@ public class HotelCommonController extends BaseController {
                         BeanUtils.copyProperties(hotel, hotelInfoVo);
                     }
                 } else {
-                    logger.error("获取错误信息：{}", json.getString("msg"));
+                    log.error("获取错误信息：{}", json.getString("msg"));
                     return ResponseDTO.createByErrorMessage("获取门店信息失败");
                 }
                 return ResponseDTO.createBySuccess(hotelInfoVo);
             }
-            logger.warn("获取门店信息失败，Json数据包为null");
+            log.warn("获取门店信息失败，Json数据包为null");
             return ResponseDTO.createByErrorMessage("获取门店信息失败");
         } catch (SignException e) {
-            logger.error("签名错误：{}", e.getMessage());
+            log.error("签名错误：{}", e.getMessage());
             throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
         } catch (Exception e) {
-            logger.error("门店信息获取失败", e);
+            log.error("门店信息获取失败", e);
             throw new ResponseEntityException(ResponseEnums.SYSTEM_ERROR);
         }
     }

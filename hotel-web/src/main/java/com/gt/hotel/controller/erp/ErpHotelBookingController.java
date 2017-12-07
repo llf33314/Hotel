@@ -1,18 +1,5 @@
 package com.gt.hotel.controller.erp;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.exception.SignException;
@@ -25,10 +12,16 @@ import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 import com.gt.hotel.web.service.TRoomCategoryService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 酒店ERP - 预订
@@ -72,12 +65,12 @@ public class ErpHotelBookingController extends BaseController {
 			@Validated @RequestBody HotelOrderParameter.OffLineOrder order, 
 			BindingResult bindingResult, 
 			HttpServletRequest request) {
-		ResponseDTO msg = InvalidParameterII(bindingResult);
+		ResponseDTO msg = invalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
 		Integer busid = getLoginUser(request).getId();
-		orderService.AddOffLineOrder(busid, order);
+		orderService.addOffLineOrder(busid, order);
 		return ResponseDTO.createBySuccess();
 	}
 	
@@ -85,7 +78,7 @@ public class ErpHotelBookingController extends BaseController {
 	@GetMapping(value = "searchMember", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<HotelBackRoomOrderVo>> searchMember(
 			String phone, 
-			Integer shopId, 
+			Integer shopId,
 			HttpServletRequest request) {
 		Integer busid = getLoginUser(request).getId();
 		try {

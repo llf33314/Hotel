@@ -13,8 +13,7 @@ import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,21 +26,22 @@ import java.util.List;
 
 /**
  * 酒店ERP - 财务
+ *
  * @author Reverien9@gmail.com
  * 2017年11月21日 上午10:52:29
  */
+@Slf4j
 @Api(tags = "酒店ERP 财务")
 @RestController
 @RequestMapping("/erp/finance")
 public class ErpHotelFinanceController extends BaseController {
-	
-	@Autowired
-    private WXMPApiUtil WXMPApiUtil;
-	
-	@Autowired
+
+    @Autowired
+    private WXMPApiUtil wxmpApiUtil;
+
+    @Autowired
     private WebServerConfigurationProperties properties;
 
-    private static final Logger logger = LoggerFactory.getLogger(ErpHotelFinanceController.class);
 
     @ApiOperation(value = "门店列表", notes = "门店列表")
     @GetMapping(value = "queryShop", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -49,26 +49,26 @@ public class ErpHotelFinanceController extends BaseController {
         Integer busid = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops = null;
         try {
-            JSONObject json = WXMPApiUtil.queryWxShopByBusId(busid);
+            JSONObject json = wxmpApiUtil.queryWxShopByBusId(busid);
             if (json.getBoolean("success")) {
                 shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),
                         HotelWsWxShopInfoExtend.class);
             }
             List<HotelShopInfo> s = new ArrayList<>();
             for (HotelWsWxShopInfoExtend shop : shops) {
-                HotelShopInfo _s = new HotelShopInfo();
-                _s.setShopId(shop.getId());
-                _s.setName(shop.getBusinessName());
-                _s.setTel(shop.getTelephone());
-                _s.setAddr(shop.getAddress());
-                _s.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
-                s.add(_s);
+                HotelShopInfo info = new HotelShopInfo();
+                info.setShopId(shop.getId());
+                info.setName(shop.getBusinessName());
+                info.setTel(shop.getTelephone());
+                info.setAddr(shop.getAddress());
+                info.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
+                s.add(info);
             }
             return ResponseDTO.createBySuccess(s);
         } catch (SignException e) {
-            logger.error("签名错误：{}", e.getMessage());
+            log.error("签名错误：{}", e.getMessage());
             throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
         }
     }
-    
+
 }

@@ -21,8 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 public class BackAuthenticationInterceptor extends HandlerInterceptorAdapter {
 
 
-    @SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(BackAuthenticationInterceptor.class);
 
     @Autowired
     private WebServerConfigurationProperties properties;

@@ -1,18 +1,15 @@
 package com.gt.hotel.param;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.domain.AfterDomainEventPublication;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
 
 @Api(description = "酒店 活动 参数实体类")
 public class ActivityParamter {
@@ -33,16 +30,20 @@ public class ActivityParamter {
 
         @ApiModelProperty(value = "活动发布状态 0 开启 1 未开启")
         private Integer publishStatus;
-        
+
     }
 
+    /**
+     * 活动房间编辑or更新
+     */
     @Data
     @Api("酒店 活动  编辑 参数")
     public static class ActivitySaveOrUpdate {
         @ApiModelProperty(value = "活动ID(更新需要)")
         private Integer id;
-        
-        @ApiModelProperty(value = "酒店ID")
+
+        @ApiModelProperty(value = "酒店ID",required = true)
+        @NotNull(message = "酒店ID不能为空")
         private Integer hotelId;
 
         @ApiModelProperty(value = "活动 开始时间")
@@ -86,10 +87,10 @@ public class ActivityParamter {
         @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段 始")
         @JsonFormat(pattern = "HH:mm:ss")
         private Date checkInPeriod;
-        
+
         @ApiModelProperty(value = "如果 activity_type=2 钟点房 客人可入住时间段 末")
         @JsonFormat(pattern = "HH:mm:ss")
-    	private Date checkOutPeriod;
+        private Date checkOutPeriod;
 
         @ApiModelProperty(value = "如果 activity=4 团购房 规则 最少预订房间数量")
         private Integer minPurchaseNumber;
@@ -98,15 +99,16 @@ public class ActivityParamter {
         private List<ActivityRoomParam> rooms;
 
         @ApiModelProperty(value = "活动名称", required = true)
-    	private String activityName;
+        @NotBlank(message = "活动名称不能为空")
+        private String activityName;
     }
 
     @Data
     @Api("酒店 活动房间 对象")
     public static class ActivityRoomParam {
-    	@ApiModelProperty(value = "活动房间ID")
-    	private Integer id;
-    	
+        @ApiModelProperty(value = "活动房间ID")
+        private Integer id;
+
         @ApiModelProperty(value = "酒店ID")
         @NotNull(message = "酒店ID不能为空")
         private Integer hotelId;

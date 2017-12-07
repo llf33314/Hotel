@@ -1,18 +1,15 @@
 package com.gt.hotel.param;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gt.hotel.vo.OrderCouponsVo;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -45,7 +42,6 @@ public class HotelOrderParameter {
 		private String roomInTime;
 
 		@ApiModelProperty(value = "离店时间")
-//		@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 		private String roomOutTime;
 	}
 
@@ -115,7 +111,7 @@ public class HotelOrderParameter {
 		@NotNull(message = "支付类型不能为空")
 		private Integer payType;
 		
-		@ApiModelProperty(value = "订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0", required = true)
+		@ApiModelProperty(value = "订单流程状态 =3 已完成 =4 已入住 默认 0", required = true)
 		@NotNull(message = "订单流程状态不能为空")
 		private Integer orderStatus;
 		

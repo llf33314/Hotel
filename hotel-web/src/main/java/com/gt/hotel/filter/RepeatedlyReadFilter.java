@@ -18,8 +18,6 @@ import java.io.IOException;
  */
 public class RepeatedlyReadFilter implements Filter {
 
-    private static final Logger logger = LoggerFactory.getLogger(RepeatedlyReadFilter.class);
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 

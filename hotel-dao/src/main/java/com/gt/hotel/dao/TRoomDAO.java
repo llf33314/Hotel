@@ -36,4 +36,12 @@ public interface TRoomDAO extends BaseMapper<TRoom> {
      */
 	List<RoomVo> queryRoomListAll(@Param("hotelId") Integer hotelId, @Param("categoryId") Integer categoryId, @Param("roomNumber") String roomNumber);
 
+
+    /**
+     * 有效的客房
+     * 如果，返回的结果 >1 则存在某一客房在这时间某段内已经被入住
+     * @param ids List<Integer>
+     * @return
+     */
+    int checkValidRooms(List<Integer> ids);
 }
