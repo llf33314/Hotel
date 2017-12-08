@@ -44,7 +44,7 @@ public class TRoom extends Model<TRoom> {
     /**
      * 房间状态 字典值 TODO: 后续给出编号  -- 可定义为字典值：在住、空房、脏房、已预订、已锁定、维护   sys_dictionary.dict_type_id=6
      */
-    private String  status;
+    private Integer  status;
     /**
      * 0 正常 1 禁用 2 删除
      */

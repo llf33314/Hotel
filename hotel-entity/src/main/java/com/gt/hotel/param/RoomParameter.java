@@ -1,14 +1,13 @@
 package com.gt.hotel.param;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * 房间 请求对象
@@ -64,8 +63,8 @@ public class RoomParameter {
 
         @ApiModelProperty(value = "折扣 默认：1 无折扣", required = true)
         @NotNull(message = "折扣不能为空")
-        @Min(value = 1l, message = "折扣数值错误")
-        @Max(value = 100l, message = "折扣数值错误")
+        @Min(value = 1L, message = "折扣数值错误")
+        @Max(value = 100L, message = "折扣数值错误")
         private Integer discount;
 
         @ApiModelProperty(value = "押金", required = true)

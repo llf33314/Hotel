@@ -90,7 +90,7 @@ public class MobileRoomController extends BaseController {
 			@Validated @RequestBody RoomMobileParameter.BookParam bookParam,
 			BindingResult bindingResult, 
 			HttpServletRequest request) {
-    	InvalidParameter(bindingResult);
+    	invalidParameter(bindingResult);
     	THotel hotel = tHotelService.selectById(hotelId);
     	Member member = getMember(request);
     	JSONObject json = new JSONObject();

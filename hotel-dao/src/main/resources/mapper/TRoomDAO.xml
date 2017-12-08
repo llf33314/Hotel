@@ -21,38 +21,48 @@
         t_room.id, t_room.category_id, t_room.number, t_room.floor, t_room.status, t_room.mark_modified, t_room.created_by, t_room.created_at, t_room.updated_by, t_room.updated_at
     </sql>
 
-	<select id="queryRoomList" resultType="com.gt.hotel.vo.RoomVo">
+    <select id="queryRoomList" resultType="com.gt.hotel.vo.RoomVo">
         SELECT
-        t_room.id, t_room.category_id categoryId, t_room.number roomNum, t_room.floor, t_room.status, t_room.mark_modified markModified, 
-        t_room.created_by createdBy, t_room.created_at createdAt, t_room.updated_by updatedBy, t_room.updated_at updatedAt, t_room_category.name categoryName 
-        FROM t_room 
-        JOIN t_room_category ON t_room.category_id = t_room_category.id 
-        WHERE t_room.mark_modified = 0 AND t_room_category.mark_modified = 0 
+        t_room.id, t_room.category_id categoryId, t_room.number roomNum, t_room.floor, t_room.status, t_room.mark_modified markModified,
+        t_room.created_by createdBy, t_room.created_at createdAt, t_room.updated_by updatedBy, t_room.updated_at updatedAt, t_room_category.name categoryName
+        FROM t_room
+        JOIN t_room_category ON t_room.category_id = t_room_category.id
+        WHERE t_room.mark_modified = 0 AND t_room_category.mark_modified = 0
         <if test="hotelId != null">
-            AND t_room_category.hotel_id = #{hotelId} 
+            AND t_room_category.hotel_id = #{hotelId}
         </if>
         <if test="categoryId != null">
-            AND t_room.category_id = #{categoryId} 
+            AND t_room.category_id = #{categoryId}
         </if>
     </select>
 
-	<select id="queryRoomListAll" resultType="com.gt.hotel.vo.RoomVo">
+    <select id="queryRoomListAll" resultType="com.gt.hotel.vo.RoomVo">
         SELECT
-        t_room.id, t_room.category_id categoryId, t_room.number roomNum, t_room.floor, t_room.status, t_room.mark_modified markModified, 
-        t_room.created_by createdBy, t_room.created_at createdAt, t_room.updated_by updatedBy, t_room.updated_at updatedAt, 
-        t_room_category.`name` categoryName, t_room_category.rack_rate rackRate, t_room_category.deposit 
-        FROM t_room 
-        JOIN t_room_category ON t_room.category_id = t_room_category.id 
-        WHERE t_room.mark_modified = 0 AND t_room_category.mark_modified = 0 
+        t_room.id, t_room.category_id categoryId, t_room.number roomNum, t_room.floor, t_room.status, t_room.mark_modified markModified,
+        t_room.created_by createdBy, t_room.created_at createdAt, t_room.updated_by updatedBy, t_room.updated_at updatedAt,
+        t_room_category.`name` categoryName, t_room_category.rack_rate rackRate, t_room_category.deposit
+        FROM t_room
+        JOIN t_room_category ON t_room.category_id = t_room_category.id
+        WHERE t_room.mark_modified = 0 AND t_room_category.mark_modified = 0
         <if test="hotelId != null">
-            AND t_room_category.hotel_id = #{hotelId} 
+            AND t_room_category.hotel_id = #{hotelId}
         </if>
         <if test="categoryId != null">
-            AND t_room.category_id = #{categoryId} 
+            AND t_room.category_id = #{categoryId}
         </if>
         <if test="roomNumber != null">
-            AND t_room.number LIKE #{roomNumber} 
+            AND t_room.number LIKE #{roomNumber}
         </if>
     </select>
-    
+
+    <select id="checkValidRooms" resultType="java.lang.Integer">
+        SELECT count(1) FROM t_room r WHERE r.mark_modified = 0 AND r.status = 1
+        <if test="ids!=null and ids.size()>0">
+            AND r.id IN
+            <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>

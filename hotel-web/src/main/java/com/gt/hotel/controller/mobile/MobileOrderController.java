@@ -5,8 +5,7 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +23,11 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2017/11/06
  * @since v1.0
  */
+@Slf4j
 @Api(tags = "订单管理")
 @RestController
 @RequestMapping("/mobile")
 public class MobileOrderController extends BaseController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MobileOrderController.class);
 
     @Autowired
     private WebServerConfigurationProperties webServerConfigurationProperties;

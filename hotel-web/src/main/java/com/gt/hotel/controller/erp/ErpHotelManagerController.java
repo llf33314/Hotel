@@ -63,7 +63,7 @@ public class ErpHotelManagerController extends BaseController {
     		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
     		@ModelAttribute AgreementParamter.AgreementQuery query, 
     		BindingResult bindingResult) {
-    	InvalidParameter(bindingResult);
+    	invalidParameter(bindingResult);
         Page<AgreementOrganizationVo> page = agreementOrganizationService.erpQueryAgreementOrganization(shopId, query);
         return ResponseDTO.createBySuccess(page);
     }
@@ -84,7 +84,7 @@ public class ErpHotelManagerController extends BaseController {
     		@RequestBody AgreementParamter.AgreementInsert insert, 
     		BindingResult bindingResult, 
     		HttpServletRequest request) {
-    	InvalidParameter(bindingResult);
+    	invalidParameter(bindingResult);
     	Integer busId = getLoginUser(request).getId();
 		agreementOrganizationService.erpInsertAgreementOrganization(busId, shopId, insert);
     	return ResponseDTO.createBySuccess();
@@ -114,7 +114,7 @@ public class ErpHotelManagerController extends BaseController {
     		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
     		@ModelAttribute PackageParamter.PackageQuery query, 
     		BindingResult bindingResult) {
-    	InvalidParameter(bindingResult);
+    	invalidParameter(bindingResult);
     	Page<PackageVo> page = packageService.erpQueryPackage(shopId, query);
         return ResponseDTO.createBySuccess(page);
     }

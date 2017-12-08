@@ -1,16 +1,14 @@
 package com.gt.hotel.param;
 
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.gt.hotel.vo.FileRecordVo;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 新增or更新房型请求对象
@@ -65,6 +63,7 @@ public class RoomCategoryParameter {
      * 新增 或 更新 参数
      */
     @Data
+    @Component
     @Api(description = "保存 或 更新 参数")
     public static class CategorySaveOrUpdate {
         @ApiModelProperty(value = "房型ID")
@@ -91,12 +90,6 @@ public class RoomCategoryParameter {
         @ApiModelProperty(value = "门市价", required = true)
         @NotNull(message = "门市价不能为空")
         private Integer rackRate;
-
-//		@ApiModelProperty("是否需要计算优惠价：0 需要 1 不需要")
-//		private Integer discountEnable;
-//		
-//		@ApiModelProperty("折扣率范围 1 - 100 默认 100(计算方式：85/100=0.85 即85折)，即不打折")
-//		private Integer discount;
 
         @ApiModelProperty("是否开启周末价 0 开启 1 禁用，即显示门市价即可")
         private Integer weekendFareEnable;

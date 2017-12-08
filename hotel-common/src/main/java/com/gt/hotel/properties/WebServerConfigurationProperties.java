@@ -1,11 +1,12 @@
 package com.gt.hotel.properties;
 
-import java.util.Map;
-
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import lombok.Data;
+import java.util.Map;
 
 /**
  * @author zhangmz
@@ -13,7 +14,8 @@ import lombok.Data;
  * @date 2017/11/09
  * @since
  */
-@Data
+@Getter
+@Setter
 @Component
 @ConfigurationProperties(prefix = "hotel.webserver")
 public class WebServerConfigurationProperties {
@@ -52,7 +54,7 @@ public class WebServerConfigurationProperties {
 
         private String serviceUrl;
 
-        private Map<String,String> ApiMap;
+        private Map<String,String> apiMap;
     }
 
     @Data
@@ -62,7 +64,7 @@ public class WebServerConfigurationProperties {
 
         private String serviceUrl;
 
-        private Map<String,String> ApiMap;
+        private Map<String,String> apiMap;
     }
     
     @Data
@@ -75,7 +77,7 @@ public class WebServerConfigurationProperties {
     	
     	private String pwd;
     	
-    	private Map<String,String> ApiMap;
+    	private Map<String,String> apiMap;
     }
 
 }

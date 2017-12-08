@@ -3,6 +3,8 @@ package com.gt.hotel.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gt.hotel.enums.ResponseEnums;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -17,17 +19,25 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing.DEF
  * @author zhangmz
  * @create 2017/6/16
  */
+@Getter
+@ToString
 //保证序列化json的时候,如果是null的对象,key也会消失
 @JsonSerialize(typing = DEFAULT_TYPING)
 public class ResponseDTO<T> implements Serializable {
 
-    /*状态码*/
+    /**
+     * 状态码
+     */
     private int code;
 
-    /*返回消息*/
+    /**
+     * 返回消息
+     */
     private String msg;
 
-    /*泛型数据*/
+    /**
+     * 泛型数据
+     */
     private T data;
 
     protected ResponseDTO(int code) {
@@ -138,16 +148,5 @@ public class ResponseDTO<T> implements Serializable {
         return this.code == ResponseEnums.SUCCESS.getCode();
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
 
 }

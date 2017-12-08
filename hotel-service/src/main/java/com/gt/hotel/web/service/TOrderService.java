@@ -1,9 +1,5 @@
 package com.gt.hotel.web.service;
 
-import java.util.List;
-
-import org.joda.time.DateTime;
-
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseService;
@@ -13,11 +9,10 @@ import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelPage;
-import com.gt.hotel.vo.BusinessConditionsVo;
-import com.gt.hotel.vo.DepositVo;
-import com.gt.hotel.vo.HotelBackFoodOrderVo;
-import com.gt.hotel.vo.HotelBackRoomOrderVo;
-import com.gt.hotel.vo.IncomeDetailsVo;
+import com.gt.hotel.vo.*;
+import org.joda.time.DateTime;
+
+import java.util.List;
 
 /**
  * <p>
@@ -53,7 +48,7 @@ public interface TOrderService extends BaseService<TOrder> {
      * @param busid
      * @param order
      */
-    void AddOffLineOrder(Integer busid, OffLineOrder order);
+    void addOffLineOrder(Integer busid, OffLineOrder order);
 
     /**
      * 房间订单详情

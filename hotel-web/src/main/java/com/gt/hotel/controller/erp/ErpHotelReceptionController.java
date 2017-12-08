@@ -28,7 +28,6 @@ public class ErpHotelReceptionController extends BaseController {
 	@Autowired
     private WebServerConfigurationProperties properties;
 
-    private static final Logger logger = LoggerFactory.getLogger(ErpHotelReceptionController.class);
 
     
     

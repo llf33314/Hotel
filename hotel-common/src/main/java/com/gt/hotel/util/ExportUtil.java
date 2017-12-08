@@ -1,19 +1,14 @@
 package com.gt.hotel.util;
 
+import org.apache.poi.hssf.usermodel.*;
+
 import java.lang.reflect.Field;
 import java.util.List;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 public class ExportUtil {
 
     @SuppressWarnings({"rawtypes", "deprecation"})
-    public static HSSFWorkbook getExcel(String fileName, String[] titles, String[] contentName, List data, Class _class, ExcelUtil fieldPprocessing)
+    public static HSSFWorkbook getExcel(String fileName, String[] titles, String[] contentName, List data, Class cls, ExcelUtil fieldPprocessing)
             throws IllegalArgumentException, IllegalAccessException {
         HSSFWorkbook wb = new HSSFWorkbook();
         HSSFSheet sheet = wb.createSheet(fileName);
@@ -34,8 +29,8 @@ public class ExportUtil {
         HSSFCellStyle styleCenter = wb.createCellStyle();
         styleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         for (int i = 0; i < data.size(); i++) {
-            _class = (Class) data.get(i).getClass();
-            Field[] field = _class.getDeclaredFields();
+            cls = (Class) data.get(i).getClass();
+            Field[] field = cls.getDeclaredFields();
             HSSFRow row = sheet.createRow(i + 1);
             for (int j = 0; j < titles.length; j++) {
                 String c = new String();
@@ -46,8 +41,8 @@ public class ExportUtil {
                         c = fieldPprocessing.fieldPprocessing(c, f.getName());
                     } else {
                         //
-                        Class _superClass = _class.getSuperclass();
-                        Field[] hyperField = _superClass.getDeclaredFields();
+                        Class superClass = cls.getSuperclass();
+                        Field[] hyperField = superClass.getDeclaredFields();
                         for (Field hf : hyperField) {
                             hf.setAccessible(true);
                             if (contentName[j].equals(hf.getName())) {

@@ -81,7 +81,7 @@ public class MobileFoodController extends BaseController {
 	public ResponseDTO moblieHotelFoodSettlement(@PathVariable("hotelId") Integer hotelId, 
 			@Validated @RequestBody @Param("参数") FoodMobileParameter.FoodMobileOrder order, 
 			BindingResult bindingResult, HttpServletRequest request) {
-    	InvalidParameter(bindingResult);
+    	invalidParameter(bindingResult);
     	Member member = getMember(request);
     	order.setHotelId(hotelId);
 		return ResponseDTO.createBySuccess(tOrderFoodService.mobileFoodOrderBook(member, order));
@@ -101,7 +101,7 @@ public class MobileFoodController extends BaseController {
     public ResponseDTO moblieHotelFoodPay(@PathVariable("hotelId") Integer hotelId, 
     		@Validated @RequestBody @Param("参数") FoodMobileParameter.FoodMobileBookOrder order, 
     		BindingResult bindingResult, HttpServletRequest request) {
-    	ResponseDTO msg = InvalidParameterII(bindingResult);
+    	ResponseDTO msg = invalidParameterII(bindingResult);
     	if(msg != null) {
     		return msg;
     	}

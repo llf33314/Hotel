@@ -12,18 +12,18 @@ spring:
 #  202.53 redis 9379      ----->从
 #  202.53 sentinel 29379  ---->哨兵3
  redis:
-   host: 113.106.202.51
-   port: 6379
+#   host: 113.106.202.51
+#   port: 6379
    password: gt@123456
    database: 3
-   timeout: 1000
+   timeout: 20000
    cluster:
-       nodes: 113.106.202.50:9379,113.106.202.53:9379
-       maxRedirects: 6
+       nodes: 113.106.202.51:6379,113.106.202.50:9379,113.106.202.53:9379
+       maxRedirects: 3
    sentinel:
-     # comma-separated list of host:port pairs  哨兵的配置列表
-     nodes: 113.106.202.51:26379,113.106.202.50:29379,113.106.202.53:29379
-     # name of Redis server  哨兵监听的Redis server的名称
+#     # comma-separated list of host:port pairs  哨兵的配置列表
+     nodes: 113.106.202.51:26379,113.106.202.50:29379,113.106.202.54:29379
+#     # name of Redis server  哨兵监听的Redis server的名称
      master: mymaster
    pool:
      max-wait: -1
@@ -65,16 +65,22 @@ spring:
      # 合并多个DruidDataSource的监控数据
      #useGlobalDataSourceStat: true
      stat-view-servlet:
-#      IP白(allow)/黑(deny)名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
+#    IP白(allow)/黑(deny)名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
        allow: 127.0.0.1,192.168.3.47
        login-username: admin
        login-password: admin
        reset-enable: false
        url-pattern: /druid/*
-       # Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联监控配置
-       # 如果spring.datasource.druid.aop-patterns要代理的类没有定义interface请设置spring.aop.proxy-target-class=true
+      # Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联监控配置
+      # 如果spring.datasource.druid.aop-patterns要代理的类没有定义interface请设置spring.aop.proxy-target-class=true
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
      aop-patterns: com.gt.hotel.*.service.*
+#     <!-- 超过时间限制是否回收 -->
+#     remove-abandoned: true
+#     <!-- 超时时间；单位为秒。180秒=3分钟 -->
+#     remove-abandoned-timeout: 180
+#     <!-- 关闭abanded连接时输出错误日志 -->
+#     log-abandoned: true
 
 #====================================================#
 #=============== Mybatis-Plus Settings ==============#
@@ -179,7 +185,8 @@ hotel:
             invenotry: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/all/invenotry # 查询已入库的商品信息(多单位)
             productType: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/basic/product/type/ # 商品类别查询【新】
             refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund # 发货、退货【新】
-
+server:
+  port: 8080
 
 
 

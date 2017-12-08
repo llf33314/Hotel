@@ -170,14 +170,14 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
     }
 
     @Override
-    public void delRoomCategory(Integer busid, List<Integer> ids) {
+    public void delRoomCategory(Integer busId, List<Integer> ids) {
         Date date = new Date();
         Wrapper<TRoomCategory> wrapper = new EntityWrapper<>();
         wrapper.in("id", ids);
         TRoomCategory entity = new TRoomCategory();
         entity.setMarkModified(CommonConst.DELETED);
         entity.setUpdatedAt(date);
-        entity.setUpdatedBy(busid);
+        entity.setUpdatedBy(busId);
         if (!this.update(entity, wrapper)) {
             throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
         }

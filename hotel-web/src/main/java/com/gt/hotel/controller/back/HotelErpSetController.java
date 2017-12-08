@@ -86,7 +86,7 @@ public class HotelErpSetController extends BaseController {
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
     public ResponseDTO erpSettingCU(@Validated @Param("参数") @RequestBody ERPParameter.ERPSave save, BindingResult bindingResult, HttpServletRequest request) {
-    	ResponseDTO msg = InvalidParameterII(bindingResult);
+    	ResponseDTO msg = invalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
@@ -102,8 +102,15 @@ public class HotelErpSetController extends BaseController {
     @SuppressWarnings("rawtypes")
     public ResponseDTO roomPermanentCU(@Valid @Param("参数") @RequestBody RoomParameter.RoomPermanent per, 
     		@Param("酒店ID") @PathVariable("hotelId") Integer hotelId, BindingResult bindingResult, HttpServletRequest request) {
+<<<<<<< HEAD
     	InvalidParameter(bindingResult);
     	per.setHotelId(hotelId);
+=======
+    	ResponseDTO msg = invalidParameterII(bindingResult);
+        if(msg != null) {
+        	return msg;
+        }
+>>>>>>> develop
         Integer busId = getLoginUser(request).getId();
         tRoomCategoryService.SaveRoomPermanent(busId, per);
         return ResponseDTO.createBySuccess();
@@ -185,7 +192,7 @@ public class HotelErpSetController extends BaseController {
     @GetMapping(value = "{hotelId}/author", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<AuthorizationVo>> authorR(@Validated @ModelAttribute ERPParameter.AuthorQuery param, 
     		 BindingResult bindingResult, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId) {
-    	ResponseDTO msg = InvalidParameterII(bindingResult);
+    	ResponseDTO msg = invalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }

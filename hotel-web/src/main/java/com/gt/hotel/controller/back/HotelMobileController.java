@@ -79,7 +79,7 @@ public class HotelMobileController extends BaseController {
 	public ResponseDTO phoneSettingCU(
 			@Validated @RequestBody @Param("参数") HotelMobileParameter.MobileSaveOrUpdate setting, BindingResult bindingResult,
 			HttpServletRequest request) {
-		ResponseDTO msg = InvalidParameterII(bindingResult);
+		ResponseDTO msg = invalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
@@ -116,7 +116,7 @@ public class HotelMobileController extends BaseController {
 	@SuppressWarnings("rawtypes")
 	public ResponseDTO foodCU(@Validated @RequestBody @Param("参数") HotelMobileParameter.FoodSaveOrUpdate food,
 			@PathVariable("hotelId") Integer hotelId, BindingResult bindingResult, HttpServletRequest request) {
-		ResponseDTO msg = InvalidParameterII(bindingResult);
+		ResponseDTO msg = invalidParameterII(bindingResult);
         if(msg != null) {
         	return msg;
         }
