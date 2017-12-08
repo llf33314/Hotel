@@ -18,6 +18,7 @@ import com.gt.hotel.other.HotelInfoVo;
 import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
+import com.gt.hotel.util.RedisCacheUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
 import io.swagger.annotations.Api;
@@ -58,6 +59,9 @@ public class HotelCommonController extends BaseController {
     @Autowired
     private WXMPApiUtil wxmpApiUtil;
 
+    @Autowired
+    private RedisCacheUtil redisCacheUtil;
+
 
     /**
      * 根据商家ID 获取门店列表
@@ -72,7 +76,6 @@ public class HotelCommonController extends BaseController {
         Integer busId = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops;
         String shopListKey = CommonConst.CURRENT_SHOP_LIST + busId;
-        log.info("=== sessionid {}", request.getSession().getId());
         try {
             // 读取session 中的门店列表
             Optional<String> shopInfoList = Optional.fromNullable((String) request.getSession().getAttribute(shopListKey));
