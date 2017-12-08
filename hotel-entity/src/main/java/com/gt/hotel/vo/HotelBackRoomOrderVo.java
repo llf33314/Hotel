@@ -125,7 +125,7 @@ public class HotelBackRoomOrderVo {
     @ApiModelProperty("活动ID，如果是活动进来的订单即可以使用活动ID")
     private Integer activityId;
     
-    @ApiModelProperty("住客类型")
+    @ApiModelProperty("住客类型(0:散客/会员, 1:协议单位)")
     private Integer guestType;
     
     @ApiModelProperty("性别")

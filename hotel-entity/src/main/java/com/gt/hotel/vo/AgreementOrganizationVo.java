@@ -20,6 +20,9 @@ public class AgreementOrganizationVo {
 
 	@ApiModelProperty("酒店ID")
 	private Integer hotelId;
+	
+	@ApiModelProperty("酒店名称")
+	private String hotelName;
 
 	@ApiModelProperty("名称")
 	private String name;
@@ -46,7 +49,7 @@ public class AgreementOrganizationVo {
 	private Integer packageId;
 	
 	@ApiModelProperty("套餐名称")
-	private Integer packageName;
+	private String packageName;
 
 	@ApiModelProperty("审核状态 字典类型 7 三种状态 0 待审核 1 已通过 2 不通过 (审核人必须是财务角色)")
 	private Integer status;

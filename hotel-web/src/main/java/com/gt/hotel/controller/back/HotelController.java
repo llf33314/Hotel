@@ -103,6 +103,7 @@ public class HotelController extends BaseController {
             List<HotelShopInfo> hotelShopInfoList = null;
             if (json.getBoolean(CommonConst.SUCCESS)) {
                 shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),HotelWsWxShopInfoExtend.class);
+                System.err.println(shops);
                 hotelShopInfoList = new ArrayList<>();
                 for (HotelWsWxShopInfoExtend shop : shops) {
                     HotelShopInfo shopInfo = new HotelShopInfo();

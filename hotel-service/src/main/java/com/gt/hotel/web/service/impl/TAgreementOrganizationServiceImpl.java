@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TAgreementOrganizationDAO;
 import com.gt.hotel.entity.TAgreementOrganization;
 import com.gt.hotel.entity.THotel;
@@ -71,6 +72,7 @@ public class TAgreementOrganizationServiceImpl extends BaseServiceImpl<TAgreemen
 			a.setCreatedAt(date);
 			a.setCreatedBy(busId);
 			a.setUpdatedBy(busId);
+			a.setStatus(CommonConst.PENDING_REVIEW);
 			if(!a.insert()) {
 				throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
 			}

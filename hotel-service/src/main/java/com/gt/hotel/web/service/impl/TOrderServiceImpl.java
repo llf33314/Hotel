@@ -102,7 +102,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		or.setOrderNum(o.getOrderNum());
 		or.setCheckInWay(CommonConst.CHECK_IN_WAY_OFFLINE);
 		or.setNumber(order.getRooms().size());
-		or.setFrom(CommonConst.SOURCE_BACK);
+		or.setOrderFrom(CommonConst.SOURCE_BACK);
 		or.setPayTime(date);
 		or.setPayStatus(CommonConst.PAY_STATUS_PAID);
 		or.setCreateTime(date);
@@ -251,7 +251,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 	public Page<DepositVo> queryMobileDeposit(Member member, HotelPage hotelPage) {
 		Page<DepositVo> page = hotelPage.initPage();
 		page.setRecords(tOrderDAO.queryMobileDeposit(member.getId(), page));
-		return null;
+		return page;
 	}
 
 	@Override

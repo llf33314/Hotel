@@ -57,7 +57,7 @@
 			b.hotel_name hotelName, b.category_id categoryId, b.category_name categoryName, b.check_in_way checkInWay, b.room_num roomNum,
 			b.customer_name customerName, b.customer_id_type customerIdType, b.customer_id_card customerIdCard, 
 			b.customer_id_card_image customerIdCardImage, b.customer_phone customerPhone, b.number, 
-			b.room_in_time roomInTime, b.room_out_time roomOutTime, b.deposit, b.room_price roomPrice, b.`from`,
+			b.room_in_time roomInTime, b.room_out_time roomOutTime, b.deposit, b.room_price roomPrice, b.`order_from`,
 			b.activity_id activityId, b.rack_rate rackRate, b.guest_type guestType, b.customer_gender customerGender, 
 			b.check_standard checkStandard 
 		FROM t_order a 

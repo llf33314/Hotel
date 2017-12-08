@@ -130,16 +130,14 @@ public class ErpHotelCommonController extends BaseController {
 
     @ApiOperation(value = "erp登录签名", notes = "erp登录签名")
     @GetMapping(value = "getSign", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<JSONObject> getSign(
+    public ResponseDTO<SignBean> getSign(
     		@ApiParam("账号") String username,
     		@ApiParam("密码") String password) {
     	Map<String, Object> map = new ConcurrentSkipListMap<String, Object>();
     	map.put("login_name", username);
     	map.put("password", password);
     	SignBean sign = SignUtils.sign(properties.getWxmpService().getSignKey(), JSONObject.toJSONString(map));
-    	JSONObject json = new JSONObject();
-    	json.put("sign", sign);
-    	return ResponseDTO.createBySuccess(json);
+    	return ResponseDTO.createBySuccess(sign);
     }
     
     @ApiOperation(value = "erp退出登录", notes = "erp退出登录")

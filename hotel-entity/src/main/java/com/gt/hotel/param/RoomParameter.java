@@ -51,8 +51,7 @@ public class RoomParameter {
         @NotNull(message = "房型ID不能为空")
         private Integer categoryId;
 
-        @ApiModelProperty(value = "酒店ID", required = true)
-        @NotNull(message = "酒店ID不能为空")
+        @ApiModelProperty(value = "酒店ID")
         private Integer hotelId;
 
         @ApiModelProperty(value = "规则名称", required = true)

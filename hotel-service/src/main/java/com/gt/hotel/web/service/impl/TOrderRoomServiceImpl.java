@@ -138,7 +138,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		orderRoom.setHotelName(hotel.getName());
 		orderRoom.setReceivablePrice(bookParam.getPayPrice());
 		orderRoom.setRoomPrice(bookParam.getDisplayPrice());
-		orderRoom.setFrom(CommonConst.SOURCE_MOBILE);
+		orderRoom.setOrderFrom(CommonConst.SOURCE_MOBILE);
 		orderRoom.setGuestType(0);
 		orderRoom.setCreatedAt(date);
 		orderRoom.setCreateTime(date);
