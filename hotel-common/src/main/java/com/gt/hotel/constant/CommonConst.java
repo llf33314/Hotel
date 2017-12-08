@@ -32,7 +32,7 @@ public final class CommonConst {
     /**
      * 当前商家下的所有门店信息
      */
-    public static final String CURRENT_SHOP_LIST  = "hotel:current_shop_list";
+    public static final String CURRENT_SHOP_LIST  = "hotel:current_shop_list:";
 
 
     /****************************** 模块类型 ******************************/

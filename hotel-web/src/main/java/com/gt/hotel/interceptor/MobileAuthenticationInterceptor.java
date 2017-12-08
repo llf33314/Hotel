@@ -3,6 +3,7 @@ package com.gt.hotel.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.google.common.base.Optional;
 import com.gt.api.bean.session.Member;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.entity.THotel;
@@ -68,60 +69,47 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String uri = request.getRequestURI();
-        if (uri.indexOf("/mobile/78CDF1/home/") != -1) {
-            return true;
-        }
-        // 酒店信息
-        String hotelInfoJson = (String) request.getSession().getAttribute(CURRENT_HOTEL_INFO);
         // 从session中获取 当前商家ID
-        Integer busId = (Integer) request.getSession().getAttribute(CURRENT_BUS_ID);
-        Integer sessionHotelId = (Integer) request.getSession().getAttribute(CURRENT_HOTEL_ID);
+        Optional<Integer> busId = Optional.fromNullable((Integer) request.getSession().getAttribute(CURRENT_BUS_ID));
+        Optional<Integer> sessionHotelId = Optional.fromNullable((Integer) request.getSession().getAttribute(CURRENT_HOTEL_ID));
         Map attribute = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         // hotelId
-        Integer hotelId = MapUtils.getInteger(attribute, HOTEL_ID);
-        if (busId != null && busId > 0) {
+        Optional<Integer> hotelId = Optional.of(MapUtils.getInteger(attribute, HOTEL_ID));
+        if (busId.isPresent() && busId.get() > 0) {
             // 访问地址的酒店ID 与 redis 内存储的hotelid 不匹配，则重新获取
-            if (!hotelId.equals(sessionHotelId)) {
+            if (sessionHotelId.isPresent() && !hotelId.get().equals(sessionHotelId.get())) {
                 // 数据库查询
                 Wrapper<THotel> wrapper = new EntityWrapper<>();
                 wrapper.eq("id", hotelId).eq("bus_id", busId).eq("mark_modified", 0);
-                THotel hotel = this.hotelService.selectOne(wrapper);
-                if (hotel == null) {
-                    log.warn("获取酒店信息失败 参数列表：hotelId : {} , busId : {} ", hotelId, busId);
+                Optional<THotel> hotel = Optional.fromNullable(this.hotelService.selectOne(wrapper));
+                if (!hotel.isPresent()) {
+                    log.warn("获取酒店信息失败 参数列表：hotelId : {} , busId : {} ", hotelId.get(), busId.get());
                     throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
                 }
-                hotelInfoJson = JSONObject.toJSONString(hotel);
                 // 并重置更新缓存信息
-                request.getSession().setAttribute(CURRENT_HOTEL_INFO, hotelInfoJson);
                 request.getSession().setAttribute(CURRENT_HOTEL_INFO, JSONObject.toJSONString(hotel));
-                request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
-                request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
+                request.getSession().setAttribute(CURRENT_BUS_ID, hotel.get().getBusId());
+                request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId.get());
             }
             // 获取会员信息
-            Member member = SessionUtils.getLoginMember(request, busId);
-            if (member == null) {
+            Optional<Member> member = Optional.fromNullable(SessionUtils.getLoginMember(request, busId.get()));
+            if (!member.isPresent()) {
                 log.warn("member is null");
-                String url = wxmpApiUtil.authorizeMember(busId);
-                throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId, url);
+                String url = wxmpApiUtil.authorizeMember(busId.get());
+                throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId.get(), url);
             }
         } else {
-            if (hotelId != null) {
-                THotel hotel = findHotelById(hotelId);
-                // 并重置更新缓存信息
-                request.getSession().setAttribute(CURRENT_HOTEL_INFO, hotelInfoJson);
-                request.getSession().setAttribute(CURRENT_HOTEL_INFO, JSONObject.toJSONString(hotel));
-                request.getSession().setAttribute(CURRENT_BUS_ID, hotel.getBusId());
-                request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId);
-                // 获取会员信息
-                Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-                if (member == null) {
-                    log.warn("member is null");
-                    String url = wxmpApiUtil.authorizeMember(hotel.getBusId());
-                    throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.getBusId(), url);
-                }
-            } else {
-                throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
+            Optional<THotel> hotel = Optional.of(findHotelById(hotelId.get()));
+            // 并重置更新缓存信息
+            request.getSession().setAttribute(CURRENT_HOTEL_INFO, JSONObject.toJSONString(hotel));
+            request.getSession().setAttribute(CURRENT_BUS_ID, hotel.get().getBusId());
+            request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId.get());
+            // 获取会员信息
+            Optional<Member> member = Optional.fromNullable(SessionUtils.getLoginMember(request, hotel.get().getBusId()));
+            if (!member.isPresent()) {
+                log.warn("member is null");
+                String url = wxmpApiUtil.authorizeMember(hotel.get().getBusId());
+                throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.get().getBusId(), url);
             }
         }
         return true;
@@ -133,16 +121,16 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
      * @param hotelId 酒店ID
      * @return THotel
      */
-    public THotel findHotelById(Integer hotelId) {
+    private THotel findHotelById(Integer hotelId) {
         Wrapper<THotel> wrapper = new EntityWrapper<>();
         wrapper.eq("id", hotelId).eq("mark_modified", 0);
         try {
-            THotel hotel = this.hotelService.selectOne(wrapper);
-            if (hotel == null) {
+            Optional<THotel> hotel = Optional.fromNullable(this.hotelService.selectOne(wrapper));
+            if (!hotel.isPresent()) {
                 log.error("酒店信息不存在，参数信息：hotelId:{} ", hotelId);
                 throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
             }
-            return hotel;
+            return hotel.get();
         } catch (ResponseEntityException ex) {
             throw ex;
         } catch (RuntimeException ex) {

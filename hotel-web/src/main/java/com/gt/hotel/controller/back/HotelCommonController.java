@@ -1,9 +1,12 @@
 package com.gt.hotel.controller.back;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.google.common.base.Optional;
 import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -68,32 +71,44 @@ public class HotelCommonController extends BaseController {
     public ResponseDTO<List<HotelShopInfo>> shops(HttpServletRequest request) {
         Integer busId = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops;
+        String shopListKey = CommonConst.CURRENT_SHOP_LIST + busId;
+        log.info("=== sessionid {}", request.getSession().getId());
         try {
-        	Wrapper<THotel> w = new EntityWrapper<>();
-        	w.eq("bus_id", busId);
-			List<THotel> hs = tHotelService.selectList(w);
-			List<Integer> ids = new ArrayList<>();
-			for(THotel h : hs) {
-				ids.add(h.getShopId());
-			}
-            JSONObject json = wxmpApiUtil.queryWxShopByBusId(busId);
-            List<HotelShopInfo> hotelShopInfoList = null;
-            if (json.getBoolean(CommonConst.SUCCESS)) {
-                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(), HotelWsWxShopInfoExtend.class);
-                hotelShopInfoList = new ArrayList<>();
-                for (HotelWsWxShopInfoExtend shop : shops) {
-                    HotelShopInfo shopInfo = new HotelShopInfo();
-                    shopInfo.setShopId(shop.getId());
-                    shopInfo.setName(shop.getBusinessName());
-                    shopInfo.setTel(shop.getTelephone());
-                    shopInfo.setAddr(shop.getAddress());
-                    shopInfo.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
-                    if(!ids.contains(shop.getId())) {
-                    	hotelShopInfoList.add(shopInfo);
+            // 读取session 中的门店列表
+            Optional<String> shopInfoList = Optional.fromNullable((String) request.getSession().getAttribute(shopListKey));
+            if (shopInfoList.isPresent()) {
+                return ResponseDTO.createBySuccess(JSON.parseObject(shopInfoList.get(), new TypeReference<List<HotelShopInfo>>() {
+                }));
+            } else {
+                // 获取商家下的酒店列表
+                List<HotelShopInfo> hotelShopInfoList = null;
+                Wrapper<THotel> wrapper = new EntityWrapper<>();
+                wrapper.eq("bus_id", busId);
+                wrapper.eq("mark_modified", CommonConst.ENABLED);
+                List<THotel> hotels = tHotelService.selectList(wrapper);
+                // 读取门店列表
+                JSONObject json = wxmpApiUtil.queryWxShopByBusId(busId);
+                if (json.getBoolean(CommonConst.SUCCESS)) {
+                    shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(), HotelWsWxShopInfoExtend.class);
+                    hotelShopInfoList = new ArrayList<>();
+                    for (HotelWsWxShopInfoExtend shop : shops) {
+                        HotelShopInfo shopInfo = new HotelShopInfo();
+                        shopInfo.setShopId(shop.getId());
+                        shopInfo.setName(shop.getBusinessName());
+                        shopInfo.setTel(shop.getTelephone());
+                        shopInfo.setAddr(shop.getAddress());
+                        shopInfo.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
+                        for (THotel hotel : hotels) {
+                            if (hotel.getShopId().equals(shopInfo.getShopId())) {
+                                shopInfo.setHotelId(hotel.getId());
+                            }
+                        }
+                        hotelShopInfoList.add(shopInfo);
                     }
                 }
+                request.getSession().setAttribute(shopListKey, JSON.toJSONString(hotelShopInfoList));
+                return ResponseDTO.createBySuccess(hotelShopInfoList);
             }
-            return ResponseDTO.createBySuccess(hotelShopInfoList);
         } catch (SignException e) {
             log.error("签名错误：{}", e.getMessage());
             throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
@@ -117,7 +132,7 @@ public class HotelCommonController extends BaseController {
         try {
             HotelInfoVo hotelInfoVo = null;
             JSONObject json = wxmpApiUtil.getShopInfoById(shopId);
-            if(json!=null) {
+            if (json != null) {
                 if (json.getInteger("code").equals(0)) {
                     shop = JSONObject.parseObject(json.get("data").toString(), HotelWsWxShopInfoExtend.class);
                     hotelInfoVo = new HotelInfoVo();
