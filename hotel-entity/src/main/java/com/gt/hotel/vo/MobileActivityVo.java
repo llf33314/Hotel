@@ -1,18 +1,20 @@
 package com.gt.hotel.vo;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
 
 @Api(description = "移动端首页活动对象")
 @Data
 public class MobileActivityVo {
 	@ApiModelProperty(value = "活动ID")
     private Integer id;
+
+    @ApiModelProperty(value = "活动名称")
+    private String activityName;
 
 	@ApiModelProperty(value = "酒店ID")
     private Integer hotelId;
