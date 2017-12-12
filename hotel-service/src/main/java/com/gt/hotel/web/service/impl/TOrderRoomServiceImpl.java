@@ -25,6 +25,7 @@ import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.dao.TOrderRoomDAO;
 import com.gt.hotel.entity.TActivityDetail;
 import com.gt.hotel.entity.TActivityRoom;
+import com.gt.hotel.entity.TBreakfastCoupons;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderCoupons;
@@ -39,6 +40,7 @@ import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
 import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.ActivityDetailVo;
+import com.gt.hotel.vo.BreakfastCouponsVo;
 import com.gt.hotel.vo.CheackInListRevenueVo;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
@@ -47,6 +49,7 @@ import com.gt.hotel.vo.RoomCheackInCountVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.TActivityDetailService;
 import com.gt.hotel.web.service.TActivityRoomService;
+import com.gt.hotel.web.service.TBreakfastCouponsService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderCouponsService;
 import com.gt.hotel.web.service.TOrderRoomService;
@@ -93,6 +96,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 
 	@Autowired
 	TRoomCategoryService tRoomCategoryService;
+	
+	@Autowired
+	TBreakfastCouponsService breakfastCouponsService;
 
 	@Autowired
 	THotelService tHotelService;
@@ -444,8 +450,28 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 	@SuppressWarnings("unchecked")
 	@Override
 	public Page<RoomCardVo> mobileFindRoomCard(Member member, Integer vipLevel, RoomCardParam param) {
+		System.err.println(member);
 		Page<RoomCardVo> page = param.initPage();
-		page.setRecords(tOrderRoomDAO.findRoomCard(member.getId(), vipLevel, page));
+		List<RoomCardVo> cardVos = tOrderRoomDAO.findRoomCard(member.getId(), vipLevel, page);
+		List<Integer> orderIds = new ArrayList<>();
+		for(RoomCardVo rcv : cardVos) {
+			orderIds.add(rcv.getOrderId());
+		}
+		Wrapper<TBreakfastCoupons> bcw = new EntityWrapper<>();
+		bcw.in("order_id", orderIds);
+		List<TBreakfastCoupons> coupons = breakfastCouponsService.selectList(bcw);
+		for(RoomCardVo rcv : cardVos) {
+			List<BreakfastCouponsVo> cs = new ArrayList<>();
+			for(TBreakfastCoupons c : coupons) {
+				if(rcv.getOrderId().equals(c.getOrderId()) && rcv.getRoomNum().equals(c.getRoomNum())) {
+					BreakfastCouponsVo cv = new BreakfastCouponsVo();
+					BeanUtils.copyProperties(c, cv);
+					cs.add(cv);
+				}
+			}
+			rcv.setBreakfastCoupons(cs);
+		}
+		page.setRecords(cardVos);
 		return page;
 	}
 	

@@ -170,27 +170,27 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
                 throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
             }
         }
-        TRoomCategory category = tRoomCategoryService.selectById(order.getCategoryId());
-		if(category.getBreakfastEnable().equals(CommonConst.ENABLED)) {
-			List<TBreakfastCoupons> bcs = new ArrayList<>();
-			for(int i = 0; i < orcs.size(); i++) {
-				for(int j = 0; j < category.getBreakfastQuantity(); j++) {
-					TBreakfastCoupons breakfastCoupons = new TBreakfastCoupons();
-					breakfastCoupons.setOrderId(o.getId());
-					breakfastCoupons.setCategoryId(order.getCategoryId());
-					breakfastCoupons.setRoomNum(orcs.get(i).getRoomNum());
-					breakfastCoupons.setCode((System.currentTimeMillis() + Math.random() * 9999999) + "");
-					breakfastCoupons.setWriteOffStatus(0);
-					breakfastCoupons.setCreatedAt(date);
-					breakfastCoupons.setCreatedBy(busId);
-					breakfastCoupons.setUpdatedBy(busId);
-					bcs.add(breakfastCoupons);
-				}
-			}
-			if(!breakfastCouponsService.insertBatch(bcs)) {
-				throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
-			}
-		}
+//        TRoomCategory category = tRoomCategoryService.selectById(order.getCategoryId());
+//		if(category.getBreakfastEnable().equals(CommonConst.ENABLED)) {
+//			List<TBreakfastCoupons> bcs = new ArrayList<>();
+//			for(int i = 0; i < orcs.size(); i++) {
+//				for(int j = 0; j < category.getBreakfastQuantity(); j++) {
+//					TBreakfastCoupons breakfastCoupons = new TBreakfastCoupons();
+//					breakfastCoupons.setOrderId(o.getId());
+//					breakfastCoupons.setCategoryId(order.getCategoryId());
+//					breakfastCoupons.setRoomNum(orcs.get(i).getRoomNum());
+//					breakfastCoupons.setCode(System.currentTimeMillis() + "" + Math.round(Math.random() * 9999999));
+//					breakfastCoupons.setWriteOffStatus(0);
+//					breakfastCoupons.setCreatedAt(date);
+//					breakfastCoupons.setCreatedBy(busId);
+//					breakfastCoupons.setUpdatedBy(busId);
+//					bcs.add(breakfastCoupons);
+//				}
+//			}
+//			if(!breakfastCouponsService.insertBatch(bcs)) {
+//				throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+//			}
+//		}
     }
 
     @Override
@@ -262,7 +262,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 					breakfastCoupons.setOrderId(orderId);
 					breakfastCoupons.setCategoryId(tOrderRoom.getCategoryId());
 					breakfastCoupons.setRoomNum(customers.get(i).getRoomNum());
-					breakfastCoupons.setCode((System.currentTimeMillis() + Math.random() * 9999999) + "");
+					breakfastCoupons.setCode(System.currentTimeMillis() + "" + Math.round(Math.random() * 9999999));
 					breakfastCoupons.setWriteOffStatus(0);
 					breakfastCoupons.setCreatedAt(date);
 					breakfastCoupons.setCreatedBy(busId);

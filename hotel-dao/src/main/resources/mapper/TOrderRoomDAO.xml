@@ -113,7 +113,7 @@
 	</select>
 	
 	<select id="findRoomCard" resultType="com.gt.hotel.vo.RoomCardVo">
-		SELECT a.id, b.room_num roomNum, IF(d.breakfast_enable = 0, d.breakfast_quantity, 0) breakfastQuantity, e.free_deposit_enable freeDepositEnable, e.vip_check_out vipCheckOut, 
+		SELECT a.id orderId, b.room_num roomNum, IF(d.breakfast_enable = 0, d.breakfast_quantity, 0) breakfastQuantity, e.free_deposit_enable freeDepositEnable, e.vip_check_out vipCheckOut, 
 		c.number, c.rack_rate rackRate, c.deposit, a.fb_discount fbDiscount, a.integral_discount integralDiscount, f.coupons_discount couponsDiscount, MIN(e.vip_level) vipLevel, 
 		c.room_price roomPrice, c.hotel_name hotelName, b.`name` customerName, b.phone customerPhone 
 		FROM t_order a 

@@ -205,7 +205,7 @@ public class MobilePersonalController extends BaseController {
 		Wrapper<TAuthorization> w = new EntityWrapper<>();
 		w.eq("member_id", member.getId());
 		TAuthorization authorization = authorizationService.selectOne(w);
-		if(Arrays.asList(authorization.getFunctionIds().split(",")).contains(
+		if(authorization != null && Arrays.asList(authorization.getFunctionIds().split(",")).contains(
 				Integer.valueOf(CommonConst.FUNCTION_WRITE_OFF).toString())) {
 			TBreakfastCoupons bc = new TBreakfastCoupons();
 			bc.setId(bqId);

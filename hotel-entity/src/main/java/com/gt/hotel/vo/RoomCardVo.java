@@ -1,5 +1,7 @@
 package com.gt.hotel.vo;
 
+import java.util.List;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,7 +19,7 @@ public class RoomCardVo {
 	private Integer orderId;
 	
 	@ApiModelProperty(value = "房卡号")
-	private Integer roomNum;
+	private String roomNum;
 	
 	@ApiModelProperty(value = "早餐券")
 	private Integer breakfastQuantity;
@@ -61,4 +63,6 @@ public class RoomCardVo {
 	@ApiModelProperty(value = "入住人手机")
 	private String customerPhone;
 	
+	@ApiModelProperty(value = "早餐去集合")
+	private List<BreakfastCouponsVo>  BreakfastCoupons;
 }
