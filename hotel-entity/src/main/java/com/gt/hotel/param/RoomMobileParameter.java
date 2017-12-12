@@ -104,4 +104,11 @@ public class RoomMobileParameter {
 //		@JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
 		private String hourRoomCheckInTime;
 	}
+	
+	@Data
+	@Api( "房卡参数" )
+	public static class RoomCardParam extends HotelPage{
+		
+	}
+	
 }

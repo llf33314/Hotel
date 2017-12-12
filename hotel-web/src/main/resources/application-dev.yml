@@ -186,7 +186,7 @@ hotel:
             productType: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/basic/product/type/ # 商品类别查询【新】
             refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund # 发货、退货【新】
 server:
-  port: 8080
+  port: 80
 
 
 

@@ -290,5 +290,27 @@ public final class CommonConst {
      * 不通过
      */
     public static final int NOT_PASSED  = 2;
+    
+    /****************************** 授权 ******************************/
+    /**
+     * 提现
+     */
+    public static final int FUNCTION_WITHDRAWAL = 6;
+    /**
+     * 免押金
+     */
+    public static final int FUNCTION_FREE_DEPOSIT = 7;
+    /**
+     * 改价
+     */
+    public static final int FUNCTION_CHANGE_PRICE  = 8;
+    /**
+     * 挂账
+     */
+    public static final int FUNCTION_LOSSES  = 9;
+    /**
+     * 核销
+     */
+    public static final int FUNCTION_WRITE_OFF  = 21;
 
 }

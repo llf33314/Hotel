@@ -72,10 +72,12 @@
 	</select>
 
 	<select id="queryMobileActivity" resultType="com.gt.hotel.vo.MobileActivityVo">
-		SELECT a.id, a.activity_num activityNum, a.hotel_id hotelId, a.begin_time beginTime, a.end_time endTime, a.available_time availableTime, a.restriction_enable restrictionEnable, 
+		SELECT a.id, a.activity_num activityNum, a.hotel_id hotelId, a.begin_time beginTime, a.end_time endTime, 
+			a.available_time availableTime, a.restriction_enable restrictionEnable, 
 		 	a.restriction_number restrictionNumber, a.show_room_enable showRoomEnable, a.number_threshold numberThreshold, a.activity_rules activityRules,
 		 	b.activity_type activityType, b.check_in_time checkInTime, b.check_in_period checkInPeriod, b.check_out_period checkOutPeriod, b.min_purchase_number minPurchaseNumber, 
-			c.category_id categoryId, c.category_name categoryName, c.room_id roomId, c.room_num roomNum, c.rack_rate rackRate, c.id, MIN(c.activity_price) activity_price, a.activity_name activityName 
+			c.category_id categoryId, c.category_name categoryName, c.room_id roomId, c.room_num roomNum, c.rack_rate rackRate, c.id, MIN(c.activity_price) activity_price, 
+			a.activity_name activityName 
 		FROM t_activity a 
 		JOIN t_activity_detail b ON a.id = b.activity_id 
 		LEFT JOIN t_activity_room c ON a.id = c.activity_id 
@@ -92,7 +94,9 @@
 		FROM t_activity a 
 		JOIN t_activity_detail b ON a.id = b.activity_id 
 		LEFT JOIN t_activity_room c ON a.id = c.activity_id
-		LEFT JOIN t_order_room d ON c.activity_id = d.activity_id 
+		<![CDATA[
+		LEFT JOIN (SELECT category_id, number, activity_id FROM t_order_room WHERE NOW() >= room_in_time AND NOW() <= room_out_time) d ON c.activity_id = d.activity_id
+		]]>  
 		JOIN t_room_category e ON c.category_id = e.id 
 		WHERE a.publish_status = 0 AND a.mark_modified = 0 AND a.hotel_id = #{hotelId} AND c.mark_modified = 0 AND a.id = #{activityId}
 		GROUP BY c.category_id 

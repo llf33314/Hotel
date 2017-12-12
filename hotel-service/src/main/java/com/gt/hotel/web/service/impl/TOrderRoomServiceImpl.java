@@ -35,12 +35,14 @@ import com.gt.hotel.other.DuofenCards;
 import com.gt.hotel.other.MemberCard;
 import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
+import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
 import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.ActivityDetailVo;
 import com.gt.hotel.vo.CheackInListRevenueVo;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomCardVo;
 import com.gt.hotel.vo.RoomCheackInCountVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.TActivityDetailService;
@@ -258,7 +260,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		for(MobileRoomCategoryVo m : page.getRecords()) {
 			if(m.getId().equals(bookParam.getCategoryId())) {
 				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
-				orderPriceVO.setRoomPrice(price);
+				orderPriceVO.setRoomPrice(price * bookParam.getNumber());
 				price = activityCalculate(bookParam, price, orderPriceVO, days);
 				if(card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
 					if(bookParam.getActivityId() == null) {
@@ -437,6 +439,14 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 			l.add(cil);
 		}
 		return l;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<RoomCardVo> mobileFindRoomCard(Member member, Integer vipLevel, RoomCardParam param) {
+		Page<RoomCardVo> page = param.initPage();
+		page.setRecords(tOrderRoomDAO.findRoomCard(member.getId(), vipLevel, page));
+		return page;
 	}
 	
 }

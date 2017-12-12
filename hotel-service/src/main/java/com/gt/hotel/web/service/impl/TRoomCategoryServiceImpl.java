@@ -311,10 +311,11 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
 
     }
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req) {
-		Page<MobileRoomCategoryVo> page = new Page<>();
-		List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req);
+		Page<MobileRoomCategoryVo> page = req.initPage();
+		List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req, page);
 		Wrapper<TFileRecord> fw = new EntityWrapper<>();
 		fw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
 		fw.eq("mark_modified", CommonConst.ENABLED);
