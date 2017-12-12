@@ -216,10 +216,10 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         }
 
         if (r1.size() > 0) if (!tRoomService.insertBatch(r1)) {
-        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
         if (r2.size() > 0) if (!tRoomService.updateBatchById(r2)) {
-        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
 
         if (entityList.size() > 0) {
@@ -239,12 +239,12 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         page.setRecords(tRoomDAO.queryRoomList(hotelId, categoryId, page));
         return page;
     }
-    
 
-	@Override
-	public List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber) {
-		return tRoomDAO.queryRoomListAll(hotelId, categoryId, roomNumber);
-	}
+
+    @Override
+    public List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber) {
+        return tRoomDAO.queryRoomListAll(hotelId, categoryId, roomNumber);
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -289,11 +289,11 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         rp.setMarkModified(CommonConst.DELETED);
         rp.setUpdatedBy(busId);
         rp.setUpdatedAt(date);
-    	Wrapper<TRoomPermanent> wrapper = new EntityWrapper<>();
-    	wrapper.in("id", ids);
-		if (!tRoomPermanentService.update(rp, wrapper)) {
-    		throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
-    	}
+        Wrapper<TRoomPermanent> wrapper = new EntityWrapper<>();
+        wrapper.in("id", ids);
+        if (!tRoomPermanentService.update(rp, wrapper)) {
+            throw new ResponseEntityException(ResponseEnums.DELETE_ERROR);
+        }
     }
 
     @Override
@@ -311,43 +311,62 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
 
     }
 
-	@Override
-	public Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req) {
-		Page<MobileRoomCategoryVo> page = new Page<>();
-		List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req);
-		Wrapper<TFileRecord> fw = new EntityWrapper<>();
-		fw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
-		fw.eq("mark_modified", CommonConst.ENABLED);
-		List<TFileRecord> fl = tFileRecordService.selectList(fw);
-		
-		Wrapper<TInfrastructureRelation> iw = new EntityWrapper<>();
-		iw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
-		List<TInfrastructureRelation> il = tInfrastructureRelationService.selectList(iw);
-		
-		for(MobileRoomCategoryVo r : l) {
-			List<FileRecordVo> images = new ArrayList<>();
-			for(TFileRecord f : fl) {
-				if(f.getReferenceId().equals(r.getId())) {
-					FileRecordVo v = new FileRecordVo();
-					BeanUtils.copyProperties(f, v);;
-					images.add(v);
-				}
-			}
-			r.setImages(images);
-			List<InfrastructureRelationVo> infrastructureRelations = new ArrayList<>();
-			for(TInfrastructureRelation i : il) {
-				if(i.getReferenceId().equals(r.getId())) {
-					InfrastructureRelationVo v = new InfrastructureRelationVo();
-					BeanUtils.copyProperties(i, v);;
-					infrastructureRelations.add(v);
-				}
-			}
-			r.setInfrastructureRelations(infrastructureRelations);
-		}
-		
-		page.setRecords(l);
-		return page;
-	}
+    @Override
+    public Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req) {
+        Page<MobileRoomCategoryVo> page = new Page<>();
+        List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req);
+        Wrapper<TFileRecord> fw = new EntityWrapper<>();
+        fw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
+        fw.eq("mark_modified", CommonConst.ENABLED);
+        List<TFileRecord> fl = tFileRecordService.selectList(fw);
+
+        Wrapper<TInfrastructureRelation> iw = new EntityWrapper<>();
+        iw.eq("module", CommonConst.MODULE_ROOM_CATEGORY);
+        List<TInfrastructureRelation> il = tInfrastructureRelationService.selectList(iw);
+
+        for (MobileRoomCategoryVo r : l) {
+            List<FileRecordVo> images = new ArrayList<>();
+            for (TFileRecord f : fl) {
+                if (f.getReferenceId().equals(r.getId())) {
+                    FileRecordVo v = new FileRecordVo();
+                    BeanUtils.copyProperties(f, v);
+                    images.add(v);
+                }
+            }
+            r.setImages(images);
+            List<InfrastructureRelationVo> infrastructureRelations = new ArrayList<>();
+            for (TInfrastructureRelation i : il) {
+                if (i.getReferenceId().equals(r.getId())) {
+                    InfrastructureRelationVo v = new InfrastructureRelationVo();
+                    BeanUtils.copyProperties(i, v);
+                    infrastructureRelations.add(v);
+                }
+            }
+            r.setInfrastructureRelations(infrastructureRelations);
+        }
+
+        page.setRecords(l);
+        return page;
+    }
+
+    /**
+     * 获取某日期范围内的客房列表
+     *
+     * @param hotelId    酒店ID
+     * @param queryParam 参数列表
+     * @param pageSize   条数
+     * @param pageIndex  页码
+     * @return page
+     */
+    public List<MobileRoomBookableVo> findMobileRoomCategoryVoListByDate(Integer hotelId, MobileQueryRoomCategory queryParam, Integer pageSize, Integer pageIndex) {
+        // 查找 房型列表 详情资料
+        // 获取酒店下的房型分组统计客房列表
+
+        // 获取客房订单
+        Page<MobileRoomCategoryVo> categoryVoPage = new Page<>(pageIndex, pageSize);
+
+        return this.tRoomCategoryDAO.findMobileRoomCategoryVoList(categoryVoPage, hotelId, queryParam);
+    }
 
 
 }

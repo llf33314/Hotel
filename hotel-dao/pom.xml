@@ -17,11 +17,7 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.gt.hotel</groupId>
-            <artifactId>hotel-entity</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>com.gt.hotel</groupId>
             <artifactId>hotel-common</artifactId>

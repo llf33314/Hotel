@@ -1,14 +1,14 @@
 package com.gt.hotel.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableLogic;
 import com.baomidou.mybatisplus.enums.IdType;
-
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -61,6 +61,7 @@ public class TActivityRoom extends Model<TActivityRoom> {
     /**
      * 状态标记
      */
+    @TableLogic
     private Integer markModified;
     /**
      * 创建者ID

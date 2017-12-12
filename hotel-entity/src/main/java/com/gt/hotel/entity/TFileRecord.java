@@ -2,6 +2,7 @@ package com.gt.hotel.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableLogic;
 import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -51,6 +52,7 @@ public class TFileRecord extends Model<TFileRecord> {
     /**
      * 是否启用 0 默认开启 1 关闭 2 删除标记
      */
+    @TableLogic
     private Integer markModified;
     /**
      * 创建者ID
