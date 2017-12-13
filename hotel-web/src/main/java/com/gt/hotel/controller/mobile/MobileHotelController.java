@@ -102,7 +102,7 @@ public class MobileHotelController extends BaseController {
                 model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
                 //System.err.println(property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
             } else {
-                model.setViewName("redirect:/#/book/roomSet/" + hotel.getId());
+                model.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());
             }
         } catch (Exception e) {
             e.printStackTrace();
