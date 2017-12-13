@@ -18,11 +18,12 @@
 		<result column="updated_by" property="updatedBy" />
 		<result column="updated_at" property="updatedAt" />
 		<result column="customer_gender" property="customerGender" />
+		<result column="order_room_id" property="orderRoomId" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, id_type, phone, id_card, id_card_image, order_id, room_num, mark_modified, created_by, created_at, updated_by, updated_at, customer_gender
+        id, name, id_type, phone, id_card, id_card_image, order_id, room_num, mark_modified, created_by, created_at, updated_by, updated_at, customer_gender, order_room_id
     </sql>
 
 </mapper>

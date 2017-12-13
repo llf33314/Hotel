@@ -231,6 +231,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         orderRoom.setUpdatedBy(busId);
         Wrapper<TOrderRoom> wrapper = new EntityWrapper<>();
         wrapper.eq("order_id", orderId);
+        TOrderRoom orderRoom2 = tOrderRoomService.selectOne(wrapper);
         if (!tOrderRoomService.update(orderRoom, wrapper)) {
             throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
@@ -247,6 +248,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
             customer.setCreatedBy(busId);
             customer.setUpdatedAt(date);
             customer.setUpdatedBy(busId);
+            customer.setOrderRoomId(orderRoom2.getId());
             customers.add(customer);
         }
         if (!tOrderRoomCustomerService.insertBatch(customers)) {

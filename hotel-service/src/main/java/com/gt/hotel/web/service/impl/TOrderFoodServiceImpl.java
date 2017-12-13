@@ -89,8 +89,8 @@ public class TOrderFoodServiceImpl extends BaseServiceImpl<TOrderFoodDAO, TOrder
 		tOrderFood.setOrderNum(tOrder.getOrderNum());
 		tOrderFood.setRoomNum("0");
 		tOrderFood.setCategoryId(0);
-		tOrderFood.setCustomerName("");
-		tOrderFood.setCustomerPhone("");
+		tOrderFood.setCustomerName(" ");
+		tOrderFood.setCustomerPhone(" ");
 		tOrderFood.setCreateTime(date);
 		tOrderFood.setCreatedAt(date);
 		tOrderFood.setCreatedBy(member.getBusid());

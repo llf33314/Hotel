@@ -30,7 +30,7 @@ public class HotelBackRoomOrderVo {
     @ApiModelProperty("支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金")
 	private Integer payType;
 
-    @ApiModelProperty("支付状态 =0 待支付 =1 已支付 =2 退款中 =3 已退款 默认 0")
+    @ApiModelProperty("支付状态 ")
     private Integer payStatus;
 
     @ApiModelProperty("支付时间")

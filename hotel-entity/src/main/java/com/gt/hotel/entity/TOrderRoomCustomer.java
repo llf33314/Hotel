@@ -81,6 +81,10 @@ public class TOrderRoomCustomer extends Model<TOrderRoomCustomer> {
      * 性别(0:男, 1:女)
      */
 	private Integer customerGender;
+	/**
+	 * 客房订单ID
+	 */
+	private Integer orderRoomId;
 
 
 	@Override

@@ -114,10 +114,16 @@ public class MobilePersonalController extends BaseController {
 		wrapper.eq("id", orderId);
 		TOrder newOrder = new TOrder();
 		newOrder.setOrderStatus(CommonConst.ORDER_CANCALLED);
+		newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
 		newOrder.setUpdatedBy(member.getId());
 		if(!tOrderService.update(newOrder, wrapper)) {
 			return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
 		}
+		Wrapper<TOrderRoom> row = new EntityWrapper<>();
+		row.eq("order_id", orderId);
+		TOrderRoom ro = new TOrderRoom();
+		ro.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
+		tOrderRoomService.update(ro, row);
 		return ResponseDTO.createBySuccess();
 	}
 	
