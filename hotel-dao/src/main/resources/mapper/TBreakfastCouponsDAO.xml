@@ -17,9 +17,19 @@
 		<result column="updated_at" property="updatedAt" />
 	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, order_id, category_id, room_num, code, write_off_status, writer, created_by, created_at, updated_by, updated_at
-    </sql>
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, order_id, category_id, room_num, code, write_off_status, writer,
+		created_by, created_at, updated_by, updated_at
+	</sql>
+
+	<select id="findBreakfastCoupons" resultType="com.gt.hotel.vo.BreakfastCouponsVo">
+		SELECT id, order_id
+		orderId, category_id categoryId, room_num roomNum, code,
+		write_off_status writeOffStatus, writer, created_by createdBy,
+		created_at createdAt, updated_by updatedBy, updated_at updatedAt 
+		FROM t_breakfast_coupons 
+		WHERE order_id = #{orderId} AND room_num = #{roomNum}
+	</select>
 
 </mapper>

@@ -194,6 +194,7 @@ public class MobilePersonalController extends BaseController {
 			Page<RoomCardVo> page = tOrderRoomService.mobileFindRoomCard(member, vipLevel, param);
 			return ResponseDTO.createBySuccess(page);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseDTO.createByError();
 		}
 		

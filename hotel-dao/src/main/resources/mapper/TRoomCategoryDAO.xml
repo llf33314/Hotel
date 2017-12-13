@@ -56,8 +56,10 @@
         FROM t_room_category a
         JOIN t_hotel_setting d ON a.hotel_id = d.hotel_id
         <![CDATA[
-		LEFT JOIN (SELECT category_id, price FROM t_room_calendar WHERE NOW() >= begin_time AND NOW() <= end_time) b ON a.id = b.category_id 
-		LEFT JOIN (SELECT category_id, number FROM t_order_room WHERE #{param.roomInTime} >= room_in_time AND #{param.roomOutTime} <= room_out_time AND pay_status != 2 AND pay_status != 3) c ON a.id = c.category_id 
+		LEFT JOIN (SELECT category_id, price FROM t_room_calendar WHERE NOW() >= begin_time AND NOW() <= end_time) b ON a.id = b.category_id		
+		LEFT JOIN (SELECT category_id, number FROM t_order_room WHERE 
+		((#{param.roomInTime} >= room_in_time AND #{param.roomInTime} < room_out_time) OR (#{param.roomInTime} < room_in_time AND #{param.roomInTime} > room_out_time))
+		AND pay_status != 2 AND pay_status != 3) c ON a.id = c.category_id  
 		]]>
 		WHERE a.hotel_id = #{hotelId} 
 		AND a.mark_modified = 0 
