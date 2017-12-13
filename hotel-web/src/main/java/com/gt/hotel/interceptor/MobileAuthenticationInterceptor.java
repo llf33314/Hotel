@@ -70,8 +70,8 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 从session中获取 当前商家ID
-        Optional<Integer> busId = Optional.fromNullable((Integer) request.getSession().getAttribute(CURRENT_BUS_ID));
-        Optional<Integer> sessionHotelId = Optional.fromNullable((Integer) request.getSession().getAttribute(CURRENT_HOTEL_ID));
+        Optional<Integer> busId = Optional.fromNullable((Integer) request.getSession().getAttribute(CURRENT_SESSION_BUS_ID));
+        Optional<Integer> sessionHotelId = Optional.fromNullable((Integer) request.getSession().getAttribute(CURRENT_SESSION_HOTEL_ID));
         Map attribute = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         String uri = request.getRequestURI();
         if(uri.indexOf("/mobile/78CDF1/home/") != -1) {
@@ -106,17 +106,31 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                 throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId.get(), url);
             }
         } else {
-            Optional<THotel> hotel = Optional.of(findHotelById(hotelId.get()));
-            // 并重置更新缓存信息
-            request.getSession().setAttribute(CURRENT_HOTEL_INFO, JSONObject.toJSONString(hotel));
-            request.getSession().setAttribute(CURRENT_BUS_ID, hotel.get().getBusId());
-            request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId.get());
-            // 获取会员信息
-            Optional<Member> member = Optional.fromNullable(SessionUtils.getLoginMember(request, hotel.get().getBusId()));
-            if (!member.isPresent()) {
-                log.warn("member is null");
-                String url = wxmpApiUtil.authorizeMember(hotel.get().getBusId());
-                throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.get().getBusId(), url);
+            // 酒店信息
+            Optional<Member> member;
+            Optional<THotel> hotel;
+            // 会话中的酒店ID 不存在
+            if (!sessionHotelId.isPresent()) {
+                hotel = Optional.of(findHotelById(hotelId.get()));
+                // 并重置更新缓存信息
+                request.getSession().setAttribute(CURRENT_SESSION_HOTEL_INFO, JSONObject.toJSONString(hotel));
+                request.getSession().setAttribute(CURRENT_SESSION_BUS_ID, hotel.get().getBusId());
+                request.getSession().setAttribute(CURRENT_SESSION_HOTEL_ID, hotelId.get());
+                // 获取会员信息
+                member = Optional.fromNullable(SessionUtils.getLoginMember(request, hotel.get().getBusId()));
+            } else {
+                Optional<String> hotelInfoJson = Optional.of((String) request.getSession().getAttribute(CURRENT_SESSION_HOTEL_INFO));
+                hotel = Optional.of(JSONObject.parseObject(hotelInfoJson.get(), THotel.class));
+                member = Optional.fromNullable(SessionUtils.getLoginMember(request, hotel.get().getBusId()));
+            }
+            if (hotel.isPresent()) {
+                if (!member.isPresent()) {
+                    log.warn("member is null");
+                    String url = wxmpApiUtil.authorizeMember(hotel.get().getBusId());
+                    throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.get().getBusId(), url);
+                }
+            } else {
+                throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
             }
         }
         return true;

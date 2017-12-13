@@ -37,7 +37,7 @@
         <java.version>1.7</java.version>
         <dev.lib.swagger2>2.6.1</dev.lib.swagger2>
         <dev.lib.mybatis>1.1.1</dev.lib.mybatis>
-        <dev.lib.druid-spring-boot-starter>1.1.2</dev.lib.druid-spring-boot-starter>
+        <dev.lib.druid-spring-boot-starter>1.1.6</dev.lib.druid-spring-boot-starter>
         <dev.lib.mysql>5.1.39</dev.lib.mysql>
         <dev.lib.mybatis-plus>2.1.5</dev.lib.mybatis-plus>
         <dev.lib.mybatisplus-spring-boot-starter>1.0.5</dev.lib.mybatisplus-spring-boot-starter>

@@ -14,15 +14,15 @@ public class MobileActivityVo {
 	@ApiModelProperty(value = "活动ID")
     private Integer id;
 
+    @ApiModelProperty(value = "活动名称")
+    private String activityName;
+
 	@ApiModelProperty(value = "酒店ID")
     private Integer hotelId;
 
 	@ApiModelProperty(value = "外部活动编号 提供对外显示 ID 格式 前缀 HD+时间戳年月日时分秒毫秒 14位")
     private String  activityNum;
 	
-	@ApiModelProperty(value = "活动名")
-	private String  activityName;
-
 	@ApiModelProperty(value = "活动 开始时间")
     private Date    beginTime;
 

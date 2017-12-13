@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.google.common.base.Optional;
 import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -175,6 +176,11 @@ public class HotelController extends BaseController {
         h.setUpdatedAt(new Date());
         h.setUpdatedBy(busid);
         tHotelService.update(h, wrapper);
+        // 删除成功后，判断session是否有缓存
+        Optional<Object> o = Optional.fromNullable(request.getSession().getAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST));
+        if(o.isPresent()){
+           request.getSession().removeAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST);
+        }
         return ResponseDTO.createBySuccess();
     }
 

@@ -10,6 +10,7 @@ import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.entity.TAuthorization;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.TAuthorizationService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -24,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
+import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_BUS_ID;
 
 /**
  * 手机端授权操作
@@ -35,6 +36,7 @@ import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
  * @since 授权
  */
 @Slf4j
+@Api(tags = "授权操作")
 @RequestMapping("/mobile/auth/")
 @RestController
 public class MobileAuthController extends BaseController {
@@ -50,7 +52,7 @@ public class MobileAuthController extends BaseController {
     @GetMapping(value = "{hotelId}/{authorId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView auth(HttpServletRequest request, @Param("酒店ID") @PathVariable("hotelId") Integer hotelId,
                                    @Param("授权ID") @PathVariable("authorId") Integer authorId, ModelAndView model) {
-        Integer busId = (Integer) request.getSession().getAttribute(CURRENT_BUS_ID);
+        Integer busId = (Integer) request.getSession().getAttribute(CURRENT_SESSION_BUS_ID);
         Member member = SessionUtils.getLoginMember(request, busId);
         Wrapper<TAuthorization> wrapper = new EntityWrapper<>();
         // 严谨点，应充分使用所有条件。避免数据串改

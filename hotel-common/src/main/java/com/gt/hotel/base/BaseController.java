@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-import static com.gt.hotel.constant.CommonConst.CURRENT_BUS_ID;
+import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_BUS_ID;
 
 /**
  * BaseController
@@ -60,7 +60,7 @@ public abstract class BaseController {
      * @return
      */
     public Member getMember(HttpServletRequest request) {
-        Integer busId = (Integer) request.getSession().getAttribute(CURRENT_BUS_ID);
+        Integer busId = (Integer) request.getSession().getAttribute(CURRENT_SESSION_BUS_ID);
         return SessionUtils.getLoginMember(request, busId);
     }
 

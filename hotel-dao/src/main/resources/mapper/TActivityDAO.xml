@@ -81,7 +81,7 @@
 		FROM t_activity a 
 		JOIN t_activity_detail b ON a.id = b.activity_id 
 		LEFT JOIN t_activity_room c ON a.id = c.activity_id 
-		WHERE a.publish_status = 0 AND a.mark_modified = 0 AND a.hotel_id = #{hotelId} AND c.mark_modified = 0 AND a.publish_status = 0 
+		WHERE a.publish_status = 0 AND a.mark_modified = 0 AND a.hotel_id = #{hotelId} AND c.mark_modified = 0
 		GROUP BY a.id 
 	</select>
 	

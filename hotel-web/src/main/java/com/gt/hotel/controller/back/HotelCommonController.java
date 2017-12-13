@@ -18,7 +18,6 @@ import com.gt.hotel.other.HotelInfoVo;
 import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
-import com.gt.hotel.util.RedisCacheUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
 import io.swagger.annotations.Api;
@@ -59,10 +58,6 @@ public class HotelCommonController extends BaseController {
     @Autowired
     private WXMPApiUtil wxmpApiUtil;
 
-    @Autowired
-    private RedisCacheUtil redisCacheUtil;
-
-
     /**
      * 根据商家ID 获取门店列表
      * 无分页
@@ -75,13 +70,11 @@ public class HotelCommonController extends BaseController {
     public ResponseDTO<List<HotelShopInfo>> shops(HttpServletRequest request) {
         Integer busId = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops;
-        String shopListKey = CommonConst.CURRENT_SHOP_LIST + busId;
         try {
             // 读取session 中的门店列表
-            Optional<String> shopInfoList = Optional.fromNullable((String) request.getSession().getAttribute(shopListKey));
+            Optional<String> shopInfoList = Optional.fromNullable((String) request.getSession().getAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST));
             if (shopInfoList.isPresent()) {
-                return ResponseDTO.createBySuccess(JSON.parseObject(shopInfoList.get(), new TypeReference<List<HotelShopInfo>>() {
-                }));
+                return ResponseDTO.createBySuccess(JSON.parseObject(shopInfoList.get(), new TypeReference<List<HotelShopInfo>>(){}));
             } else {
                 // 获取商家下的酒店列表
                 List<HotelShopInfo> hotelShopInfoList = null;
@@ -109,7 +102,8 @@ public class HotelCommonController extends BaseController {
                         hotelShopInfoList.add(shopInfo);
                     }
                 }
-                request.getSession().setAttribute(shopListKey, JSON.toJSONString(hotelShopInfoList));
+                // 缓存入session
+                request.getSession().setAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST, JSON.toJSONString(hotelShopInfoList));
                 return ResponseDTO.createBySuccess(hotelShopInfoList);
             }
         } catch (SignException e) {
