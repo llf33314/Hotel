@@ -1,5 +1,6 @@
 package com.gt.hotel;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @author zhangmz
  * @create 2017/6/16
  */
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class BasicTest {

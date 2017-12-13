@@ -22,6 +22,12 @@
         <result column="updated_at" property="updatedAt"/>
     </resultMap>
 
+    <resultMap id="MobileRoomBookableVo" type="com.gt.hotel.vo.MobileRoomBookableVo">
+        <collection property="infrastructureRelations" select="com.gt.hotel.dao.TInfrastructureRelationDAO.findRelationVoListByRefIdAndModule"
+                    column="{module=module,refId=id}"/>
+        <collection property="images" select="com.gt.hotel.dao.TFileRecordDAO.findRecordVoListByRefIdAndModule" column="{module=module,refId=id}"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, name, room_count, hotel_id, desc, rack_rate, deposit, weekend_fare_enable, weekend_fare, mark_modified, breakfast_enable, breakfast_quantity, created_by, created_at, updated_by, updated_at
@@ -40,16 +46,16 @@
             AND hotel_id = #{queryRoomCategory.hotelId}
         </if>
     </select>
-    
+
     <select id="queryMobileRoomCategory" resultType="com.gt.hotel.vo.MobileRoomCategoryVo">
-    	SELECT a.id, a.hotel_id hotelId, a.`name`, a.rack_rate rackRate, a.`desc`, a.deposit,a.weekend_fare_enable weekendFareEnable, 
-			a.weekend_fare weekendFare, a.breakfast_enable breakfastEnable, a.breakfast_quantity breakfastQuantity, 
-			a.room_count roomCount, d.remnant_room_enable remnantRoomEnable,
-			b.price calenderPrice, IFNULL(SUM(c.number), 0) orderCount,
-			(CASE a.weekend_fare_enable WHEN 0 THEN IFNULL(b.price, IF(DAYOFWEEK(NOW()) IN (6,7), a.weekend_fare, a.rack_rate)) WHEN 1 THEN (IFNULL(b.price, a.rack_rate)) END) displayPrice 
-		FROM t_room_category a 
-		JOIN t_hotel_setting d ON a.hotel_id = d.hotel_id
-    	<![CDATA[
+        SELECT a.id, a.hotel_id hotelId, a.`name`, a.rack_rate rackRate, a.`desc`, a.deposit,a.weekend_fare_enable weekendFareEnable,
+        a.weekend_fare weekendFare, a.breakfast_enable breakfastEnable, a.breakfast_quantity breakfastQuantity,
+        a.room_count roomCount, d.remnant_room_enable remnantRoomEnable,
+        b.price calenderPrice, IFNULL(SUM(c.number), 0) orderCount,
+        (CASE a.weekend_fare_enable WHEN 0 THEN IFNULL(b.price, IF(DAYOFWEEK(NOW()) IN (6,7), a.weekend_fare, a.rack_rate)) WHEN 1 THEN (IFNULL(b.price, a.rack_rate)) END) displayPrice
+        FROM t_room_category a
+        JOIN t_hotel_setting d ON a.hotel_id = d.hotel_id
+        <![CDATA[
 		LEFT JOIN (SELECT category_id, price FROM t_room_calendar WHERE NOW() >= begin_time AND NOW() <= end_time) b ON a.id = b.category_id 
 		LEFT JOIN (SELECT category_id, number FROM t_order_room WHERE #{param.roomInTime} >= room_in_time AND #{param.roomOutTime} <= room_out_time) c ON a.id = c.category_id 
 		]]>
@@ -58,9 +64,36 @@
 		<if test="param.categoryId != null">
 			AND a.id = #{param.categoryId} 
 		</if>
-		GROUP BY a.id 
-		<![CDATA[ 
+		GROUP BY a.id
+		<![CDATA[
 		HAVING orderCount < room_count
-		]]> 
+		]]>
     </select>
+
+    <select id="findMobileRoomCategoryVoList" resultMap="MobileRoomBookableVo">
+        SELECT
+        category.id,
+        category.hotel_id hotelId,
+        category.name,
+        category.rack_rate rackRate, # 门市价
+        category.weekend_fare_enable weekendFareEnable, # 周末价
+        category.weekend_fare weekendFare,
+        category.breakfast_enable breakfastEnable,
+        category.breakfast_quantity breakfastQuantity,
+        count(order_room.order_num IS NOT NULL) AS reserved, # 已预约
+        category.room_count roomCount, # 房型一共多少间客房
+        'ROOM_CATEGORY' AS module, # 房型 常量固定值 see CommonConstan
+        category.mark_modified
+        FROM t_room_category category LEFT JOIN t_order_room order_room ON category.id = order_room.category_id AND category.mark_modified = 0 AND order_room.mark_modified=0
+        WHERE category.hotel_id = #{hotelId}
+        <if test="param.categoryId != null">
+            AND category.id = #{param.categoryId}
+        </if>
+        # TODO: 支付状态包含 已支付与未支付 未支付的订单 默认保留30分钟交易权？ 超时将自动置入超时未支付
+        # 选择入住日期范围
+        AND order_room.pay_status IN (0, 1)
+        <![CDATA[ AND #{param.roomInTime} >= order_room.room_in_time AND #{param.roomOutTime} <= order_room.room_out_time ]]>
+        GROUP BY category.id
+    </select>
+
 </mapper>

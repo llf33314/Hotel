@@ -2,6 +2,10 @@ package com.gt.hotel.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.gt.hotel.entity.TInfrastructureRelation;
+import com.gt.hotel.vo.InfrastructureRelationVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +16,13 @@ import com.gt.hotel.entity.TInfrastructureRelation;
  * @since 2017-10-11
  */
 public interface TInfrastructureRelationDAO extends BaseMapper<TInfrastructureRelation> {
+
+    /**
+     * 查找 基础设施列表
+     * @param refId 引用ID
+     * @param module 模块类型
+     * @return List
+     */
+    List<InfrastructureRelationVo> findRelationVoListByRefIdAndModule(@Param("refId")Integer refId,@Param("module")String module);
 
 }

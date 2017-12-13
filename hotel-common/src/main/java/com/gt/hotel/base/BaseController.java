@@ -1,9 +1,13 @@
 package com.gt.hotel.base;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Optional;
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.Member;
 import com.gt.api.util.SessionUtils;
+import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.THotel;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.util.RedisCacheUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +39,7 @@ public abstract class BaseController {
      * @param session HttpSession
      * @return
      */
-    public String getSessionId(HttpSession session) {
+    protected String getSessionId(HttpSession session) {
         return session.getId();
     }
 
@@ -46,11 +50,20 @@ public abstract class BaseController {
      * @param request HttpServletRequest
      * @return int
      */
-    public BusUser getLoginUser(HttpServletRequest request) {
+    protected BusUser getLoginUser(HttpServletRequest request) {
         BusUser b = new BusUser();
         b.setId(33);
         return b;
 //    	return SessionUtils.getLoginUser(request);
+    }
+
+    /**
+     * 获取酒店信息
+     * @return THotel
+     */
+    protected THotel getHotelInfo(HttpServletRequest request){
+        Optional<String> json = Optional.of((String)request.getSession().getAttribute(CommonConst.CURRENT_SESSION_HOTEL_INFO));
+        return Optional.of(JSONObject.parseObject(json.get(),THotel.class)).get();
     }
 
     /**
@@ -59,10 +72,12 @@ public abstract class BaseController {
      * @param request
      * @return
      */
-    public Member getMember(HttpServletRequest request) {
+    protected Member getMember(HttpServletRequest request) {
         Integer busId = (Integer) request.getSession().getAttribute(CURRENT_SESSION_BUS_ID);
         return SessionUtils.getLoginMember(request, busId);
     }
+
+
 
     /**
      * 参数校验
@@ -102,7 +117,7 @@ public abstract class BaseController {
      *
      * @return 1:微信浏览器,99:其他浏览器
      */
-    public static Integer judgeBrowser(HttpServletRequest request) {
+    protected static Integer judgeBrowser(HttpServletRequest request) {
         Integer result;
         String ua = request.getHeader("user-agent")
                 .toLowerCase();
@@ -117,12 +132,12 @@ public abstract class BaseController {
         return result;
     }
 
-    public static String getCode() {
+    protected static String getCode() {
         Long date = System.currentTimeMillis();
         return date.toString().substring(1);
     }
 
-    public static String getHost(HttpServletRequest request) {
+    protected static String getHost(HttpServletRequest request) {
         String path = request.getContextPath();
         return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
     }
