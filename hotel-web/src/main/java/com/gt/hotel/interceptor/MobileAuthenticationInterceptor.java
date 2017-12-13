@@ -84,20 +84,20 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         Optional<Integer> hotelId = Optional.of(MapUtils.getInteger(attribute, HOTEL_ID));
         if (busId.isPresent() && busId.get() > 0) {
             // 访问地址的酒店ID 与 redis 内存储的hotelid 不匹配，则重新获取
-//            if (sessionHotelId.isPresent() && !hotelId.get().equals(sessionHotelId.get())) {
-//                // 数据库查询
-//                Wrapper<THotel> wrapper = new EntityWrapper<>();
-//                wrapper.eq("id", hotelId).eq("bus_id", busId).eq("mark_modified", 0);
-//                Optional<THotel> hotel = Optional.fromNullable(this.hotelService.selectOne(wrapper));
-//                if (!hotel.isPresent()) {
-//                    log.warn("获取酒店信息失败 参数列表：hotelId : {} , busId : {} ", hotelId.get(), busId.get());
-//                    throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
-//                }
-//                // 并重置更新缓存信息
-//                request.getSession().setAttribute(CURRENT_HOTEL_INFO, JSONObject.toJSONString(hotel));
-//                request.getSession().setAttribute(CURRENT_BUS_ID, hotel.get().getBusId());
-//                request.getSession().setAttribute(CURRENT_HOTEL_ID, hotelId.get());
-//            }
+            if (sessionHotelId.isPresent() && !hotelId.get().equals(sessionHotelId.get())) {
+                // 数据库查询
+                Wrapper<THotel> wrapper = new EntityWrapper<>();
+                wrapper.eq("id", hotelId.get()).eq("bus_id", busId.get()).eq("mark_modified", 0);
+                Optional<THotel> hotel = Optional.fromNullable(this.hotelService.selectOne(wrapper));
+                if (!hotel.isPresent()) {
+                    log.warn("获取酒店信息失败 参数列表：hotelId : {} , busId : {} ", hotelId.get(), busId.get());
+                    throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
+                }
+                // 并重置更新缓存信息
+                request.getSession().setAttribute(CURRENT_SESSION_HOTEL_INFO, JSONObject.toJSONString(hotel));
+                request.getSession().setAttribute(CURRENT_SESSION_BUS_ID, hotel.get().getBusId());
+                request.getSession().setAttribute(CURRENT_SESSION_HOTEL_ID, hotelId.get());
+            }
             // 获取会员信息
             Optional<Member> member = Optional.fromNullable(SessionUtils.getLoginMember(request, busId.get()));
             if (!member.isPresent()) {

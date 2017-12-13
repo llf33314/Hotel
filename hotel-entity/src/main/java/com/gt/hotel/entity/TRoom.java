@@ -2,6 +2,7 @@ package com.gt.hotel.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableLogic;
 import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -48,6 +49,7 @@ public class TRoom extends Model<TRoom> {
     /**
      * 0 正常 1 禁用 2 删除
      */
+    @TableLogic
     private Integer markModified;
     /**
      * 创建者ID

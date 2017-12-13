@@ -1,8 +1,6 @@
 package com.gt.hotel.properties;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +12,6 @@ import java.util.Map;
  * @date 2017/11/09
  * @since
  */
-@Getter
-@Setter
 @Component
 @ConfigurationProperties(prefix = "hotel.webserver")
 public class WebServerConfigurationProperties {
@@ -80,4 +76,36 @@ public class WebServerConfigurationProperties {
     	private Map<String,String> apiMap;
     }
 
+
+    public WxmpService getWxmpService() {
+        return wxmpService;
+    }
+
+    public void setWxmpService(WxmpService wxmpService) {
+        this.wxmpService = wxmpService;
+    }
+
+    public ShortService getShortService() {
+        return shortService;
+    }
+
+    public void setShortService(ShortService shortService) {
+        this.shortService = shortService;
+    }
+
+    public MemberService getMemberService() {
+        return memberService;
+    }
+
+    public void setMemberService(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
+    public JxcService getJxcService() {
+        return jxcService;
+    }
+
+    public void setJxcService(JxcService jxcService) {
+        this.jxcService = jxcService;
+    }
 }

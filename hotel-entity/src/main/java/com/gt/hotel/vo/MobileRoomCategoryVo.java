@@ -21,9 +21,6 @@ public class MobileRoomCategoryVo {
     @ApiModelProperty("门市价")
     private Integer rackRate;
 
-//    @ApiModelProperty("折扣率")
-//    private Integer discount;
-
     @ApiModelProperty("是否开启周末价 0 开启 1 禁用，即显示门市价即可")
     private Integer weekendFareEnable;
 
@@ -53,9 +50,6 @@ public class MobileRoomCategoryVo {
     
     @ApiModelProperty(value = "是否显示剩余房间数 默认 1 关闭 0 开启")
     private Integer remnantRoomEnable;
-
-//    @ApiModelProperty("房间集合")
-//    private List<RoomVo> tRoomList;
 
     @ApiModelProperty("显示价格")
     private Integer displayPrice;
