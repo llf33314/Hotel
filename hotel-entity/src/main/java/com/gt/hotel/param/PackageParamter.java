@@ -23,5 +23,9 @@ public class PackageParamter {
 		@ApiModelProperty(value = "门店ID", required = true)
 		@NotNull(message = "门店ID不能为空")
 		private Integer shopId;
+		
+		@ApiModelProperty(value = "套餐针对的单位类型：0 协议单位  1 中介", required = true)
+		@NotNull(message = "单位类型不能为空")
+		private Integer module;
 	}
 }

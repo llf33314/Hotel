@@ -58,6 +58,9 @@
 		<if test="param.categoryId != null">
 			AND a.id = #{param.categoryId} 
 		</if>
-		GROUP BY a.id
+		GROUP BY a.id 
+		<![CDATA[ 
+		HAVING orderCount < room_count
+		]]> 
     </select>
 </mapper>

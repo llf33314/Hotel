@@ -118,6 +118,9 @@ public class TActivityServiceImpl extends BaseServiceImpl<TActivityDAO, TActivit
                 ar.setCreatedBy(busId);
                 ar.setUpdatedAt(date);
                 ar.setUpdatedBy(busId);
+                if(arp.getActivityPrice() == null) {
+                	ar.setActivityPrice(arp.getRackRate());
+                }
                 ars.add(ar);
             } else {
                 arsids.add(ar.getId());

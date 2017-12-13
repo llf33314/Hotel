@@ -1,5 +1,15 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -9,9 +19,11 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.dao.TRoomDAO;
+import com.gt.hotel.entity.TBreakfastCoupons;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.entity.TOrderRoomCustomer;
+import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelOrderParameter.CheckInParam;
@@ -20,20 +32,19 @@ import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.param.HotelPage;
-import com.gt.hotel.vo.*;
+import com.gt.hotel.vo.BusinessConditionsVo;
+import com.gt.hotel.vo.DepositVo;
+import com.gt.hotel.vo.HotelBackFoodOrderVo;
+import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.IncomeDetailsVo;
+import com.gt.hotel.vo.OrderRoomCustomerVo;
+import com.gt.hotel.web.service.TBreakfastCouponsService;
 import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
-import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.gt.hotel.web.service.TRoomCategoryService;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -58,6 +69,12 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 
     @Autowired
     private TRoomDAO tRoomDAO;
+    
+    @Autowired
+    TRoomCategoryService tRoomCategoryService;
+    
+    @Autowired
+    TBreakfastCouponsService breakfastCouponsService;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -120,7 +137,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         or.setOrderNum(o.getOrderNum());
         or.setCheckInWay(CommonConst.CHECK_IN_WAY_OFFLINE);
         or.setNumber(order.getRooms().size());
-        or.setFrom(CommonConst.SOURCE_BACK);
+        or.setOrderFrom(CommonConst.SOURCE_BACK);
         or.setPayTime(date);
         or.setPayStatus(CommonConst.PAY_STATUS_PAID);
         or.setCreateTime(date);
@@ -153,6 +170,27 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
                 throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
             }
         }
+//        TRoomCategory category = tRoomCategoryService.selectById(order.getCategoryId());
+//		if(category.getBreakfastEnable().equals(CommonConst.ENABLED)) {
+//			List<TBreakfastCoupons> bcs = new ArrayList<>();
+//			for(int i = 0; i < orcs.size(); i++) {
+//				for(int j = 0; j < category.getBreakfastQuantity(); j++) {
+//					TBreakfastCoupons breakfastCoupons = new TBreakfastCoupons();
+//					breakfastCoupons.setOrderId(o.getId());
+//					breakfastCoupons.setCategoryId(order.getCategoryId());
+//					breakfastCoupons.setRoomNum(orcs.get(i).getRoomNum());
+//					breakfastCoupons.setCode(System.currentTimeMillis() + "" + Math.round(Math.random() * 9999999));
+//					breakfastCoupons.setWriteOffStatus(0);
+//					breakfastCoupons.setCreatedAt(date);
+//					breakfastCoupons.setCreatedBy(busId);
+//					breakfastCoupons.setUpdatedBy(busId);
+//					bcs.add(breakfastCoupons);
+//				}
+//			}
+//			if(!breakfastCouponsService.insertBatch(bcs)) {
+//				throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+//			}
+//		}
     }
 
     @Override
@@ -214,6 +252,28 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         if (!tOrderRoomCustomerService.insertBatch(customers)) {
             throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
+        TOrderRoom tOrderRoom = tOrderRoomService.selectOne(wrapper);
+        TRoomCategory category = tRoomCategoryService.selectById(tOrderRoom.getCategoryId());
+		if(category.getBreakfastEnable().equals(CommonConst.ENABLED)) {
+			List<TBreakfastCoupons> bcs = new ArrayList<>();
+			for(int i = 0; i < customers.size(); i++) {
+				for(int j = 0; j < category.getBreakfastQuantity(); j++) {
+					TBreakfastCoupons breakfastCoupons = new TBreakfastCoupons();
+					breakfastCoupons.setOrderId(orderId);
+					breakfastCoupons.setCategoryId(tOrderRoom.getCategoryId());
+					breakfastCoupons.setRoomNum(customers.get(i).getRoomNum());
+					breakfastCoupons.setCode(System.currentTimeMillis() + "" + Math.round(Math.random() * 9999999));
+					breakfastCoupons.setWriteOffStatus(0);
+					breakfastCoupons.setCreatedAt(date);
+					breakfastCoupons.setCreatedBy(busId);
+					breakfastCoupons.setUpdatedBy(busId);
+					bcs.add(breakfastCoupons);
+				}
+			}
+			if(!breakfastCouponsService.insertBatch(bcs)) {
+				throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+			}
+		}
     }
 
     @Override
@@ -269,7 +329,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
     public Page<DepositVo> queryMobileDeposit(Member member, HotelPage hotelPage) {
         Page<DepositVo> page = hotelPage.initPage();
         page.setRecords(tOrderDAO.queryMobileDeposit(member.getId(), page));
-        return null;
+        return page;
     }
 
     @Override

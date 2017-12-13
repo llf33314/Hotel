@@ -25,6 +25,7 @@ import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.dao.TOrderRoomDAO;
 import com.gt.hotel.entity.TActivityDetail;
 import com.gt.hotel.entity.TActivityRoom;
+import com.gt.hotel.entity.TBreakfastCoupons;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderCoupons;
@@ -35,16 +36,20 @@ import com.gt.hotel.other.DuofenCards;
 import com.gt.hotel.other.MemberCard;
 import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
+import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
 import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.ActivityDetailVo;
+import com.gt.hotel.vo.BreakfastCouponsVo;
 import com.gt.hotel.vo.CheackInListRevenueVo;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomCardVo;
 import com.gt.hotel.vo.RoomCheackInCountVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.TActivityDetailService;
 import com.gt.hotel.web.service.TActivityRoomService;
+import com.gt.hotel.web.service.TBreakfastCouponsService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderCouponsService;
 import com.gt.hotel.web.service.TOrderRoomService;
@@ -91,6 +96,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 
 	@Autowired
 	TRoomCategoryService tRoomCategoryService;
+	
+	@Autowired
+	TBreakfastCouponsService breakfastCouponsService;
 
 	@Autowired
 	THotelService tHotelService;
@@ -138,7 +146,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		orderRoom.setHotelName(hotel.getName());
 		orderRoom.setReceivablePrice(bookParam.getPayPrice());
 		orderRoom.setRoomPrice(bookParam.getDisplayPrice());
-		orderRoom.setFrom(CommonConst.SOURCE_MOBILE);
+		orderRoom.setOrderFrom(CommonConst.SOURCE_MOBILE);
 		orderRoom.setGuestType(0);
 		orderRoom.setCreatedAt(date);
 		orderRoom.setCreateTime(date);
@@ -258,7 +266,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		for(MobileRoomCategoryVo m : page.getRecords()) {
 			if(m.getId().equals(bookParam.getCategoryId())) {
 				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
-				orderPriceVO.setRoomPrice(price);
+				orderPriceVO.setRoomPrice(price * bookParam.getNumber());
 				price = activityCalculate(bookParam, price, orderPriceVO, days);
 				if(card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
 					if(bookParam.getActivityId() == null) {
@@ -437,6 +445,34 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 			l.add(cil);
 		}
 		return l;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<RoomCardVo> mobileFindRoomCard(Member member, Integer vipLevel, RoomCardParam param) {
+		System.err.println(member);
+		Page<RoomCardVo> page = param.initPage();
+		List<RoomCardVo> cardVos = tOrderRoomDAO.findRoomCard(member.getId(), vipLevel, page);
+		List<Integer> orderIds = new ArrayList<>();
+		for(RoomCardVo rcv : cardVos) {
+			orderIds.add(rcv.getOrderId());
+		}
+		Wrapper<TBreakfastCoupons> bcw = new EntityWrapper<>();
+		bcw.in("order_id", orderIds);
+		List<TBreakfastCoupons> coupons = breakfastCouponsService.selectList(bcw);
+		for(RoomCardVo rcv : cardVos) {
+			List<BreakfastCouponsVo> cs = new ArrayList<>();
+			for(TBreakfastCoupons c : coupons) {
+				if(rcv.getOrderId().equals(c.getOrderId()) && rcv.getRoomNum().equals(c.getRoomNum())) {
+					BreakfastCouponsVo cv = new BreakfastCouponsVo();
+					BeanUtils.copyProperties(c, cv);
+					cs.add(cv);
+				}
+			}
+			rcv.setBreakfastCoupons(cs);
+		}
+		page.setRecords(cardVos);
+		return page;
 	}
 	
 }

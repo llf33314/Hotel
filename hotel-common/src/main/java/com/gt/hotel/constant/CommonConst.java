@@ -49,6 +49,10 @@ public final class CommonConst {
      * 客房
      */
     public static final String MODULE_ROOM          = "ROOM";
+    /**
+     * 菜品
+     */
+    public static final String MODULE_FOOD          = "FOOD";
 
     /****************************** 活动状态 ******************************/
 
@@ -272,5 +276,41 @@ public final class CommonConst {
      * 51 ERP统一计算
      */
     public static final int PAY_MODEL_ERP  = 51;
+    
+    /****************************** 审核状态 字典类型 7 三种状态 0 待审核 1 已通过 2 不通过 (审核人必须是财务角色) ******************************/
+    /**
+     * 待审核
+     */
+    public static final int PENDING_REVIEW = 0;
+    /**
+     * 已通过
+     */
+    public static final int PASSED = 1;
+    /**
+     * 不通过
+     */
+    public static final int NOT_PASSED  = 2;
+    
+    /****************************** 授权 ******************************/
+    /**
+     * 提现
+     */
+    public static final int FUNCTION_WITHDRAWAL = 6;
+    /**
+     * 免押金
+     */
+    public static final int FUNCTION_FREE_DEPOSIT = 7;
+    /**
+     * 改价
+     */
+    public static final int FUNCTION_CHANGE_PRICE  = 8;
+    /**
+     * 挂账
+     */
+    public static final int FUNCTION_LOSSES  = 9;
+    /**
+     * 核销
+     */
+    public static final int FUNCTION_WRITE_OFF  = 21;
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,7 +60,7 @@ public class ErpHotelManagerController extends BaseController {
     @ApiOperation(value = "协议单位or中介列表", notes = "协议单位or中介列表")
     @GetMapping(value = "organization/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<AgreementOrganizationVo>> organizationR(
-    		@ApiParam("门店ID")@PathVariable("shopId") Integer shopId,
+    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
     		@ModelAttribute AgreementParamter.AgreementQuery query, 
     		BindingResult bindingResult) {
     	invalidParameter(bindingResult);
@@ -70,8 +71,8 @@ public class ErpHotelManagerController extends BaseController {
     @ApiOperation(value = "协议单位or中介 详情", notes = "协议单位or中介 详情")
     @GetMapping(value = "organization/{shopId}/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<AgreementOrganizationVo> organizationR(
-    		@ApiParam("门店ID") Integer shopId,
-    		@ApiParam("组织ID") Integer id) {
+    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+    		@ApiParam("组织ID") @PathVariable("id") Integer id) {
     	return ResponseDTO.createBySuccess(agreementOrganizationService.erpQueryAgreementOrganizationDetail(id));
     }
     
@@ -79,8 +80,8 @@ public class ErpHotelManagerController extends BaseController {
 	@ApiOperation(value = "编辑 协议单位or中介", notes = "编辑 协议单位or中介")
     @PostMapping(value = "organization/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO organizationCU(
-    		@ApiParam("门店ID") Integer shopId,
-    		@ModelAttribute AgreementParamter.AgreementInsert insert, 
+    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+    		@RequestBody AgreementParamter.AgreementInsert insert, 
     		BindingResult bindingResult, 
     		HttpServletRequest request) {
     	invalidParameter(bindingResult);
@@ -93,7 +94,7 @@ public class ErpHotelManagerController extends BaseController {
     @ApiOperation(value = "删除 协议单位or中介", notes = "删除 协议单位or中介")
     @DeleteMapping(value = "organization/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO organizationD(
-    		@ApiParam("组织ID") Integer id,
+    		@ApiParam("组织ID") @PathVariable("id") Integer id,
     		HttpServletRequest request) {
     	Integer busId = getLoginUser(request).getId();
     	TAgreementOrganization a = new TAgreementOrganization();
@@ -110,7 +111,7 @@ public class ErpHotelManagerController extends BaseController {
     @ApiOperation(value = "套餐 列表", notes = "套餐 列表")
     @GetMapping(value = "package/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<PackageVo>> packageR(
-    		@ApiParam("门店ID") Integer shopId,
+    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
     		@ModelAttribute PackageParamter.PackageQuery query, 
     		BindingResult bindingResult) {
     	invalidParameter(bindingResult);
@@ -121,8 +122,8 @@ public class ErpHotelManagerController extends BaseController {
     @ApiOperation(value = "套餐房间 列表", notes = "套餐房间 列表")
     @GetMapping(value = "package/{shopId}/{packageId}/packageRoom", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<List<PackageRoomVo>> packageRoomR(
-    		@ApiParam("门店ID") Integer shopId,
-    		@ApiParam("组织ID") Integer packageId) {
+    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+    		@ApiParam("组织ID") @PathVariable("packageId") Integer packageId) {
         return ResponseDTO.createBySuccess(packageRoomService.erpQueryPackageRoom(shopId, packageId));
     }
     

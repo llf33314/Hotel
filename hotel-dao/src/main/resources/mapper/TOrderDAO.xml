@@ -57,7 +57,7 @@
 			b.hotel_name hotelName, b.category_id categoryId, b.category_name categoryName, b.check_in_way checkInWay, b.room_num roomNum,
 			b.customer_name customerName, b.customer_id_type customerIdType, b.customer_id_card customerIdCard, 
 			b.customer_id_card_image customerIdCardImage, b.customer_phone customerPhone, b.number, 
-			b.room_in_time roomInTime, b.room_out_time roomOutTime, b.deposit, b.room_price roomPrice, b.`from`,
+			b.room_in_time roomInTime, b.room_out_time roomOutTime, b.deposit, b.room_price roomPrice, b.`order_from`,
 			b.activity_id activityId, b.rack_rate rackRate, b.guest_type guestType, b.customer_gender customerGender, 
 			b.check_standard checkStandard 
 		FROM t_order a 
@@ -144,7 +144,7 @@
 		SELECT a.id orderId, b.deposit, b.check_out_instructions checkOutInstructions, a.pay_time payTime, IF((a.order_status = 4 AND a.pay_status = 3),0,1) isRefund 
 		FROM t_order a 
 		JOIN t_order_room b ON a.id = b.order_id 
-		WHERE b.deposit_visible = 0 AND a.mark_modified = 0 AND b.mark_modified = 0 
+		WHERE b.deposit_visible = 0 AND a.mark_modified = 0 AND b.mark_modified = 0 AND a.pay_time IS NOT NULL  
 		<if test="memberId != null">
 			AND a.member_id = #{memberId} 
 		</if>

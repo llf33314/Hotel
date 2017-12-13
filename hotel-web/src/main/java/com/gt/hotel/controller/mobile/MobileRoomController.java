@@ -1,5 +1,22 @@
 package com.gt.hotel.controller.mobile;
 
+import java.text.SimpleDateFormat;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
@@ -12,26 +29,21 @@ import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.MemberCard;
+import com.gt.hotel.param.RoomCategoryParameter;
+import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomMobileParameter;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
+import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * 酒店移动端 订房
@@ -91,6 +103,17 @@ public class MobileRoomController extends BaseController {
 			BindingResult bindingResult, 
 			HttpServletRequest request) {
     	invalidParameter(bindingResult);
+    	if(bookParam.getActivityId() != null) {
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    		RoomCategoryParameter.MobileQueryRoomCategory req = new MobileQueryRoomCategory();
+    		req.setCategoryId(bookParam.getCategoryId());
+    		req.setRoomInTime(sdf.format(bookParam.getRoomInTime()));
+    		req.setRoomOutTime(sdf.format(bookParam.getRoomOutTime()));
+    		MobileRoomCategoryVo mrcv = tRoomCategoryService.queryMobileRoomCategory(hotelId, req).getRecords().get(0);
+    		if(bookParam.getNumber() < (mrcv.getRoomCount() - mrcv.getOrderCount())) {
+    			return ResponseDTO.createByErrorMessage("房间数量不足");
+    		}
+    	}
     	THotel hotel = tHotelService.selectById(hotelId);
     	Member member = getMember(request);
     	JSONObject json = new JSONObject();

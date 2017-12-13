@@ -1,5 +1,7 @@
 package com.gt.hotel.controller.mobile;
 
+import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +21,30 @@ import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.TAuthorization;
+import com.gt.hotel.entity.TBreakfastCoupons;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.enums.ResponseEnums;
+import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
+import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.RoomCardVo;
+import com.gt.hotel.web.service.TAuthorizationService;
+import com.gt.hotel.web.service.TBreakfastCouponsService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * 酒店移动端 我的
@@ -56,6 +67,15 @@ public class MobilePersonalController extends BaseController {
 	
 	@Autowired
     private WebServerConfigurationProperties property;
+	
+	@Autowired
+	private TAuthorizationService authorizationService;
+	
+	@Autowired
+	private TBreakfastCouponsService breakfastCouponsService;
+	
+	@Autowired
+    WXMPApiUtil wXMPApiUtil;
 	
 	@ApiOperation(value = "我的 首页", notes = "我的 首页")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -150,14 +170,53 @@ public class MobilePersonalController extends BaseController {
 	
 	/********************************************************* 我的房卡 *************************************************************************/
 	
-	@SuppressWarnings("rawtypes")
-	@ApiOperation(value = "我的房卡（暂无）", notes = "我的房卡（暂无）")
+	@ApiOperation(value = "我的房卡", notes = "我的房卡")
 	@GetMapping(value = "{hotelId}/roomCard", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO moblieRoomCard(
+	public ResponseDTO<Page<RoomCardVo>> moblieRoomCard(
 			@PathVariable("hotelId") Integer hotelId, 
-			@ModelAttribute HotelPage hotelPage, 
+			@ModelAttribute RoomCardParam param, 
 			HttpServletRequest request) {
-		//TODO 我的房卡（暂无）
+		try {
+			Member member = getMember(request);
+			Integer vipLevel = null;
+			THotel hotel = tHotelService.selectById(hotelId);
+			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+			if(json != null && json.getInteger("code").equals(0)) {
+				JSONObject card = json.getJSONObject("data");
+				vipLevel = Integer.valueOf(card.get("gradeName").toString().replace("vip", ""));
+			}
+			Page<RoomCardVo> page = tOrderRoomService.mobileFindRoomCard(member, vipLevel, param);
+			return ResponseDTO.createBySuccess(page);
+		} catch (Exception e) {
+			return ResponseDTO.createByError();
+		}
+		
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@ApiOperation(value = "核销早餐券(二维码链接)", notes = "核销早餐券")
+	@GetMapping(value = "{hotelId}/writeOffBQ/{bqId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO writeOffBreakfastQuantity(
+			@PathVariable("hotelId") Integer hotelId, 
+			@PathVariable("bqId") @ApiParam("早餐券ID") Integer bqId, 
+			@ModelAttribute RoomCardParam param, 
+			HttpServletRequest request) {
+		Member member = getMember(request);
+		Wrapper<TAuthorization> w = new EntityWrapper<>();
+		w.eq("member_id", member.getId());
+		TAuthorization authorization = authorizationService.selectOne(w);
+		if(authorization != null && Arrays.asList(authorization.getFunctionIds().split(",")).contains(
+				Integer.valueOf(CommonConst.FUNCTION_WRITE_OFF).toString())) {
+			TBreakfastCoupons bc = new TBreakfastCoupons();
+			bc.setId(bqId);
+			bc.setWriteOffStatus(1);
+			bc.setWriter(authorization.getAccountId());
+			if(!breakfastCouponsService.updateById(bc)) {
+				throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+			}
+		}else {
+			return ResponseDTO.createByErrorMessage("无核销权限");
+		}
 		return ResponseDTO.createBySuccess();
 	}
 	

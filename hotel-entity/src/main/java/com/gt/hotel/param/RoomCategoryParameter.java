@@ -35,7 +35,7 @@ public class RoomCategoryParameter {
 
     @Data
     @Api(description = "移动端 房型列表 查询参数")
-    public static class MobileQueryRoomCategory {
+    public static class MobileQueryRoomCategory extends HotelPage {
         @ApiModelProperty(value = "房型ID")
         private Integer categoryId;
 

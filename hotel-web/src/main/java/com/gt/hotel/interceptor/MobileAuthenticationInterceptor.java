@@ -73,6 +73,13 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         Optional<Integer> busId = Optional.fromNullable((Integer) request.getSession().getAttribute(CURRENT_SESSION_BUS_ID));
         Optional<Integer> sessionHotelId = Optional.fromNullable((Integer) request.getSession().getAttribute(CURRENT_SESSION_HOTEL_ID));
         Map attribute = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        String uri = request.getRequestURI();
+        if(uri.indexOf("/mobile/78CDF1/home/") != -1) {
+        	return true;
+        }
+        if(uri.indexOf("/mobile/78CDF1/common/") != -1) {
+        	return true;
+        }
         // hotelId
         Optional<Integer> hotelId = Optional.of(MapUtils.getInteger(attribute, HOTEL_ID));
         if (busId.isPresent() && busId.get() > 0) {

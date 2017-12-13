@@ -25,7 +25,7 @@
 		<result column="receivable_price" property="receivablePrice" />
 		<result column="deposit" property="deposit" />
 		<result column="room_price" property="roomPrice" />
-		<result column="from" property="from" />
+		<result column="order_from" property="orderFrom" />
 		<result column="pay_time" property="payTime" />
 		<result column="pay_status" property="payStatus" />
 		<result column="activity_id" property="activityId" />
@@ -46,7 +46,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender, check_standard, hour_room_check_in_time
+        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, order_from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender, check_standard, hour_room_check_in_time
     </sql>
     
     <sql id="Base_Column_List_VO">
@@ -61,7 +61,7 @@
 		t_order_room.room_in_time roomInTime, t_order_room.room_out_time
 		roomOutTime, t_order_room.rack_rate rackRate,
 		t_order_room.receivable_price receivablePrice, t_order_room.deposit,
-		t_order_room.room_price roomPrice, t_order_room.from,
+		t_order_room.room_price roomPrice, t_order_room.order_from from,
 		t_order_room.pay_time payTime, t_order_room.pay_status payStatus,
 		t_order_room.activity_id activityId, t_order_room.completion_time
 		completionTime, t_order_room.create_time createTime,
@@ -110,5 +110,24 @@
 		JOIN t_order b ON a.order_id = b.id 
 		JOIN t_hotel c ON b.hotel_id = c.id 
 		WHERE a.room_in_time BETWEEN #{startDate} AND #{endDate} AND b.mark_modified = 0 AND b.order_status = 4 AND c.shop_id = #{shopId} AND c.bus_id = #{busId};
+	</select>
+	
+	<select id="findRoomCard" resultType="com.gt.hotel.vo.RoomCardVo">
+		SELECT a.id orderId, b.room_num roomNum, IF(d.breakfast_enable = 0, d.breakfast_quantity, 0) breakfastQuantity, e.free_deposit_enable freeDepositEnable, e.vip_check_out vipCheckOut, 
+		c.number, c.rack_rate rackRate, c.deposit, a.fb_discount fbDiscount, a.integral_discount integralDiscount, f.coupons_discount couponsDiscount, MIN(e.vip_level) vipLevel, 
+		c.room_price roomPrice, c.hotel_name hotelName, b.`name` customerName, b.phone customerPhone 
+		FROM t_order a 
+		JOIN t_order_room_customer b ON a.id = b.order_id 
+		JOIN t_order_room c ON a.id = c.order_id 
+		JOIN t_room_category d ON c.category_id = d.id 
+		LEFT JOIN t_hotel_member_setting e ON a.hotel_id = e.hotel_id 
+		LEFT JOIN t_order_coupons f ON a.id = f.order_id 
+		WHERE a.member_id = #{memberId} 
+		AND a.mark_modified = 0 
+		AND a.order_status = 4 
+		<if test="vip != null">
+			AND e.vip_level = #{vip} 
+		</if>
+		GROUP BY b.room_num
 	</select>
 </mapper>

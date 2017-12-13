@@ -32,5 +32,8 @@
 		<if test="param.id != null">
 			AND a.id = #{param.id}
 		</if>
+		<if test="param.module != null">
+			AND a.module = #{param.module}
+		</if>
 	</select>
 </mapper>

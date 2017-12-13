@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomCardVo;
 import com.gt.hotel.vo.RoomCheackInCountVo;
 
 /**
@@ -52,5 +54,14 @@ public interface TOrderRoomDAO extends BaseMapper<TOrderRoom> {
 	 * @return
 	 */
 	List<TOrderRoom> getCheckInRoom(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("startDate") String startDate, @Param("endDate") String endDate);
+
+	/**
+	 * 我的房卡
+	 * @param memberId
+	 * @param vipLevel
+	 * @param param
+	 * @return
+	 */
+	List<RoomCardVo> findRoomCard(@Param("memberId") Integer memberId, @Param("vip") Integer vipLevel, @Param("page") Pagination param);
 
 }
