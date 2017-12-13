@@ -91,7 +91,6 @@ public class MobileHotelController extends BaseController {
         try {
             THotel hotel = tHotelService.selectById(hotelId);
             Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
-            //System.err.println(member);
             if (member == null) {
                 Map<String, Object> queryMap = new HashMap<>();
                 queryMap.put("browser", judgeBrowser(request));
@@ -100,7 +99,6 @@ public class MobileHotelController extends BaseController {
                 queryMap.put("returnUrl", getHost(request) + "/mobile/78CDF1/home/" + hotelId);
                 String param = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
                 model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
-                //System.err.println(property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
             } else {
                 model.setViewName("redirect:/#/book/roomSet/" + hotel.getId());
             }
@@ -140,7 +138,6 @@ public class MobileHotelController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-//    		return ResponseDTO.createByErrorMessage("会员信息获取失败");
         }
         return ResponseDTO.createBySuccess(page);
     }
@@ -245,7 +242,6 @@ public class MobileHotelController extends BaseController {
                 + param.getRoomNum() + "，姓名：" + or.getCustomerName() + "，手机：" + or.getCustomerPhone() + "，发票抬头："
                 + param.getInvoiceHead() + "，发票类目：" + param.getInvoiceCategory();
         try {
-//			JSONObject result = wXMPApiUtil.sendMsg(o.getBusId(), hotelset.getReservationCheckOutPhone(), content);
             JSONObject result = wXMPApiUtil.sendSmsNew(hotelset.getReservationCheckOutPhone(), content, o.getBusId(), 58761l);
             if (!result.getInteger("code").equals(0)) {
                 return ResponseDTO.createByError();
