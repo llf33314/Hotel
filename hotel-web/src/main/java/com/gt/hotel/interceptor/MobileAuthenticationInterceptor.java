@@ -1,5 +1,22 @@
 package com.gt.hotel.interceptor;
 
+import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_BUS_ID;
+import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_HOTEL_ID;
+import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_HOTEL_INFO;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -13,20 +30,8 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
+
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Map;
-
-import static com.gt.hotel.constant.CommonConst.*;
 
 /**
  * 移动端登录、微信授权拦截器
@@ -103,7 +108,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             if (!member.isPresent()) {
                 log.warn("member is null");
                 String url = wxmpApiUtil.authorizeMember(busId.get());
-                throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId.get(), url);
+                throw new NeedLoginException(ResponseEnums.NEED_LOGIN, busId.get(), hotelId.get(), url);
             }
         } else {
             // 酒店信息
@@ -127,7 +132,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                 if (!member.isPresent()) {
                     log.warn("member is null");
                     String url = wxmpApiUtil.authorizeMember(hotel.get().getBusId());
-                    throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.get().getBusId(), url);
+                    throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.get().getBusId(), hotel.get().getId(), url);
                 }
             } else {
                 throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);

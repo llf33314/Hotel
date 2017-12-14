@@ -24,11 +24,20 @@ public class ResponseErrorDTO<T> extends ResponseDTO<T> implements Serializable 
     private String redirectUrl;
     @Getter
     private Integer busId;
+    @Getter
+    private Integer hotelId;
 
     private ResponseErrorDTO(int status, String msg, T data, Integer busId, String url) {
         super(status, msg, data);
         this.busId = busId;
         this.redirectUrl = url;
+    }
+    
+    private ResponseErrorDTO(int status, String msg, T data, Integer busId, Integer hotelId, String url) {
+    	super(status, msg, data);
+    	this.busId = busId;
+    	this.redirectUrl = url;
+    	this.hotelId = hotelId;
     }
 
     public static <T> ResponseErrorDTO<T> createByError() {
@@ -46,12 +55,15 @@ public class ResponseErrorDTO<T> extends ResponseDTO<T> implements Serializable 
     public static <T> ResponseErrorDTO<T> createByErrorCodeMessage(int errorCode, String errorMessage, Integer busId, String url) {
         return createByErrorCodeMessage(errorCode, errorMessage, null, busId, url);
     }
+    
+    public static <T> ResponseErrorDTO<T> createByErrorCodeMessage(int errorCode, String errorMessage, Integer busId, Integer hotelId, String url) {
+    	return new ResponseErrorDTO<>(errorCode, errorMessage, null, busId, hotelId, url);
+    }
 
     public static <T> ResponseErrorDTO<T> createByErrorCodeMessage(int errorCode, String errorMessage, T data, Integer busId, String url) {
         return new ResponseErrorDTO<>(errorCode, errorMessage, data, busId, url);
     }
-
-
+    
     public static void main(String[] args) {
         ResponseErrorDTO<Object> error = ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.ERROR.getCode(), ResponseEnums.ERROR.getMsg());
         System.out.println(" url " + error.getRedirectUrl());

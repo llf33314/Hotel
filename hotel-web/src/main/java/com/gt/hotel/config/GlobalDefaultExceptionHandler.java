@@ -54,7 +54,7 @@ public class GlobalDefaultExceptionHandler {
         if (e instanceof ResponseEntityException || e instanceof BusinessException) {
             return ResponseErrorDTO.createByErrorCodeMessage(e.getCode(), e.getMessage(), e.getRedirectUrl());
         } else if (e instanceof NeedLoginException) {
-            return ResponseErrorDTO.createByErrorCodeMessage(e.getCode(), e.getMessage(), ((NeedLoginException) e).getBusId(), e.getRedirectUrl());
+            return ResponseErrorDTO.createByErrorCodeMessage(e.getCode(), e.getMessage(), ((NeedLoginException) e).getBusId(), ((NeedLoginException) e).getHotelId(), e.getRedirectUrl());
         } else {
             return ResponseErrorDTO.createByErrorCodeMessage(ResponseEnums.ERROR.getCode(), e.getMessage(), e.getRedirectUrl());
         }

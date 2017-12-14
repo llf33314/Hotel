@@ -14,6 +14,8 @@ import lombok.Getter;
 public class NeedLoginException extends BaseException{
 
     private Integer busId;
+    
+    private Integer hotelId;
 
     public NeedLoginException(String message) {
         super(message);
@@ -31,6 +33,12 @@ public class NeedLoginException extends BaseException{
         super(responseEnums, redirectUrl);
         this.busId = busId;
     }
+    
+    public NeedLoginException(ResponseEnums responseEnums,Integer busId, Integer hotelId, String redirectUrl) {
+    	super(responseEnums, redirectUrl);
+    	this.busId = busId;
+    	this.hotelId = hotelId;
+    }
 
     public NeedLoginException(int code, String message) {
         super(code, message);
@@ -43,5 +51,11 @@ public class NeedLoginException extends BaseException{
     public NeedLoginException(int code, String message,Integer busId, String redirectUrl) {
         super(code, message, redirectUrl);
         this.busId = busId;
+    }
+    
+    public NeedLoginException(int code, String message,Integer busId, Integer hotelId, String redirectUrl) {
+    	super(code, message, redirectUrl);
+    	this.busId = busId;
+    	this.hotelId = hotelId;
     }
 }

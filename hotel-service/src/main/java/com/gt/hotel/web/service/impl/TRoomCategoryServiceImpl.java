@@ -271,7 +271,10 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         }
         rp.setUpdatedAt(date);
         rp.setUpdatedBy(busId);
-        if (!rp.insertOrUpdate()) throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        rp.setHotelId(per.getHotelId());
+        if (!rp.insertOrUpdate()) {
+        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        }
     }
 
     @SuppressWarnings("unchecked")
