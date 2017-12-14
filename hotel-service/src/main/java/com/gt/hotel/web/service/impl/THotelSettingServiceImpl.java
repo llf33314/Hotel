@@ -161,11 +161,8 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
         	fw.in("id", frsu);
 			TFileRecord fi = new TFileRecord();
 			fi.setMarkModified(CommonConst.ENABLED);
-			fi.setUpdatedAt(date);
 			fi.setUpdatedBy(busid);
-			if (!tFileRecordService.update(fi, fw)) {
-        		throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
-        	}
+			tFileRecordService.update(fi, fw);
         }
         //保存设施关系
         Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
