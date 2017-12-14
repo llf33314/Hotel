@@ -21,7 +21,7 @@
     <springProperty scope="context" name="logName" source="spring.application.name" defaultValue="localhost.log"/>
     <!-- 按照每天生成日志文件 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/${logName}.log</file>    <!-- 使用方法 -->
+        <file>./logs/${logName}.log</file>    <!-- 使用方法 -->
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/${logName}-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>

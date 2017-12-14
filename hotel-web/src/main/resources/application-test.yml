@@ -18,11 +18,11 @@ spring:
    database: 3
    timeout: 20000
    cluster:
-       nodes: 113.106.202.51:6379,113.106.202.50:9379,113.106.202.53:9379
+       nodes: 113.106.202.51:6379,113.106.202.50:9379,113.106.202.54:9379
        maxRedirects: 3
    sentinel:
 #     # comma-separated list of host:port pairs  哨兵的配置列表
-     nodes: 113.106.202.51:26379,113.106.202.50:29379,113.106.202.53:29379
+     nodes: 113.106.202.51:26379,113.106.202.50:29379,113.106.202.54:29379
 #     # name of Redis server  哨兵监听的Redis server的名称
      master: mymaster
    pool:
@@ -37,6 +37,7 @@ spring:
      url: jdbc:mysql://113.106.202.51:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
      username: gt_hotel
      password: gt123456
+     driver-class-name: com.mysql.jdbc.Driver
      connectionInitSqls: set names utf8mb4
      # 下面为连接池的补充设置，应用到上面所有数据源中
      # 初始化大小，最小，最大
@@ -73,20 +74,20 @@ spring:
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
      aop-patterns: com.gt.hotel.*.service.*
 
+
 #====================================================#
 #=============== Mybatis-Plus Settings ==============#
 #====================================================#
 mybatis-plus:
   global-config:
     #刷新mapper 调试神器
-    refresh-mapper: true
+    refresh-mapper: false
 
 #============================================#
 #========== Redis Session Settings ==========#
 #============================================#
 redisSession:
   domainName: deeptel.com.cn
-#  domainName: yifriend.net
   cookiePath: /
   cookieName: WXMPJSESSIONID
 
@@ -100,7 +101,23 @@ swagger:
 #============================================#
 #=============== WXMP Settings ==============#
 #============================================#
-### WebServer 第三方API 配置 ###
+wxmp:
+  imageurl:
+    prefixurl: http://maint.duofriend.com/upload
+  api:
+    sign: WXMP2017
+    membersign: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
+    serverurl: https://deeptel.com.cn
+    memberserverurl: https://member.deeptel.com.cn
+    memberserverurly: http://member.yifriend.net
+  short:
+    url:
+      path: http://short.duofee.com
+      signkey: goodtom2016@shortUrl.
+  socket:
+    url: https://socket.deeptel.com.cn
+  materialurl: https://suc.deeptel.com.cn
+
 ### WebServer 第三方API 配置 ###
 hotel:
   webserver:
@@ -150,13 +167,16 @@ hotel:
         serviceUrl: https://jxc.deeptel.com.cn
         account: erp_5
         pwd: 123456
-        login: ${hotel.webserver.JxcService.serviceUrl}/erp/b/login
-        allProducts: ${hotel.webserver.JxcService.serviceUrl}/erp/query/allProducts # 查询已入库的商品信息
-        amountSum: ${hotel.webserver.JxcService.serviceUrl}/erp/statistics/amountSum # 库存总数查询
-        getProTypes: ${hotel.webserver.JxcService.serviceUrl}/erp/query/getProTypes # 商品类别查询
-        operation: ${hotel.webserver.JxcService.serviceUrl}/erp/order/inventory/operation # 发货、退货(商城.ERP)
-        inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct # 库存查询(根据商品ID)
-
+        ApiMap:
+            login: ${hotel.webserver.JxcService.serviceUrl}/erp/b/login
+            allProducts: ${hotel.webserver.JxcService.serviceUrl}/erp/query/allProducts # 查询已入库的商品信息
+            amountSum: ${hotel.webserver.JxcService.serviceUrl}/erp/statistics/amountSum # 库存总数查询
+            getProTypes: ${hotel.webserver.JxcService.serviceUrl}/erp/query/getProTypes # 商品类别查询
+            operation: ${hotel.webserver.JxcService.serviceUrl}/erp/order/inventory/operation # 发货、退货(商城.ERP)
+            inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct # 库存查询(根据商品ID)
+            invenotry: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/all/invenotry # 查询已入库的商品信息(多单位)
+            productType: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/basic/product/type/ # 商品类别查询【新】
+            refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund # 发货、退货【新】
 server:
   port: 8080
 

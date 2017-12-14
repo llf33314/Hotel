@@ -2,14 +2,9 @@ package com.gt.hotel.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * 日期处理相关工具类
@@ -85,27 +80,6 @@ public class DateUtil {
         }
     }
 
-    /**
-     * 把字符串转换为LocalDate类型
-     *
-     * @param dateStr 格式必须为：“2016-05-31”
-     * @return
-     */
-    public static LocalDate stringToLocalDate(String dateStr) {
-        return LocalDate.parse(dateStr);
-    }
-
-    /**
-     * 把字符串转换为LocalDate类型
-     *
-     * @param dateStr
-     * @param pattern
-     * @return
-     */
-    public static LocalDate stringToLocalDate(String dateStr, DatePattern pattern) {
-        final DateTimeFormatter df = DateTimeFormatter.ofPattern(pattern.getPattern());
-        return LocalDate.parse(dateStr, df);
-    }
 
     /**
      * 将指定的日期转换成long时间戳
@@ -176,25 +150,6 @@ public class DateUtil {
         return df.format(date);
     }
 
-    /**
-     * 转换long类型的timestamp为LocalDateTime类型
-     *
-     * @param timestamp
-     * @return LocalDateTime
-     */
-    public static LocalDateTime timestampToLocalDateTime(long timestamp) {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), TimeZone.getDefault().toZoneId());
-    }
-
-    /**
-     * 转换long类型的timestamp为LocalDate类型
-     *
-     * @param timestamp
-     * @return LocalDate
-     */
-    public static LocalDate timestampToLocalDate(long timestamp) {
-        return timestampToLocalDateTime(timestamp).toLocalDate();
-    }
 
     /**
      * 获取系统当前时间字符串（"yyyy-MM-dd HH:mm:ss"）
@@ -254,81 +209,36 @@ public class DateUtil {
         }
     }
 
-    /**
-     * 获取几天前00:00:00的时间戳
-     *
-     * @param d 距离现在d天前
-     * @return 时间戳，以秒为单位
-     */
-    public static long getMinusDay(int d) {
-        LocalDate now = LocalDate.now();
-        return now.minusDays(d).atStartOfDay().toEpochSecond(ZoneOffset.ofHours(8));
-    }
-
-    /**
-     * 获取距离现在m个月前00:00:00的时间戳
-     *
-     * @param m 距离现在m个月前
-     * @return 时间戳，以秒为单位
-     */
-    public static long getMinusMonth(int m) {
-        LocalDate now = LocalDate.now();
-        return now.minusMonths(m).atStartOfDay().toEpochSecond(ZoneOffset.ofHours(8));
-    }
-
-    public static String getDayOfWeek(LocalDate d) {
-        DayOfWeek dayOfWeek = d.getDayOfWeek();
-        return dayOfWeek.getDisplayName(TextStyle.FULL, Locale.SIMPLIFIED_CHINESE);
-    }
 
     /**
      * 两个日期相差的天数
+     *
      * @param date1
      * @param date2
      * @return
      */
     public static int differentDays(Date beginDate, Date endDate) {
-    	Calendar cal1 = Calendar.getInstance();
-    	cal1.setTime(beginDate);
-    	Calendar cal2 = Calendar.getInstance();
-    	cal2.setTime(endDate);
-    	int day1= cal1.get(Calendar.DAY_OF_YEAR);
-    	int day2 = cal2.get(Calendar.DAY_OF_YEAR);
-    	int year1 = cal1.get(Calendar.YEAR);
-    	int year2 = cal2.get(Calendar.YEAR);
-    	if(year1 != year2) {
-    		int timeDistance = 0 ;
-    		for(int i = year1 ; i < year2 ; i ++){
-    			if(i%4==0 && i%100!=0 || i%400==0){
-    				timeDistance += 366;
-    			}else{
-    				timeDistance += 365;
-    			}
-    		}
-    		return timeDistance + (day2-day1) ;
-    	}else{
-    		return day2-day1;
-    	}
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(beginDate);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(endDate);
+        int day1 = cal1.get(Calendar.DAY_OF_YEAR);
+        int day2 = cal2.get(Calendar.DAY_OF_YEAR);
+        int year1 = cal1.get(Calendar.YEAR);
+        int year2 = cal2.get(Calendar.YEAR);
+        if (year1 != year2) {
+            int timeDistance = 0;
+            for (int i = year1; i < year2; i++) {
+                if (i % 4 == 0 && i % 100 != 0 || i % 400 == 0) {
+                    timeDistance += 366;
+                } else {
+                    timeDistance += 365;
+                }
+            }
+            return timeDistance + (day2 - day1);
+        } else {
+            return day2 - day1;
+        }
     }
-    
-    public static void main(String[] args) {
-        System.out.println(stringToTimestamp("2016-05-05T15:22:09"));
-        System.out.println(stringToTimestamp("2016-05-05 15:22:09"));
-        System.out.println(stringToTimestamp("2016-05-05"));
-        System.out.println(getMinusMonth(1));
-        System.out.println(LocalDateTime.ofEpochSecond(getMinusMonth(2), 0, ZoneOffset.ofHours(8)));
 
-        System.out.println(LocalDateTime.ofEpochSecond(getMinusDay(0), 0, ZoneOffset.ofHours(8)));
-        System.out.println(LocalDateTime.ofEpochSecond(getMinusDay(1), 0, ZoneOffset.ofHours(8)));
-
-        LocalDate now = LocalDate.now();
-        System.out.println(getDayOfWeek(now));
-
-        LocalDate ld = stringToLocalDate("2015-05-29", DatePattern.DATE_ONLY);
-        System.out.println(ld);
-
-        System.out.println("defult zone Id: " + TimeZone.getDefault().toZoneId());
-        System.out.println("timestamp to LocalDate: " + timestampToLocalDate(1462432929));
-        System.out.println("timestamp to LocalDateTime: " + timestampToLocalDateTime(1462432929));
-    }
 }
