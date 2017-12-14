@@ -100,7 +100,7 @@ public class MobileHotelController extends BaseController {
                 String param = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
                 model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
             } else {
-                model.setViewName("redirect:/#/book/roomSet/" + hotel.getId());
+                model.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());
             }
         } catch (Exception e) {
             e.printStackTrace();
