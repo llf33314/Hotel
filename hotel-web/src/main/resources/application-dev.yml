@@ -76,6 +76,8 @@ spring:
       # 如果spring.datasource.druid.aop-patterns要代理的类没有定义interface请设置spring.aop.proxy-target-class=true
       # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
      aop-patterns: com.gt.hotel.*.service.*
+ jmx:
+   default-domain: dev
 
 
 #====================================================#
@@ -183,6 +185,5 @@ hotel:
             refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund # 发货、退货【新】
 server:
   port: 80
-
 
 
