@@ -163,6 +163,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
             orc.setCreatedBy(busId);
             orc.setUpdatedAt(date);
             orc.setUpdatedBy(busId);
+            orc.setOrderRoomId(or.getId());
             orcs.add(orc);
         }
         if (orcs.size() != 0) {

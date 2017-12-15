@@ -1,17 +1,16 @@
 package com.gt.hotel.interceptor;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import com.gt.api.bean.session.BusUser;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.NeedLoginException;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 后台登录拦截器

@@ -214,7 +214,8 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
                 r2.add(r);
             }
         }
-
+        System.err.println(r1.size());
+        System.err.println(r2.size());
         if (r1.size() > 0) if (!tRoomService.insertBatch(r1)) {
             throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
