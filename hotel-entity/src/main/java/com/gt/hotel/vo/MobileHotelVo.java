@@ -69,7 +69,7 @@ public class MobileHotelVo {
     private String reservationCheckOutPhone;
 
     @ApiModelProperty("发票支持的类目 1 办公用品 2 住宿费 3 餐费 4 培训费 5 打球费 6 健身费 存储方式 1,2,3,4,5 or 1,2,3")
-    private String  InvoiceCategorys;
+    private String  invoiceCategorys;
     
     @ApiModelProperty("创建者ID")
     private Integer createdBy;

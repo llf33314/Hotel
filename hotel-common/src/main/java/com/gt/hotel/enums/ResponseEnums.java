@@ -54,4 +54,5 @@ public enum ResponseEnums {
     public String getMsg() {
         return msg;
     }
+
 }
