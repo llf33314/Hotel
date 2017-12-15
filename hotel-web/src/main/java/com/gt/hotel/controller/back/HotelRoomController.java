@@ -1,5 +1,26 @@
 package com.gt.hotel.controller.back;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
@@ -14,20 +35,12 @@ import com.gt.hotel.vo.InfrastructureVo;
 import com.gt.hotel.vo.RoomCalendarVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.RoomVo;
+import com.gt.hotel.web.service.TRoomCalendarService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 酒店后台-房型管理
@@ -42,6 +55,9 @@ public class HotelRoomController extends BaseController {
 
     @Autowired
     TRoomCategoryService tRoomCategoryService;
+    
+    @Autowired
+    TRoomCalendarService calendarService;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @ApiOperation(value = "房型列表", notes = "房型列表")
@@ -135,27 +151,39 @@ public class HotelRoomController extends BaseController {
         return ResponseDTO.createBySuccess(page);
     }
 
-    @ApiOperation(value = "编辑 房型 价格信息", notes = "编辑 房型 价格信息")
+    @ApiOperation(value = "编辑 房型 价格信息(不输入为删除)", notes = "编辑 房型 价格信息")
     @PostMapping(value = "{categoryId}/calendar", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO roomCalendarCU(@PathVariable("categoryId") Integer categoryId,
-                                      @RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, HttpServletRequest request) {
-        Integer busid = getLoginUser(request).getId();
-        Date date = new Date();
-        TRoomCalendar calendar = new TRoomCalendar();
-        BeanUtils.copyProperties(cal, calendar);
-        calendar.setCategoryId(categoryId);
-        if (cal.getId() == null) {
-            calendar.setCreatedBy(busid);
-            calendar.setCreatedAt(date);
-        }
-        calendar.setUpdatedAt(date);
-        calendar.setUpdatedBy(busid);
-        if (calendar.insertOrUpdate()) {
-            return ResponseDTO.createBySuccess();
-        } else {
-            return ResponseDTO.createByError();
-        }
+    public ResponseDTO roomCalendarCU(@PathVariable("categoryId") Integer categoryId, 
+    		@RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, 
+    		HttpServletRequest request) {
+    	if(cal.getId() != null && cal.getPrice() == null) {
+    		Wrapper<TRoomCalendar> w = new EntityWrapper<>();
+    		w.eq("category_id", categoryId);
+    		w.eq("id", cal.getId());
+			if(calendarService.delete(w)) {
+				return ResponseDTO.createBySuccess();
+			}else {
+				return ResponseDTO.createByError();
+			}
+    	}else {
+    		Integer busid = getLoginUser(request).getId();
+    		Date date = new Date();
+    		TRoomCalendar calendar = new TRoomCalendar();
+    		BeanUtils.copyProperties(cal, calendar);
+    		calendar.setCategoryId(categoryId);
+    		if (cal.getId() == null) {
+    			calendar.setCreatedBy(busid);
+    			calendar.setCreatedAt(date);
+    		}
+    		calendar.setUpdatedAt(date);
+    		calendar.setUpdatedBy(busid);
+    		if (calendar.insertOrUpdate()) {
+    			return ResponseDTO.createBySuccess();
+    		} else {
+    			return ResponseDTO.createByError();
+    		}
+    	}
     }
 
 }

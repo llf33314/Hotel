@@ -93,8 +93,11 @@ public class THotelServiceImpl extends BaseServiceImpl<THotelDAO, THotel> implem
             Wrapper<THotelMemberSetting> wrapper = new EntityWrapper<>();
             wrapper.eq("hotel_id", hotelMemberSetting.getHotelId());
             wrapper.eq("vip_level", hotelMemberSetting.getVipLevel());
-			if (!tHotelMemberSettingService.update(hotelMemberSetting, wrapper)) {
-            	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            THotelMemberSetting selectOne = tHotelMemberSettingService.selectOne(wrapper);
+            if(selectOne == null) {
+            	tHotelMemberSettingService.insert(hotelMemberSetting);
+            }else {
+            	tHotelMemberSettingService.update(hotelMemberSetting, wrapper);
             }
         }
     }
