@@ -1,5 +1,16 @@
 package com.gt.hotel.base;
 
+import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_BUS_ID;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Optional;
 import com.gt.api.bean.session.BusUser;
@@ -10,16 +21,8 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.util.RedisCacheUtil;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
-
-import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_BUS_ID;
 
 /**
  * BaseController
@@ -51,10 +54,10 @@ public abstract class BaseController {
      * @return int
      */
     protected BusUser getLoginUser(HttpServletRequest request) {
-        BusUser b = new BusUser();
-        b.setId(33);
-        return b;
-//    	return SessionUtils.getLoginUser(request);
+//        BusUser b = new BusUser();
+//        b.setId(33);
+//        return b;
+    	return SessionUtils.getLoginUser(request);
     }
 
     /**
