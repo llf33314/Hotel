@@ -67,7 +67,9 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
         Wrapper<THotelSetting> hsw = new EntityWrapper<>();
         hsw.eq("hotel_id", hotelId);
         THotelSetting hs = this.selectOne(hsw);
-        BeanUtils.copyProperties(hs, hotelVo);
+        if(hs != null) {
+        	BeanUtils.copyProperties(hs, hotelVo);
+        }
 
         Wrapper<TFileRecord> rsw = new EntityWrapper<>();
         rsw.eq("module", CommonConst.MODULE_HOTEL);
