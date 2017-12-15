@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
-import com.gt.hotel.dao.THotelDAO;
 import com.gt.hotel.dao.THotelSettingDAO;
 import com.gt.hotel.dao.TInfrastructureDAO;
 import com.gt.hotel.entity.TFileRecord;
@@ -55,12 +54,12 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
     THotelService tHotelService;
 
     @Autowired
-    private THotelDAO tHotelDAO;
+    private THotelSettingDAO tHotelSettingDAO;
 
     @Override
     public MobileHotelVo queryHotelSettingOne(Integer hotelId) {
         // FIXME: 2017/12/15 修改查询接口
-        return this.tHotelDAO.findHotelVoById(hotelId);
+        return this.tHotelSettingDAO.findHotelVoById(hotelId);
     }
 
     @Transactional

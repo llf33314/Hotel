@@ -23,10 +23,6 @@
         <result column="updated_at" property="updatedAt"/>
     </resultMap>
 
-    <resultMap id="MobileHotelSettingVo" type="com.gt.hotel.vo.MobileHotelVo">
-        <collection property="imageurls" select="com.gt.hotel.dao.TFileRecordDAO.findRecordVoListByRefIdAndModule" column="{refId=id,module=module}"/>
-        <collection property="installations" select="com.gt.hotel.dao.TInfrastructureRelationDAO.findRelationVoListByRefIdAndModule" column="{refId=id,module=module}"/>
-    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
@@ -47,37 +43,7 @@
         </if>
     </select>
 
-    <select id="findHotelVoById" resultMap="MobileHotelSettingVo">
-        SELECT
-            hotel.id,
-            hotel.name,
-            hotel.bus_id                         busId,
-            hotel.shop_id                        shopId,
-            hotel.phone,
-            hotel.address,
-            hotel.logo,
-            hotel.longitude,
-            hotel.latitude,
-            hotel.`desc`,
-            setting.pay_mode                     payMode,
-            setting.sms_enable                   smsEnable,
-            setting.sms_phone                    smsPhone,
-            setting.notice_enable                noticeEnable,
-            setting.bulletin,
-            setting.remnant_room_enable          remnantRoomEnable,
-            setting.room_reservation_enable      roomReservationEnable,
-            setting.food_pay_mode                foodPayMode,
-            setting.reservation_check_out_enable reservationCheckOutEnable,
-            setting.reservation_check_out_phone  reservationCheckOutPhone,
-            setting.invoice_categorys            invoiceCategorys,
-            setting.created_at                   createdAt,
-            setting.created_by                   createdBy,
-            setting.updated_at                   updatedAt,
-            setting.updated_by                   updatedBy,
-            'HOTEL' AS                   module
-        FROM t_hotel hotel INNER JOIN t_hotel_setting setting ON hotel.id = setting.hotel_id
-        WHERE hotel.id = #{hotelId} AND hotel.mark_modified = 0
-    </select>
+
 
 
 </mapper>
