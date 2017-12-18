@@ -1,5 +1,30 @@
 package com.gt.hotel.controller.back;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -22,27 +47,11 @@ import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.web.service.TOrderService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 酒店后台-订单管理
@@ -295,9 +304,11 @@ public class HotelOrderController extends BaseController {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @ApiOperation(value = "房间订单入住", notes = "房间订单入住")
     @PostMapping(value = "{orderId}/checkIn", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<QueryRoomCategoryOne> checkIn(@PathVariable("orderId") Integer orderId,
-                                                     @Validated @RequestBody HotelOrderParameter.CheckInParam param,
-                                                     BindingResult bindingResult, HttpServletRequest request) {
+    public ResponseDTO<QueryRoomCategoryOne> checkIn(
+    		@PathVariable("orderId") Integer orderId, 
+    		@Validated @RequestBody HotelOrderParameter.CheckInParam param, 
+    		BindingResult bindingResult, 
+    		HttpServletRequest request) {
         ResponseDTO msg = invalidParameterII(bindingResult);
         if (msg != null) {
             return msg;
