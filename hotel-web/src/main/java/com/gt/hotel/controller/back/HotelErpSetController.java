@@ -1,5 +1,33 @@
 package com.gt.hotel.controller.back;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -10,6 +38,7 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TAuthorization;
+import com.gt.hotel.entity.THotel;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.Employee;
 import com.gt.hotel.param.ERPParameter;
@@ -26,28 +55,10 @@ import com.gt.hotel.web.service.SysDictionaryService;
 import com.gt.hotel.web.service.TAuthorizationService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 酒店后台-ERP设置
@@ -143,24 +154,44 @@ public class HotelErpSetController extends BaseController {
     @SuppressWarnings("unchecked")
 	@ApiOperation(value = "查询 员工列表", notes = "查询 员工列表")
     @GetMapping(value = "employee/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<Employee>> employeeR(@PathVariable("shopId") Integer shopId, 
-    		@Param("门店ID") @ModelAttribute WXMPParameter.queryEmployee qe) {
+    public ResponseDTO<Page<Employee>> employeeR(@Param("门店ID") @PathVariable("shopId") Integer shopId, 
+    		@ModelAttribute WXMPParameter.queryEmployee qe) {
     	Page<Employee> page = qe.initPage();
 //        JSONObject result = WXMPApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), qe.getPage(), qe.getPageSize());
         JSONObject result = wxmpApiUtil.getAllStaffShopId(shopId, qe.getName(), qe.getPhone(), null, null);
         if ("0".equals(result.getString("code"))) {
             JSONObject temp = JSONObject.parseObject(result.getString("data"));
             List<Employee> l = JSONArray.parseArray(temp.getString("staffList"), Employee.class);
+            List<Employee> l2 = new ArrayList<>();
+            
+            Wrapper<THotel> w = new EntityWrapper<>();
+            w.eq("shop_id", shopId);
+            w.eq("mark_modified", CommonConst.ENABLED);
+            w.orderBy("id", false);
+			THotel hotel = tHotelService.selectOne(w);
+			Wrapper<TAuthorization> aw = new EntityWrapper<>();
+			aw.eq("hotel_id", hotel.getId());
+			aw.eq("mark_modified", CommonConst.ENABLED);
+			List<TAuthorization> als = tAuthorizationService.selectList(aw);
+			List<Integer> aids = new ArrayList<>();
+			for(TAuthorization a : als) {
+				aids.add(a.getAccountId());
+			}
+            for(Employee e : l) {
+            	if(!aids.contains(e.getId())) {
+            		l2.add(e);
+            	}
+            }
             List<Employee> le = new ArrayList<>();
             if(!StringUtils.isEmpty(qe.getKeyword())) {
-            	for(int i=0;i<l.size();i++) {
-            		if(l.get(i).getName().indexOf(qe.getKeyword().trim()) != -1 
-            				|| l.get(i).getPhone().indexOf(qe.getKeyword().trim()) != -1) {
-            			le.add(l.get(i));
+            	for(int i=0;i<l2.size();i++) {
+            		if(l2.get(i).getName().indexOf(qe.getKeyword().trim()) != -1 
+            				|| l2.get(i).getPhone().indexOf(qe.getKeyword().trim()) != -1) {
+            			le.add(l2.get(i));
             		}
             	}
             }else {
-            	le = l;
+            	le = l2;
             }
             List<Employee> les = new ArrayList<>();
             int begin = (qe.getPage()-1)*qe.getPageSize();
@@ -177,7 +208,7 @@ public class HotelErpSetController extends BaseController {
             	les = le;
             }
             page.setRecords(les);
-            page.setTotal(temp.getInteger("count"));
+            page.setTotal(le.size());
         } else {
         	throw new ResponseEntityException(result.getString("msg"));
         }

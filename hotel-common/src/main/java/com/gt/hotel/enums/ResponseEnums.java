@@ -27,6 +27,7 @@ public enum ResponseEnums {
     REFUNDS_ERROR(1008, "退款失败"),
     BOOK_FAILED(1009, "下单失败"),
     PRICE_FAILED(1010, "价格错误"),
+    NAME_EXIST(1011, "名称已存在"),
     GUEST_ROOM_HAS_BEEN_USED(1011,"客房已被使用"),
     INFRASTRUCTRUE_ERROR(1998, "设施保存失败"),
     IMAGE_ERROR(1999, "图片保存失败"),
