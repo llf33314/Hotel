@@ -128,15 +128,15 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                 hotel = Optional.of(JSONObject.parseObject(hotelInfoJson.get(), THotel.class));
                 member = Optional.fromNullable(SessionUtils.getLoginMember(request, hotel.get().getBusId()));
             }
-            if (hotel.isPresent()) {
+//            if (hotel.isPresent()) {
                 if (!member.isPresent()) {
                     log.warn("member is null");
                     String url = wxmpApiUtil.authorizeMember(hotel.get().getBusId());
                     throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.get().getBusId(), hotel.get().getId(), url);
                 }
-            } else {
-                throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
-            }
+//            } else {
+//                throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
+//            }
         }
         return true;
     }
