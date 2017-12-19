@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -38,14 +39,18 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
+import com.gt.hotel.param.RoomMobileParameter;
 import com.gt.hotel.util.ExcelUtil;
 import com.gt.hotel.util.ExportUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.RoomOrderPriceVO;
+import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 
 import io.swagger.annotations.Api;
@@ -66,6 +71,9 @@ public class HotelOrderController extends BaseController {
 
     @Autowired
     TOrderService tOrderService;
+    
+    @Autowired
+    TOrderRoomService orderRoomService;
 
     @Autowired
     private WXMPApiUtil wxmpApiUtil;
@@ -329,11 +337,29 @@ public class HotelOrderController extends BaseController {
                                         HttpServletRequest request) {
         Integer busid = getLoginUser(request).getId();
         TOrder order = tOrderService.selectById(orderId);
+        Wrapper<TOrderRoom> w = new EntityWrapper<>();
+        w.eq("order_id", orderId);
+		TOrderRoom orderRoom = orderRoomService.selectOne(w);
         if (!(order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN) && order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID))) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
         }
         try {
             WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
+            //线下订单
+            if(orderRoom != null && orderRoom.getOrderFrom().equals(1)) {
+            	Wrapper<TOrder> wrapper = new EntityWrapper<>();
+                wrapper.eq("id", orderId);
+                TOrder newOrder = new TOrder();
+                newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
+                newOrder.setUpdatedBy(busid);
+                newOrder.setRefundAmount(refundsP.getRefundFee());
+                newOrder.setRefundReason(refundsP.getRefundReason());
+                if (!tOrderService.update(newOrder, wrapper)) {
+                    return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+                } else {
+                    return ResponseDTO.createBySuccess();
+                }
+            }
             //支付宝
             if (order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
                 JSONObject params = new JSONObject();
@@ -438,13 +464,21 @@ public class HotelOrderController extends BaseController {
                     "门市价", "订单状态", "支付状态", "支付方式", "住客类型", "入住标准", "证件类型", "证件号码", "性别", "消费金额",
                     "优惠金额", "应收金额", "退还金额", "实收金额"};
             String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomInTime", "roomOutTime",
-                    "categoryName", "number", "rackRate", "orderStatus", "payStatus", "payType", "guestType", "入住标准", "customerIdType",
-                    "customerIdCard", "customerGender", "billPrice", "优惠金额", "receivablePrice", "退还金额", "realPrice"};
+                    "categoryName", "number", "rackRate", "orderStatus", "payStatus", "payType", "guestType", "checkStandard", "customerIdType",
+                    "customerIdCard", "customerGender", "billPrice", "discountedPrice", "receivablePrice", "refundAmount", "realPrice"};
             wb = ExportUtil.getExcel("房间订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
                 @Override
                 public String fieldPprocessing(Object c, String contentName) {
                     String s = c.toString();
-                    if ("orderStatus".equals(contentName)) {
+                    if("rackRate".equals(contentName) 
+                    		|| "billPrice".equals(contentName) 
+                    		|| "discountedPrice".equals(contentName) 
+                    		|| "receivablePrice".equals(contentName) 
+                    		|| "refundAmount".equals(contentName) 
+                    		|| "realPrice".equals(contentName)) {
+                    	Double d = Double.valueOf(s);
+                    	s = new DecimalFormat("#0.00").format(d / 100);
+                    }else if ("orderStatus".equals(contentName)) {
                         switch (Integer.valueOf(c.toString())) {
                             case 0:
                                 s = "处理中";
@@ -582,7 +616,15 @@ public class HotelOrderController extends BaseController {
                 @Override
                 public String fieldPprocessing(Object c, String contentName) {
                     String s = c.toString();
-                    if ("orderStatus".equals(contentName)) {
+                    if("rackRate".equals(contentName) 
+                    		|| "billPrice".equals(contentName) 
+                    		|| "discountedPrice".equals(contentName) 
+                    		|| "receivablePrice".equals(contentName) 
+                    		|| "refundAmount".equals(contentName) 
+                    		|| "realPrice".equals(contentName)) {
+                    	Double d = Double.valueOf(s);
+                    	s = new DecimalFormat("#0.00").format(d / 100);
+                    }else if ("orderStatus".equals(contentName)) {
                         switch (Integer.valueOf(c.toString())) {
                             case 0:
                                 s = "处理中";
@@ -662,6 +704,23 @@ public class HotelOrderController extends BaseController {
                 e.printStackTrace();
             }
         }
+    }
+    ////////////////////////////////////////////////////////////↓价格计算↓ //////////////////////////////////////////////////////////
+    
+    @ApiOperation(value = "价格计算", notes = "价格计算")
+    @PostMapping(value = "{hotelId}/getPrice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<RoomOrderPriceVO> moblieHotelRoomGetPrice(
+    		@PathVariable("hotelId") Integer hotelId,
+    		@RequestBody RoomMobileParameter.BookParam bookParam,
+    		HttpServletRequest request) {
+		RoomOrderPriceVO price = null;
+		try {
+			price = orderRoomService.mobilePriceCalculation(hotelId, null, bookParam);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseDTO.createByErrorMessage("价格计算出错");
+		}
+        return ResponseDTO.createBySuccess(price);
     }
 
 }

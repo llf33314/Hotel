@@ -146,6 +146,9 @@ public class HotelBackRoomOrderVo {
     @ApiModelProperty("退还金额(退换的押金)")
 	private Integer refundAmount;
     
+    @ApiModelProperty("优惠金额")
+    private Integer discountedPrice;
+    
     @ApiModelProperty("房间列表")
     private List<OrderRoomCustomerVo> rooms;
 }

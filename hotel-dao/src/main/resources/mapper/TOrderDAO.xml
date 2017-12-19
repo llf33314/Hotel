@@ -59,7 +59,7 @@
 			b.customer_id_card_image customerIdCardImage, b.customer_phone customerPhone, b.number, 
 			b.room_in_time roomInTime, b.room_out_time roomOutTime, b.deposit, b.room_price roomPrice, b.`order_from`,
 			b.activity_id activityId, b.rack_rate rackRate, b.guest_type guestType, b.customer_gender customerGender, 
-			b.check_standard checkStandard 
+			b.check_standard checkStandard, IFNULL((a.fb_discount + a.integral_discount + SUM(c.coupons_discount)), 0) discountedPrice 
 		FROM t_order a 
 		JOIN t_order_room b ON a.id = b.order_id 
 		LEFT JOIN t_order_coupons c ON a.id = c.order_id 
@@ -83,14 +83,15 @@
 			AND a.pay_status = #{param.payStatus} 
 		</if>
 		<if test="param.roomInTime != null">
-			<![CDATA[ AND b.room_in_time <= #{param.roomInTime} ]]>
+			<![CDATA[ AND b.room_in_time >= #{param.roomInTime} ]]>
 		</if>
 		<if test="param.roomOutTime != null">
-			<![CDATA[ AND b.room_out_time >= #{param.roomOutTime} ]]>
+			<![CDATA[ AND b.room_in_time <= #{param.roomOutTime} ]]>
 		</if>
 		<if test="param.keyword != null">
 			AND (b.customer_name = #{param.keyword} OR b.customer_phone = #{param.keyword}) 
 		</if>
+		GROUP BY a.id 
 		ORDER BY a.id DESC
 	</select>
 
@@ -121,10 +122,10 @@
 			AND a.pay_status = #{param.payStatus} 
 		</if>
 		<if test="param.beginTime != null">
-			<![CDATA[ AND a.create_time <= #{param.beginTime} ]]>
+			<![CDATA[ AND a.create_time >= #{param.beginTime} ]]>
 		</if>
 		<if test="param.endTime != null">
-			<![CDATA[ AND a.create_time >= #{param.endTime} ]]>
+			<![CDATA[ AND a.create_time <= #{param.endTime} ]]>
 		</if>
 		<if test="param.keyword != null">
 			AND (b.customer_name = #{param.keyword} OR b.customer_phone = #{param.keyword}) 
