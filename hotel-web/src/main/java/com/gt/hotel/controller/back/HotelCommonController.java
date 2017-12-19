@@ -80,7 +80,6 @@ public class HotelCommonController extends BaseController {
                 List<HotelShopInfo> hotelShopInfoList = null;
                 Wrapper<THotel> wrapper = new EntityWrapper<>();
                 wrapper.eq("bus_id", busId);
-                wrapper.eq("mark_modified", CommonConst.ENABLED);
                 List<THotel> hotels = tHotelService.selectList(wrapper);
                 // 读取门店列表
                 JSONObject json = wxmpApiUtil.queryWxShopByBusId(busId);

@@ -2,33 +2,72 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.THotelSettingDAO">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotelSetting">
-		<id column="hotel_id" property="hotelId" />
-		<result column="pay_mode" property="payMode" />
-		<result column="sms_enable" property="smsEnable" />
-		<result column="sms_phone" property="smsPhone" />
-		<result column="notice_enable" property="noticeEnable" />
-		<result column="bulletin" property="bulletin" />
-		<result column="remnant_room_enable" property="remnantRoomEnable" />
-		<result column="food_pay_mode" property="foodPayMode" />
-		<result column="reservation_check_out_enable" property="reservationCheckOutEnable" />
-		<result column="reservation_check_out_phone" property="reservationCheckOutPhone" />
-		<result column="Invoice_categorys" property="InvoiceCategorys" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_at" property="createdAt" />
-		<result column="updated_by" property="updatedBy" />
-		<result column="updated_at" property="updatedAt" />
-		<result column="room_reservation_enable" property="roomReservationEnable" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotelSetting">
+        <id column="hotel_id" property="hotelId"/>
+        <result column="pay_mode" property="payMode"/>
+        <result column="sms_enable" property="smsEnable"/>
+        <result column="sms_phone" property="smsPhone"/>
+        <result column="notice_enable" property="noticeEnable"/>
+        <result column="bulletin" property="bulletin"/>
+        <result column="remnant_room_enable" property="remnantRoomEnable"/>
+        <result column="food_pay_mode" property="foodPayMode"/>
+        <result column="reservation_check_out_enable" property="reservationCheckOutEnable"/>
+        <result column="reservation_check_out_phone" property="reservationCheckOutPhone"/>
+        <result column="Invoice_categorys" property="invoiceCategorys"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="room_reservation_enable" property="roomReservationEnable"/>
+    </resultMap>
 
-	<!-- 通用查询结果列 -->
-	<sql id="Base_Column_List">
-		hotel_id, pay_mode, sms_enable, sms_phone, notice_enable, bulletin,
-		remnant_room_enable, food_pay_mode, reservation_check_out_enable,
-		reservation_check_out_phone, Invoice_categorys AS InvoiceCategorys,
-		created_by, created_at, updated_by, updated_at,
-		room_reservation_enable
-	</sql>
+    <!-- Setting VO -->
+    <resultMap id="MobileHotelSettingVo" type="com.gt.hotel.vo.MobileHotelVo">
+        <collection property="imageurls" select="com.gt.hotel.dao.TFileRecordDAO.findRecordVoListByRefIdAndModule" column="{refId=id,module=module}"/>
+        <collection property="installations" select="com.gt.hotel.dao.TInfrastructureRelationDAO.findRelationVoListByRefIdAndModule" column="{refId=id,module=module}"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        hotel_id, pay_mode, sms_enable, sms_phone, notice_enable, bulletin,
+        remnant_room_enable, food_pay_mode, reservation_check_out_enable,
+        reservation_check_out_phone, Invoice_categorys AS InvoiceCategorys,
+        created_by, created_at, updated_by, updated_at,
+        room_reservation_enable
+    </sql>
+
+
+    <select id="findHotelVoById" resultMap="MobileHotelSettingVo">
+        SELECT
+            hotel.id,
+            hotel.name,
+            hotel.bus_id                         busId,
+            hotel.shop_id                        shopId,
+            hotel.phone,
+            hotel.address,
+            hotel.logo,
+            hotel.longitude,
+            hotel.latitude,
+            hotel.`desc`,
+            setting.pay_mode                     payMode,
+            setting.sms_enable                   smsEnable,
+            setting.sms_phone                    smsPhone,
+            setting.notice_enable                noticeEnable,
+            setting.bulletin,
+            setting.remnant_room_enable          remnantRoomEnable,
+            setting.room_reservation_enable      roomReservationEnable,
+            setting.food_pay_mode                foodPayMode,
+            setting.reservation_check_out_enable reservationCheckOutEnable,
+            setting.reservation_check_out_phone  reservationCheckOutPhone,
+            setting.invoice_categorys            invoiceCategorys,
+            setting.created_at                   createdAt,
+            setting.created_by                   createdBy,
+            setting.updated_at                   updatedAt,
+            setting.updated_by                   updatedBy,
+            'HOTEL' AS                           module
+        FROM t_hotel hotel INNER JOIN t_hotel_setting setting ON hotel.id = setting.hotel_id
+        WHERE hotel.id = #{hotelId} AND hotel.mark_modified = 0
+    </select>
 
 </mapper>

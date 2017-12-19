@@ -1,5 +1,6 @@
 package com.gt.hotel.dao;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.BasicTest;
 import com.gt.hotel.param.RoomCategoryParameter;
@@ -35,11 +36,13 @@ public class TRoomCategoryDAOTest extends BasicTest {
         Page<MobileRoomBookableVo> page = new Page<>(1, 10);
         // 获取每个房型可预约的间数
         RoomCategoryParameter.MobileQueryRoomCategory req = new RoomCategoryParameter.MobileQueryRoomCategory();
-        req.setRoomInTime("2017-11-16");
-        req.setRoomOutTime("2017-11-18");
+        req.setRoomInTime("2017-12-15");
+        req.setRoomOutTime("2017-12-18");
         List<MobileRoomBookableVo> roomCategoryVoList = this.tRoomCategoryDAO.findMobileRoomCategoryVoList(page, 3, req);
         Assert.assertNotNull(roomCategoryVoList);
         for (MobileRoomBookableVo record : roomCategoryVoList) {
+            log.info("MobileRoomBookableVo : {}", JSONObject.toJSONString(record));
+
             log.info("MobileRoomBookableVo==>> {}", record);
             for (FileRecordVo recordVo : record.getImages()) {
                 log.info(recordVo.getName());

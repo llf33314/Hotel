@@ -92,18 +92,18 @@ public class HotelController extends BaseController {
         Integer busId = getLoginUser(request).getId();
         List<HotelWsWxShopInfoExtend> shops;
         try {
-        	Wrapper<THotel> w = new EntityWrapper<>();
-        	w.eq("bus_id", busId);
-        	w.eq("mark_modified", CommonConst.ENABLED);
-			List<THotel> hs = tHotelService.selectList(w);
-			List<Integer> ids = new ArrayList<>();
-			for(THotel h : hs) {
-				ids.add(h.getShopId());
-			}
+            Wrapper<THotel> w = new EntityWrapper<>();
+            w.eq("bus_id", busId);
+            w.eq("mark_modified", CommonConst.ENABLED);
+            List<THotel> hs = tHotelService.selectList(w);
+            List<Integer> ids = new ArrayList<>();
+            for (THotel h : hs) {
+                ids.add(h.getShopId());
+            }
             JSONObject json = wxmpApiUtil.queryWxShopByBusId(busId);
             List<HotelShopInfo> hotelShopInfoList = null;
             if (json.getBoolean(CommonConst.SUCCESS)) {
-                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(),HotelWsWxShopInfoExtend.class);
+                shops = JSONArray.parseArray(json.getJSONArray("data").toJSONString(), HotelWsWxShopInfoExtend.class);
                 System.err.println(shops);
                 hotelShopInfoList = new ArrayList<>();
                 for (HotelWsWxShopInfoExtend shop : shops) {
@@ -113,8 +113,8 @@ public class HotelController extends BaseController {
                     shopInfo.setTel(shop.getTelephone());
                     shopInfo.setAddr(shop.getAddress());
                     shopInfo.setImage(properties.getWxmpService().getImageUrl() + shop.getImageUrl());
-                    if(!ids.contains(shop.getId())) {
-                    	hotelShopInfoList.add(shopInfo);
+                    if (!ids.contains(shop.getId())) {
+                        hotelShopInfoList.add(shopInfo);
                     }
                 }
             }
@@ -126,7 +126,6 @@ public class HotelController extends BaseController {
     }
 
 
-
     @ApiOperation(value = "酒店列表", notes = "酒店列表")
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<HotelVo>> hotelR(HotelQuery hpage, HttpServletRequest request) {
@@ -134,22 +133,22 @@ public class HotelController extends BaseController {
         Page<HotelVo> page = tHotelService.queryHotelHome(busId, hpage);
         return ResponseDTO.createBySuccess(page);
     }
-    
+
     @ApiOperation(value = "酒店对象", notes = "酒店对象")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<HotelVo> hotelObjectR(@PathVariable("hotelId") Integer hotelId) {
-    	HotelVo h = new HotelVo();
-		THotel th = tHotelService.selectById(hotelId);
+        HotelVo h = new HotelVo();
+        THotel th = tHotelService.selectById(hotelId);
         BeanUtils.copyProperties(th, h);
         h.setHotelId(th.getId());
         try {
-        	HotelWsWxShopInfoExtend shop = null;
+            HotelWsWxShopInfoExtend shop = null;
             JSONObject json = wxmpApiUtil.getShopInfoById(h.getShopId());
             if (json.getBoolean(CommonConst.SUCCESS)) {
                 shop = JSONArray.parseObject(json.getJSONObject("data").toJSONString(), HotelWsWxShopInfoExtend.class);
-	    		h.setShopAddr(shop.getAddress());
-	    		h.setShopPhone(shop.getTelephone());
-	    		h.setShopName(shop.getBusinessName());
+                h.setShopAddr(shop.getAddress());
+                h.setShopPhone(shop.getTelephone());
+                h.setShopName(shop.getBusinessName());
             }
             return ResponseDTO.createBySuccess(h);
         } catch (SignException e) {
@@ -161,9 +160,9 @@ public class HotelController extends BaseController {
     @ApiOperation(value = "新增或更新酒店", notes = "新增或更新酒店")
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
-    public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel, 
-    		BindingResult bindingResult, 
-    		HttpServletRequest request) {
+    public ResponseDTO hotelCU(@Validated @RequestBody HotelParameter.HotelSaveOrUpdate hotel,
+                               BindingResult bindingResult,
+                               HttpServletRequest request) {
         ResponseDTO msg = invalidParameterII(bindingResult);
         if (msg != null) {
             return msg;
@@ -178,6 +177,11 @@ public class HotelController extends BaseController {
 		}
         Integer busid = getLoginUser(request).getId();
         tHotelService.backHotelCU(busid, hotel);
+        // FIXME: 2017/12/15 新增门店需要删除Session 否则导致缓存获取不到最新数据
+        Optional<Object> o = Optional.fromNullable(request.getSession().getAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST));
+        if (o.isPresent()) {
+            request.getSession().removeAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST);
+        }
         return ResponseDTO.createBySuccess();
     }
 
@@ -193,10 +197,10 @@ public class HotelController extends BaseController {
         h.setUpdatedAt(new Date());
         h.setUpdatedBy(busid);
         tHotelService.update(h, wrapper);
-        // 删除成功后，判断session是否有缓存
+        // FIXME:  删除成功后，判断session是否有缓存
         Optional<Object> o = Optional.fromNullable(request.getSession().getAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST));
-        if(o.isPresent()){
-           request.getSession().removeAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST);
+        if (o.isPresent()) {
+            request.getSession().removeAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST);
         }
         return ResponseDTO.createBySuccess();
     }

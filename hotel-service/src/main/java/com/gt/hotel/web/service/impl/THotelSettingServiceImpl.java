@@ -1,14 +1,5 @@
 package com.gt.hotel.web.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.hotel.base.BaseServiceImpl;
@@ -16,7 +7,6 @@ import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.THotelSettingDAO;
 import com.gt.hotel.dao.TInfrastructureDAO;
 import com.gt.hotel.entity.TFileRecord;
-import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.entity.TInfrastructure;
 import com.gt.hotel.entity.TInfrastructureRelation;
@@ -25,13 +15,20 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelMobileParameter.MobileSaveOrUpdate;
 import com.gt.hotel.param.InfrastructureRelationParamter;
 import com.gt.hotel.vo.FileRecordVo;
-import com.gt.hotel.vo.InfrastructureRelationVo;
 import com.gt.hotel.vo.InfrastructureVo;
 import com.gt.hotel.vo.MobileHotelVo;
 import com.gt.hotel.web.service.TFileRecordService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
 import com.gt.hotel.web.service.TInfrastructureRelationService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -55,57 +52,14 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
 
     @Autowired
     THotelService tHotelService;
-    
+
+    @Autowired
+    private THotelSettingDAO tHotelSettingDAO;
+
     @Override
     public MobileHotelVo queryHotelSettingOne(Integer hotelId) {
-    	MobileHotelVo hotelVo = new MobileHotelVo();
-		THotel hotel = tHotelService.selectById(hotelId);
-		if (hotel == null) {
-			return hotelVo;
-		}
-		BeanUtils.copyProperties(hotel, hotelVo);
-        Wrapper<THotelSetting> hsw = new EntityWrapper<>();
-        hsw.eq("hotel_id", hotelId);
-        THotelSetting hs = this.selectOne(hsw);
-        if(hs != null) {
-        	BeanUtils.copyProperties(hs, hotelVo);
-        }
-
-        Wrapper<TFileRecord> rsw = new EntityWrapper<>();
-        rsw.eq("module", CommonConst.MODULE_HOTEL);
-        rsw.eq("reference_id", hotelId);
-        rsw.eq("mark_modified", CommonConst.ENABLED);
-        List<TFileRecord> frs = tFileRecordService.selectList(rsw);
-        List<FileRecordVo> imageurls = new ArrayList<>();
-        for (TFileRecord fr : frs) {
-            FileRecordVo frv = new FileRecordVo();
-            BeanUtils.copyProperties(fr, frv);
-            imageurls.add(frv);
-        }
-        hotelVo.setImageurls(imageurls);
-        
-        Wrapper<TInfrastructure> iwr = new EntityWrapper<>();
-        iwr.eq("module", CommonConst.MODULE_HOTEL);
-        List<TInfrastructure> il = tInfrastructureDAO.selectList(iwr);
-
-        Wrapper<TInfrastructureRelation> irw = new EntityWrapper<>();
-        irw.eq("module", CommonConst.MODULE_HOTEL);
-        irw.eq("reference_id", hotelId);
-        List<TInfrastructureRelation> irs = tInfrastructureRelationService.selectList(irw);
-        List<InfrastructureRelationVo> installations = new ArrayList<>();
-        for (TInfrastructureRelation ir : irs) {
-            InfrastructureRelationVo irv = new InfrastructureRelationVo();
-            BeanUtils.copyProperties(ir, irv);
-            for(TInfrastructure i : il) {
-            	if(ir.getInfrastructureId().equals(i.getId())) {
-            		irv.setName(i.getName());
-            		irv.setIconUrl(i.getIconUrl());
-            	}
-            }
-            installations.add(irv);
-        }
-        hotelVo.setInstallations(installations);
-        return hotelVo;
+        // FIXME: 2017/12/15 修改查询接口
+        return this.tHotelSettingDAO.findHotelVoById(hotelId);
     }
 
     @Transactional
@@ -129,28 +83,28 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
 //        tFileRecordService.delete(filewrapper);
         TFileRecord ientity = new TFileRecord();
         ientity.setMarkModified(2);
-		tFileRecordService.update(ientity, filewrapper);
+        tFileRecordService.update(ientity, filewrapper);
         List<TFileRecord> frsi = new ArrayList<>();
         List<Integer> frsu = new ArrayList<>();
         for (FileRecordVo img : setting.getImageurls()) {
             TFileRecord fr = new TFileRecord();
             BeanUtils.copyProperties(img, fr);
-            if(fr.getId() == null) {
-            	fr.setCreatedAt(date);
-            	fr.setCreatedBy(busid);
-            	fr.setModule(CommonConst.MODULE_HOTEL);
-            	fr.setReferenceId(hs.getHotelId());
-            	fr.setPath(img.getPath());
+            if (fr.getId() == null) {
+                fr.setCreatedAt(date);
+                fr.setCreatedBy(busid);
+                fr.setModule(CommonConst.MODULE_HOTEL);
+                fr.setReferenceId(hs.getHotelId());
+                fr.setPath(img.getPath());
 //            	int index = img.getPath().lastIndexOf("/");
 //            	if (index == -1) index = 0;
 //            	String name = img.getPath().substring(index+1);
 //            	fr.setName(name);
-            	fr.setOriginalName(fr.getName());
-            	fr.setUpdatedAt(date);
-            	fr.setUpdatedBy(busid);
-            	frsi.add(fr);
-            }else {
-            	frsu.add(fr.getId());
+                fr.setOriginalName(fr.getName());
+                fr.setUpdatedAt(date);
+                fr.setUpdatedBy(busid);
+                frsi.add(fr);
+            } else {
+                frsu.add(fr.getId());
             }
         }
         if (frsi.size() > 0) {
@@ -159,12 +113,12 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
             }
         }
         if (frsu.size() > 0) {
-        	Wrapper<TFileRecord> fw = new EntityWrapper<>();
-        	fw.in("id", frsu);
-			TFileRecord fi = new TFileRecord();
-			fi.setMarkModified(CommonConst.ENABLED);
-			fi.setUpdatedBy(busid);
-			tFileRecordService.update(fi, fw);
+            Wrapper<TFileRecord> fw = new EntityWrapper<>();
+            fw.in("id", frsu);
+            TFileRecord fi = new TFileRecord();
+            fi.setMarkModified(CommonConst.ENABLED);
+            fi.setUpdatedBy(busid);
+            tFileRecordService.update(fi, fw);
         }
         //保存设施关系
         Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();

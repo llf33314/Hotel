@@ -3,45 +3,47 @@
 <mapper namespace="com.gt.hotel.dao.THotelDAO">
 
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotel">
-		<id column="id" property="id" />
-		<result column="bus_id" property="busId" />
-		<result column="shop_id" property="shopId" />
-		<result column="name" property="name" />
-		<result column="desc" property="desc" />
-		<result column="phone" property="phone" />
-		<result column="address" property="address" />
-		<result column="thumbnail" property="thumbnail" />
-		<result column="logo" property="logo" />
-		<result column="longitude" property="longitude" />
-		<result column="latitude" property="latitude" />
-		<result column="mark_modified" property="markModified" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_at" property="createdAt" />
-		<result column="updated_by" property="updatedBy" />
-		<result column="updated_at" property="updatedAt" />
-	</resultMap>
-
-	<!-- 通用查询结果列 -->
-	<sql id="Base_Column_List">
-		id, bus_id, shop_id, name, desc, phone, address, thumbnail, logo,
-		longitude, latitude, mark_modified, created_by, created_at,
-		updated_by, updated_at
-	</sql>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.THotel">
+        <id column="id" property="id"/>
+        <result column="bus_id" property="busId"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="name" property="name"/>
+        <result column="desc" property="desc"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <result column="thumbnail" property="thumbnail"/>
+        <result column="logo" property="logo"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="mark_modified" property="markModified"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
 
 
-	<select id="queryHotelHome" resultType="com.gt.hotel.vo.HotelVo">
-		SELECT id hotelId, name, phone, address, logo, shop_id shopId,
-		longitude, latitude, `desc`
-		FROM t_hotel
-		WHERE mark_modified = 0
-		<if test="req.hotelId != null">
-			AND id = #{req.hotelId}
-		</if>
-		<if test="busId != null">
-			AND bus_id = #{busId}
-		</if>
-	</select>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bus_id, shop_id, name, desc, phone, address, thumbnail, logo, longitude, latitude, mark_modified, created_by, created_at, updated_by, updated_at
+    </sql>
+
+
+    <select id="queryHotelHome" resultType="com.gt.hotel.vo.HotelVo">
+        SELECT id hotelId, name, phone, address, logo, shop_id shopId,
+        longitude, latitude, `desc`
+        FROM t_hotel
+        WHERE mark_modified = 0
+        <if test="req.hotelId != null">
+            AND id = #{req.hotelId}
+        </if>
+        <if test="busId != null">
+            AND bus_id = #{busId}
+        </if>
+    </select>
+
+
+
 
 </mapper>

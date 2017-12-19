@@ -28,4 +28,7 @@ public interface THotelDAO extends BaseMapper<THotel> {
      */
     List<HotelVo> queryHotelHome(@Param("page") Pagination page, @Param("req") HotelParameter.HotelQuery hpage, @Param("busId") Integer busid);
 
+
+
+
 }
