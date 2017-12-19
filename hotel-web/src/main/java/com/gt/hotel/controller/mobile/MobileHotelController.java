@@ -98,6 +98,7 @@ public class MobileHotelController extends BaseController {
                 queryMap.put("uclogin", null);
                 queryMap.put("returnUrl", getHost(request) + "/mobile/78CDF1/home/" + hotelId);
                 String param = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
+                System.err.println(property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
                 model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
             } else {
                 model.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());

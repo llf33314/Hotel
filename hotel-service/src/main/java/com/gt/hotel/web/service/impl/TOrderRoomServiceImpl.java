@@ -258,15 +258,18 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		req.setRoomOutTime(sdf.format(bookParam.getRoomOutTime()));
 		THotel hotel = tHotelService.selectById(hotelId);
 		Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
-		JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-		JSONObject card = json.getJSONObject("data");
+		JSONObject card = null;
+		if(member != null) {
+			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+			card = json.getJSONObject("data");
+		}
 		
 		for(MobileRoomCategoryVo m : page.getRecords()) {
 			if(m.getId().equals(bookParam.getCategoryId())) {
 				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
 				orderPriceVO.setRoomPrice(price * bookParam.getNumber());
 				price = activityCalculate(bookParam, price, orderPriceVO, days);
-				if(card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
+				if(member != null && card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
 					if(bookParam.getActivityId() == null) {
 						price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
 						orderPriceVO.setRoomPrice(price);
