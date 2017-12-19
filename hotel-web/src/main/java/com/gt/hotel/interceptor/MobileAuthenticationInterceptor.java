@@ -130,7 +130,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
      */
     private boolean passUri(HttpServletRequest request) {
         String uri = request.getRequestURI();
-        return uri.contains("/mobile/78CDF1/home/") || uri.contains("/mobile/78CDF1/common/");
+        return uri.contains("/mobile/78CDF1/home/") || uri.contains("/mobile/78CDF1/common/") || uri.contains("/mobile/auth/");
     }
 
     /**
