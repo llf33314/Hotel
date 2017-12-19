@@ -29,18 +29,17 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderCoupons;
 import com.gt.hotel.entity.TOrderRoom;
+import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.DuofenCards;
 import com.gt.hotel.other.MemberCard;
-import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
 import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.ActivityDetailVo;
 import com.gt.hotel.vo.CheackInListRevenueVo;
-import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.vo.RoomCardVo;
 import com.gt.hotel.vo.RoomCheackInCountVo;
@@ -234,7 +233,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		RoomOrderPriceVO orderPriceVO = new RoomOrderPriceVO();
 		Integer price = 0;
 		/* 日期 */
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
 		days = days == 0 ? 1 : days;
 		Calendar cal = Calendar.getInstance();
@@ -252,21 +251,29 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 			}
 		}
 		/* 日期 */
-		MobileQueryRoomCategory req = new MobileQueryRoomCategory();
-		req.setCategoryId(bookParam.getCategoryId());
-		req.setRoomInTime(sdf.format(bookParam.getRoomInTime()));
-		req.setRoomOutTime(sdf.format(bookParam.getRoomOutTime()));
+//		MobileQueryRoomCategory req = new MobileQueryRoomCategory();
+//		req.setCategoryId(bookParam.getCategoryId());
+//		req.setRoomInTime(sdf.format(bookParam.getRoomInTime()));
+//		req.setRoomOutTime(sdf.format(bookParam.getRoomOutTime()));
+//		Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
 		THotel hotel = tHotelService.selectById(hotelId);
-		Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, req);
+		Wrapper<TRoomCategory> w = new EntityWrapper<>();
+		w.eq("hotel_id", hotelId);
+		w.eq("id", bookParam.getCategoryId());
+		List<TRoomCategory> categories = tRoomCategoryService.selectList(w);
 		JSONObject card = null;
 		if(member != null) {
 			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
 			card = json.getJSONObject("data");
 		}
 		
-		for(MobileRoomCategoryVo m : page.getRecords()) {
+		for(TRoomCategory m : categories) {
 			if(m.getId().equals(bookParam.getCategoryId())) {
 				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
+				System.err.println(m.getRackRate());
+				System.err.println(ordinaryDays);
+				System.err.println(weekendDays);
+				System.err.println(bookParam.getNumber());
 				orderPriceVO.setRoomPrice(price * bookParam.getNumber());
 				price = activityCalculate(bookParam, price, orderPriceVO, days);
 				if(member != null && card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
