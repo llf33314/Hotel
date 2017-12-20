@@ -184,9 +184,7 @@ public class MobileRoomController extends BaseController {
 		Member member = getMember(request);
 		RoomOrderPriceVO price = null;
 		try {
-			System.err.println(bookParam);
 			price = tOrderRoomService.mobilePriceCalculation(hotelId, member, bookParam);
-			System.err.println(price);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseDTO.createByErrorMessage("价格计算出错");

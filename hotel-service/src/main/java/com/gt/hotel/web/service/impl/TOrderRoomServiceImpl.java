@@ -270,10 +270,6 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		for(TRoomCategory m : categories) {
 			if(m.getId().equals(bookParam.getCategoryId())) {
 				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
-				System.err.println(m.getRackRate());
-				System.err.println(ordinaryDays);
-				System.err.println(weekendDays);
-				System.err.println(bookParam.getNumber());
 				orderPriceVO.setRoomPrice(price * bookParam.getNumber());
 				price = activityCalculate(bookParam, price, orderPriceVO, days);
 				if(member != null && card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {

@@ -24,8 +24,8 @@
 
     <!-- Setting VO -->
     <resultMap id="MobileHotelSettingVo" type="com.gt.hotel.vo.MobileHotelVo">
-        <collection property="imageurls" select="com.gt.hotel.dao.TFileRecordDAO.findRecordVoListByRefIdAndModule" column="{refId=id,module=module}"/>
-        <collection property="installations" select="com.gt.hotel.dao.TInfrastructureRelationDAO.findRelationVoListByRefIdAndModule" column="{refId=id,module=module}"/>
+        <collection property="imageurls" select="com.gt.hotel.dao.TFileRecordDAO.findRecordVoListByRefIdAndModule" column="{refId=hotelId,module=module}"/>
+        <collection property="installations" select="com.gt.hotel.dao.TInfrastructureRelationDAO.findRelationVoListByRefIdAndModule" column="{refId=hotelId,module=module}"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
