@@ -84,7 +84,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                 Optional<THotel> hotel = Optional.fromNullable(this.hotelService.selectOne(wrapper));
                 if (!hotel.isPresent()) {
                     log.warn("获取酒店信息失败 参数列表：hotelId : {} , busId : {} ", hotelId.get(), busId.get());
-                    throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
+//                    throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
                 }
                 // 并重置更新缓存信息
                 resetSession(request, hotelId.get(), hotel.get());
@@ -117,7 +117,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
                 String url = wxmpApiUtil.authorizeMember(hotel.get().getBusId());
                 throw new NeedLoginException(ResponseEnums.NEED_LOGIN, hotel.get().getBusId(), hotel.get().getId(), url);
             } else {
-                throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
+//                throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
             }
         }
         return true;
@@ -159,7 +159,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             Optional<THotel> hotel = Optional.fromNullable(this.hotelService.selectOne(wrapper));
             if (!hotel.isPresent()) {
                 log.error("酒店信息不存在，参数信息：hotelId:{} ", hotelId);
-                throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
+//                throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
             }
             return hotel.get();
         } catch (ResponseEntityException ex) {

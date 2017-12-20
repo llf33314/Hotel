@@ -66,7 +66,7 @@
             setting.updated_at                   updatedAt,
             setting.updated_by                   updatedBy,
             'HOTEL' AS                           module
-        FROM t_hotel hotel INNER JOIN t_hotel_setting setting ON hotel.id = setting.hotel_id
+        FROM t_hotel hotel LEFT JOIN t_hotel_setting setting ON hotel.id = setting.hotel_id
         WHERE hotel.id = #{hotelId} AND hotel.mark_modified = 0
     </select>
 
