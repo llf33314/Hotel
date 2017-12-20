@@ -45,12 +45,12 @@ mybatis-plus:
    #序列接口实现类配置
    #key-generator: com.baomidou.springboot.xxx
 #   逻辑删除配置
-   logic-delete-value: 2
-   logic-not-delete-value: 0
+#   logic-delete-value: 2
+#   logic-not-delete-value: 0
    #自定义填充策略接口实现
 #   meta-object-handler: com.gt.hotel.config.MybatisPlusConfig.HotelCommonMetaObjectHandler
    #自定义SQL注入器
-   sqlInjector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+#   sqlInjector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
  configuration:
    map-underscore-to-camel-case: true
    cache-enabled: false

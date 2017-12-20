@@ -2,9 +2,7 @@ package com.gt.hotel.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * 日期处理相关工具类
@@ -121,7 +119,7 @@ public class DateUtil {
         return df.format(date);
     }
 
-	/*public static String localDateToString(LocalDate date) {
+	/*public static String locadateListToString(LocadateList date) {
     return date.toString();
 	}*/
 
@@ -241,4 +239,51 @@ public class DateUtil {
         }
     }
 
+    /**
+     * 根据开始时间和结束时间返回时间段内的时间集合
+     *
+     * <pre>
+     *     例如： beginDate: 2017-12-10 endDate: 2017-12-20
+     *     获取 开始日期与结束日期之间，每一天的日期。 2017-12-10，2017-12-11，2017-12-12 ....
+     * </pre>
+     *
+     * @param beginDate  开始日期
+     * @param endDate 结束日期
+     * @return List<Date> 日期列表
+     */
+    public static List<Date> getDatesBetweenTwoDate(Date beginDate, Date endDate) {
+        List<Date> dateList = new ArrayList<>();
+        //把开始时间加入集合
+        dateList.add(beginDate);
+        Calendar cal = Calendar.getInstance();
+        //使用给定的 Date 设置此 Calendar 的时间
+        cal.setTime(beginDate);
+        while (true) {
+            //根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            // 测试此日期是否在指定日期之后
+            if (endDate.after(cal.getTime())) {
+                dateList.add(cal.getTime());
+            } else {
+                break;
+            }
+        }
+        //把结束时间加入集合
+        dateList.add(endDate);
+        return dateList;
+    }
+
+
+    public static void main(String[] args) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String bDate = "2017-12-10";
+        String eDate = "2017-12-20";
+        Date beginDate = sdf.parse(bDate);
+        Date endDate = sdf.parse(eDate);
+        List<Date> twoDate = getDatesBetweenTwoDate(beginDate, endDate);
+        for (Date o : twoDate) {
+            System.out.println(sdf.format(o));
+        }
+
+    }
 }

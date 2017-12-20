@@ -131,6 +131,10 @@ public class TOrder extends Model<TOrder> {
 	 * 退款说明
 	 */
 	private String refundReason;
+	/**
+	 * 订购客房数量
+	 */
+	private Integer roomOrderNum;
 
 	@Override
 	protected Serializable pkVal() {
