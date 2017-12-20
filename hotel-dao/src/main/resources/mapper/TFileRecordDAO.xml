@@ -29,4 +29,13 @@
         FROM t_file_record t
         WHERE t.module = #{module} AND t.reference_id = #{refId} AND t.mark_modified = 0;
     </select>
+    
+    <update id="updateFileRecordMark">
+    	UPDATE t_file_record 
+    	SET mark_modified = #{file.markModified}, updated_by = #{file.updatedBy} 
+    	WHERE mark_modified = #{mark} AND id IN 
+    	<foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+			#{item} 
+    	</foreach>
+    </update>
 </mapper>

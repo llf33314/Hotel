@@ -1,5 +1,7 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TFileRecord;
 
@@ -12,5 +14,13 @@ import com.gt.hotel.entity.TFileRecord;
  * @since 2017-10-09
  */
 public interface TFileRecordService extends BaseService<TFileRecord> {
+
+	/**
+	 * 更新mark
+	 * @param fi
+	 * @param ids id集合
+	 * @param mark mark_modified
+	 */
+	void updateFileRecordMark(TFileRecord fi, List<Integer> frsu, Integer deleted);
 
 }

@@ -1,5 +1,14 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.hotel.base.BaseServiceImpl;
@@ -21,14 +30,6 @@ import com.gt.hotel.web.service.TFileRecordService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.THotelSettingService;
 import com.gt.hotel.web.service.TInfrastructureRelationService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
@@ -74,7 +75,11 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
         Wrapper<THotelSetting> sw = new EntityWrapper<>();
         sw.eq("hotel_id", hs.getHotelId());
         if (!this.update(hs, sw)) {
-            throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        	hs.setCreatedAt(date);
+        	hs.setCreatedBy(busid);
+        	if(!this.insert(hs)) {
+        		throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        	}
         }
         //保存图片
         Wrapper<TFileRecord> filewrapper = new EntityWrapper<>();
@@ -82,7 +87,7 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
         filewrapper.eq("module", CommonConst.MODULE_HOTEL);
 //        tFileRecordService.delete(filewrapper);
         TFileRecord ientity = new TFileRecord();
-        ientity.setMarkModified(2);
+        ientity.setMarkModified(CommonConst.DELETED);
         tFileRecordService.update(ientity, filewrapper);
         List<TFileRecord> frsi = new ArrayList<>();
         List<Integer> frsu = new ArrayList<>();
@@ -113,12 +118,10 @@ public class THotelSettingServiceImpl extends BaseServiceImpl<THotelSettingDAO, 
             }
         }
         if (frsu.size() > 0) {
-            Wrapper<TFileRecord> fw = new EntityWrapper<>();
-            fw.in("id", frsu);
             TFileRecord fi = new TFileRecord();
             fi.setMarkModified(CommonConst.ENABLED);
             fi.setUpdatedBy(busid);
-            tFileRecordService.update(fi, fw);
+            tFileRecordService.updateFileRecordMark(fi, frsu, CommonConst.DELETED);
         }
         //保存设施关系
         Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
