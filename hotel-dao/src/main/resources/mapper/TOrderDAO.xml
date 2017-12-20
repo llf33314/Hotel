@@ -134,14 +134,13 @@
 	</select> 
 	
 	<select id="queryRoomOrderOneRooms" resultType="com.gt.hotel.vo.OrderRoomCustomerVo">
-		SELECT b.id categoryId, b.`name` categoryName, c.id roomId, c.number roomNum 
+		SELECT d.id categoryId, d.`name` categoryName, c.id roomId, c.number roomNum 
 		FROM t_order_room a 
-		JOIN t_room_category b ON a.category_id = b.id  
-		JOIN t_order_room d ON a.order_id = d.order_id 
-		JOIN t_order_room_customer e ON d.id = e.order_room_id 
+		JOIN t_order_room_customer e ON a.id = e.order_room_id 
 		JOIN t_room c ON e.room_num = c.number 
+		JOIN t_room_category d ON c.category_id = d.id 
 		WHERE a.order_id = #{orderId} AND a.mark_modified = 0 
-			AND b.mark_modified = 0 AND c.mark_modified = 0 
+			AND d.mark_modified = 0 AND c.mark_modified = 0 
 		GROUP BY e.id 
 	</select>
 	

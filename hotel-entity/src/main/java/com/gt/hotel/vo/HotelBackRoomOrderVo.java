@@ -1,9 +1,6 @@
 package com.gt.hotel.vo;
 
-import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,15 +31,15 @@ public class HotelBackRoomOrderVo {
     private Integer payStatus;
 
     @ApiModelProperty("支付时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date payTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private String payTime;
     
     @ApiModelProperty("订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0")
 	private Integer orderStatus;
 
     @ApiModelProperty("创建订单时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date createTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private String createTime;
 
     @ApiModelProperty("实收金额")
 	private Integer realPrice;
@@ -66,8 +63,8 @@ public class HotelBackRoomOrderVo {
     private String remark;
 
     @ApiModelProperty("总订单完成时间 (已完成状态) 完成总订单 必须把子订单全部都完成")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date completionTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private String completionTime;
     
     @ApiModelProperty("冗余参数 酒店名称")
     private String hotelName;
@@ -103,12 +100,12 @@ public class HotelBackRoomOrderVo {
     private Integer number;
 
     @ApiModelProperty("抵店时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date roomInTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private String roomInTime;
 
     @ApiModelProperty("离店时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date roomOutTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private String roomOutTime;
 
     @ApiModelProperty("当前门市价 固定从房型获取(周一至周四为 门市价 周五周六 为周末价。如果有日历价，则为日历价)")
     private Integer rackRate;

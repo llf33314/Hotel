@@ -26,4 +26,12 @@ public interface TFileRecordDAO extends BaseMapper<TFileRecord> {
      */
     List<FileRecordVo> findRecordVoListByRefIdAndModule(@Param("refId") Integer referenceId, @Param("module") String module);
 
+    /**
+     * 更新mark
+     * @param fi
+     * @param ids
+     * @param mark
+     */
+	void updateFileRecordMark(@Param("file") TFileRecord fi, @Param("ids") List<Integer> ids, @Param("mark") Integer mark);
+
 }

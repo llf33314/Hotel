@@ -1,10 +1,14 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TFileRecordDAO;
 import com.gt.hotel.entity.TFileRecord;
 import com.gt.hotel.web.service.TFileRecordService;
-import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -16,5 +20,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TFileRecordServiceImpl extends BaseServiceImpl<TFileRecordDAO, TFileRecord> implements TFileRecordService {
+
+	@Autowired
+	private TFileRecordDAO fileRecordDAO;
+	
+	@Override
+	public void updateFileRecordMark(TFileRecord fi, List<Integer> ids, Integer mark) {
+		fileRecordDAO.updateFileRecordMark(fi, ids, mark);
+	}
+
 
 }
