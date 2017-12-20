@@ -74,12 +74,13 @@ public class HotelCommonController extends BaseController {
             // 读取session 中的门店列表
             Optional<String> shopInfoList = Optional.fromNullable((String) request.getSession().getAttribute(CommonConst.CURRENT_SESSION_SHOP_LIST));
             if (shopInfoList.isPresent()) {
-                return ResponseDTO.createBySuccess(JSON.parseObject(shopInfoList.get(), new TypeReference<List<HotelShopInfo>>(){}));
+                return ResponseDTO.createBySuccess(JSON.parseObject(shopInfoList.get(), new TypeReference<List<HotelShopInfo>>() {
+                }));
             } else {
                 // 获取商家下的酒店列表
                 List<HotelShopInfo> hotelShopInfoList = null;
                 Wrapper<THotel> wrapper = new EntityWrapper<>();
-                wrapper.eq("bus_id", busId);
+                wrapper.eq("bus_id", busId).eq("mark_modified", CommonConst.ENABLED);
                 List<THotel> hotels = tHotelService.selectList(wrapper);
                 // 读取门店列表
                 JSONObject json = wxmpApiUtil.queryWxShopByBusId(busId);
@@ -126,7 +127,7 @@ public class HotelCommonController extends BaseController {
         Integer busId = getLoginUser(request).getId();
         HotelWsWxShopInfoExtend shop;
         try {
-            HotelInfoVo hotelInfoVo = null;
+            HotelInfoVo hotelInfoVo;
             JSONObject json = wxmpApiUtil.getShopInfoById(shopId);
             if (json != null) {
                 if (json.getInteger("code").equals(0)) {
@@ -140,7 +141,7 @@ public class HotelCommonController extends BaseController {
                     log.info(shop.toString());
                     // 填充酒店信息 根据门店ID获取酒店信息
                     Wrapper<THotel> wrapper = new EntityWrapper<>();
-                    wrapper.eq("shop_id", shopId).eq("bus_id", busId).eq("mark_modified", 0);
+                    wrapper.eq("shop_id", shopId).eq("bus_id", busId).eq("mark_modified", CommonConst.ENABLED);
                     THotel hotel = this.tHotelService.selectOne(wrapper);
                     if (hotel != null) {
                         BeanUtils.copyProperties(hotel, hotelInfoVo);
