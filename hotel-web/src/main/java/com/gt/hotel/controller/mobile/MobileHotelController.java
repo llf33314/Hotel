@@ -98,7 +98,6 @@ public class MobileHotelController extends BaseController {
                 queryMap.put("uclogin", null);
                 queryMap.put("returnUrl", getHost(request) + "/mobile/78CDF1/home/" + hotelId);
                 String param = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
-                System.err.println(property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
                 model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
             } else {
                 model.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());
@@ -172,16 +171,16 @@ public class MobileHotelController extends BaseController {
                     }
                 }
             }
-        }catch (SignException e){
-            log.error("签名错误",e);
+        } catch (SignException e) {
+            log.error("签名错误", e);
             throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
-        }catch (Exception e) {
-            log.error("出错了",e);
+        } catch (Exception e) {
+            log.error("出错了", e);
         }
         return ResponseDTO.createBySuccess(page);
     }
 
-
+    // FIXME: 2017/12/20 酒店ID 缺少
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {

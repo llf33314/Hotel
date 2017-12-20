@@ -40,7 +40,7 @@
 
     <select id="findHotelVoById" resultMap="MobileHotelSettingVo">
         SELECT
-            hotel.id,
+            hotel.id                             hotelId,
             hotel.name,
             hotel.bus_id                         busId,
             hotel.shop_id                        shopId,
