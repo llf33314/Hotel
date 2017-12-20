@@ -285,6 +285,9 @@ public class HotelOrderController extends BaseController {
     public ResponseDTO<Page<HotelBackRoomOrderVo>> roomOrderR(HotelOrderParameter.RoomOrderQuery param,
                                                               HttpServletRequest request) {
         Integer busId = getLoginUser(request).getId();
+        if(param.getKeyword() != null) {
+        	param.setKeyword("%" + param.getKeyword() + "%");
+        }
         Page<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrder(busId, param);
         return ResponseDTO.createBySuccess(page);
     }
