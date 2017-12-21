@@ -1,12 +1,30 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
-import com.gt.hotel.dao.*;
-import com.gt.hotel.entity.*;
+import com.gt.hotel.dao.TInfrastructureDAO;
+import com.gt.hotel.dao.TRoomCalendarDAO;
+import com.gt.hotel.dao.TRoomCategoryDAO;
+import com.gt.hotel.dao.TRoomDAO;
+import com.gt.hotel.dao.TRoomPermanentDAO;
+import com.gt.hotel.entity.TFileRecord;
+import com.gt.hotel.entity.TInfrastructure;
+import com.gt.hotel.entity.TInfrastructureRelation;
+import com.gt.hotel.entity.TRoom;
+import com.gt.hotel.entity.TRoomCategory;
+import com.gt.hotel.entity.TRoomPermanent;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.InfrastructureRelationParamter;
@@ -16,16 +34,20 @@ import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
-import com.gt.hotel.vo.*;
-import com.gt.hotel.web.service.*;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.gt.hotel.vo.FileRecordVo;
+import com.gt.hotel.vo.InfrastructureRelationVo;
+import com.gt.hotel.vo.InfrastructureVo;
+import com.gt.hotel.vo.MobileRoomBookableVo;
+import com.gt.hotel.vo.MobileRoomCategoryVo;
+import com.gt.hotel.vo.RoomCalendarVo;
+import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.vo.RoomPermanentVo;
+import com.gt.hotel.vo.RoomVo;
+import com.gt.hotel.web.service.TFileRecordService;
+import com.gt.hotel.web.service.TInfrastructureRelationService;
+import com.gt.hotel.web.service.TRoomCategoryService;
+import com.gt.hotel.web.service.TRoomPermanentService;
+import com.gt.hotel.web.service.TRoomService;
 
 /**
  * <p>
@@ -252,11 +274,6 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
     public Page<RoomCalendarVo> queryRoomCalendarList(Integer categoryId, CalendarQuery param) {
         Page<RoomCalendarVo> page = param.initPage();
         List<RoomCalendarVo> l = tRoomCalendarDAO.queryRoomCalendarList(categoryId, param, page);
-        TRoomCategory rc = tRoomCategoryDAO.selectById(categoryId);
-        for (RoomCalendarVo r : l) {
-            r.setWeekendFareEnable(rc.getWeekendFareEnable());
-            r.setWeekendFare(rc.getWeekendFare());
-        }
         page.setRecords(l);
         return page;
     }

@@ -20,23 +20,28 @@
     <sql id="Base_Column_List">
         id, hotel_id, category_id, begin_time, end_time, price, created_by, created_at, updated_by, updated_at
     </sql>
+    
+    <sql id="Base_Column_List_VO">
+        a.id, a.hotel_id, a.category_id, a.begin_time, a.end_time, a.price, a.created_by, a.created_at, a.updated_by, a.updated_at
+    </sql>
 
     <select id="queryRoomCalendarList" resultType="com.gt.hotel.vo.RoomCalendarVo">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_room_calendar
+        <include refid="Base_Column_List_VO" />, b.weekend_fare_enable weekendFareEnable, b.weekend_fare weekendFare 
+        FROM t_room_calendar a 
+		RIGHT JOIN t_room_category b ON a.category_id = b.id 
         <where>
             <if test="param.id != null">
-                AND id = #{param.id}
+                AND a.id = #{param.id}
             </if>
             <if test="categoryId != null">
-                AND category_id = #{categoryId}
+                AND b.id = #{categoryId}
             </if>
             <if test="param.beginTime != null">
-                <![CDATA[ AND begin_time <= #{param.beginTime} ]]>
+                <![CDATA[ AND abegin_time <= #{param.beginTime} ]]>
             </if>
             <if test="param.endTime != null">
-                <![CDATA[ AND end_time >= #{param.endTime} ]]>
+                <![CDATA[ AND aend_time >= #{param.endTime} ]]>
             </if>
         </where>
     </select>

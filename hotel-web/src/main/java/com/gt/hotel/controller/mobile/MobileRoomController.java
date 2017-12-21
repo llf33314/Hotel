@@ -1,6 +1,8 @@
 package com.gt.hotel.controller.mobile;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,14 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.KeysUtil;
+import com.gt.entityBo.NewErpPaySuccessBo;
+import com.gt.entityBo.PayTypeBo;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.entity.TOrderCoupons;
+import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.MemberCard;
@@ -38,6 +46,7 @@ import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.THotelService;
+import com.gt.hotel.web.service.TOrderCouponsService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 import com.gt.hotel.web.service.TRoomCategoryService;
@@ -69,6 +78,9 @@ public class MobileRoomController extends BaseController {
 	
 	@Autowired
 	TOrderService tOrderService;
+	
+	@Autowired
+	TOrderCouponsService orderCouponsService;
 	
 	@Autowired
     WebServerConfigurationProperties properties;
@@ -138,27 +150,86 @@ public class MobileRoomController extends BaseController {
     		@PathVariable("orderId") Integer orderId,
     		HttpServletRequest request, 
     		ModelAndView modelAndView) {
-    	TOrder tOrder = tOrderService.selectById(orderId);
-    	JSONObject SubQrPayParams = new JSONObject();
-    	SubQrPayParams.put("totalFee", tOrder.getRealPrice());
-    	SubQrPayParams.put("model", CommonConst.PAY_MODEL_ROOM);
-    	SubQrPayParams.put("busId", tOrder.getBusId());
-    	SubQrPayParams.put("appidType", 0);
-    	SubQrPayParams.put("orderNum", tOrder.getOrderNum());
-    	SubQrPayParams.put("desc", "酒店订房");
-    	SubQrPayParams.put("isreturn", 0);
-    	SubQrPayParams.put("notifyUrl", getHost(request)+"/mobile/78CDF1/room/"+hotelId+"/notifyUrl/"+orderId);
-    	SubQrPayParams.put("isSendMessage", 0);
-//    	SubQrPayParams.put("sendUrl", "");
-    	SubQrPayParams.put("payWay", 0);
-    	SubQrPayParams.put("sourceType", 1);
 		try {
-			String obj;
-			obj = KeysUtil.getEncString(SubQrPayParams.toJSONString());
-			modelAndView.setViewName("redirect:" + properties.getWxmpService().getApiMap().get("payapi").toString()+obj);
+			THotel hotel = tHotelService.selectById(hotelId);
+			Member member = getMember(request);
+			TOrder tOrder = tOrderService.selectById(orderId);
+			Wrapper<TOrderCoupons> w = new EntityWrapper<>();
+			w.eq("order_id", orderId);
+			TOrderCoupons orderCoupon = orderCouponsService.selectOne(w);
+			MemberCard memberCard = null;
+			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+			if(json != null && json.getInteger("code").equals(0)) {
+				memberCard = JSONObject.toJavaObject(json.getJSONObject("data"), MemberCard.class);
+			}
+			if(memberCard != null && memberCard.getCtId() == CommonConst.CARD_TYPE_VALUE_CARD) {
+				//会员卡支付
+				NewErpPaySuccessBo bo = new NewErpPaySuccessBo();
+				bo.setMemberId(member.getId());
+				bo.setStoreId(hotel.getShopId());
+				bo.setOrderCode(tOrder.getOrderNum());
+				bo.setTotalMoney(tOrder.getReceivablePrice() / 100d);
+				bo.setDiscountAfterMoney(tOrder.getRealPrice() / 100d);
+				bo.setDiscountMoney((tOrder.getFbDiscount() + tOrder.getIntegralDiscount()) / 100d);
+				bo.setUcType(1);
+				if(orderCoupon != null) {
+					bo.setDiscountMoney((tOrder.getFbDiscount() + tOrder.getIntegralDiscount() + orderCoupon.getCouponsDiscount()) / 100d);
+					bo.setUseCoupon(1);
+					bo.setCardId(orderCoupon.getCouponsId());
+					bo.setCouponType(1);
+				}else {
+					bo.setUseCoupon(0);
+				}
+				bo.setUserFenbi(tOrder.getFb() == 0 ? 0 : 1);
+				bo.setFenbiNum(tOrder.getFb() / 100d);
+				bo.setUserJifen(tOrder.getIntegral() == 0 ? 0 : 1);
+				bo.setJifenNum(tOrder.getIntegral() / 100);
+				bo.setDataSource(judgeBrowser(request) == 1 ? 1 : 2);
+				bo.setPayTypeBos(new ArrayList<PayTypeBo>());
+				JSONObject jsonObject = wXMPApiUtil.newPaySuccessByErpBalance(bo);
+				System.err.println(jsonObject);
+				if(jsonObject.getInteger("code").equals(0)) {
+			    	Date date = new Date();
+			    	tOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
+			    	tOrder.setPayTime(date);
+					tOrder.setPayType(judgeBrowser(request) == 1 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
+					if(!tOrder.updateById()) {
+						throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+					}
+					Wrapper<TOrderRoom> fwrapper = new EntityWrapper<>();
+					fwrapper.eq("order_id", orderId);
+					fwrapper.eq("order_num", tOrder.getOrderNum());
+					TOrderRoom orderRoom = tOrderRoomService.selectOne(fwrapper);
+					orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
+					orderRoom.setPayTime(date);
+					if(!orderRoom.updateById()) {
+						throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+					}
+					modelAndView.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());
+				}else {
+					modelAndView.setViewName("/error/defaultError.html");
+				}
+			}else {
+				JSONObject SubQrPayParams = new JSONObject();
+				SubQrPayParams.put("totalFee", tOrder.getRealPrice());
+				SubQrPayParams.put("model", CommonConst.PAY_MODEL_ROOM);
+				SubQrPayParams.put("busId", tOrder.getBusId());
+				SubQrPayParams.put("appidType", 0);
+				SubQrPayParams.put("orderNum", tOrder.getOrderNum());
+				SubQrPayParams.put("desc", "酒店订房");
+				SubQrPayParams.put("isreturn", 0);
+				SubQrPayParams.put("notifyUrl", getHost(request)+"/mobile/78CDF1/room/"+hotelId+"/notifyUrl/"+orderId);
+				SubQrPayParams.put("isSendMessage", 0);
+//    			SubQrPayParams.put("sendUrl", "");
+				SubQrPayParams.put("payWay", 0);
+				SubQrPayParams.put("sourceType", 1);
+				String obj;
+				obj = KeysUtil.getEncString(SubQrPayParams.toJSONString());
+				modelAndView.setViewName("redirect:" + properties.getWxmpService().getApiMap().get("payapi").toString()+obj);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			modelAndView.setViewName("/error");
+			modelAndView.setViewName("/error/defaultError.html");
 		}
     	return modelAndView;
     }
