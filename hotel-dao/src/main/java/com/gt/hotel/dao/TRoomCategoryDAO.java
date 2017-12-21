@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
-import com.gt.hotel.vo.MobileRoomBookableVo;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import org.apache.ibatis.annotations.Param;
@@ -50,5 +49,5 @@ public interface TRoomCategoryDAO extends BaseMapper<TRoomCategory> {
      * @param req MobileQueryRoomCategory
      * @return Page<MobileRoomBookableVo>
      */
-    List<MobileRoomBookableVo> findMobileRoomCategoryVoList(@Param("page") Pagination page, @Param("hotelId") Integer hotelId, @Param("param") MobileQueryRoomCategory req);
+    //List<MobileRoomBookableVo> findMobileRoomCategoryVoList(@Param("page") Pagination page, @Param("hotelId") Integer hotelId, @Param("param") MobileQueryRoomCategory req);
 }

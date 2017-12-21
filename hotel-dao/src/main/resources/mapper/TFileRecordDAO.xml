@@ -27,7 +27,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_file_record t
-        WHERE t.module = #{module} AND t.reference_id = #{refId} AND t.mark_modified = 0;
+        WHERE t.module = #{module} AND t.reference_id = #{refId} AND t.mark_modified = 0
     </select>
     
     <update id="updateFileRecordMark">

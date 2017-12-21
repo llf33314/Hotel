@@ -180,7 +180,7 @@ public class MobileHotelController extends BaseController {
         return ResponseDTO.createBySuccess(page);
     }
 
-    // FIXME: 2017/12/20 酒店ID 缺少
+    /* 2017/12/20: 修复缺少酒店ID，修订代码  by:zhangmz */
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
