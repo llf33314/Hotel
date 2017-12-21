@@ -90,7 +90,7 @@
             <![CDATA[ AND b.room_in_time <= #{param.roomOutTime} ]]>
         </if>
         <if test="param.keyword != null">
-            AND (b.customer_name LIKE #{param.keyword} OR b.customer_phone LIKE #{param.keyword})
+            AND (b.customer_name LIKE CONCAT(CONCAT('%',#{param.keyword}),'%') OR b.customer_phone LIKE CONCAT(CONCAT('%',#{param.keyword}),'%'))
         </if>
         GROUP BY a.id
         ORDER BY a.id DESC
