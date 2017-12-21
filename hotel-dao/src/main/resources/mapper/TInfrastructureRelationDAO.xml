@@ -19,10 +19,13 @@
     <sql id="Base_Column_List">
         id, infrastructure_id, module, reference_id, created_by, created_at, updated_by, updated_at, display_value
     </sql>
+    <sql id="Base_Column_List_VO">
+        t.id, t.infrastructure_id, t.module, t.reference_id, t.created_by, t.created_at, t.updated_by, t.updated_at, t.display_value
+    </sql>
 
     <select id="findRelationVoListByRefIdAndModule" resultType="com.gt.hotel.vo.InfrastructureRelationVo">
         select
-        <include refid="Base_Column_List"/>
-        from t_infrastructure_relation t WHERE t.module=#{module} AND t.reference_id=#{refId}
+        <include refid="Base_Column_List_VO"/>, a.`name`, a.icon_url iconUrl 
+        from t_infrastructure_relation t JOIN t_infrastructure a ON t.infrastructure_id = a.id WHERE t.module=#{module} AND t.reference_id=#{refId}
     </select>
 </mapper>

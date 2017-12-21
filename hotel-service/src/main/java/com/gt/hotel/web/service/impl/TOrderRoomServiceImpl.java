@@ -216,78 +216,77 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         Integer price = 0;
         /* 日期 */
 //		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
-        days = days == 0 ? 1 : days;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(bookParam.getRoomInTime());
-        cal.add(Calendar.DAY_OF_YEAR, -1);
-        int ordinaryDays = 0;
-        int weekendDays = 0;
-        for (int i = 0; i < days; i++) {
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            int week = cal.get(Calendar.DAY_OF_WEEK);
-            if (week == Calendar.FRIDAY || week == Calendar.SATURDAY) {
-                weekendDays++;
-            } else {
-                ordinaryDays++;
-            }
-        }
-        /* 日期 */
-        THotel hotel = tHotelService.selectById(hotelId);
-        Wrapper<TRoomCategory> w = new EntityWrapper<>();
-        w.eq("hotel_id", hotelId);
-        w.eq("id", bookParam.getCategoryId());
-        List<TRoomCategory> categories = tRoomCategoryService.selectList(w);
-        JSONObject card = null;
-        if (member != null) {
-            JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-            card = json.getJSONObject("data");
-        }
+		Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
+		days = days == 0 ? 1 : days;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(bookParam.getRoomInTime());
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		int ordinaryDays = 0;
+		int weekendDays = 0;
+		for(int i=0;i<days;i++) {
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+			int week = cal.get(Calendar.DAY_OF_WEEK);
+			if(week == Calendar.FRIDAY || week == Calendar.SATURDAY) {
+				weekendDays++;				
+			}else {
+				ordinaryDays++;
+			}
+		}
+		/* 日期 */
+		THotel hotel = tHotelService.selectById(hotelId);
+		Wrapper<TRoomCategory> w = new EntityWrapper<>();
+		w.eq("hotel_id", hotelId);
+		w.eq("id", bookParam.getCategoryId());
+		List<TRoomCategory> categories = tRoomCategoryService.selectList(w);
+		JSONObject card = null;
+		if(member != null) {
+			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+			card = json.getJSONObject("data");
+		}
+		for(TRoomCategory m : categories) {
+			if(m.getId().equals(bookParam.getCategoryId())) {
+				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
+				orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
+				price = activityCalculate(bookParam, price, orderPriceVO, days);
+				if(member != null && card != null/* && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)*/) {
+					if(bookParam.getActivityId() == null) {
+						price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
+						orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
+					}
+					MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
+					price = duofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
+					price = integralCalculate(bookParam, memberCard, price, orderPriceVO);
+					price = fenBiCalculate(bookParam, memberCard, price, orderPriceVO);
+				}
+			}
+		}
+		price += bookParam.getDeposit();
+		price *= bookParam.getRoomOrderNum();
+		orderPriceVO.setDeposit(bookParam.getDeposit() * bookParam.getRoomOrderNum());
+		orderPriceVO.setPayPrice(price);
+		return orderPriceVO;
+	}
 
-        for (TRoomCategory m : categories) {
-            if (m.getId().equals(bookParam.getCategoryId())) {
-                price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
-                orderPriceVO.setRoomPrice(price * bookParam.getNumber());
-                price = activityCalculate(bookParam, price, orderPriceVO, days);
-                if (member != null && card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
-                    if (bookParam.getActivityId() == null) {
-                        price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
-                        orderPriceVO.setRoomPrice(price);
-                    }
-                    MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
-                    price = duofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
-                    price = integralCalculate(bookParam, memberCard, price, orderPriceVO);
-                    price = fenBiCalculate(bookParam, memberCard, price, orderPriceVO);
-                }
-            }
-        }
-        price += bookParam.getDeposit();
-        price *= bookParam.getNumber();
-        orderPriceVO.setDeposit(bookParam.getDeposit() * bookParam.getNumber());
-        orderPriceVO.setPayPrice(price);
-        return orderPriceVO;
-    }
+	/**
+	 * 活动 计算
+	 * @param bookParam
+	 * @param price
+	 * @param orderPriceVO
+	 * @param days 
+	 */
 
-    /**
-     * 活动 计算
-     *
-     * @param bookParam
-     * @param price
-     * @param orderPriceVO
-     * @param days
-     */
-    private Integer activityCalculate(BookParam bookParam, Integer price, RoomOrderPriceVO orderPriceVO, Integer days) {
-        if (bookParam.getActivityId() != null) {
-            Wrapper<TActivityRoom> arw = new EntityWrapper<>();
-            arw.eq("activity_id", bookParam.getActivityId());
-            arw.eq("category_id", bookParam.getCategoryId());
-            TActivityRoom ar = activityRoomService.selectOne(arw);
-            price = ar.getActivityPrice() * days;
-            orderPriceVO.setRoomPrice(price);
-        }
-        return price;
-    }
-
+	private Integer activityCalculate(BookParam bookParam, Integer price, RoomOrderPriceVO orderPriceVO, Integer days) {
+		if(bookParam.getActivityId() != null) {
+			Wrapper<TActivityRoom> arw = new EntityWrapper<>();
+			arw.eq("activity_id", bookParam.getActivityId());
+			arw.eq("category_id", bookParam.getCategoryId());
+			TActivityRoom ar = activityRoomService.selectOne(arw);
+			price = ar.getActivityPrice() * days;
+			orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
+		}
+		return price;
+	}
+	
 
     /**
      * 积分 计算

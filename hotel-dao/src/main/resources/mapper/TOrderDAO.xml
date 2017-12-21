@@ -90,7 +90,7 @@
 			<![CDATA[ AND b.room_in_time <= #{param.roomOutTime} ]]>
 		</if>
 		<if test="param.keyword != null">
-			AND (b.customer_name = #{param.keyword} OR b.customer_phone = #{param.keyword}) 
+			AND (b.customer_name LIKE #{param.keyword} OR b.customer_phone LIKE #{param.keyword}) 
 		</if>
 		GROUP BY a.id 
 		ORDER BY a.id DESC
@@ -129,9 +129,10 @@
 			<![CDATA[ AND a.create_time <= #{param.endTime} ]]>
 		</if>
 		<if test="param.keyword != null">
-			AND (b.customer_name = #{param.keyword} OR b.customer_phone = #{param.keyword}) 
+			AND (b.customer_name LIKE #{param.keyword} OR b.customer_phone LIKE #{param.keyword}) 
 		</if>
 		GROUP BY a.id 
+		ORDER BY a.id DESC 
 	</select> 
 	
 	<select id="queryRoomOrderOneRooms" resultType="com.gt.hotel.vo.OrderRoomCustomerVo">
