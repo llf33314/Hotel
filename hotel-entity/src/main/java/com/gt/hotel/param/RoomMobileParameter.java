@@ -49,7 +49,7 @@ public class RoomMobileParameter {
 		
 		@NotNull(message = "客房数量不能为空")
 		@ApiModelProperty(value = "客房数量", required = true)
-		private Integer number;
+		private Integer roomOrderNum;
 		
 		@ApiModelProperty(value = "客户姓名")
 //		@NotEmpty(message = "客户姓名不能为空")

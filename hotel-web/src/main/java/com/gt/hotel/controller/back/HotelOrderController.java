@@ -446,8 +446,9 @@ public class HotelOrderController extends BaseController {
     public ResponseDTO<Page<HotelBackFoodOrderVo>> foodOrderR(HotelOrderParameter.FoodOrderQuery param,
                                                               HttpServletRequest request) {
         Integer busid = getLoginUser(request).getId();
-        if (param.getKeyword() != null && param.getKeyword().trim().length() == 0) {
-            param.setKeyword(null);
+        if(param.getKeyword() != null) {
+        	param.setKeyword("%" + param.getKeyword() + "%");
+        	param.setPage(1);
         }
         Page<HotelBackFoodOrderVo> page = tOrderService.queryFoodOrder(busid, param);
         return ResponseDTO.createBySuccess(page);

@@ -266,16 +266,15 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
 			card = json.getJSONObject("data");
 		}
-		
 		for(TRoomCategory m : categories) {
 			if(m.getId().equals(bookParam.getCategoryId())) {
 				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
-				orderPriceVO.setRoomPrice(price * bookParam.getNumber());
+				orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
 				price = activityCalculate(bookParam, price, orderPriceVO, days);
-				if(member != null && card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
+				if(member != null && card != null/* && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)*/) {
 					if(bookParam.getActivityId() == null) {
 						price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
-						orderPriceVO.setRoomPrice(price);
+						orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
 					}
 					MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
 					price = duofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
@@ -285,8 +284,8 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 			}
 		}
 		price += bookParam.getDeposit();
-		price *= bookParam.getNumber();
-		orderPriceVO.setDeposit(bookParam.getDeposit() * bookParam.getNumber());
+		price *= bookParam.getRoomOrderNum();
+		orderPriceVO.setDeposit(bookParam.getDeposit() * bookParam.getRoomOrderNum());
 		orderPriceVO.setPayPrice(price);
 		return orderPriceVO;
 	}
@@ -306,7 +305,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 			arw.eq("category_id", bookParam.getCategoryId());
 			TActivityRoom ar = activityRoomService.selectOne(arw);
 			price = ar.getActivityPrice() * days;
-			orderPriceVO.setRoomPrice(price);
+			orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
 		}
 		return price;
 	}
