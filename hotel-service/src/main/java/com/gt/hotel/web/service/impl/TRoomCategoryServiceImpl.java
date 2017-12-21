@@ -113,7 +113,11 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
             file.setOriginalName(imgurl.getName());
             imgs.add(file);
         }
-        if (imgs.size() > 0) if (!tFileRecordService.insertBatch(imgs)) throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
+        if (imgs.size() > 0) {
+            if (!tFileRecordService.insertBatch(imgs)) {
+                throw new ResponseEntityException(ResponseEnums.IMAGE_ERROR);
+            }
+        }
         //删除设施关系
         Wrapper<TInfrastructureRelation> rwrapper = new EntityWrapper<>();
         rwrapper.eq("reference_id", tRoomCategory.getId());
@@ -133,7 +137,11 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
             _ir.setInfrastructureId(ir.getInfrastructureId());
             irs.add(_ir);
         }
-        if (irs.size() > 0) if (!tInfrastructureRelationService.insertBatch(irs)) throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
+        if (irs.size() > 0) {
+            if (!tInfrastructureRelationService.insertBatch(irs)) {
+                throw new ResponseEntityException(ResponseEnums.INFRASTRUCTRUE_ERROR);
+            }
+        }
         return tRoomCategory.getId();
     }
 
@@ -208,19 +216,24 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         List<TRoom> r1 = new ArrayList<>();
         List<TRoom> r2 = new ArrayList<>();
         for (TRoom r : entityList) {
-            if (r.getId() == null) r1.add(r);
-            else {
+            if (r.getId() == null) {
+                r1.add(r);
+            } else {
                 r.setMarkModified(CommonConst.ENABLED);
                 r2.add(r);
             }
         }
         System.err.println(r1.size());
         System.err.println(r2.size());
-        if (r1.size() > 0) if (!tRoomService.insertBatch(r1)) {
-            throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        if (r1.size() > 0) {
+            if (!tRoomService.insertBatch(r1)) {
+                throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            }
         }
-        if (r2.size() > 0) if (!tRoomService.updateBatchById(r2)) {
-            throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+        if (r2.size() > 0) {
+            if (!tRoomService.updateBatchById(r2)) {
+                throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            }
         }
 
         if (entityList.size() > 0) {
