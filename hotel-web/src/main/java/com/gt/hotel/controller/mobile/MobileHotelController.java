@@ -142,44 +142,6 @@ public class MobileHotelController extends BaseController {
         return ResponseDTO.createBySuccess(page);
     }
 
-    @ApiOperation(value = "房型列表", notes = "房型列表 分页参数")
-    @GetMapping(value = "{hotelId}/roomCategoryNew", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<Page<MobileRoomCategoryVo>> mobileRoomCategoryR(HttpServletRequest request, @PathVariable("hotelId") Integer hotelId,
-                                                                       @ModelAttribute RoomCategoryParameter.MobileQueryRoomCategory queryParam,
-                                                                       @ApiParam(value = "页码", defaultValue = "1") @RequestParam(defaultValue = "1") Integer pageIndex,
-                                                                       @ApiParam(value = "显示数目", defaultValue = "5") @RequestParam(defaultValue = "5") Integer pageSize) {
-        THotel hotel = this.getHotelInfo(request);
-        Member member = Optional.of(this.getMember(request)).get();
-        Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, queryParam);
-        try {
-            JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-            if (json != null && json.getInteger("code").equals(0)) {
-                JSONObject card = json.getJSONObject("data");
-                Integer cardType = card.getInteger("ctId");
-                List<MobileRoomCategoryVo> l = page.getRecords();
-                for (MobileRoomCategoryVo m : l) {    //会员
-                    switch (cardType) {
-                        case CommonConst.CARD_TYPE_POINT_CARD:
-                            break;
-                        case CommonConst.CARD_TYPE_DISCOUNT_CARD:
-                            m.setDisplayPrice(Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue());
-                            break;
-                        case CommonConst.CARD_TYPE_VALUE_CARD:
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        } catch (SignException e) {
-            log.error("签名错误", e);
-            throw new ResponseEntityException(ResponseEnums.SIGNATURE_ERROR);
-        } catch (Exception e) {
-            log.error("出错了", e);
-        }
-        return ResponseDTO.createBySuccess(page);
-    }
-
     /* 2017/12/20: 修复缺少酒店ID，修订代码  by:zhangmz */
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

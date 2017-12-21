@@ -88,7 +88,7 @@
         WHERE
         # 所有的 到店支付 或 已支付 均确认过后的订单 则会扣减库存
         o.hotel_id = #{hotelId} AND tor.room_in_time BETWEEN #{param.roomInTime} AND #{param.roomOutTime}
-        AND ((o.pay_type = 2) OR (o.pay_status = 1) ) AND o.order_status IN (1, 4)) o ON category.id = o.category_id
+        AND ((o.pay_type = 2) OR (o.pay_status = 1) ) AND o.order_status IN (1, 4) AND o.mark_modified=0) o ON category.id = o.category_id
         WHERE category.hotel_id = #{hotelId}
         <if test="param.categoryId != null">
             AND category.id = #{param.categoryId}
