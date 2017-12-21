@@ -1,8 +1,5 @@
 package com.gt.hotel.web.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
@@ -11,11 +8,11 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
-import com.gt.hotel.vo.CheackInListRevenueVo;
-import com.gt.hotel.vo.MobileRoomOrderVo;
-import com.gt.hotel.vo.RoomCardVo;
-import com.gt.hotel.vo.RoomCheackInCountVo;
-import com.gt.hotel.vo.RoomOrderPriceVO;
+import com.gt.hotel.vo.*;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -34,7 +31,7 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @param bookParam
 	 * @return 订单ID
 	 */
-	Integer mobileBookOrder(THotel hotel, Member member, BookParam bookParam);
+	Integer mobileBookOrder(THotel hotel, Member member, BookParam bookParam) throws ParseException;
 
 	/**
 	 * 移动端 房间 支付订单详情

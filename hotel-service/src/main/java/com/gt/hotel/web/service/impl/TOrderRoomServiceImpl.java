@@ -81,7 +81,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Integer mobileBookOrder(THotel hotel, Member member, BookParam bookParam) {
+    public Integer mobileBookOrder(THotel hotel, Member member, BookParam bookParam) throws ParseException {
         // TODO: 2017/12/20 需要增加客房历史流水记录，方便跟踪入住客房房价历史。
         // FIXME: 2017/12/20 修订业务操作 创建订单多笔订单数量 Bug
         try {
@@ -96,12 +96,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         }
         Date date = new Date();
         TOrder order = new TOrder();
-        TOrderRoom orderRoom = new TOrderRoom();
         TOrderCoupons coupons = new TOrderCoupons();
         BeanUtils.copyProperties(bookParam, order);
-        BeanUtils.copyProperties(bookParam, orderRoom);
         BeanUtils.copyProperties(bookParam, coupons);
-
         order.setOrderNum("DD" + System.currentTimeMillis());
         order.setHotelId(hotel.getId());
         order.setBusId(member.getBusid());
@@ -116,28 +113,30 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         if (!orderService.insert(order)) {
             throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
         }
-
-        orderRoom.setOrderId(order.getId());
-        orderRoom.setOrderNum(order.getOrderNum());
-        orderRoom.setHotelId(hotel.getId());
-        orderRoom.setHotelName(hotel.getName());
-        orderRoom.setReceivablePrice(bookParam.getPayPrice());
-        orderRoom.setRoomPrice(bookParam.getDisplayPrice());
-        orderRoom.setOrderFrom(CommonConst.SOURCE_MOBILE);
-        orderRoom.setGuestType(0);
-        orderRoom.setCreatedAt(date);
-        orderRoom.setCreateTime(date);
-        orderRoom.setCreatedBy(member.getId());
-        orderRoom.setUpdatedBy(member.getId());
-        if (bookParam.getHourRoomCheckInTime() != null) {
-            try {
+        // 2017/12/21: 创建多间客房订单  by:zhangmz
+        List<TOrderRoom> orderRoomList = new ArrayList<>();
+        for (int i = 0; i < order.getRoomOrderNum(); i++) {
+            TOrderRoom orderRoom = new TOrderRoom();
+            BeanUtils.copyProperties(bookParam, orderRoom);
+            orderRoom.setOrderId(order.getId());
+            orderRoom.setOrderNum(order.getOrderNum());
+            orderRoom.setHotelId(hotel.getId());
+            orderRoom.setHotelName(hotel.getName());
+            orderRoom.setReceivablePrice(bookParam.getPayPrice());
+            orderRoom.setRoomPrice(bookParam.getDisplayPrice());
+            orderRoom.setOrderFrom(CommonConst.SOURCE_MOBILE);
+            orderRoom.setGuestType(0);
+            orderRoom.setCreatedAt(date);
+            orderRoom.setCreateTime(date);
+            orderRoom.setCreatedBy(member.getId());
+            orderRoom.setUpdatedBy(member.getId());
+            if (bookParam.getHourRoomCheckInTime() != null) {
                 orderRoom.setHourRoomCheckInTime(new SimpleDateFormat("HH:mm:ss").parse(bookParam.getHourRoomCheckInTime()));
-            } catch (ParseException e) {
-                log.error("", e);
-                throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
             }
+            orderRoomList.add(orderRoom);
         }
-        if (!orderRoomService.insert(orderRoom)) {
+        // 批量插入
+        if (!orderRoomService.insertBatch(orderRoomList)) {
             log.error("客房订单创建失败");
             throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
         }
@@ -160,6 +159,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         }
         return order.getId();
     }
+
 
     @Override
     public MobileRoomOrderVo queryMobileRoomOrderOne(Integer hotelId, Integer orderId, Member member) {
@@ -216,63 +216,65 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         Integer price = 0;
         /* 日期 */
 //		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
-		days = days == 0 ? 1 : days;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(bookParam.getRoomInTime());
-		cal.add(Calendar.DAY_OF_YEAR, -1);
-		int ordinaryDays = 0;
-		int weekendDays = 0;
-		for(int i=0;i<days;i++) {
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-			int week = cal.get(Calendar.DAY_OF_WEEK);
-			if(week == Calendar.FRIDAY || week == Calendar.SATURDAY) {
-				weekendDays++;				
-			}else {
-				ordinaryDays++;
-			}
-		}
-		/* 日期 */
-		THotel hotel = tHotelService.selectById(hotelId);
-		Wrapper<TRoomCategory> w = new EntityWrapper<>();
-		w.eq("hotel_id", hotelId);
-		w.eq("id", bookParam.getCategoryId());
-		List<TRoomCategory> categories = tRoomCategoryService.selectList(w);
-		JSONObject card = null;
-		if(member != null) {
-			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
-			card = json.getJSONObject("data");
-		}
-		for(TRoomCategory m : categories) {
-			if(m.getId().equals(bookParam.getCategoryId())) {
-				price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
-				orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
-				price = activityCalculate(bookParam, price, orderPriceVO, days);
-				if(member != null && card != null/* && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)*/) {
-					if(bookParam.getActivityId() == null) {
-						price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
-						orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
-					}
-					MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
-					price = duofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
-					price = integralCalculate(bookParam, memberCard, price, orderPriceVO);
-					price = fenBiCalculate(bookParam, memberCard, price, orderPriceVO);
-				}
-			}
-		}
-		price += bookParam.getDeposit();
-		price *= bookParam.getRoomOrderNum();
-		orderPriceVO.setDeposit(bookParam.getDeposit() * bookParam.getRoomOrderNum());
-		orderPriceVO.setPayPrice(price);
-		return orderPriceVO;
-	}
+        Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
+        days = days == 0 ? 1 : days;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(bookParam.getRoomInTime());
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        int ordinaryDays = 0;
+        int weekendDays = 0;
+        for (int i = 0; i < days; i++) {
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            int week = cal.get(Calendar.DAY_OF_WEEK);
+            if (week == Calendar.FRIDAY || week == Calendar.SATURDAY) {
+                weekendDays++;
+            } else {
+                ordinaryDays++;
+            }
+        }
+        /* 日期 */
+        THotel hotel = tHotelService.selectById(hotelId);
+        Wrapper<TRoomCategory> w = new EntityWrapper<>();
+        w.eq("hotel_id", hotelId);
+        w.eq("id", bookParam.getCategoryId());
+        List<TRoomCategory> categories = tRoomCategoryService.selectList(w);
+        JSONObject card = null;
+        if (member != null) {
+            // 获取会员卡券
+            JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+            card = json.getJSONObject("data");
+        }
+
+        for (TRoomCategory m : categories) {
+            if (m.getId().equals(bookParam.getCategoryId())) {
+                price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
+                orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
+                price = activityCalculate(bookParam, price, orderPriceVO, days);
+                if (member != null && card != null) {
+                    if (bookParam.getActivityId() == null) {
+                        price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
+                        orderPriceVO.setRoomPrice(price* bookParam.getRoomOrderNum());
+                    }
+                    MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
+                    price = duofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
+                    price = integralCalculate(bookParam, memberCard, price, orderPriceVO);
+                    price = fenBiCalculate(bookParam, memberCard, price, orderPriceVO);
+                }
+            }
+        }
+        price += bookParam.getDeposit();
+        price *= bookParam.getRoomOrderNum();
+        orderPriceVO.setDeposit(bookParam.getDeposit() * bookParam.getRoomOrderNum());
+        orderPriceVO.setPayPrice(price);
+        return orderPriceVO;
+    }
 
 	/**
 	 * 活动 计算
 	 * @param bookParam
 	 * @param price
 	 * @param orderPriceVO
-	 * @param days 
+	 * @param days
 	 */
 
 	private Integer activityCalculate(BookParam bookParam, Integer price, RoomOrderPriceVO orderPriceVO, Integer days) {
@@ -286,7 +288,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 		}
 		return price;
 	}
-	
+
 
     /**
      * 积分 计算
@@ -295,7 +297,6 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
      * @param memberCard
      * @param price
      * @param orderPriceVO
-     * @param days
      */
     private Integer integralCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
         if (bookParam.getIntegral() != null) {
@@ -314,7 +315,6 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
      * @param memberCard
      * @param price
      * @param orderPriceVO
-     * @param days
      */
     private Integer fenBiCalculate(BookParam bookParam, MemberCard memberCard, Integer price, RoomOrderPriceVO orderPriceVO) {
         if (bookParam.getFb() != null) {
@@ -331,7 +331,6 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
      *
      * @param memberCard
      * @param price
-     * @param CouponsCode
      * @param orderPriceVO
      * @return
      */

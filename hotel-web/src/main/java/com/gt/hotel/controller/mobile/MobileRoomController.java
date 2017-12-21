@@ -1,24 +1,5 @@
 package com.gt.hotel.controller.mobile;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -45,11 +26,7 @@ import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
-import com.gt.hotel.web.service.THotelService;
-import com.gt.hotel.web.service.TOrderCouponsService;
-import com.gt.hotel.web.service.TOrderRoomService;
-import com.gt.hotel.web.service.TOrderService;
-import com.gt.hotel.web.service.TRoomCategoryService;
+import com.gt.hotel.web.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +37,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -123,7 +103,7 @@ public class MobileRoomController extends BaseController {
             @PathVariable("hotelId") Integer hotelId,
             @Validated @RequestBody RoomMobileParameter.BookParam bookParam,
             BindingResult bindingResult,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws ParseException {
         invalidParameter(bindingResult);
         /* 2017/12/20: 业务修订 总订单 1 ： N 客房订单 by:zhangmz */
         if (bookParam.getActivityId() != null) {

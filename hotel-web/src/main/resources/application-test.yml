@@ -2,185 +2,205 @@
 #======== Test Environment Settings =========#
 #============================================#
 spring:
- devtools:
-  restart:
-   enabled: true
-# 202.51 redis 6379      ----->主
-#  202.51 sentinel 26379  ---->哨兵1
-#  202.50 redis 9379      ----->从
-#  202.50 sentinel 29379  ---->哨兵2
-#  202.53 redis 9379      ----->从
-#  202.53 sentinel 29379  ---->哨兵3
- redis:
-#   host: 113.106.202.51
-#   port: 6379
-   password: gt@123456
-   database: 3
-   timeout: 20000
-   cluster:
-       nodes: 113.106.202.51:6379,113.106.202.50:9379,113.106.202.54:9379
-       maxRedirects: 3
-   sentinel:
-#     # comma-separated list of host:port pairs  哨兵的配置列表
-     nodes: 113.106.202.51:26379,113.106.202.50:29379,113.106.202.54:29379
-#     # name of Redis server  哨兵监听的Redis server的名称
-     master: mymaster
-   pool:
-     max-wait: -1
-     min-idle: 0
-     max-active: 200
-     max-idle: 20
- session:
-   store-type: redis
- datasource:
-   druid:
-     url: jdbc:mysql://113.106.202.51:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
-     username: gt_hotel
-     password: gt123456
-     driver-class-name: com.mysql.jdbc.Driver
-     connectionInitSqls: set names utf8mb4
-     # 下面为连接池的补充设置，应用到上面所有数据源中
-     # 初始化大小，最小，最大
-     initial-size: 5
-     max-active: 20
-     # 配置获取连接等待超时的时间
-     maxWait: 60000
-     # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 五分钟
-     timeBetweenEvictionRunsMillis: 300000
-     # 配置一个连接在池中最小生存的时间，单位是毫秒
-     minEvictableIdleTimeMillis: 30000
-     validationQuery: select 1
-     testWhileIdle: true
-     testOnBorrow: true
-     testOnReturn: true
-     # 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
-#     poolPreparedStatements: true
-#     maxPoolPreparedStatementPerConnectionSize: 20
-     # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-     filters: stat,wall,slf4j
-     # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-     # 合并多个DruidDataSource的监控数据
-     #useGlobalDataSourceStat: true
-     stat-view-servlet:
-#      IP白(allow)/黑(deny)名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
-       allow: 127.0.0.1,192.168.3.47
-       login-username: admin
-       login-password: admin
-       reset-enable: false
-       url-pattern: /druid/*
-       # Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联监控配置
-       # 如果spring.datasource.druid.aop-patterns要代理的类没有定义interface请设置spring.aop.proxy-target-class=true
-      # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
-     aop-patterns: com.gt.hotel.*.service.*
- jmx:
-   default-domain: test
-
+    devtools:
+        restart:
+            enabled: true
+    # 202.51 redis 6379      ----->主
+    #  202.51 sentinel 26379  ---->哨兵1
+    #  202.50 redis 9379      ----->从
+    #  202.50 sentinel 29379  ---->哨兵2
+    #  202.53 redis 9379      ----->从
+    #  202.53 sentinel 29379  ---->哨兵3
+    redis:
+        #   host: 113.106.202.51
+        #   port: 6379
+        password: gt@123456
+        database: 3
+        timeout: 20000
+        cluster:
+            nodes: 113.106.202.51:6379,113.106.202.50:9379,113.106.202.54:9379
+            maxRedirects: 3
+        sentinel:
+            #     # comma-separated list of host:port pairs  哨兵的配置列表
+            nodes: 113.106.202.51:26379,113.106.202.50:29379,113.106.202.54:29379
+            #     # name of Redis server  哨兵监听的Redis server的名称
+            master: mymaster
+        pool:
+            max-wait: -1
+            min-idle: 0
+            max-active: 200
+            max-idle: 20
+    session:
+        store-type: redis
+    datasource:
+        druid:
+            url: jdbc:mysql://113.106.202.51:3306/gt_hotel?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true
+            username: gt_hotel
+            password: gt123456
+            driver-class-name: com.mysql.jdbc.Driver
+            connectionInitSqls: set names utf8mb4
+            # 下面为连接池的补充设置，应用到上面所有数据源中
+            # 初始化大小，最小，最大
+            initial-size: 5
+            max-active: 20
+            # 配置获取连接等待超时的时间
+            maxWait: 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 五分钟
+            timeBetweenEvictionRunsMillis: 300000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            minEvictableIdleTimeMillis: 30000
+            validationQuery: select 1
+            testWhileIdle: true
+            testOnBorrow: true
+            testOnReturn: true
+            # 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
+            #     poolPreparedStatements: true
+            #     maxPoolPreparedStatementPerConnectionSize: 20
+            # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+            filters: stat,wall,slf4j
+            # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+            connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+            # 合并多个DruidDataSource的监控数据
+            #useGlobalDataSourceStat: true
+            stat-view-servlet:
+                #      IP白(allow)/黑(deny)名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
+                allow: 127.0.0.1,192.168.3.47
+                login-username: admin
+                login-password: admin
+                reset-enable: false
+                url-pattern: /druid/*
+            # Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联监控配置
+            # 如果spring.datasource.druid.aop-patterns要代理的类没有定义interface请设置spring.aop.proxy-target-class=true
+            # Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
+            aop-patterns: com.gt.hotel.*.service.*
+    jmx:
+        default-domain: test
 #====================================================#
 #=============== Mybatis-Plus Settings ==============#
 #====================================================#
 mybatis-plus:
-  global-config:
-    #刷新mapper 调试神器
-    refresh-mapper: false
-
+    global-config:
+        #刷新mapper 调试神器
+        refresh-mapper: false
 #============================================#
 #========== Redis Session Settings ==========#
 #============================================#
 redisSession:
-  domainName: deeptel.com.cn
-  cookiePath: /
-  cookieName: WXMPJSESSIONID
-
+    domainName: deeptel.com.cn
+    cookiePath: /
+    cookieName: WXMPJSESSIONID
 #============================================#
 #============= swagger Settings =============#
 #============================================#
 # 是否开启Swagger接口展示
 swagger:
-  show: true
-
+    show: true
 #============================================#
 #=============== WXMP Settings ==============#
 #============================================#
 wxmp:
-  imageurl:
-    prefixurl: http://maint.duofriend.com/upload
-  api:
-    sign: WXMP2017
-    membersign: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
-    serverurl: https://deeptel.com.cn
-    memberserverurl: https://member.deeptel.com.cn
-    memberserverurly: http://member.yifriend.net
-  short:
-    url:
-      path: http://short.duofee.com
-      signkey: goodtom2016@shortUrl.
-  socket:
-    url: https://socket.deeptel.com.cn
-  materialurl: https://suc.deeptel.com.cn
-
+    imageurl:
+        prefixurl: http://maint.duofriend.com/upload
+    api:
+        sign: WXMP2017
+        membersign: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
+        serverurl: https://deeptel.com.cn
+        memberserverurl: https://member.deeptel.com.cn
+        memberserverurly: http://member.yifriend.net
+    short:
+        url:
+            path: http://short.duofee.com
+            signkey: goodtom2016@shortUrl.
+    socket:
+        url: https://socket.deeptel.com.cn
+    materialurl: https://suc.deeptel.com.cn
 ### WebServer 第三方API 配置 ###
 hotel:
-  webserver:
-    WxmpService:
-      signKey: WXMP2017
-      serviceUrl: https://deeptel.com.cn
-      imageUrl: http://maint.duofriend.com/upload
-      materialUrl: https://suc.deeptel.com.cn
-      socketUrl: https://socket.deeptel.com.cn
-      wxmpLogin: ${hotel.webserver.WxmpService.serviceUrl}/user/tologin.do #商家后台登录
-      ApiMap: # Api接口列表
-        dictKey: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/dictApi/getDictApi.do   # 获取字典信息
-        isErpCount: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getIsErpCount.do # 根据商家ID判断是否开通某个erp
-        socketPush: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/socket/getSocketApi.do # Socket推送
-        erpMenus: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenus.do # 商家/员工获取ERP列表菜单
-        staffListByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/staffApiMsg/getStaffListShopId.do # 根据门店ID获取员工列表分页功能（支持员工姓名，手机登模糊查询）
-        childListByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/staffApiMsg/getChildListShopId.do # 根据门店ID获取管理员（子账号）分页列表信息
-        sendSMSOld: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsOld.do #发送短信 旧版
-        sendSmsNew: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsNew.do #2、发送短信(模板接口)
-        findShopInfoByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/getShopById.do #根据ID获取门店信息
-        findWxShopListByBusId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do #根据商家ID获取所有门店
-        getWxPulbicMsg: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getWxPulbicMsg.do  # 获取WxPulbic对象
-        payapi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/payapi.do?obj=  #  1、支付(支付宝公众号多粉钱包)
-        refundErp: ${hotel.webserver.WxmpService.serviceUrl}/memberAPI/member/refundErp #会员结算退款
-        setRedisStorage: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/redis/SetExApi.do  # 存储redis重定向地址
-        authorizeMember: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody= # 授权地址
-        authorizeMemberNew: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMemberNew.do?queryBody= # 新的授权地址
-        selectByUserId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/wxpublicapi/6F6D9AD2/79B4DE7C/selectByUserId.do # 根据商家ID查询 商户号对象
-        getErpListApi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getErpListApi.do # 商家/员工  获取管理的ERP列表
-        getMenus: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenus.do # 商家/员工获取ERP列表菜单
-        getMall: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMall.do # erp商家是否有商城功能
-        getMenusThree: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenusThree.do # erp三级菜单接口
-        wxmemberPayRefund: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do  # 微信退款
-    ShortService:
-      signKey: goodtom2016@shortUrl.
-      serviceUrl: http://short.duofee.com
-      ApiMap:
-        shortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl?longUrl= # 获取短连接
-        getShortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl  # 获取短连接
-    MemberService:
-      signKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
-      serviceUrl: https://member.deeptel.com.cn
-      ApiMap: # Api接口列表
-        findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard   # 获取会员信息
-        findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId   # 包含会员信息、微信卡券、多粉卡券
-    JxcService:
-        serviceUrl: https://jxc.deeptel.com.cn
-        account: erp_5
-        pwd: 123456
-        ApiMap:
-            login: ${hotel.webserver.JxcService.serviceUrl}/erp/b/login
-            allProducts: ${hotel.webserver.JxcService.serviceUrl}/erp/query/allProducts # 查询已入库的商品信息
-            amountSum: ${hotel.webserver.JxcService.serviceUrl}/erp/statistics/amountSum # 库存总数查询
-            getProTypes: ${hotel.webserver.JxcService.serviceUrl}/erp/query/getProTypes # 商品类别查询
-            operation: ${hotel.webserver.JxcService.serviceUrl}/erp/order/inventory/operation # 发货、退货(商城.ERP)
-            inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct # 库存查询(根据商品ID)
-            invenotry: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/all/invenotry # 查询已入库的商品信息(多单位)
-            productType: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/basic/product/type/ # 商品类别查询【新】
-            refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund # 发货、退货【新】
+    webserver:
+        WxmpService:
+            signKey: WXMP2017
+            serviceUrl: https://deeptel.com.cn
+            imageUrl: http://maint.duofriend.com/upload
+            materialUrl: https://suc.deeptel.com.cn
+            socketUrl: https://socket.deeptel.com.cn
+            #商家后台登录
+            wxmpLogin: ${hotel.webserver.WxmpService.serviceUrl}/user/tologin.do
+            # Api接口列表
+            ApiMap:
+                # 获取字典信息
+                dictKey: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/dictApi/getDictApi.do
+                # 根据商家ID判断是否开通某个erp
+                isErpCount: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getIsErpCount.do
+                # Socket推送
+                socketPush: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/socket/getSocketApi.do
+                # 商家/员工获取ERP列表菜单
+                erpMenus: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenus.do
+                # 根据门店ID获取员工列表分页功能（支持员工姓名，手机登模糊查询）
+                staffListByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/staffApiMsg/getStaffListShopId.do
+                # 根据门店ID获取管理员（子账号）分页列表信息
+                childListByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/staffApiMsg/getChildListShopId.do
+                #发送短信 旧版
+                sendSMSOld: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsOld.do
+                #2、发送短信(模板接口)
+                sendSmsNew: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsNew.do
+                #根据ID获取门店信息
+                findShopInfoByShopId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/getShopById.do
+                #根据商家ID获取所有门店
+                findWxShopListByBusId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/shopapi/6F6D9AD2/79B4DE7C/queryWxShopByBusId.do
+                # 获取WxPulbic对象
+                getWxPulbicMsg: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getWxPulbicMsg.do
+                #  1、支付(支付宝公众号多粉钱包)
+                payapi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/payapi.do?obj=
+                #会员结算退款
+                refundErp: ${hotel.webserver.WxmpService.serviceUrl}/memberAPI/member/refundErp
+                # 存储redis重定向地址
+                setRedisStorage: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/redis/SetExApi.do
+                authorizeMember: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody=
+                authorizeMemberNew: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMemberNew.do?queryBody=
+                selectByUserId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/wxpublicapi/6F6D9AD2/79B4DE7C/selectByUserId.do
+                getErpListApi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getErpListApi.do
+                getMenus: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenus.do
+                getMall: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMall.do
+                getMenusThree: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenusThree.do
+                wxmemberPayRefund: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/wxmemberPayRefund.do
+        ShortService:
+            signKey: goodtom2016@shortUrl.
+            serviceUrl: http://short.duofee.com
+            ApiMap:
+                shortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl?longUrl=
+                getShortURL: ${hotel.webserver.ShortService.serviceUrl}/service/rest/shortUrl/getShortUrl
+        MemberService:
+            signKey: MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM
+            serviceUrl: https://member.deeptel.com.cn
+            # Api接口列表
+            ApiMap:
+                # 获取会员信息
+                findMemberCard: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberCard
+                # 包含会员信息、微信卡券、多粉卡券
+                findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId
+                # 单门店 结算支付成功会员处理
+                newPaySuccessByErpBalance: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/newPaySuccessByErpBalance
+        JxcService:
+            serviceUrl: https://jxc.deeptel.com.cn
+            account: erp_5
+            pwd: 123456
+            ApiMap:
+                login: ${hotel.webserver.JxcService.serviceUrl}/erp/b/login
+                # 查询已入库的商品信息
+                allProducts: ${hotel.webserver.JxcService.serviceUrl}/erp/query/allProducts
+                # 库存总数查询
+                amountSum: ${hotel.webserver.JxcService.serviceUrl}/erp/statistics/amountSum
+                # 商品类别查询
+                getProTypes: ${hotel.webserver.JxcService.serviceUrl}/erp/query/getProTypes
+                # 发货、退货(商城.ERP)
+                operation: ${hotel.webserver.JxcService.serviceUrl}/erp/order/inventory/operation
+                # 库存查询(根据商品ID)
+                inventoryByProduct: ${hotel.webserver.JxcService.serviceUrl}/erp/order/sync/inventoryByProduct
+                # 查询已入库的商品信息(多单位)
+                invenotry: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/all/invenotry
+                # 商品类别查询【新】
+                productType: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/basic/product/type/
+                # 发货、退货【新】
+                refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund
 server:
-  port: 8080
-
-
-
-
+    port: 8080
