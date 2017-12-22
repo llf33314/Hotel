@@ -1,9 +1,13 @@
 package com.gt.hotel.web.service.impl;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,8 @@ import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.util.ExcelUtil;
+import com.gt.hotel.util.ExportUtil;
 import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
@@ -378,4 +384,215 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         return page;
     }
 
+    @Override
+    public HSSFWorkbook exportFoodOrder(List<HotelBackFoodOrderVo> page, String[] contentName, String[] titles)
+    		throws IllegalArgumentException, IllegalAccessException {
+    	HSSFWorkbook wb = null;
+		wb = ExportUtil.getExcel("餐饮订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
+            @Override
+            public String fieldPprocessing(Object c, String contentName) {
+            	if(c == null || "".equals(c.toString())) {
+            		return "";
+            	}
+            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            	SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
+                String s = c.toString();
+                if("rackRate".equals(contentName) 
+                		|| "billPrice".equals(contentName) 
+                		|| "discountedPrice".equals(contentName) 
+                		|| "receivablePrice".equals(contentName) 
+                		|| "refundAmount".equals(contentName) 
+                		|| "realPrice".equals(contentName)) {
+                	Double d = Double.valueOf(s);
+                	s = new DecimalFormat("#0.00").format(d / 100);
+                }else if("createTime".equals(contentName)) {
+                	try {
+						s = sdf.format(sdf2.parse(s));
+					} catch (ParseException e) {
+						log.error("/back/order/foodExport error");
+						e.printStackTrace();
+					}
+                }else if ("orderStatus".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "处理中";
+                            break;
+                        case 1:
+                            s = "已确认";
+                            break;
+                        case 2:
+                            s = "已取消";
+                            break;
+                        case 3:
+                            s = "已完成";
+                            break;
+                    }
+                } else if ("payStatus".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "待支付";
+                            break;
+                        case 1:
+                            s = "已支付";
+                            break;
+                        case 2:
+                            s = "退款中";
+                            break;
+                        case 3:
+                            s = "已退款";
+                            break;
+                    }
+                } else if ("payType".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "支付宝";
+                            break;
+                        case 1:
+                            s = "微信";
+                            break;
+                        case 2:
+                            s = "到店支付";
+                            break;
+                        case 3:
+                            s = "储值卡支付";
+                            break;
+                        case 4:
+                            s = "信用卡";
+                            break;
+                        case 5:
+                            s = "现金";
+                            break;
+                    }
+                }
+                return s;
+            }
+        });
+		return wb;
+    }
+    
+    @Override
+    public HSSFWorkbook exportRoomOrder(List<HotelBackRoomOrderVo> page, String[] contentName, String[] titles)
+    		throws IllegalArgumentException, IllegalAccessException {
+    	HSSFWorkbook wb = null;
+    	wb = ExportUtil.getExcel("房间订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
+            @Override
+            public String fieldPprocessing(Object c, String contentName) {
+            	if(c == null || "".equals(c.toString())) {
+            		return "";
+            	}
+            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            	SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
+                String s = c.toString();
+                if("rackRate".equals(contentName) 
+                		|| "billPrice".equals(contentName) 
+                		|| "discountedPrice".equals(contentName) 
+                		|| "receivablePrice".equals(contentName) 
+                		|| "refundAmount".equals(contentName) 
+                		|| "realPrice".equals(contentName)) {
+                	Double d = Double.valueOf(s);
+                	s = new DecimalFormat("#0.00").format(d / 100);
+                }else if("roomInTime".equals(contentName) 
+                		|| "roomOutTime".equals(contentName)) {
+                	try {
+						s = sdf.format(sdf2.parse(s));
+					} catch (ParseException e) {
+						log.error("/back/order/foodExport error");
+						e.printStackTrace();
+					}
+                }else if ("orderStatus".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "处理中";
+                            break;
+                        case 1:
+                            s = "已确认";
+                            break;
+                        case 2:
+                            s = "已取消";
+                            break;
+                        case 3:
+                            s = "已完成";
+                            break;
+                        case 4:
+                            s = "已入住";
+                            break;
+                    }
+                } else if ("payStatus".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "待支付";
+                            break;
+                        case 1:
+                            s = "已支付";
+                            break;
+                        case 2:
+                            s = "退款中";
+                            break;
+                        case 3:
+                            s = "已退款";
+                            break;
+                    }
+                } else if ("payType".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "支付宝";
+                            break;
+                        case 1:
+                            s = "微信";
+                            break;
+                        case 2:
+                            s = "到店支付";
+                            break;
+                        case 3:
+                            s = "储值卡支付";
+                            break;
+                        case 4:
+                            s = "信用卡";
+                            break;
+                        case 5:
+                            s = "现金";
+                            break;
+                    }
+                } else if ("customerIdType".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "二代身份证";
+                            break;
+                        case 1:
+                            s = "一代身份证";
+                            break;
+                        case 2:
+                            s = "驾驶证";
+                            break;
+                        case 3:
+                            s = "护照";
+                            break;
+                        case 4:
+                            s = "军官证";
+                            break;
+                        case 5:
+                            s = "士兵证";
+                            break;
+                        case 6:
+                            s = "港澳通行证";
+                            break;
+                        case 7:
+                            s = "其他";
+                            break;
+                    }
+                } else if ("customerGender".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "男";
+                            break;
+                        case 1:
+                            s = "女";
+                            break;
+                    }
+                }
+                return s;
+            }
+        });
+    	return wb;
+    }
 }

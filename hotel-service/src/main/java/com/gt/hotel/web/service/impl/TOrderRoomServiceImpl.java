@@ -247,25 +247,29 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 
         for (TRoomCategory m : categories) {
             if (m.getId().equals(bookParam.getCategoryId())) {
-                price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
+                if(m.getWeekendFareEnable().equals(CommonConst.ENABLED)) {
+                	price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
+                }else {
+                	price = m.getRackRate() * days;
+                }
                 orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
                 price = activityCalculate(bookParam, price, orderPriceVO, days);
-                if (member != null && card != null) {
-                    if (bookParam.getActivityId() == null) {
-                        if(card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
-                        	price = Double.valueOf(m.getRackRate() * card.getDouble("discount") / 10).intValue() * days;
-                        }
-                        orderPriceVO.setRoomPrice(price* bookParam.getRoomOrderNum());
-                    }
-                    MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
-                    price = duofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
-                    price = integralCalculate(bookParam, memberCard, price, orderPriceVO);
-                    price = fenBiCalculate(bookParam, memberCard, price, orderPriceVO);
+                if (bookParam.getActivityId() == null) {
+                	if(card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
+                		price = Double.valueOf(m.getRackRate() * card.getDouble("discount") / 10).intValue() * days;
+                	}
+                	orderPriceVO.setRoomPrice(price* bookParam.getRoomOrderNum());
                 }
             }
         }
         price += bookParam.getDeposit();
         price *= bookParam.getRoomOrderNum();
+        if (member != null && card != null) {
+        	MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
+        	price = duofenCardsCalculate(bookParam, memberCard, price, orderPriceVO);
+        	price = integralCalculate(bookParam, memberCard, price, orderPriceVO);
+        	price = fenBiCalculate(bookParam, memberCard, price, orderPriceVO);
+        }
         orderPriceVO.setDeposit(bookParam.getDeposit() * bookParam.getRoomOrderNum());
         orderPriceVO.setPayPrice(price);
         return orderPriceVO;

@@ -10,6 +10,8 @@ import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.vo.*;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -143,6 +145,24 @@ public interface TOrderService extends BaseService<TOrder> {
 	 * @return
 	 */
 	Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer shopId, HotelPage hpage);
+
+	/**
+	 * 
+	 * @param page 数据
+	 * @param contentName 字段名
+	 * @param titles 标题
+	 * @return
+	 */
+	HSSFWorkbook exportFoodOrder(List<HotelBackFoodOrderVo> page, String[] contentName, String[] titles) throws IllegalArgumentException, IllegalAccessException;
+
+	/**
+	 * 
+	 * @param page 数据
+	 * @param contentName 字段名
+	 * @param titles 标题
+	 * @return
+	 */
+	HSSFWorkbook exportRoomOrder(List<HotelBackRoomOrderVo> page, String[] contentName, String[] titles) throws IllegalArgumentException, IllegalAccessException;
 
 
 }

@@ -1,5 +1,7 @@
 package com.gt.hotel.vo;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.Api;
@@ -35,14 +37,14 @@ public class HotelBackFoodOrderVo {
 
     @ApiModelProperty("支付时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private String payTime;
+	private Date payTime;
     
     @ApiModelProperty("订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0")
 	private Integer orderStatus;
 
     @ApiModelProperty("创建订单时间")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private String createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date createTime;
 
     @ApiModelProperty("实收金额")
 	private Integer realPrice;
@@ -66,8 +68,8 @@ public class HotelBackFoodOrderVo {
     private String remark;
 
     @ApiModelProperty("总订单完成时间 (已完成状态) 完成总订单 必须把子订单全部都完成")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private String completionTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date completionTime;
     
     @ApiModelProperty("酒店名称")
     private String hotelName;

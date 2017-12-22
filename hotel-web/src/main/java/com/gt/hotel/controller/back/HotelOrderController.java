@@ -1,5 +1,32 @@
 package com.gt.hotel.controller.back;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -26,28 +53,11 @@ import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 酒店后台-订单管理
@@ -461,112 +471,7 @@ public class HotelOrderController extends BaseController {
             String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomInTime", "roomOutTime",
                     "categoryName", "number", "rackRate", "orderStatus", "payStatus", "payType", "guestType", "checkStandard", "customerIdType",
                     "customerIdCard", "customerGender", "billPrice", "discountedPrice", "receivablePrice", "refundAmount", "realPrice"};
-            wb = ExportUtil.getExcel("房间订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
-                @Override
-                public String fieldPprocessing(Object c, String contentName) {
-                    String s = c.toString();
-                    if("rackRate".equals(contentName) 
-                    		|| "billPrice".equals(contentName) 
-                    		|| "discountedPrice".equals(contentName) 
-                    		|| "receivablePrice".equals(contentName) 
-                    		|| "refundAmount".equals(contentName) 
-                    		|| "realPrice".equals(contentName)) {
-                    	Double d = Double.valueOf(s);
-                    	s = new DecimalFormat("#0.00").format(d / 100);
-                    }else if ("orderStatus".equals(contentName)) {
-                        switch (Integer.valueOf(c.toString())) {
-                            case 0:
-                                s = "处理中";
-                                break;
-                            case 1:
-                                s = "已确认";
-                                break;
-                            case 2:
-                                s = "已取消";
-                                break;
-                            case 3:
-                                s = "已完成";
-                                break;
-                            case 4:
-                                s = "已入住";
-                                break;
-                        }
-                    } else if ("payStatus".equals(contentName)) {
-                        switch (Integer.valueOf(c.toString())) {
-                            case 0:
-                                s = "待支付";
-                                break;
-                            case 1:
-                                s = "已支付";
-                                break;
-                            case 2:
-                                s = "退款中";
-                                break;
-                            case 3:
-                                s = "已退款";
-                                break;
-                        }
-                    } else if ("payType".equals(contentName)) {
-                        switch (Integer.valueOf(c.toString())) {
-                            case 0:
-                                s = "支付宝";
-                                break;
-                            case 1:
-                                s = "微信";
-                                break;
-                            case 2:
-                                s = "到店支付";
-                                break;
-                            case 3:
-                                s = "储值卡支付";
-                                break;
-                            case 4:
-                                s = "信用卡";
-                                break;
-                            case 5:
-                                s = "现金";
-                                break;
-                        }
-                    } else if ("customerIdType".equals(contentName)) {
-                        switch (Integer.valueOf(c.toString())) {
-                            case 0:
-                                s = "二代身份证";
-                                break;
-                            case 1:
-                                s = "一代身份证";
-                                break;
-                            case 2:
-                                s = "驾驶证";
-                                break;
-                            case 3:
-                                s = "护照";
-                                break;
-                            case 4:
-                                s = "军官证";
-                                break;
-                            case 5:
-                                s = "士兵证";
-                                break;
-                            case 6:
-                                s = "港澳通行证";
-                                break;
-                            case 7:
-                                s = "其他";
-                                break;
-                        }
-                    } else if ("customerGender".equals(contentName)) {
-                        switch (Integer.valueOf(c.toString())) {
-                            case 0:
-                                s = "男";
-                                break;
-                            case 1:
-                                s = "女";
-                                break;
-                        }
-                    }
-                    return s;
-                }
-            });
+            wb = tOrderService.exportRoomOrder(page, contentName, titles);
             response.setHeader("Content-Disposition", "attachment;filename=\"" +
                     URLEncoder.encode("房间订单" + new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()) +
                             ".xls", "UTF-8") + "\"");
@@ -607,73 +512,7 @@ public class HotelOrderController extends BaseController {
             String[] titles = new String[]{"订单编号", "酒店名称", "预订人", "电话", "房号", "订单总额(元)", "下单时间", "菜品提供方", "订单状态", "支付状态", "支付方式"};
             String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomNum",
                     "realPrice", "createTime", "foodProvidesName", "orderStatus", "payStatus", "payType"};
-            wb = ExportUtil.getExcel("餐饮订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
-                @Override
-                public String fieldPprocessing(Object c, String contentName) {
-                    String s = c.toString();
-                    if("rackRate".equals(contentName) 
-                    		|| "billPrice".equals(contentName) 
-                    		|| "discountedPrice".equals(contentName) 
-                    		|| "receivablePrice".equals(contentName) 
-                    		|| "refundAmount".equals(contentName) 
-                    		|| "realPrice".equals(contentName)) {
-                    	Double d = Double.valueOf(s);
-                    	s = new DecimalFormat("#0.00").format(d / 100);
-                    }else if ("orderStatus".equals(contentName)) {
-                        switch (Integer.valueOf(c.toString())) {
-                            case 0:
-                                s = "处理中";
-                                break;
-                            case 1:
-                                s = "已确认";
-                                break;
-                            case 2:
-                                s = "已取消";
-                                break;
-                            case 3:
-                                s = "已完成";
-                                break;
-                        }
-                    } else if ("payStatus".equals(contentName)) {
-                        switch (Integer.valueOf(c.toString())) {
-                            case 0:
-                                s = "待支付";
-                                break;
-                            case 1:
-                                s = "已支付";
-                                break;
-                            case 2:
-                                s = "退款中";
-                                break;
-                            case 3:
-                                s = "已退款";
-                                break;
-                        }
-                    } else if ("payType".equals(contentName)) {
-                        switch (Integer.valueOf(c.toString())) {
-                            case 0:
-                                s = "支付宝";
-                                break;
-                            case 1:
-                                s = "微信";
-                                break;
-                            case 2:
-                                s = "到店支付";
-                                break;
-                            case 3:
-                                s = "储值卡支付";
-                                break;
-                            case 4:
-                                s = "信用卡";
-                                break;
-                            case 5:
-                                s = "现金";
-                                break;
-                        }
-                    }
-                    return s;
-                }
-            });
+            wb = tOrderService.exportFoodOrder(page, contentName, titles);
             response.setHeader("Content-Disposition", "attachment;filename=\"" +
                     URLEncoder.encode("餐饮订单" + new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()) +
                             ".xls", "UTF-8") + "\"");
