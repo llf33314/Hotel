@@ -29,6 +29,7 @@ import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
@@ -49,6 +50,7 @@ import java.util.Map;
  * @author Reverien9@gmail.com
  * 2017年11月14日 上午10:27:26
  */
+@Slf4j
 @Api(tags = "酒店移动端 订房")
 @RestController
 @RequestMapping("/mobile/78CDF1/room")
@@ -81,10 +83,9 @@ public class MobileRoomController extends BaseController {
             @PathVariable("hotelId") Integer hotelId,
             @PathVariable("categoryId") Integer categoryId,
             HttpServletRequest request) {
-        THotel hotel = tHotelService.selectById(hotelId);
+		THotel hotel = this.getHotelInfo(request);
         Member member = getMember(request);
         MemberCard memberCard = null;
-
         try {
             JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
             if (json != null && json.getInteger("code").equals(0)) {

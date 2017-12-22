@@ -1,19 +1,5 @@
 package com.gt.hotel.interceptor;
 
-import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_BUS_ID;
-import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_HOTEL_ID;
-import static com.gt.hotel.constant.CommonConst.CURRENT_SESSION_HOTEL_INFO;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.collections.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -27,8 +13,17 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.web.service.THotelService;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+
+import static com.gt.hotel.constant.CommonConst.*;
 
 /**
  * 移动端登录、微信授权拦截器
@@ -127,7 +122,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
     }
 
     /**
-     * 匹配上请求地址 全都通过
+     * 放行 uri 地址
      *
      * @param request HttpServletRequest
      * @return boolean
@@ -160,12 +155,9 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         Wrapper<THotel> wrapper = new EntityWrapper<>();
         wrapper.eq("id", hotelId).eq("mark_modified", 0);
         try {
+            log.debug("参数信息：hotelId:{} ", hotelId);
             Optional<THotel> hotel = Optional.fromNullable(this.hotelService.selectOne(wrapper));
-            if (!hotel.isPresent()) {
-                log.error("酒店信息不存在，参数信息：hotelId:{} ", hotelId);
-//                throw new ResponseEntityException(ResponseEnums.DATA_DOES_NOT_EXIST);
-            }
-            return hotel.get();
+            return hotel.orNull();
         } catch (ResponseEntityException ex) {
             throw ex;
         } catch (RuntimeException ex) {
@@ -173,6 +165,5 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
             throw new ResponseEntityException(ResponseEnums.UNKNOWN_ERROR);
         }
     }
-
 
 }

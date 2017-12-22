@@ -50,16 +50,17 @@ public abstract class BaseController {
      * @return int
      */
     protected BusUser getLoginUser(HttpServletRequest request) {
-    	return SessionUtils.getLoginUser(request);
+        return SessionUtils.getLoginUser(request);
     }
 
     /**
      * 获取酒店信息
+     *
      * @return THotel
      */
-    protected THotel getHotelInfo(HttpServletRequest request){
-        Optional<String> json = Optional.of((String)request.getSession().getAttribute(CommonConst.CURRENT_SESSION_HOTEL_INFO));
-        return Optional.of(JSONObject.parseObject(json.get(),THotel.class)).get();
+    protected THotel getHotelInfo(HttpServletRequest request) {
+        Optional<String> json = Optional.of((String) request.getSession().getAttribute(CommonConst.CURRENT_SESSION_HOTEL_INFO));
+        return Optional.of(JSONObject.parseObject(json.get(), THotel.class)).get();
     }
 
     /**
@@ -72,7 +73,6 @@ public abstract class BaseController {
         Integer busId = (Integer) request.getSession().getAttribute(CURRENT_SESSION_BUS_ID);
         return SessionUtils.getLoginMember(request, busId);
     }
-
 
 
     /**
@@ -128,13 +128,16 @@ public abstract class BaseController {
         return result;
     }
 
+    /**
+     * 2017/12/22:   by:zhangmz
+     */
     protected static String getCode() {
         Long date = System.currentTimeMillis();
         return date.toString().substring(1);
     }
 
     protected static String getHost(HttpServletRequest request) {
-        String path = request.getContextPath();
-        return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+        StringBuffer url = request.getRequestURL();
+        return url.delete(url.length() - request.getRequestURI().length(), url.length()).toString();
     }
 }
