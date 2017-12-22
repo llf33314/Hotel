@@ -249,7 +249,6 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
             JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
             card = json.getJSONObject("data");
         }
-
         Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
         days = days == 0 ? 1 : days;
         for (TRoomCategory m : categories) {
@@ -278,7 +277,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
                 orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
                 price = activityCalculate(bookParam, price, orderPriceVO, days);
                 if (bookParam.getActivityId() == null) {
-                	if(card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
+                	if(card != null && card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
                 		price = Double.valueOf(m.getRackRate() * card.getDouble("discount") / 10).intValue() * days;
                 	}
                 	orderPriceVO.setRoomPrice(price* bookParam.getRoomOrderNum());
