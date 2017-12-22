@@ -189,7 +189,7 @@ public class MobilePersonalController extends BaseController {
 			JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
 			if(json != null && json.getInteger("code").equals(0)) {
 				JSONObject card = json.getJSONObject("data");
-				vipLevel = Integer.valueOf(card.get("gradeName").toString().replace("vip", ""));
+				vipLevel = Integer.valueOf(card.get("gradeName").toString().replace("vip", "").replace("VIP", ""));
 			}
 			Page<RoomCardVo> page = tOrderRoomService.mobileFindRoomCard(member, vipLevel, param);
 			return ResponseDTO.createBySuccess(page);

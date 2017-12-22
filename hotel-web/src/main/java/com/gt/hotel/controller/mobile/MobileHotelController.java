@@ -116,6 +116,7 @@ public class MobileHotelController extends BaseController {
         THotel hotel = this.getHotelInfo(request);
         Member member = Optional.of(this.getMember(request)).get();
         Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, queryParam);
+        
         try {
             JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
             if (json != null && json.getInteger("code").equals(0)) {
