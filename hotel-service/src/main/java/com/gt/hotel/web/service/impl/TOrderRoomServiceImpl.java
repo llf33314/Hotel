@@ -252,7 +252,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
                 price = activityCalculate(bookParam, price, orderPriceVO, days);
                 if (member != null && card != null) {
                     if (bookParam.getActivityId() == null) {
-                        price = Double.valueOf(m.getRackRate() * card.getDouble("discount")).intValue() * days;
+                        if(card.getInteger("ctId").equals(CommonConst.CARD_TYPE_DISCOUNT_CARD)) {
+                        	price = Double.valueOf(m.getRackRate() * card.getDouble("discount") / 10).intValue() * days;
+                        }
                         orderPriceVO.setRoomPrice(price* bookParam.getRoomOrderNum());
                     }
                     MemberCard memberCard = JSONObject.toJavaObject(card, MemberCard.class);
