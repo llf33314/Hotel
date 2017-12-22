@@ -205,7 +205,7 @@ public class HotelController extends BaseController {
     @ApiOperation(value = "链接", notes = "链接")
     @GetMapping(value = "{hotelId}/link", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<LinkVo> link(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
-        String url = getHost(request) + "/mobile/78CDF1/home/" + hotelId;
+        String url = String.format("%s/mobile/78CDF1/home/%s", getHost(request), hotelId);
         LinkVo link = new LinkVo();
         link.setLongUrl(url);
         link.setShortUrl(shortUrlUtil.getShorUrl(url));

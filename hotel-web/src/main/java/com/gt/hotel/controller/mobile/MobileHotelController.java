@@ -16,8 +16,6 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
-import com.gt.hotel.enums.ResponseEnums;
-import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelMobileParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
@@ -27,7 +25,6 @@ import com.gt.hotel.vo.*;
 import com.gt.hotel.web.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,9 +34,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 酒店移动端
@@ -96,9 +93,8 @@ public class MobileHotelController extends BaseController {
                 queryMap.put("browser", judgeBrowser(request));
                 queryMap.put("busId", hotel.getBusId());
                 queryMap.put("uclogin", null);
-                queryMap.put("returnUrl", getHost(request) + "/mobile/78CDF1/home/" + hotelId);
-                String param = URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
-                model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + param);
+                queryMap.put("returnUrl", URLEncoder.encode(String.format("%s/mobile/78CDF1/home/%s", getHost(request), hotelId), "utf-8"));
+                model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + JSON.toJSONString(queryMap));
             } else {
                 model.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());
             }
@@ -215,7 +211,6 @@ public class MobileHotelController extends BaseController {
         }
         return ResponseDTO.createBySuccess();
     }
-
 
 
 }
