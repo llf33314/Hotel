@@ -67,7 +67,7 @@
         'ROOM_CATEGORY' AS module,
         (CASE category.weekend_fare_enable
         WHEN 0
-        THEN IFNULL(calendar.price, IF(DAYOFWEEK(NOW()) IN (6, 7), category.weekend_fare, category.rack_rate))
+        THEN IFNULL(calendar.price, IF(DAYOFWEEK(#{param.roomInTime}) IN (6, 7), category.weekend_fare, category.rack_rate))
         WHEN 1
         THEN (IFNULL(calendar.price, category.rack_rate)) END) displayPrice
         FROM t_room_category category
@@ -78,7 +78,7 @@
         FROM t_room_calendar
         WHERE
         <![CDATA[
-          NOW() >= begin_time AND NOW() <= end_time
+          #{param.roomInTime} >= begin_time AND #{param.roomInTime} <= end_time
         ]]>
         ) calendar ON category.id = calendar.category_id
         LEFT JOIN (SELECT

@@ -78,6 +78,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
 
     @Autowired
     THotelService tHotelService;
+    
+    @Autowired
+    TRoomCalendarService roomCalendarService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -216,22 +219,24 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         Integer price = 0;
         /* 日期 */
 //		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
-        days = days == 0 ? 1 : days;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(bookParam.getRoomInTime());
-        cal.add(Calendar.DAY_OF_YEAR, -1);
-        int ordinaryDays = 0;
-        int weekendDays = 0;
-        for (int i = 0; i < days; i++) {
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            int week = cal.get(Calendar.DAY_OF_WEEK);
-            if (week == Calendar.FRIDAY || week == Calendar.SATURDAY) {
-                weekendDays++;
-            } else {
-                ordinaryDays++;
-            }
-        }
+//        List<Long> timeList = new ArrayList<Long>();
+//        Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
+//        days = days == 0 ? 1 : days;
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(bookParam.getRoomInTime());
+//        cal.add(Calendar.DAY_OF_YEAR, -1);
+//        int ordinaryDays = 0;
+//        int weekendDays = 0;
+//        for (int i = 0; i < days; i++) {
+//            cal.add(Calendar.DAY_OF_YEAR, 1);
+//            int week = cal.get(Calendar.DAY_OF_WEEK);
+//            if (week == Calendar.FRIDAY || week == Calendar.SATURDAY) {
+//                weekendDays++;
+//            } else {
+//                ordinaryDays++;
+//            }
+//            timeList.add(cal.getTimeInMillis());
+//        }
         /* 日期 */
         THotel hotel = tHotelService.selectById(hotelId);
         Wrapper<TRoomCategory> w = new EntityWrapper<>();
@@ -245,12 +250,30 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
             card = json.getJSONObject("data");
         }
 
+        Integer days = DateUtil.differentDays(bookParam.getRoomInTime(), bookParam.getRoomOutTime());
+        days = days == 0 ? 1 : days;
         for (TRoomCategory m : categories) {
             if (m.getId().equals(bookParam.getCategoryId())) {
-                if(m.getWeekendFareEnable().equals(CommonConst.ENABLED)) {
-                	price = m.getRackRate() * ordinaryDays + m.getWeekendFare() * weekendDays;
-                }else {
-                	price = m.getRackRate() * days;
+            	Wrapper<TRoomCalendar> calw = new EntityWrapper<>();
+            	w.eq("category_id", bookParam.getCategoryId());
+        		List<TRoomCalendar> calList = roomCalendarService.selectList(calw);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(bookParam.getRoomInTime());
+                cal.add(Calendar.DAY_OF_YEAR, -1);
+            	for (int i = 0; i < days; i++) {
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    int week = cal.get(Calendar.DAY_OF_WEEK);
+                    int tempPrice = m.getRackRate();
+                    if ((week == Calendar.FRIDAY || week == Calendar.SATURDAY) && m.getWeekendFareEnable().equals(CommonConst.ENABLED)) {
+                    	tempPrice = m.getWeekendFare();
+                    }
+                    for(TRoomCalendar rcal : calList) {
+            			if(rcal.getBeginTime().getTime() <= cal.getTimeInMillis() && rcal.getEndTime().getTime() >= cal.getTimeInMillis()) {
+            				tempPrice = rcal.getPrice();
+            				break;
+            			}
+            		}
+                    price += tempPrice;
                 }
                 orderPriceVO.setRoomPrice(price * bookParam.getRoomOrderNum());
                 price = activityCalculate(bookParam, price, orderPriceVO, days);

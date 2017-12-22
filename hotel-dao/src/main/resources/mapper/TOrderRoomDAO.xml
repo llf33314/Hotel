@@ -82,7 +82,8 @@
 		JOIN t_order_room b ON a.id = b.order_id 
 		JOIN t_hotel c ON a.hotel_id = c.id 
 		LEFT JOIN t_order_coupons d ON a.id = d.order_id 
-		WHERE a.id = #{orderId} AND a.member_id = #{memberId} AND a.hotel_id = #{hotelId}
+		WHERE a.id = #{orderId} AND a.member_id = #{memberId} AND a.hotel_id = #{hotelId} 
+		GROUP BY orderId
 	</select>
 
 	<select id="queryMobileRoomOrderSUM" resultType="Integer">
