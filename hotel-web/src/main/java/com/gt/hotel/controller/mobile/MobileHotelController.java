@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.google.common.base.Optional;
 import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
+import com.gt.api.util.KeysUtil;
 import com.gt.api.util.SessionUtils;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -16,6 +17,8 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
+import com.gt.hotel.enums.ResponseEnums;
+import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelMobileParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCategoryParameter;
@@ -81,10 +84,7 @@ public class MobileHotelController extends BaseController {
 
     @ApiOperation(value = "首页", notes = "首页")
     @GetMapping(value = "home/{hotelId}")
-    public ModelAndView moblieHome(
-            HttpServletRequest request,
-            @PathVariable("hotelId") Integer hotelId,
-            ModelAndView model) {
+    public ModelAndView moblieHome(HttpServletRequest request, @PathVariable("hotelId") Integer hotelId, ModelAndView model) {
         try {
             THotel hotel = tHotelService.selectById(hotelId);
             Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
@@ -92,14 +92,17 @@ public class MobileHotelController extends BaseController {
                 Map<String, Object> queryMap = new HashMap<>();
                 queryMap.put("browser", judgeBrowser(request));
                 queryMap.put("busId", hotel.getBusId());
-                queryMap.put("uclogin", null);
-                queryMap.put("returnUrl", String.format("%s/mobile/78CDF1/home/%s", getHost(request), hotelId));
-                model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8"));
+                queryMap.put("uclogin", "");
+                queryMap.put("returnUrl", (String.format("%s/mobile/78CDF1/home/%s", getHost(request), hotelId)));
+                String redirectUrl = "redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
+                log.debug("微信授权重定向 : {}", redirectUrl);
+                model.setViewName(redirectUrl);
             } else {
                 model.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info("移动端首页跳转异常", e);
+            throw new ResponseEntityException(ResponseEnums.BAD_REQUEST);
         }
         return model;
     }
@@ -112,8 +115,6 @@ public class MobileHotelController extends BaseController {
         THotel hotel = this.getHotelInfo(request);
         Member member = Optional.of(this.getMember(request)).get();
         Page<MobileRoomCategoryVo> page = tRoomCategoryService.queryMobileRoomCategory(hotelId, queryParam);
-        System.err.println(queryParam);
-        System.err.println(page.getRecords());
         try {
             JSONObject json = wXMPApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
             if (json != null && json.getInteger("code").equals(0)) {
