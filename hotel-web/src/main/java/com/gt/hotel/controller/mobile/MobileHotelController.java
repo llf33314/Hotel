@@ -93,9 +93,8 @@ public class MobileHotelController extends BaseController {
                 queryMap.put("browser", judgeBrowser(request));
                 queryMap.put("busId", hotel.getBusId());
                 queryMap.put("uclogin", null);
-                queryMap.put("returnUrl", URLEncoder.encode(String.format("%s/mobile/78CDF1/home/%s", getHost(request), hotelId), "utf-8"));
-                System.err.println(property.getWxmpService().getApiMap().get("authorizeMemberNew") + JSON.toJSONString(queryMap));
-                model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + JSON.toJSONString(queryMap));
+                queryMap.put("returnUrl", String.format("%s/mobile/78CDF1/home/%s", getHost(request), hotelId));
+                model.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8"));
             } else {
                 model.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());
             }

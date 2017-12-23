@@ -207,4 +207,4 @@ hotel:
                 # 发货、退货【新】
                 refund: ${hotel.webserver.JxcService.serviceUrl}/erp/order/news/add/outout/or/refund
 server:
-    port: 8080
+    port: 80
