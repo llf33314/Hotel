@@ -267,7 +267,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
                     	tempPrice = m.getWeekendFare();
                     }
                     for(TRoomCalendar rcal : calList) {
-            			if(rcal.getBeginTime().getTime() <= cal.getTimeInMillis() && rcal.getEndTime().getTime() >= cal.getTimeInMillis()) {
+            			if(rcal.getCategoryId().equals(m.getId()) 
+            					&& rcal.getBeginTime().getTime() <= cal.getTimeInMillis() 
+            					&& rcal.getEndTime().getTime() >= cal.getTimeInMillis()) {
             				tempPrice = rcal.getPrice();
             				break;
             			}
