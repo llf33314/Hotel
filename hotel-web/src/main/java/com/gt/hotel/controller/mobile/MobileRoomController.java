@@ -31,6 +31,7 @@ import com.gt.entityBo.PayTypeBo;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderCoupons;
@@ -46,6 +47,7 @@ import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
+import com.gt.hotel.web.service.TActivityService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TOrderCouponsService;
 import com.gt.hotel.web.service.TOrderRoomService;
@@ -85,6 +87,9 @@ public class MobileRoomController extends BaseController {
 
 	@Autowired
 	TOrderCouponsService orderCouponsService;
+	
+	@Autowired
+	TActivityService activityService;
 
 	@Autowired
     WebServerConfigurationProperties properties;
@@ -120,6 +125,10 @@ public class MobileRoomController extends BaseController {
         invalidParameter(bindingResult);
         /* 2017/12/20: 业务修订 总订单 1 ： N 客房订单 by:zhangmz */
         if (bookParam.getActivityId() != null) {
+        	TActivity activity = activityService.selectById(bookParam.getActivityId());
+        	if(activity.getEndTime().getTime() < System.currentTimeMillis()) {
+        		return ResponseDTO.createByErrorMessage("活动已结束");
+        	}
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             RoomCategoryParameter.MobileQueryRoomCategory req = new MobileQueryRoomCategory();
             req.setCategoryId(bookParam.getCategoryId());
