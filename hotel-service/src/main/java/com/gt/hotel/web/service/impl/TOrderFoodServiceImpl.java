@@ -114,6 +114,11 @@ public class TOrderFoodServiceImpl extends BaseServiceImpl<TOrderFoodDAO, TOrder
 		foodSettleVo.setCreateTime(tOrder.getCreateTime());
 		foodSettleVo.setCustomerName(member.getNickname());
 		foodSettleVo.setCustomerPhone(member.getPhone());
+		
+		order.getFoodMobileBookOrder().setHotelId(order.getHotelId());
+		order.getFoodMobileBookOrder().setOrderId(tOrder.getId());
+    	tOrderFoodService.mobileFoodOrderBookPay(member, order.getFoodMobileBookOrder());
+		
 		return foodSettleVo;
 	}
 	
@@ -151,6 +156,10 @@ public class TOrderFoodServiceImpl extends BaseServiceImpl<TOrderFoodDAO, TOrder
 		foodSettleVo.setCustomerPhone(tOrderFood.getCustomerPhone());
 		foodSettleVo.setOrderFoodDetails(detailVos);
 		foodSettleVo.setDeliveryTime(Collections.max(deliverys));
+		foodSettleVo.setRoomNum(tOrderFood.getRoomNum());
+		foodSettleVo.setPayType(tOrder.getPayType());
+		foodSettleVo.setInvoiceHead(tOrderFood.getInvoiceHead());
+		foodSettleVo.setRemark(tOrder.getRemark());
 		return foodSettleVo;
 	}
 
@@ -159,6 +168,7 @@ public class TOrderFoodServiceImpl extends BaseServiceImpl<TOrderFoodDAO, TOrder
 	public void mobileFoodOrderBookPay(Member member, FoodMobileBookOrder order) {
 		TOrder tOrder = tOrderService.selectById(order.getOrderId());
 		tOrder.setPayType(order.getPayType());
+		tOrder.setRemark(order.getRemark());
 		if(!tOrder.updateById()) {
 			throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
 		}

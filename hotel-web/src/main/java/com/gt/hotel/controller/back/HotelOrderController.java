@@ -350,7 +350,7 @@ public class HotelOrderController extends BaseController {
         try {
             WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
             //线下订单
-            if(orderRoom != null && orderRoom.getOrderFrom().equals(1)) {
+            if((orderRoom != null && orderRoom.getOrderFrom().equals(1)) || order.getRealPrice() == 0) {
             	Wrapper<TOrder> wrapper = new EntityWrapper<>();
                 wrapper.eq("id", orderId);
                 TOrder newOrder = new TOrder();

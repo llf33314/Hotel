@@ -65,6 +65,9 @@ public class FoodMobileParameter {
 		
 		@ApiModelProperty(value = "菜品集合")
 		private List<OrderFoodDetailVo> foods; 
+		
+		@ApiModelProperty(value = "餐饮 移动端 支付 订单 参数")
+		private FoodMobileBookOrder foodMobileBookOrder;
 	}
 	
 	@Data
