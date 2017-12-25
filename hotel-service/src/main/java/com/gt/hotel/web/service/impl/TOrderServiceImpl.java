@@ -491,6 +491,35 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
                 		|| "realPrice".equals(contentName)) {
                 	Double d = Double.valueOf(s);
                 	s = new DecimalFormat("#0.00").format(d / 100);
+                }else if("checkStandard".equals(contentName)) {
+//                	入住标准 0 全天房 1 特价房 2 钟点房 3 秒杀房 4 团购房
+                	switch (Integer.valueOf(c.toString())) {
+                	case 0:
+                		s = "全天房";
+                		break;
+                	case 1:
+                		s = "特价房";
+                		break;
+                	case 2:
+                		s = "钟点房";
+                		break;
+                	case 3:
+                		s = "秒杀房";
+                		break;
+                	case 4:
+                		s = "团购房";
+                		break;
+                	}
+                }else if("guestType".equals(contentName)) {
+//                	住客类型(0:散客/会员, 1:协议单位) 默认 0
+                	switch (Integer.valueOf(c.toString())) {
+                	case 0:
+                		s = "散客/会员";
+                		break;
+                	case 1:
+                		s = "协议单位";
+                		break;
+                	}
                 }else if("roomInTime".equals(contentName) 
                 		|| "roomOutTime".equals(contentName)) {
                 	try {

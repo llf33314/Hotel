@@ -157,16 +157,16 @@ public class HotelRoomController extends BaseController {
     public ResponseDTO roomCalendarCU(@PathVariable("categoryId") Integer categoryId, 
     		@RequestBody @ApiParam("参数") RoomCalendarParamter.CalendarSaveOrUpdate cal, 
     		HttpServletRequest request) {
-    	if(cal.getId() != null && cal.getPrice() == null) {
-    		Wrapper<TRoomCalendar> w = new EntityWrapper<>();
-    		w.eq("category_id", categoryId);
-    		w.eq("id", cal.getId());
-			if(calendarService.delete(w)) {
-				return ResponseDTO.createBySuccess();
-			}else {
-				return ResponseDTO.createByError();
-			}
-    	}else {
+//    	if(cal.getId() != null && cal.getPrice() == null) {
+//    		Wrapper<TRoomCalendar> w = new EntityWrapper<>();
+//    		w.eq("category_id", categoryId);
+//    		w.eq("id", cal.getId());
+//			if(calendarService.delete(w)) {
+//				return ResponseDTO.createBySuccess();
+//			}else {
+//				return ResponseDTO.createByError();
+//			}
+//    	}else {
     		Integer busid = getLoginUser(request).getId();
     		Date date = new Date();
     		TRoomCalendar calendar = new TRoomCalendar();
@@ -183,7 +183,7 @@ public class HotelRoomController extends BaseController {
     		} else {
     			return ResponseDTO.createByError();
     		}
-    	}
+//    	}
     }
 
 }

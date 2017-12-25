@@ -469,7 +469,7 @@ public class HotelOrderController extends BaseController {
                     "门市价", "订单状态", "支付状态", "支付方式", "住客类型", "入住标准", "证件类型", "证件号码", "性别", "消费金额",
                     "优惠金额", "应收金额", "退还金额", "实收金额"};
             String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomInTime", "roomOutTime",
-                    "categoryName", "number", "rackRate", "orderStatus", "payStatus", "payType", "guestType", "checkStandard", "customerIdType",
+                    "categoryName", "roomOrderNum", "rackRate", "orderStatus", "payStatus", "payType", "guestType", "checkStandard", "customerIdType",
                     "customerIdCard", "customerGender", "billPrice", "discountedPrice", "receivablePrice", "refundAmount", "realPrice"};
             wb = tOrderService.exportRoomOrder(page, contentName, titles);
             response.setHeader("Content-Disposition", "attachment;filename=\"" +
