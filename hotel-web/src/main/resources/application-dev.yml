@@ -85,12 +85,14 @@ mybatis-plus:
     global-config:
         #刷新mapper 调试神器
         refresh-mapper: true
+#    configuration:
+        # 开启缓存
+#        cache-enabled: true
 #============================================#
 #========== Redis Session Settings ==========#
 #============================================#
 redisSession:
     domainName: deeptel.com.cn
-    #  domainName: yifriend.net
     cookiePath: /
     cookieName: WXMPJSESSIONID
 #============================================#

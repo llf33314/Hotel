@@ -64,9 +64,9 @@ spring:
             #useGlobalDataSourceStat: true
             stat-view-servlet:
                 #      IP白(allow)/黑(deny)名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
-                allow: 127.0.0.1,192.168.3.47
+                allow: 127.0.0.1,192.168.3.47,113.81.62.193
                 login-username: admin
-                login-password: admin
+                login-password: gt@13579@
                 reset-enable: false
                 url-pattern: /druid/*
             # Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联监控配置
