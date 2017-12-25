@@ -161,6 +161,8 @@ hotel:
                 setRedisStorage: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/redis/SetExApi.do
                 authorizeMember: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody=
                 authorizeMemberNew: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMemberNew.do?queryBody=
+                # 授权新地址
+                authorizeMemberNew2: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMemberNew2.do?busId=%s&browser=%s&returnUrl=%s
                 selectByUserId: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/wxpublicapi/6F6D9AD2/79B4DE7C/selectByUserId.do
                 getErpListApi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getErpListApi.do
                 getMenus: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/ErploginApi/getMenus.do

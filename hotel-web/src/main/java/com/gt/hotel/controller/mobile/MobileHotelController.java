@@ -89,12 +89,16 @@ public class MobileHotelController extends BaseController {
             THotel hotel = tHotelService.selectById(hotelId);
             Member member = SessionUtils.getLoginMember(request, hotel.getBusId());
             if (member == null) {
+                Integer browser = judgeBrowser(request);
+                String url = KeysUtil.getEncString(String.format("%s/mobile/78CDF1/home/%s", getHost(request), hotelId));
                 Map<String, Object> queryMap = new HashMap<>();
-                queryMap.put("browser", judgeBrowser(request));
+                queryMap.put("browser", browser);
                 queryMap.put("busId", hotel.getBusId());
                 queryMap.put("uclogin", "");
-                queryMap.put("returnUrl", (String.format("%s/mobile/78CDF1/home/%s", getHost(request), hotelId)));
-                String redirectUrl = "redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8");
+                // 2017/12/23: 双重加密  by:zhangmz
+                queryMap.put("returnUrl", url);
+                //String redirectUrl = "redirect:" + String.format(property.getWxmpService().getApiMap().get("authorizeMemberNew2"), hotel.getBusId(), browser, url);
+                String redirectUrl = "redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + URLEncoder.encode(JSON.toJSONString(queryMap));
                 log.debug("微信授权重定向 : {}", redirectUrl);
                 model.setViewName(redirectUrl);
             } else {
@@ -141,7 +145,9 @@ public class MobileHotelController extends BaseController {
         return ResponseDTO.createBySuccess(page);
     }
 
-    /* 2017/12/20: 修复缺少酒店ID，修订代码  by:zhangmz */
+    /**
+     * 2017/12/20: 修复缺少酒店ID，修订代码  by:zhangmz
+     */
     @ApiOperation(value = "首页酒店信息", notes = "首页酒店信息")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<MobileHotelVo> moblieHotelR(@PathVariable("hotelId") Integer hotelId, HttpServletRequest request) {
