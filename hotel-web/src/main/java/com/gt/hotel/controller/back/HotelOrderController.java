@@ -143,8 +143,7 @@ public class HotelOrderController extends BaseController {
         Integer busid = getLoginUser(request).getId();
         TOrder order = tOrderService.selectById(orderId);
         if (!order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)
-                || !order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED)
-                || !order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN)) {
+                || !order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED)) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
         }
         Wrapper<TOrder> wrapper = new EntityWrapper<>();

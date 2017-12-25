@@ -225,7 +225,7 @@ public class MobileRoomController extends BaseController {
 				}
 			}else {
 				JSONObject SubQrPayParams = new JSONObject();
-				SubQrPayParams.put("totalFee", tOrder.getRealPrice());
+				SubQrPayParams.put("totalFee", tOrder.getRealPrice() / 100);
 				SubQrPayParams.put("model", CommonConst.PAY_MODEL_ROOM);
 				SubQrPayParams.put("busId", tOrder.getBusId());
 				SubQrPayParams.put("appidType", 0);
