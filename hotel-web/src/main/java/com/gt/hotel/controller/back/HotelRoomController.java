@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
@@ -147,6 +145,7 @@ public class HotelRoomController extends BaseController {
     public ResponseDTO<Page<RoomCalendarVo>> calendarRList(
             @PathVariable("categoryId") @ApiParam("房型ID") Integer categoryId,
             RoomCalendarParamter.CalendarQuery param) {
+    	param.setPageSize(999);
         Page<RoomCalendarVo> page = tRoomCategoryService.queryRoomCalendarList(categoryId, param);
         return ResponseDTO.createBySuccess(page);
     }

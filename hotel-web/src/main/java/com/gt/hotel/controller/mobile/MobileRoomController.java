@@ -167,7 +167,7 @@ public class MobileRoomController extends BaseController {
 			if(json != null && json.getInteger("code").equals(0)) {
 				memberCard = JSONObject.toJavaObject(json.getJSONObject("data"), MemberCard.class);
 			}
-			if(memberCard != null && memberCard.getCtId() == CommonConst.CARD_TYPE_VALUE_CARD) {
+			if(memberCard != null && tOrder.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD) && memberCard.getCtId() == CommonConst.CARD_TYPE_VALUE_CARD) {
 				//会员卡支付
 				NewErpPaySuccessBo bo = new NewErpPaySuccessBo();
 				bo.setMemberId(member.getId());
