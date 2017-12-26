@@ -4,8 +4,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -45,8 +43,6 @@ import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
 import com.gt.hotel.param.RoomMobileParameter;
-import com.gt.hotel.util.ExcelUtil;
-import com.gt.hotel.util.ExportUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
 import com.gt.hotel.vo.HotelBackRoomOrderVo;
@@ -142,14 +138,14 @@ public class HotelOrderController extends BaseController {
     public ResponseDTO foodOrderComplete(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId, HttpServletRequest request) {
         Integer busid = getLoginUser(request).getId();
         TOrder order = tOrderService.selectById(orderId);
-        if (!order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)
-                || !order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED)) {
+        if (!(order.getOrderStatus().equals(CommonConst.ORDER_CONFIRMED)
+                || order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED))) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
         }
         Wrapper<TOrder> wrapper = new EntityWrapper<>();
         wrapper.eq("id", orderId);
         TOrder newOrder = new TOrder();
-        newOrder.setOrderStatus(CommonConst.ORDER_CANCALLED);
+        newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
         newOrder.setUpdatedBy(busid);
         newOrder.setUpdatedAt(new Date());
         if (!tOrderService.update(newOrder, wrapper)) {

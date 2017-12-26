@@ -212,9 +212,11 @@ public class MobileHotelController extends BaseController {
         wrapper.eq("order_num", param.getOrderNum());
         TOrder o = tOrderService.selectOne(wrapper);
         TOrderRoom or = tOrderRoomService.selectOne(wrapper);
-        String content = "收到客人预约退房通知，请查看。订单号：" + param.getOrderNum() + "，退房房号："
-                + param.getRoomNum() + "，姓名：" + or.getCustomerName() + "，手机：" + or.getCustomerPhone() + "，发票抬头："
-                + param.getInvoiceHead() + "，发票类目：" + param.getInvoiceCategory();
+//        String content = "收到客人预约退房通知，请查看。订单号：" + param.getOrderNum() + "，退房房号："
+//                + param.getRoomNum() + "，姓名：" + or.getCustomerName() + "，手机：" + or.getCustomerPhone() + "，发票抬头："
+//                + param.getInvoiceHead() + "，发票类目：" + param.getInvoiceCategory();
+        String content = param.getOrderNum() + "," + param.getRoomNum() + "," + or.getCustomerName() + ","
+        		+ or.getCustomerPhone() + "," + param.getInvoiceHead() + "," + param.getInvoiceCategory();
         try {
             JSONObject result = wXMPApiUtil.sendSmsNew(hotelset.getReservationCheckOutPhone(), content, o.getBusId());
 //            JSONObject result = wXMPApiUtil.sendMsg(o.getBusId(), hotelset.getReservationCheckOutPhone(), content);

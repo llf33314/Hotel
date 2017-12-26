@@ -10,10 +10,13 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.HttpClienUtils;
+import com.gt.api.util.RequestUtils;
 import com.gt.api.util.sign.SignHttpUtils;
 import com.gt.entityBo.ErpRefundBo;
 import com.gt.entityBo.NewErpPaySuccessBo;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
+
+import lombok.Data;
 
 /**
  * 多粉接口
@@ -50,7 +53,7 @@ public final class WXMPApiUtil {
      * @return
      * @throws SignException
      */
-    private JSONObject getLApi(JSONObject param, String url)
+    private JSONObject getLApi(Object param, String url)
             throws SignException {
         JSONObject result = HttpClienUtils.reqPostUTF8(
                 JSONObject.toJSONString(param), url, JSONObject.class, webServerConfigurationProperties.getWxmpService().getSignKey());
@@ -255,18 +258,18 @@ public final class WXMPApiUtil {
      */
     public JSONObject sendMsg(Integer busId, String phone, String content)
             throws SignException {
-        JSONObject oldApiSms = new JSONObject();
-        oldApiSms.put("mobiles", phone);
-        oldApiSms.put("content", content);
-        oldApiSms.put("company", "(多粉平台)");
-        oldApiSms.put("busId", busId);
-        oldApiSms.put("model", 7);
+    	RequestUtils<OldApiSms> a = new RequestUtils<>();
+    	OldApiSms b = new OldApiSms();
+    	b.setBusId(busId);
+    	b.setMobiles(phone);
+    	b.setContent(content);
+    	a.setReqdata(b);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSMSOld");
-        return getLApi(oldApiSms, url);
+        return getLApi(a, url);
     }
 
     /**
-     * 发送短信(模板接口)
+     * 发送短信(退房模板接口)
      *
      * @param mobile    手机号码,可多个号码
      * @param paramsStr 内容
@@ -275,14 +278,16 @@ public final class WXMPApiUtil {
      * @throws SignException
      */
     public JSONObject sendSmsNew(String mobile, String paramsStr, Integer busId/*, Long tmplId*/) throws SignException {
-    	JSONObject newApiSms = new JSONObject();
-        newApiSms.put("mobile", mobile);
-        newApiSms.put("paramsStr", paramsStr);
-        newApiSms.put("busId", busId);
-        newApiSms.put("model", 7);
-        newApiSms.put("tmplId", 58761);
+    	RequestUtils<NewApiSms> a = new RequestUtils<>();
+    	NewApiSms b = new NewApiSms();
+    	b.setBusId(busId);
+    	b.setMobile(mobile);
+    	b.setParamsStr(paramsStr);
+    	b.setModel(7);
+    	b.setTmplId(58761L);
+    	a.setReqdata(b);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSmsNew");
-        return getLApi(newApiSms, url);
+        return getLApi(a, url);
     }
 
     /**
@@ -599,14 +604,23 @@ public final class WXMPApiUtil {
 //            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
 //            System.err.println(result);
 
-            JSONObject newApiSms = new JSONObject();
-            newApiSms.put("mobile", "15013990984");
-            newApiSms.put("paramsStr", "测试 test");
-            newApiSms.put("busId", 36);
-            newApiSms.put("model", 7);
-            newApiSms.put("tmplId", 58761);
+        	RequestUtils<NewApiSms> a = new RequestUtils<>();
+//            JSONObject newApiSms = new JSONObject();
+//            newApiSms.put("mobile", "15013990984");
+//            newApiSms.put("paramsStr", "测试,test,测试1,测试1,测试1,测试1");
+//            newApiSms.put("busId", 36);
+//            newApiSms.put("model", 7);
+//            newApiSms.put("tmplId", 58761L);
+        	NewApiSms b = new NewApiSms();
+        	b.setBusId(36);
+        	b.setMobile("15013990984");
+        	b.setParamsStr("eins,SDG,DGDFG,SFD,ASFSA,ASDFDF");
+        	b.setModel(7);
+        	b.setTmplId(58761L);
+        	a.setReqdata(b);
             String url = "https://deeptel.com.cn/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsNew.do";
-        	JSONObject result2 = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(newApiSms), url, JSONObject.class, "WXMP2017");
+        	JSONObject result2 = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(a), url, JSONObject.class, "WXMP2017");
+        	
 //            JSONObject oldApiSms = new JSONObject();
 //            oldApiSms.put("mobiles", "15013990984");
 //            oldApiSms.put("content", "测试 test");
@@ -620,5 +634,24 @@ public final class WXMPApiUtil {
             e.printStackTrace();
         }
     }
+}
+
+@Data
+class NewApiSms{
+	private Integer busId;
+	private String mobile;
+	private String paramsStr;
+	private Integer model = 7;
+	private Long tmplId;
+}
+
+@Data
+class OldApiSms{
+	private String mobiles;
+	private String content;
+	private String company = "多粉平台";
+	private Integer busId;
+	private Integer model = 7;
+	private String notifyUrl;
 }
 
