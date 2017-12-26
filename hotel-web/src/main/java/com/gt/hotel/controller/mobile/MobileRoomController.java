@@ -206,7 +206,7 @@ public class MobileRoomController extends BaseController {
 			    	Date date = new Date();
 			    	tOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
 			    	tOrder.setPayTime(date);
-					tOrder.setPayType(judgeBrowser(request) == 1 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
+//					tOrder.setPayType(judgeBrowser(request) == 1 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
 					if(!tOrder.updateById()) {
 						throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
 					}

@@ -51,5 +51,13 @@ public interface TOrderFoodService extends BaseService<TOrderFood> {
 	 * @return
 	 */
 	FoodSettleVo queryFoodOrderOne(Integer hotelId, Integer orderId, Member member);
+
+	/**
+	 * 支付同步回调
+	 * @param param 
+	 * @param orderId
+	 * @return
+	 */
+	void moblieHotelFoodPayReturnUrl(Integer orderId);
 	
 }

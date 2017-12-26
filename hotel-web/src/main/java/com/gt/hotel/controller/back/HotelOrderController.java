@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +42,7 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.enums.ResponseEnums;
+import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelOrderParameter;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategoryOne;
 import com.gt.hotel.param.RoomMobileParameter;
@@ -75,6 +78,8 @@ public class HotelOrderController extends BaseController {
     @Autowired
     private WXMPApiUtil wxmpApiUtil;
 
+    private long midflag = 0;
+    
     @ApiOperation(value = "删除 房间&餐饮订单(共用)", notes = "删除 房间&餐饮订单(共用)")
     @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @SuppressWarnings("rawtypes")
@@ -451,28 +456,51 @@ public class HotelOrderController extends BaseController {
 
     ////////////////////////////////////////////////////////////↓导出↓ //////////////////////////////////////////////////////////
 
-    @ApiOperation(value = "房间订单导出", notes = "房间订单导出")
+	@ApiOperation(value = "房间订单导出", notes = "房间订单导出")
     @GetMapping(value = "roomExport", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void roomOrderExport(HotelOrderParameter.RoomOrderQuery param,
-                                HttpServletRequest request, HttpServletResponse response) {
+	public void roomOrderExport(HotelOrderParameter.RoomOrderQuery param,
+			HttpServletRequest request, HttpServletResponse response) {
+		if(midflag != 0 && (System.currentTimeMillis() - midflag < 1000)) {
+    		throw new ResponseEntityException("操作太快");
+    	}
+		midflag = System.currentTimeMillis();
         OutputStream outputStream = null;
         HSSFWorkbook wb = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            Integer busid = getLoginUser(request).getId();
-            List<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrderExport(busid, param);
-            String[] titles = new String[]{"订单号", "酒店名称", "姓名", "手机号", "入住时间", "离店时间", "房间类型", "预订间数",
-                    "门市价", "订单状态", "支付状态", "支付方式", "住客类型", "入住标准", "证件类型", "证件号码", "性别", "消费金额",
-                    "优惠金额", "应收金额", "退还金额", "实收金额"};
-            String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomInTime", "roomOutTime",
-                    "categoryName", "roomOrderNum", "rackRate", "orderStatus", "payStatus", "payType", "guestType", "checkStandard", "customerIdType",
-                    "customerIdCard", "customerGender", "billPrice", "discountedPrice", "receivablePrice", "refundAmount", "realPrice"};
-            wb = tOrderService.exportRoomOrder(page, contentName, titles);
-            response.setHeader("Content-Disposition", "attachment;filename=\"" +
-                    URLEncoder.encode("房间订单" + new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()) +
-                            ".xls", "UTF-8") + "\"");
-            response.setContentType("application/vnd.ms-excel");
-            outputStream = new BufferedOutputStream(response.getOutputStream());
-            wb.write(outputStream);
+        	if(StringUtils.isEmpty(param.getRoomOutTime())) {
+        		param.setRoomOutTime(format.format(System.currentTimeMillis()));
+        	}
+        	if(StringUtils.isEmpty(param.getRoomInTime())) {
+        		Calendar cal = Calendar.getInstance();
+        		cal.setTimeInMillis(System.currentTimeMillis());
+        		cal.add(Calendar.MONTH, -3);
+        		param.setRoomInTime(format.format(cal.getTime()));
+        	}
+        	Calendar inDate = Calendar.getInstance();
+        	inDate.setTime(format.parse(param.getRoomInTime()));
+        	Calendar outDate = Calendar.getInstance();
+        	outDate.setTime(format.parse(param.getRoomOutTime()));
+        	int monthDiff = (outDate.get(Calendar.YEAR) - inDate.get(Calendar.YEAR)) * 12 + outDate.get(Calendar.MONTH) - inDate.get(Calendar.MONTH);
+        	if(monthDiff > 3) {
+        		throw new ResponseEntityException("最大时间不可超过三个月");
+        	}else {
+        		Integer busid = getLoginUser(request).getId();
+        		List<HotelBackRoomOrderVo> page = tOrderService.queryRoomOrderExport(busid, param);
+        		String[] titles = new String[]{"订单号", "酒店名称", "姓名", "手机号", "入住时间", "离店时间", "房间类型", "预订间数",
+        				"门市价", "订单状态", "支付状态", "支付方式", "住客类型", "入住标准", "证件类型", "证件号码", "性别", "消费金额",
+        				"优惠金额", "应收金额", "退还金额", "实收金额"};
+        		String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomInTime", "roomOutTime",
+        				"categoryName", "roomOrderNum", "rackRate", "orderStatus", "payStatus", "payType", "guestType", "checkStandard", "customerIdType",
+        				"customerIdCard", "customerGender", "billPrice", "discountedPrice", "receivablePrice", "refundAmount", "realPrice"};
+        		wb = tOrderService.exportRoomOrder(page, contentName, titles);
+        		response.setHeader("Content-Disposition", "attachment;filename=\"" +
+        				URLEncoder.encode("房间订单" + new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()) +
+        						".xls", "UTF-8") + "\"");
+        		response.setContentType("application/vnd.ms-excel");
+        		outputStream = new BufferedOutputStream(response.getOutputStream());
+        		wb.write(outputStream);
+        	}
             outputStream.flush();
             outputStream.close();
             wb.close();
@@ -497,23 +525,45 @@ public class HotelOrderController extends BaseController {
     @ApiOperation(value = "餐饮订单导出", notes = "餐饮订单导出")
     @GetMapping(value = "foodExport", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void foodOrderExport(HotelOrderParameter.FoodOrderQuery param,
-                                HttpServletRequest request, HttpServletResponse response) {
-
+    		HttpServletRequest request, HttpServletResponse response) {
+    	if(midflag != 0 && (System.currentTimeMillis() - midflag < 1000)) {
+    		throw new ResponseEntityException("操作太快");
+    	}
+		midflag = System.currentTimeMillis();
         OutputStream outputStream = null;
         HSSFWorkbook wb = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            Integer busid = getLoginUser(request).getId();
-            List<HotelBackFoodOrderVo> page = tOrderService.queryFoodOrderExport(busid, param);
-            String[] titles = new String[]{"订单编号", "酒店名称", "预订人", "电话", "房号", "订单总额(元)", "下单时间", "菜品提供方", "订单状态", "支付状态", "支付方式"};
-            String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomNum",
-                    "realPrice", "createTime", "foodProvidesName", "orderStatus", "payStatus", "payType"};
-            wb = tOrderService.exportFoodOrder(page, contentName, titles);
-            response.setHeader("Content-Disposition", "attachment;filename=\"" +
-                    URLEncoder.encode("餐饮订单" + new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()) +
-                            ".xls", "UTF-8") + "\"");
-            response.setContentType("application/vnd.ms-excel");
-            outputStream = new BufferedOutputStream(response.getOutputStream());
-            wb.write(outputStream);
+        	if(StringUtils.isEmpty(param.getEndTime())) {
+        		param.setEndTime(format.format(System.currentTimeMillis()));
+        	}
+        	if(StringUtils.isEmpty(param.getBeginTime())) {
+        		Calendar cal = Calendar.getInstance();
+        		cal.setTimeInMillis(System.currentTimeMillis());
+        		cal.add(Calendar.MONTH, -3);
+        		param.setBeginTime(format.format(cal.getTime()));
+        	}
+        	Calendar inDate = Calendar.getInstance();
+        	inDate.setTime(format.parse(param.getEndTime()));
+        	Calendar outDate = Calendar.getInstance();
+        	outDate.setTime(format.parse(param.getBeginTime()));
+        	int monthDiff = (outDate.get(Calendar.YEAR) - inDate.get(Calendar.YEAR)) * 12 + outDate.get(Calendar.MONTH) - inDate.get(Calendar.MONTH);
+        	if(monthDiff > 3) {
+        		throw new ResponseEntityException("最大时间不可超过三个月");
+        	}else {
+        		Integer busid = getLoginUser(request).getId();
+        		List<HotelBackFoodOrderVo> page = tOrderService.queryFoodOrderExport(busid, param);
+        		String[] titles = new String[]{"订单编号", "酒店名称", "预订人", "电话", "房号", "订单总额(元)", "下单时间", "菜品提供方", "订单状态", "支付状态", "支付方式"};
+        		String[] contentName = new String[]{"orderNum", "hotelName", "customerName", "customerPhone", "roomNum",
+        				"realPrice", "createTime", "foodProvidesName", "orderStatus", "payStatus", "payType"};
+        		wb = tOrderService.exportFoodOrder(page, contentName, titles);
+        		response.setHeader("Content-Disposition", "attachment;filename=\"" +
+        				URLEncoder.encode("餐饮订单" + new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()) +
+        						".xls", "UTF-8") + "\"");
+        		response.setContentType("application/vnd.ms-excel");
+        		outputStream = new BufferedOutputStream(response.getOutputStream());
+        		wb.write(outputStream);
+        	}
             outputStream.flush();
             outputStream.close();
             wb.close();
