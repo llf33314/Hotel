@@ -255,15 +255,14 @@ public final class WXMPApiUtil {
      */
     public JSONObject sendMsg(Integer busId, String phone, String content)
             throws SignException {
-        Map<String, Object> oldApiSms = new HashMap<String, Object>();
+        JSONObject oldApiSms = new JSONObject();
         oldApiSms.put("mobiles", phone);
         oldApiSms.put("content", content);
         oldApiSms.put("company", "(多粉平台)");
         oldApiSms.put("busId", busId);
         oldApiSms.put("model", 7);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSMSOld");
-        String result = SignHttpUtils.postByHttp(url, oldApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
-        return JSONObject.parseObject(result);
+        return getLApi(oldApiSms, url);
     }
 
     /**
@@ -272,20 +271,18 @@ public final class WXMPApiUtil {
      * @param mobile    手机号码,可多个号码
      * @param paramsStr 内容
      * @param busId     商家ID
-     * @param tmplId    短信模板id
      * @return
      * @throws SignException
      */
-    public JSONObject sendSmsNew(String mobile, String paramsStr, Integer busId, Long tmplId) throws SignException {
-        Map<String, Object> newApiSms = new HashMap<String, Object>();
+    public JSONObject sendSmsNew(String mobile, String paramsStr, Integer busId/*, Long tmplId*/) throws SignException {
+    	JSONObject newApiSms = new JSONObject();
         newApiSms.put("mobile", mobile);
         newApiSms.put("paramsStr", paramsStr);
         newApiSms.put("busId", busId);
         newApiSms.put("model", 7);
-        newApiSms.put("tmplId", tmplId);
+        newApiSms.put("tmplId", 58761);
         String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("sendSmsNew");
-        String result = SignHttpUtils.postByHttp(url, newApiSms, webServerConfigurationProperties.getWxmpService().getSignKey());
-        return JSONObject.parseObject(result);
+        return getLApi(newApiSms, url);
     }
 
     /**
@@ -571,9 +568,9 @@ public final class WXMPApiUtil {
 
     public static void main(String[] args) {
         try {
-            Map<String, Object> param = new HashMap<String, Object>();
-        	param.put("style", 1197);
-        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
+//            Map<String, Object> param = new HashMap<String, Object>();
+//        	param.put("style", 1197);
+//        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
 //        	param.put("loginStyle", "1");
 //        	param.put("userId", 33);
 //        	param.put("loginuc", 0);
@@ -583,7 +580,7 @@ public final class WXMPApiUtil {
 //        	param.put("levelModel", 1);
 //            param.put("reqdata", 33);
 //            String url = "https://deeptel.com.cn" + "/8A5DA52E/ErploginApi/getMenusThree.do";
-            String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
+//            String result = SignHttpUtils.WxmppostByHttp(url, param, "WXMP2017");
 //            JSONObject result = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(param), url, JSONObject.class, "WXMP2017");
 
 //        	param.put("cardNo", "13433550667");
@@ -592,7 +589,7 @@ public final class WXMPApiUtil {
 //        	String url = "http://member.yifriend.net" + "/memberAPI/member/findCardByMembeId";
 //        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
 //
-            System.err.println(result);
+//            System.err.println(result);
 
 //            String url = "http://member.yifriend.net/" + "memberAPI/member/findMemberByIds";
 //            String signKey = "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM";
@@ -602,7 +599,23 @@ public final class WXMPApiUtil {
 //            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
 //            System.err.println(result);
 
-
+            JSONObject newApiSms = new JSONObject();
+            newApiSms.put("mobile", "15013990984");
+            newApiSms.put("paramsStr", "测试 test");
+            newApiSms.put("busId", 36);
+            newApiSms.put("model", 7);
+            newApiSms.put("tmplId", 58761);
+            String url = "https://deeptel.com.cn/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsNew.do";
+        	JSONObject result2 = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(newApiSms), url, JSONObject.class, "WXMP2017");
+//            JSONObject oldApiSms = new JSONObject();
+//            oldApiSms.put("mobiles", "15013990984");
+//            oldApiSms.put("content", "测试 test");
+//            oldApiSms.put("company", "(多粉平台)");
+//            oldApiSms.put("busId", 36);
+//            oldApiSms.put("model", 7);
+//            String url = "https://deeptel.com.cn/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsOld.do";
+//            JSONObject result2 = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(oldApiSms), url, JSONObject.class, "WXMP2017");
+            System.out.println(result2);
         } catch (Exception e) {
             e.printStackTrace();
         }

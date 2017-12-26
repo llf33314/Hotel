@@ -216,7 +216,7 @@ public class MobileHotelController extends BaseController {
                 + param.getRoomNum() + "，姓名：" + or.getCustomerName() + "，手机：" + or.getCustomerPhone() + "，发票抬头："
                 + param.getInvoiceHead() + "，发票类目：" + param.getInvoiceCategory();
         try {
-            JSONObject result = wXMPApiUtil.sendSmsNew(hotelset.getReservationCheckOutPhone(), content, o.getBusId(), 58761l);
+            JSONObject result = wXMPApiUtil.sendSmsNew(hotelset.getReservationCheckOutPhone(), content, o.getBusId());
 //            JSONObject result = wXMPApiUtil.sendMsg(o.getBusId(), hotelset.getReservationCheckOutPhone(), content);
             if(result == null) {
             	return ResponseDTO.createByErrorMessage("400:短信发送失败");

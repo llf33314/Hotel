@@ -118,7 +118,7 @@ public class MobileFoodController extends BaseController {
     		HttpServletRequest request, ModelAndView modelAndView) {
     	TOrder tOrder = tOrderService.selectById(orderId);
     	JSONObject SubQrPayParams = new JSONObject();
-    	SubQrPayParams.put("totalFee", tOrder.getRealPrice());
+    	SubQrPayParams.put("totalFee", tOrder.getRealPrice() / 100d);
     	SubQrPayParams.put("model", CommonConst.PAY_MODEL_FOOD);
     	SubQrPayParams.put("busId", tOrder.getBusId());
     	SubQrPayParams.put("appidType", 0);

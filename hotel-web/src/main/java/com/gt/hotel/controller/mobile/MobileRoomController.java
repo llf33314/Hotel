@@ -225,7 +225,7 @@ public class MobileRoomController extends BaseController {
 				}
 			}else {
 				JSONObject SubQrPayParams = new JSONObject();
-				SubQrPayParams.put("totalFee", tOrder.getRealPrice() / 100);
+				SubQrPayParams.put("totalFee", tOrder.getRealPrice() / 100d);
 				SubQrPayParams.put("model", CommonConst.PAY_MODEL_ROOM);
 				SubQrPayParams.put("busId", tOrder.getBusId());
 				SubQrPayParams.put("appidType", 0);
@@ -237,8 +237,8 @@ public class MobileRoomController extends BaseController {
 //    			SubQrPayParams.put("sendUrl", "");
 				SubQrPayParams.put("payWay", 0);
 				SubQrPayParams.put("sourceType", 1);
-				String obj;
-				obj = KeysUtil.getEncString(SubQrPayParams.toJSONString());
+				System.err.println(SubQrPayParams.toJSONString());
+				String obj = KeysUtil.getEncString(SubQrPayParams.toJSONString());
 				modelAndView.setViewName("redirect:" + properties.getWxmpService().getApiMap().get("payapi").toString()+obj);
 			}
 		} catch (Exception e) {
