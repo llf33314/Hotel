@@ -116,11 +116,13 @@ public class MobileFoodController extends BaseController {
     public ModelAndView moblieHotelFoodPay(@PathVariable("hotelId") Integer hotelId,  
     		@PathVariable("orderId") Integer orderId,
     		HttpServletRequest request, ModelAndView modelAndView) {
+    	Member member = getMember(request);
     	TOrder tOrder = tOrderService.selectById(orderId);
     	JSONObject SubQrPayParams = new JSONObject();
     	SubQrPayParams.put("totalFee", tOrder.getRealPrice() / 100d);
     	SubQrPayParams.put("model", CommonConst.PAY_MODEL_FOOD);
     	SubQrPayParams.put("busId", tOrder.getBusId());
+    	SubQrPayParams.put("memberId", member.getId());
     	SubQrPayParams.put("appidType", 0);
     	SubQrPayParams.put("orderNum", tOrder.getOrderNum());
     	SubQrPayParams.put("desc", "酒店订餐");

@@ -344,19 +344,21 @@ public class HotelOrderController extends BaseController {
         Wrapper<TOrderRoom> w = new EntityWrapper<>();
         w.eq("order_id", orderId);
 		TOrderRoom orderRoom = orderRoomService.selectOne(w);
-        if (!(order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN) && order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID))) {
+        if (!order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN) && 
+        		!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID) && 
+        		!order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE)) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
         }
         try {
             WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
             //线下订单
-            if((orderRoom != null && orderRoom.getOrderFrom().equals(1)) || order.getRealPrice() == 0) {
+            if((orderRoom != null && orderRoom.getOrderFrom().equals(1)) || order.getRealPrice() == 0 || order.getPayType().equals(2)) {
             	Wrapper<TOrder> wrapper = new EntityWrapper<>();
                 wrapper.eq("id", orderId);
                 TOrder newOrder = new TOrder();
                 newOrder.setOrderStatus(CommonConst.PAY_STATUS_REFUNDS);
                 newOrder.setUpdatedBy(busid);
-                newOrder.setRefundAmount(refundsP.getRefundFee());
+                newOrder.setRefundAmount(refundsP.getRefundFee() == null ? 0 : refundsP.getRefundFee());
                 newOrder.setRefundReason(refundsP.getRefundReason());
                 if (!tOrderService.update(newOrder, wrapper)) {
                     return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
