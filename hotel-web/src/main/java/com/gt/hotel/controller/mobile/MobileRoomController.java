@@ -206,7 +206,7 @@ public class MobileRoomController extends BaseController {
 			    	Date date = new Date();
 			    	tOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
 			    	tOrder.setPayTime(date);
-					tOrder.setPayType(judgeBrowser(request) == 1 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
+//					tOrder.setPayType(judgeBrowser(request) == 1 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
 					if(!tOrder.updateById()) {
 						throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
 					}
@@ -231,8 +231,9 @@ public class MobileRoomController extends BaseController {
 				SubQrPayParams.put("appidType", 0);
 				SubQrPayParams.put("orderNum", tOrder.getOrderNum());
 				SubQrPayParams.put("desc", "酒店订房");
-				SubQrPayParams.put("isreturn", 0);
-				SubQrPayParams.put("notifyUrl", getHost(request)+"/mobile/78CDF1/room/"+hotelId+"/notifyUrl/"+orderId);
+				SubQrPayParams.put("isreturn", 1);
+				SubQrPayParams.put("returnUrl", getHost(request)+"/mobile/78CDF1/room/"+hotelId+"/returnUrl/"+orderId);
+//				SubQrPayParams.put("notifyUrl", getHost(request)+"/mobile/78CDF1/room/"+hotelId+"/notifyUrl/"+orderId);
 				SubQrPayParams.put("isSendMessage", 0);
 //    			SubQrPayParams.put("sendUrl", "");
 				SubQrPayParams.put("payWay", 0);
@@ -247,12 +248,28 @@ public class MobileRoomController extends BaseController {
 		}
     	return modelAndView;
     }
+    
+    @ApiOperation(value = "支付同步回调", notes = "支付同步回调", hidden = true)
+    @GetMapping(value = "{hotelId}/returnUrl/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ModelAndView moblieHotelRoomPayReturnUrl(@PathVariable("hotelId") Integer hotelId,
+    		@PathVariable("orderId") Integer orderId, 
+    		Integer busId, Integer memberId,
+    		ModelAndView modelAndView,
+    		HttpServletRequest request) {
+        try{
+        	tOrderRoomService.moblieHotelRoomPayReturnUrl(orderId);
+        }catch (Exception e) {
+        	modelAndView.setViewName("/error/defaultError.html");
+		}
+    	modelAndView.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotelId);
+    	return modelAndView;
+    }
 
     @ApiOperation(value = "支付异步回调", notes = "支付异步回调", hidden = true)
     @PostMapping(value = "{hotelId}/notifyUrl/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public JSONObject moblieHotelRoomPayNotifyUrl(@PathVariable("hotelId") Integer hotelId,
-                                                  @PathVariable("orderId") Integer orderId, Map<String, Object> param,
-                                                  HttpServletRequest request) {
+    		@PathVariable("orderId") Integer orderId, Map<String, Object> param,
+    		HttpServletRequest request) {
         JSONObject json = new JSONObject();
         json.put("code", -1);
         json.put("msg", "支付失败");

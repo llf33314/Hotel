@@ -1,5 +1,19 @@
 package com.gt.hotel.web.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -9,7 +23,14 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.dao.TOrderRoomDAO;
-import com.gt.hotel.entity.*;
+import com.gt.hotel.entity.TActivityDetail;
+import com.gt.hotel.entity.TActivityRoom;
+import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.entity.TOrderCoupons;
+import com.gt.hotel.entity.TOrderRoom;
+import com.gt.hotel.entity.TRoomCalendar;
+import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.DuofenCards;
@@ -18,18 +39,23 @@ import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
 import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.WXMPApiUtil;
-import com.gt.hotel.vo.*;
-import com.gt.hotel.web.service.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import com.gt.hotel.vo.ActivityDetailVo;
+import com.gt.hotel.vo.CheackInListRevenueVo;
+import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomCardVo;
+import com.gt.hotel.vo.RoomCheackInCountVo;
+import com.gt.hotel.vo.RoomOrderPriceVO;
+import com.gt.hotel.web.service.TActivityDetailService;
+import com.gt.hotel.web.service.TActivityRoomService;
+import com.gt.hotel.web.service.TBreakfastCouponsService;
+import com.gt.hotel.web.service.THotelService;
+import com.gt.hotel.web.service.TOrderCouponsService;
+import com.gt.hotel.web.service.TOrderRoomService;
+import com.gt.hotel.web.service.TOrderService;
+import com.gt.hotel.web.service.TRoomCalendarService;
+import com.gt.hotel.web.service.TRoomCategoryService;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -184,8 +210,10 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
     @Override
     public JSONObject moblieHotelRoomPayNotifyUrl(Map<String, Object> param, Integer orderId) {
         JSONObject json = new JSONObject();
+        json.put("code", -1);
+        json.put("msg", "支付失败");
         if (param.get("out_trade_no") == null) {
-            throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+        	return json;
         }
         int payType = Integer.valueOf(param.get("payType").toString());
         Date date = new Date();
@@ -197,7 +225,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         tOrder.setPayTime(date);
         tOrder.setPayType(payType == 0 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
         if (!tOrder.updateById()) {
-            throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+        	return json;
         }
         Wrapper<TOrderRoom> fwrapper = new EntityWrapper<>();
         fwrapper.eq("order_id", orderId);
@@ -206,7 +234,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
         orderRoom.setPayTime(date);
         if (!orderRoom.updateById()) {
-            throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+        	return json;
         }
         json.put("code", 0);
         json.put("msg", "支付成功");
@@ -462,11 +490,32 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
     @SuppressWarnings("unchecked")
     @Override
     public Page<RoomCardVo> mobileFindRoomCard(Member member, Integer vipLevel, RoomCardParam param) {
-        System.err.println(member);
         Page<RoomCardVo> page = param.initPage();
         List<RoomCardVo> cardVos = tOrderRoomDAO.findRoomCard(member.getId(), vipLevel, page);
         page.setRecords(cardVos);
         return page;
     }
+
+    @Transactional
+	@Override
+	public void moblieHotelRoomPayReturnUrl(Integer orderId) {
+		Date date = new Date();
+        TOrder order = orderService.selectById(orderId);
+        order.setPayStatus(CommonConst.PAY_STATUS_PAID);
+        order.setPayTime(date);
+        System.err.println(order);
+        if (!orderService.updateById(order)) {
+        	throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+        }
+        Wrapper<TOrderRoom> fwrapper = new EntityWrapper<>();
+        fwrapper.eq("order_id", orderId);
+        fwrapper.eq("order_num", order.getOrderNum());
+        TOrderRoom orderRoom = orderRoomService.selectOne(fwrapper);
+        orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
+        orderRoom.setPayTime(date);
+        if (!orderRoomService.updateById(orderRoom)) {
+        	throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+        }
+	}
 
 }

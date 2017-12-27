@@ -90,4 +90,11 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 */
 	Page<RoomCardVo> mobileFindRoomCard(Member member, Integer vipLevel, RoomCardParam param);
 
+	/**
+	 * 支付同步回调
+	 * @param orderId
+	 * @return
+	 */
+	void moblieHotelRoomPayReturnUrl(Integer orderId);
+
 }

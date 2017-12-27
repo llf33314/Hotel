@@ -22,6 +22,7 @@ import com.gt.hotel.entity.TFood;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderFood;
 import com.gt.hotel.entity.TOrderFoodDetail;
+import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
@@ -223,6 +224,26 @@ public class TOrderFoodServiceImpl extends BaseServiceImpl<TOrderFoodDAO, TOrder
 		json.put("code", 0);
 		json.put("msg", "支付成功");
 		return json;
+	}
+
+	@Override
+	public void moblieHotelFoodPayReturnUrl(Integer orderId) {
+		Date date = new Date();
+        TOrder order = tOrderService.selectById(orderId);
+        order.setPayStatus(CommonConst.PAY_STATUS_PAID);
+        order.setPayTime(date);
+        if (!tOrderService.updateById(order)) {
+        	throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+        }
+        Wrapper<TOrderFood> fwrapper = new EntityWrapper<>();
+		fwrapper.eq("order_id", orderId);
+		fwrapper.eq("order_num", order.getOrderNum());
+		TOrderFood tOrderFood = tOrderFoodService.selectOne(fwrapper);
+		tOrderFood.setPayStatus(CommonConst.PAY_STATUS_PAID);
+		tOrderFood.setPayTime(date);
+		if(!tOrderFood.updateById()) {
+			throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+		}
 	}
 	
 }
