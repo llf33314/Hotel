@@ -121,7 +121,7 @@
 	<select id="findRoomCard" resultMap="RoomCardVo">
 		SELECT a.id orderId, b.room_num roomNum, IF(d.breakfast_enable = 0, d.breakfast_quantity, 0) breakfastQuantity, e.free_deposit_enable freeDepositEnable, e.vip_check_out vipCheckOut, 
 		c.number, c.rack_rate rackRate, c.deposit, a.fb_discount fbDiscount, a.integral_discount integralDiscount, f.coupons_discount couponsDiscount, MIN(e.vip_level) vipLevel, 
-		c.room_price roomPrice, c.hotel_name hotelName, b.`name` customerName, b.phone customerPhone 
+		c.room_price roomPrice, c.hotel_name hotelName, b.`name` customerName, b.phone customerPhone, c.order_from orderFrom 
 		FROM t_order a 
 		JOIN t_order_room_customer b ON a.id = b.order_id 
 		JOIN t_order_room c ON a.id = c.order_id 

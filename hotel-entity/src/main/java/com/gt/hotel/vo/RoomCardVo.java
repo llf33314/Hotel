@@ -63,6 +63,9 @@ public class RoomCardVo {
 	@ApiModelProperty(value = "入住人手机")
 	private String customerPhone;
 	
+	@ApiModelProperty(value = "来源 1 后台(线下订单) 2 ERP 3 移动端(H5) 4 小程序 ，默认 0 未知来源  ")
+	private Integer orderFrom;
+	
 	@ApiModelProperty(value = "早餐去集合")
 	private List<BreakfastCouponsVo>  BreakfastCoupons;
 }
