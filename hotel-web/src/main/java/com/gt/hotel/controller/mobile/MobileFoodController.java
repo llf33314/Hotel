@@ -145,7 +145,7 @@ public class MobileFoodController extends BaseController {
     }
     
     @ApiOperation(value = "支付同步回调", notes = "支付同步回调", hidden = true)
-    @PostMapping(value = "{hotelId}/returnUrl/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "{hotelId}/returnUrl/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ModelAndView moblieHotelFoodPayReturnUrl(@PathVariable("hotelId") Integer hotelId,
     		@PathVariable("orderId") Integer orderId, 
     		Integer busId, Integer memberId,

@@ -379,13 +379,15 @@ public final class WXMPApiUtil {
      */
     public JSONObject wxmemberPayRefund(String appid, String mchid, String sysOrderNo, Double refundFee, Double totalFee)
             throws SignException {
-        JSONObject param = new JSONObject();
-        param.put("appid", appid);
-        param.put("mchid", mchid);
-        param.put("sysOrderNo", sysOrderNo);
-        param.put("refundFee", refundFee);
-        param.put("totalFee", totalFee);
-        JSONObject result = getLApi(param, webServerConfigurationProperties.getWxmpService().getApiMap().get("wxmemberPayRefund"));
+        RequestUtils<WxmemberPayRefund> req = new RequestUtils<>();
+        WxmemberPayRefund re = new WxmemberPayRefund();
+        re.setAppid(appid);
+        re.setMchid(mchid);
+        re.setRefundFee(refundFee);
+        re.setTotalFee(totalFee);
+        re.setSysOrderNo(sysOrderNo);
+        req.setReqdata(re);
+        JSONObject result = getLApi(req, webServerConfigurationProperties.getWxmpService().getApiMap().get("wxmemberPayRefund"));
         return result;
     }
 
@@ -655,3 +657,11 @@ class OldApiSms{
 	private String notifyUrl;
 }
 
+@Data
+class WxmemberPayRefund{
+	private String appid;
+	private String mchid;
+	private String sysOrderNo;
+	private Double refundFee;
+	private Double totalFee;
+}
