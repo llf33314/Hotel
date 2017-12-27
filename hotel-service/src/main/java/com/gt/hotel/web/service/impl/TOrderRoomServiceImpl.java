@@ -215,15 +215,16 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         if (param.get("out_trade_no") == null) {
         	return json;
         }
-        int payType = Integer.valueOf(param.get("payType").toString());
+//        int payType = Integer.valueOf(param.get("payType").toString());
         Date date = new Date();
         Wrapper<TOrder> wrapper = new EntityWrapper<>();
         wrapper.eq("id", orderId);
         wrapper.eq("order_num", param.get("out_trade_no"));
         TOrder tOrder = orderService.selectOne(wrapper);
+        System.err.println(tOrder);
         tOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
         tOrder.setPayTime(date);
-        tOrder.setPayType(payType == 0 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
+//        tOrder.setPayType(payType == 0 ? CommonConst.PAY_TYPE_WX : CommonConst.PAY_TYPE_ALI);
         if (!tOrder.updateById()) {
         	return json;
         }

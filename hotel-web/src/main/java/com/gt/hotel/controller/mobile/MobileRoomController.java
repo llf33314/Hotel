@@ -228,6 +228,7 @@ public class MobileRoomController extends BaseController {
 				SubQrPayParams.put("totalFee", tOrder.getRealPrice() / 100d);
 				SubQrPayParams.put("model", CommonConst.PAY_MODEL_ROOM);
 				SubQrPayParams.put("busId", tOrder.getBusId());
+				SubQrPayParams.put("memberId", member.getId());
 				SubQrPayParams.put("appidType", 0);
 				SubQrPayParams.put("orderNum", tOrder.getOrderNum());
 				SubQrPayParams.put("desc", "酒店订房");
@@ -268,12 +269,14 @@ public class MobileRoomController extends BaseController {
     @ApiOperation(value = "支付异步回调", notes = "支付异步回调", hidden = true)
     @PostMapping(value = "{hotelId}/notifyUrl/{orderId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public JSONObject moblieHotelRoomPayNotifyUrl(@PathVariable("hotelId") Integer hotelId,
-    		@PathVariable("orderId") Integer orderId, Map<String, Object> param,
+    		@PathVariable("orderId") Integer orderId, 
+    		@RequestBody Map<String, Object> params,
     		HttpServletRequest request) {
         JSONObject json = new JSONObject();
         json.put("code", -1);
         json.put("msg", "支付失败");
-        json = tOrderRoomService.moblieHotelRoomPayNotifyUrl(param, orderId);
+        System.err.println(params);
+        json = tOrderRoomService.moblieHotelRoomPayNotifyUrl(params, orderId);
         return json;
     }
 
