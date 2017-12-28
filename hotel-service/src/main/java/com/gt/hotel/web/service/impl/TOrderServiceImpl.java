@@ -223,12 +223,12 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
     @Override
     public void checkIn(Integer busId, Integer orderId, CheckInParam param) {
         Date date = new Date();
-
+        TOrder order = this.selectById(orderId);
         Wrapper<TOrder> owrapper = new EntityWrapper<>();
         owrapper.eq("id", orderId);
         TOrder newOrder = new TOrder();
         newOrder.setOrderStatus(CommonConst.ORDER_CHECK_IN);
-        if(newOrder.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE)) {
+        if(order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
         	newOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
         	newOrder.setPayTime(date);
         }
@@ -243,7 +243,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         orderRoom.setCustomerIdType(param.getCustomerIdType());
         orderRoom.setCustomerIdCard(param.getCustomerIdCard());
         orderRoom.setCustomerGender(param.getCustomerGender());
-        if(newOrder.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE)) {
+        if(order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
         	orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
         	orderRoom.setPayTime(date);
         }
@@ -642,10 +642,15 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 	@Override
 	public void orderComplete(Integer orderId, Integer busid) {
     	Date date = new Date();
+    	TOrder order = this.selectById(orderId);
 		Wrapper<TOrder> wrapper = new EntityWrapper<>();
         wrapper.eq("id", orderId);
         TOrder newOrder = new TOrder();
         newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
+        if(order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
+        	newOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
+        	newOrder.setPayTime(date);
+        }
         newOrder.setUpdatedBy(busid);
         newOrder.setUpdatedAt(date);
         if (!this.update(newOrder, wrapper)) {

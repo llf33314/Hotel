@@ -155,8 +155,6 @@ hotel:
                 getWxPulbicMsg: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/busUserApi/getWxPulbicMsg.do
                 #  1、支付(支付宝公众号多粉钱包)
                 payapi: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/payApi/6F6D9AD2/79B4DE7C/payapi.do?obj=
-                #会员结算退款
-                refundErp: ${hotel.webserver.WxmpService.serviceUrl}/memberAPI/member/refundErp
                 # 存储redis重定向地址
                 setRedisStorage: ${hotel.webserver.WxmpService.serviceUrl}/8A5DA52E/redis/SetExApi.do
                 authorizeMember: ${hotel.webserver.WxmpService.serviceUrl}/remoteUserAuthoriPhoneController/79B4DE7C/authorizeMember.do?queryBody=
@@ -184,6 +182,8 @@ hotel:
                 findCardByMembeId: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findCardByMembeId
                 # 单门店 结算支付成功会员处理
                 newPaySuccessByErpBalance: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/newPaySuccessByErpBalance
+                #会员结算退款
+                refundErp: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/refundErp
         JxcService:
             serviceUrl: https://jxc.deeptel.com.cn
             account: erp_5
