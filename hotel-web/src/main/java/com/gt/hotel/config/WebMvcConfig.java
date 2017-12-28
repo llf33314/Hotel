@@ -37,7 +37,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("/index.html");
-        registry.addViewController("/error").setViewName("/error/defaultError.html");
+        registry.addViewController("/error").setViewName("/error/404.html");
     }
 
     /**
