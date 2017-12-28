@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -173,13 +174,15 @@ public class HotelOrderController extends BaseController {
             WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
             //支付宝
             if (order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
-                JSONObject params = new JSONObject();
+                Map<String, Object> params = new HashMap<>();
                 params.put("out_trade_no", order.getOrderNum());
                 params.put("busId", order.getBusId());
                 params.put("desc", "酒店后台退款");
                 params.put("fee", order.getRealPrice() / 100d);
                 params.put("notifyUrl", getHost(request) + "/back/order" + orderId + "/aliPayCallBack");
-                String key = KeysUtil.getEncString(params.toJSONString());
+                String key = KeysUtil.getEncString(params.toString());
+                System.err.println(params.toString());
+                System.err.println(key);
                 return ResponseDTO.createBySuccess(key);
                 //微信
             } else if (order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
