@@ -400,7 +400,7 @@ public final class WXMPApiUtil {
      */
     public JSONObject memberRefundErp(ErpRefundBo bo)
             throws SignException {
-        JSONObject result = getPApi(bo, webServerConfigurationProperties.getWxmpService().getApiMap().get("refundErp"));
+        JSONObject result = getPApi(bo, webServerConfigurationProperties.getMemberService().getApiMap().get("refundErp"));
         return result;
     }
 

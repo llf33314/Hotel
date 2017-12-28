@@ -148,15 +148,6 @@ public class HotelOrderController extends BaseController {
                 || order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED))) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.ORDER_STATUS_ERROR.getMsg());
         }
-        Wrapper<TOrder> wrapper = new EntityWrapper<>();
-        wrapper.eq("id", orderId);
-        TOrder newOrder = new TOrder();
-        newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
-        newOrder.setUpdatedBy(busid);
-        newOrder.setUpdatedAt(new Date());
-        if (!tOrderService.update(newOrder, wrapper)) {
-            return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
-        }
         tOrderService.orderComplete(orderId, busid);
         return ResponseDTO.createBySuccess();
     }
@@ -227,6 +218,8 @@ public class HotelOrderController extends BaseController {
                 bo.setRefundFenbi(order.getFb() / 100d);
                 bo.setRefundDate(System.currentTimeMillis());
                 JSONObject result = wxmpApiUtil.memberRefundErp(bo);
+                System.err.println(order);
+                System.err.println(result);
                 if (result.getInteger("code").equals(0)) {
                     Wrapper<TOrder> wrapper = new EntityWrapper<>();
                     wrapper.eq("id", orderId);
