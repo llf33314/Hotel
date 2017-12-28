@@ -8,18 +8,31 @@ package com.gt.hotel.constant;
  * @date 2017/09/28
  */
 public final class RoomStatusConst {
-    //////////////  在住、空房、脏房、已预订、已锁定、维护 //////////////
-    /**
-     * 在住
-     */
-    public static final String STAY_IN_THE = "";
+    //////////////  字典值 1	空房,2	锁定,3	在住,4	清洁,5	维护 //////////////
+
     /**
      * 空房
      */
-    public static final String VACANT_ROOM = "";
+    public static final String VACANT_ROOM = "1";
+    /**
+     * 锁
+     */
+    public static final String LOCK        = "2";
+    /**
+     * 在住
+     */
+    public static final String STAY_IN_THE = "3";
     /**
      * 已预订
      */
     public static final String RESERVED    = "";
+    /**
+     * 清洁
+     */
+    public static final String CLEAN       = "4";
+    /**
+     * 维护
+     */
+    public static final String MAINTAIN    = "5";
 
 }

@@ -17,6 +17,7 @@ import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
 import com.gt.hotel.vo.*;
+import com.gt.hotel.vo.erp.ErpRoomCategoryVo;
 import com.gt.hotel.web.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -332,5 +333,8 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
 	}
 
 
-
+    @Override
+    public List<ErpRoomCategoryVo> findErpGroupRoomList(Integer hotelId) {
+        return this.tRoomCategoryDAO.findErpGroupRoomList(hotelId);
+    }
 }

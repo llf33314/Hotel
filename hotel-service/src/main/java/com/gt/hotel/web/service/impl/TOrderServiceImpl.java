@@ -1,19 +1,5 @@
 package com.gt.hotel.web.service.impl;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -23,12 +9,7 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.dao.TRoomDAO;
-import com.gt.hotel.entity.TBreakfastCoupons;
-import com.gt.hotel.entity.TOrder;
-import com.gt.hotel.entity.TOrderFood;
-import com.gt.hotel.entity.TOrderRoom;
-import com.gt.hotel.entity.TOrderRoomCustomer;
-import com.gt.hotel.entity.TRoomCategory;
+import com.gt.hotel.entity.*;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelOrderParameter.CheckInParam;
@@ -39,20 +20,22 @@ import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.util.ExcelUtil;
 import com.gt.hotel.util.ExportUtil;
-import com.gt.hotel.vo.BusinessConditionsVo;
-import com.gt.hotel.vo.DepositVo;
-import com.gt.hotel.vo.HotelBackFoodOrderVo;
-import com.gt.hotel.vo.HotelBackRoomOrderVo;
-import com.gt.hotel.vo.IncomeDetailsVo;
-import com.gt.hotel.vo.OrderRoomCustomerVo;
-import com.gt.hotel.web.service.TBreakfastCouponsService;
-import com.gt.hotel.web.service.TOrderFoodService;
-import com.gt.hotel.web.service.TOrderRoomCustomerService;
-import com.gt.hotel.web.service.TOrderRoomService;
-import com.gt.hotel.web.service.TOrderService;
-import com.gt.hotel.web.service.TRoomCategoryService;
-
+import com.gt.hotel.vo.*;
+import com.gt.hotel.web.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -80,10 +63,10 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 
     @Autowired
     private TRoomDAO tRoomDAO;
-    
+
     @Autowired
     TRoomCategoryService tRoomCategoryService;
-    
+
     @Autowired
     TBreakfastCouponsService breakfastCouponsService;
 
@@ -223,14 +206,15 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
     @Override
     public void checkIn(Integer busId, Integer orderId, CheckInParam param) {
         Date date = new Date();
+        // FIXME: 2017/12/28 入住时间 必须判断当前日期是否 是预约的入住日期
         TOrder order = this.selectById(orderId);
         Wrapper<TOrder> owrapper = new EntityWrapper<>();
         owrapper.eq("id", orderId);
         TOrder newOrder = new TOrder();
         newOrder.setOrderStatus(CommonConst.ORDER_CHECK_IN);
-        if(order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
-        	newOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
-        	newOrder.setPayTime(date);
+        if (order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
+            newOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
+            newOrder.setPayTime(date);
         }
         newOrder.setUpdatedBy(busId);
         newOrder.setUpdatedAt(new Date());
@@ -238,14 +222,16 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
             throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
         }
 
+        // FIXME: 2017/12/28 orderRoom 缺少客房ID 客房编号
+
         TOrderRoom orderRoom = new TOrderRoom();
         List<TOrderRoomCustomer> customers = new ArrayList<>();
         orderRoom.setCustomerIdType(param.getCustomerIdType());
         orderRoom.setCustomerIdCard(param.getCustomerIdCard());
         orderRoom.setCustomerGender(param.getCustomerGender());
-        if(order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
-        	orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
-        	orderRoom.setPayTime(date);
+        if (order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
+            orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
+            orderRoom.setPayTime(date);
         }
         orderRoom.setUpdatedAt(date);
         orderRoom.setUpdatedBy(busId);
@@ -255,6 +241,8 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         if (!tOrderRoomService.update(orderRoom, wrapper)) {
             throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
+
+
         for (HotelOrderRoomParameter.OrderRoom o : param.getRooms()) {
             TOrderRoomCustomer customer = new TOrderRoomCustomer();
             customer.setIdType(param.getCustomerIdType());
@@ -276,26 +264,26 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         }
         TOrderRoom tOrderRoom = tOrderRoomService.selectOne(wrapper);
         TRoomCategory category = tRoomCategoryService.selectById(tOrderRoom.getCategoryId());
-		if(category.getBreakfastEnable().equals(CommonConst.ENABLED)) {
-			List<TBreakfastCoupons> bcs = new ArrayList<>();
-			for(int i = 0; i < customers.size(); i++) {
-				for(int j = 0; j < category.getBreakfastQuantity(); j++) {
-					TBreakfastCoupons breakfastCoupons = new TBreakfastCoupons();
-					breakfastCoupons.setOrderId(orderId);
-					breakfastCoupons.setCategoryId(tOrderRoom.getCategoryId());
-					breakfastCoupons.setRoomNum(customers.get(i).getRoomNum());
-					breakfastCoupons.setCode(System.currentTimeMillis() + "" + Math.round(Math.random() * 9999999));
-					breakfastCoupons.setWriteOffStatus(0);
-					breakfastCoupons.setCreatedAt(date);
-					breakfastCoupons.setCreatedBy(busId);
-					breakfastCoupons.setUpdatedBy(busId);
-					bcs.add(breakfastCoupons);
-				}
-			}
-			if(!breakfastCouponsService.insertBatch(bcs)) {
-				throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
-			}
-		}
+        if (category.getBreakfastEnable().equals(CommonConst.ENABLED)) {
+            List<TBreakfastCoupons> bcs = new ArrayList<>();
+            for (int i = 0; i < customers.size(); i++) {
+                for (int j = 0; j < category.getBreakfastQuantity(); j++) {
+                    TBreakfastCoupons breakfastCoupons = new TBreakfastCoupons();
+                    breakfastCoupons.setOrderId(orderId);
+                    breakfastCoupons.setCategoryId(tOrderRoom.getCategoryId());
+                    breakfastCoupons.setRoomNum(customers.get(i).getRoomNum());
+                    breakfastCoupons.setCode(System.currentTimeMillis() + "" + Math.round(Math.random() * 9999999));
+                    breakfastCoupons.setWriteOffStatus(0);
+                    breakfastCoupons.setCreatedAt(date);
+                    breakfastCoupons.setCreatedBy(busId);
+                    breakfastCoupons.setUpdatedBy(busId);
+                    bcs.add(breakfastCoupons);
+                }
+            }
+            if (!breakfastCouponsService.insertBatch(bcs)) {
+                throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            }
+        }
     }
 
     @Override
@@ -399,33 +387,33 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 
     @Override
     public HSSFWorkbook exportFoodOrder(List<HotelBackFoodOrderVo> page, String[] contentName, String[] titles)
-    		throws IllegalArgumentException, IllegalAccessException {
-    	HSSFWorkbook wb = null;
-		wb = ExportUtil.getExcel("餐饮订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
+            throws IllegalArgumentException, IllegalAccessException {
+        HSSFWorkbook wb = null;
+        wb = ExportUtil.getExcel("餐饮订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
             @Override
             public String fieldPprocessing(Object c, String contentName) {
-            	if(c == null || "".equals(c.toString())) {
-            		return "";
-            	}
-            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            	SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
+                if (c == null || "".equals(c.toString())) {
+                    return "";
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
                 String s = c.toString();
-                if("rackRate".equals(contentName) 
-                		|| "billPrice".equals(contentName) 
-                		|| "discountedPrice".equals(contentName) 
-                		|| "receivablePrice".equals(contentName) 
-                		|| "refundAmount".equals(contentName) 
-                		|| "realPrice".equals(contentName)) {
-                	Double d = Double.valueOf(s);
-                	s = new DecimalFormat("#0.00").format(d / 100);
-                }else if("createTime".equals(contentName)) {
-                	try {
-						s = sdf.format(sdf2.parse(s));
-					} catch (ParseException e) {
-						log.error("/back/order/foodExport error");
-						e.printStackTrace();
-					}
-                }else if ("orderStatus".equals(contentName)) {
+                if ("rackRate".equals(contentName)
+                        || "billPrice".equals(contentName)
+                        || "discountedPrice".equals(contentName)
+                        || "receivablePrice".equals(contentName)
+                        || "refundAmount".equals(contentName)
+                        || "realPrice".equals(contentName)) {
+                    Double d = Double.valueOf(s);
+                    s = new DecimalFormat("#0.00").format(d / 100);
+                } else if ("createTime".equals(contentName)) {
+                    try {
+                        s = sdf.format(sdf2.parse(s));
+                    } catch (ParseException e) {
+                        log.error("/back/order/foodExport error");
+                        e.printStackTrace();
+                    }
+                } else if ("orderStatus".equals(contentName)) {
                     switch (Integer.valueOf(c.toString())) {
                         case 0:
                             s = "处理中";
@@ -480,68 +468,68 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
                 return s;
             }
         });
-		return wb;
+        return wb;
     }
-    
+
     @Override
     public HSSFWorkbook exportRoomOrder(List<HotelBackRoomOrderVo> page, String[] contentName, String[] titles)
-    		throws IllegalArgumentException, IllegalAccessException {
-    	HSSFWorkbook wb = null;
-    	wb = ExportUtil.getExcel("房间订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
+            throws IllegalArgumentException, IllegalAccessException {
+        HSSFWorkbook wb = null;
+        wb = ExportUtil.getExcel("房间订单", titles, contentName, page, HotelBackFoodOrderVo.class, new ExcelUtil() {
             @Override
             public String fieldPprocessing(Object c, String contentName) {
-            	if(c == null || "".equals(c.toString())) {
-            		return "";
-            	}
-            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            	SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
+                if (c == null || "".equals(c.toString())) {
+                    return "";
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
                 String s = c.toString();
-                if("rackRate".equals(contentName) 
-                		|| "billPrice".equals(contentName) 
-                		|| "discountedPrice".equals(contentName) 
-                		|| "receivablePrice".equals(contentName) 
-                		|| "refundAmount".equals(contentName) 
-                		|| "realPrice".equals(contentName)) {
-                	Double d = Double.valueOf(s);
-                	s = new DecimalFormat("#0.00").format(d / 100);
-                }else if("checkStandard".equals(contentName)) {
+                if ("rackRate".equals(contentName)
+                        || "billPrice".equals(contentName)
+                        || "discountedPrice".equals(contentName)
+                        || "receivablePrice".equals(contentName)
+                        || "refundAmount".equals(contentName)
+                        || "realPrice".equals(contentName)) {
+                    Double d = Double.valueOf(s);
+                    s = new DecimalFormat("#0.00").format(d / 100);
+                } else if ("checkStandard".equals(contentName)) {
 //                	入住标准 0 全天房 1 特价房 2 钟点房 3 秒杀房 4 团购房
-                	switch (Integer.valueOf(c.toString())) {
-                	case 0:
-                		s = "全天房";
-                		break;
-                	case 1:
-                		s = "特价房";
-                		break;
-                	case 2:
-                		s = "钟点房";
-                		break;
-                	case 3:
-                		s = "秒杀房";
-                		break;
-                	case 4:
-                		s = "团购房";
-                		break;
-                	}
-                }else if("guestType".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "全天房";
+                            break;
+                        case 1:
+                            s = "特价房";
+                            break;
+                        case 2:
+                            s = "钟点房";
+                            break;
+                        case 3:
+                            s = "秒杀房";
+                            break;
+                        case 4:
+                            s = "团购房";
+                            break;
+                    }
+                } else if ("guestType".equals(contentName)) {
 //                	住客类型(0:散客/会员, 1:协议单位) 默认 0
-                	switch (Integer.valueOf(c.toString())) {
-                	case 0:
-                		s = "散客/会员";
-                		break;
-                	case 1:
-                		s = "协议单位";
-                		break;
-                	}
-                }else if("roomInTime".equals(contentName) 
-                		|| "roomOutTime".equals(contentName)) {
-                	try {
-						s = sdf.format(sdf2.parse(s));
-					} catch (ParseException e) {
-						log.error("/back/order/foodExport error");
-						e.printStackTrace();
-					}
-                }else if ("orderStatus".equals(contentName)) {
+                    switch (Integer.valueOf(c.toString())) {
+                        case 0:
+                            s = "散客/会员";
+                            break;
+                        case 1:
+                            s = "协议单位";
+                            break;
+                    }
+                } else if ("roomInTime".equals(contentName)
+                        || "roomOutTime".equals(contentName)) {
+                    try {
+                        s = sdf.format(sdf2.parse(s));
+                    } catch (ParseException e) {
+                        log.error("/back/order/foodExport error");
+                        e.printStackTrace();
+                    }
+                } else if ("orderStatus".equals(contentName)) {
                     switch (Integer.valueOf(c.toString())) {
                         case 0:
                             s = "处理中";
@@ -635,26 +623,26 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
                 return s;
             }
         });
-    	return wb;
+        return wb;
     }
 
     @Transactional
-	@Override
-	public void orderComplete(Integer orderId, Integer busid) {
-    	Date date = new Date();
-    	TOrder order = this.selectById(orderId);
-		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+    @Override
+    public void orderComplete(Integer orderId, Integer busid) {
+        Date date = new Date();
+        TOrder order = this.selectById(orderId);
+        Wrapper<TOrder> wrapper = new EntityWrapper<>();
         wrapper.eq("id", orderId);
         TOrder newOrder = new TOrder();
         newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
-        if(order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
-        	newOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
-        	newOrder.setPayTime(date);
+        if (order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
+            newOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
+            newOrder.setPayTime(date);
         }
         newOrder.setUpdatedBy(busid);
         newOrder.setUpdatedAt(date);
         if (!this.update(newOrder, wrapper)) {
-        	throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+            throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
         }
         Wrapper<TOrderRoom> fwrapper = new EntityWrapper<>();
         fwrapper.eq("order_id", orderId);
@@ -663,13 +651,13 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         orderRoom.setPayTime(date);
         orderRoom.setUpdatedBy(busid);
         tOrderRoomService.update(orderRoom, fwrapper);
-        
+
         Wrapper<TOrderFood> fw = new EntityWrapper<>();
         fw.eq("order_id", orderId);
-		TOrderFood f = new TOrderFood();
-		f.setPayStatus(CommonConst.PAY_STATUS_PAID);
-		f.setPayTime(date);
-		f.setUpdatedBy(busid);
-		tOrderFoodService.update(f, fw);
-	}
+        TOrderFood f = new TOrderFood();
+        f.setPayStatus(CommonConst.PAY_STATUS_PAID);
+        f.setPayTime(date);
+        f.setUpdatedBy(busid);
+        tOrderFoodService.update(f, fw);
+    }
 }

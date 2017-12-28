@@ -2,28 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.TOrderRoomCustomerDAO">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TOrderRoomCustomer">
-		<id column="id" property="id" />
-		<result column="name" property="name" />
-		<result column="id_type" property="idType" />
-		<result column="phone" property="phone" />
-		<result column="id_card" property="idCard" />
-		<result column="id_card_image" property="idCardImage" />
-		<result column="order_id" property="orderId" />
-		<result column="room_num" property="roomNum" />
-		<result column="mark_modified" property="markModified" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_at" property="createdAt" />
-		<result column="updated_by" property="updatedBy" />
-		<result column="updated_at" property="updatedAt" />
-		<result column="customer_gender" property="customerGender" />
-		<result column="order_room_id" property="orderRoomId" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TOrderRoomCustomer">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="id_type" property="idType"/>
+        <result column="phone" property="phone"/>
+        <result column="id_card" property="idCard"/>
+        <result column="id_card_image" property="idCardImage"/>
+        <result column="order_id" property="orderId"/>
+        <result column="room_num" property="roomNum"/>
+        <result column="room_id" property="roomId"/>
+        <result column="mark_modified" property="markModified"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="customer_gender" property="customerGender"/>
+        <result column="order_room_id" property="orderRoomId"/>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, id_type, phone, id_card, id_card_image, order_id, room_num, mark_modified, created_by, created_at, updated_by, updated_at, customer_gender, order_room_id
+        id, name, id_type, phone, id_card, id_card_image, order_id, room_num, room_id, mark_modified, created_by, created_at, updated_by, updated_at, customer_gender, order_room_id
     </sql>
 
 </mapper>

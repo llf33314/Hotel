@@ -2,9 +2,6 @@
 #======== Test Environment Settings =========#
 #============================================#
 spring:
-    devtools:
-        restart:
-            enabled: true
     # 202.51 redis 6379      ----->主
     #  202.51 sentinel 26379  ---->哨兵1
     #  202.50 redis 9379      ----->从
