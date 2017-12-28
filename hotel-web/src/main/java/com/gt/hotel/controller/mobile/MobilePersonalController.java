@@ -1,6 +1,10 @@
 package com.gt.hotel.controller.mobile;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -209,27 +214,39 @@ public class MobilePersonalController extends BaseController {
 			HttpServletRequest request,
 			ModelAndView modelAndView) {
 		Member member = getMember(request);
-		TBreakfastCoupons breakfastCoupon = breakfastCouponsService.selectById(bqId);
-		Wrapper<TAuthorization> w = new EntityWrapper<>();
-		w.eq("member_id", member.getId());
-		TAuthorization authorization = authorizationService.selectOne(w);
-		if(authorization != null &&
-				!breakfastCoupon.getWriteOffStatus().equals(1) && 
-				Arrays.asList(authorization.getFunctionIds().split(",")).contains(Integer.valueOf(CommonConst.FUNCTION_WRITE_OFF).toString())) {
-			TBreakfastCoupons bc = new TBreakfastCoupons();
-			bc.setId(bqId);
-			bc.setWriteOffStatus(1);
-			bc.setWriter(authorization.getAccountId());
-			if(!breakfastCouponsService.updateById(bc)) {
-				modelAndView.addObject("msg", "核销失败");
-			}else {
-				modelAndView.addObject("msg", "核销成功");
-			}
-		}else {
-			modelAndView.addObject("msg", "核销失败");
-//			return ResponseDTO.createByErrorMessage("无核销权限");
-		}
+		THotel hotel = tHotelService.selectById(hotelId);
+		modelAndView.addObject("msg", "核销失败");
 		modelAndView.setViewName("/error/defaultError.html");
+		try {
+			if (member == null) {
+				Map<String, Object> queryMap = new HashMap<>();
+				queryMap.put("browser", judgeBrowser(request));
+				queryMap.put("busId", hotel.getBusId());
+				queryMap.put("uclogin", null);
+				queryMap.put("returnUrl", getHost(request) + "/mobile/78CDF1/my/" + hotelId + "/writeOffBQ/" + bqId);
+				modelAndView.setViewName("redirect:" + property.getWxmpService().getApiMap().get("authorizeMemberNew") + URLEncoder.encode(JSON.toJSONString(queryMap), "utf-8"));
+			} else {
+				TBreakfastCoupons breakfastCoupon = breakfastCouponsService.selectById(bqId);
+				Wrapper<TAuthorization> w = new EntityWrapper<>();
+				w.eq("member_id", member.getId());
+				TAuthorization authorization = authorizationService.selectOne(w);
+				if(authorization != null &&
+						!breakfastCoupon.getWriteOffStatus().equals(1) && 
+						Arrays.asList(authorization.getFunctionIds().split(",")).contains(Integer.valueOf(CommonConst.FUNCTION_WRITE_OFF).toString())) {
+					TBreakfastCoupons bc = new TBreakfastCoupons();
+					bc.setId(bqId);
+					bc.setWriteOffStatus(1);
+					bc.setWriter(authorization.getAccountId());
+					if(breakfastCouponsService.updateById(bc)) {
+						modelAndView.addObject("msg", "核销成功");
+					}
+				}else {
+					modelAndView.addObject("msg", "无核销权限");
+				}
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		return modelAndView;
 	}
 	
