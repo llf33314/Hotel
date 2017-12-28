@@ -164,5 +164,12 @@ public interface TOrderService extends BaseService<TOrder> {
 	 */
 	HSSFWorkbook exportRoomOrder(List<HotelBackRoomOrderVo> page, String[] contentName, String[] titles) throws IllegalArgumentException, IllegalAccessException;
 
+	/**
+	 * 订单完成操作
+	 * @param orderId
+	 * @param busid
+	 */
+	void orderComplete(Integer orderId, Integer busid);
+
 
 }

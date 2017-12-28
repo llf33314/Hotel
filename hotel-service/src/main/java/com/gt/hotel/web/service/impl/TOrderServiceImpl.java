@@ -25,6 +25,7 @@ import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.dao.TRoomDAO;
 import com.gt.hotel.entity.TBreakfastCoupons;
 import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.entity.TOrderFood;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.entity.TOrderRoomCustomer;
 import com.gt.hotel.entity.TRoomCategory;
@@ -45,6 +46,7 @@ import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.vo.IncomeDetailsVo;
 import com.gt.hotel.vo.OrderRoomCustomerVo;
 import com.gt.hotel.web.service.TBreakfastCouponsService;
+import com.gt.hotel.web.service.TOrderFoodService;
 import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
@@ -72,6 +74,9 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 
     @Autowired
     TOrderRoomService tOrderRoomService;
+
+    @Autowired
+    TOrderFoodService tOrderFoodService;
 
     @Autowired
     private TRoomDAO tRoomDAO;
@@ -223,6 +228,10 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         owrapper.eq("id", orderId);
         TOrder newOrder = new TOrder();
         newOrder.setOrderStatus(CommonConst.ORDER_CHECK_IN);
+        if(newOrder.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE)) {
+        	newOrder.setPayStatus(CommonConst.PAY_STATUS_PAID);
+        	newOrder.setPayTime(date);
+        }
         newOrder.setUpdatedBy(busId);
         newOrder.setUpdatedAt(new Date());
         if (!this.update(newOrder, owrapper)) {
@@ -234,6 +243,10 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         orderRoom.setCustomerIdType(param.getCustomerIdType());
         orderRoom.setCustomerIdCard(param.getCustomerIdCard());
         orderRoom.setCustomerGender(param.getCustomerGender());
+        if(newOrder.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE)) {
+        	orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
+        	orderRoom.setPayTime(date);
+        }
         orderRoom.setUpdatedAt(date);
         orderRoom.setUpdatedBy(busId);
         Wrapper<TOrderRoom> wrapper = new EntityWrapper<>();
@@ -624,4 +637,34 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         });
     	return wb;
     }
+
+    @Transactional
+	@Override
+	public void orderComplete(Integer orderId, Integer busid) {
+    	Date date = new Date();
+		Wrapper<TOrder> wrapper = new EntityWrapper<>();
+        wrapper.eq("id", orderId);
+        TOrder newOrder = new TOrder();
+        newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
+        newOrder.setUpdatedBy(busid);
+        newOrder.setUpdatedAt(date);
+        if (!this.update(newOrder, wrapper)) {
+        	throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+        }
+        Wrapper<TOrderRoom> fwrapper = new EntityWrapper<>();
+        fwrapper.eq("order_id", orderId);
+        TOrderRoom orderRoom = new TOrderRoom();
+        orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
+        orderRoom.setPayTime(date);
+        orderRoom.setUpdatedBy(busid);
+        tOrderRoomService.update(orderRoom, fwrapper);
+        
+        Wrapper<TOrderFood> fw = new EntityWrapper<>();
+        fw.eq("order_id", orderId);
+		TOrderFood f = new TOrderFood();
+		f.setPayStatus(CommonConst.PAY_STATUS_PAID);
+		f.setPayTime(date);
+		f.setUpdatedBy(busid);
+		tOrderFoodService.update(f, fw);
+	}
 }

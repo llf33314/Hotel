@@ -157,10 +157,11 @@ public class HotelOrderController extends BaseController {
         if (!tOrderService.update(newOrder, wrapper)) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
         }
+        tOrderService.orderComplete(orderId, busid);
         return ResponseDTO.createBySuccess();
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "static-access" })
     @ApiOperation(value = "订单  退款 操作", notes = "订单  退款 操作(占位)")
     @PostMapping(value = "{orderId}/refunds", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO orderRefunds(@ApiParam("订单ID") @PathVariable("orderId") Integer orderId,
@@ -179,8 +180,9 @@ public class HotelOrderController extends BaseController {
                 params.put("busId", order.getBusId());
                 params.put("desc", "酒店后台退款");
                 params.put("fee", order.getRealPrice() / 100d);
-                params.put("notifyUrl", getHost(request) + "/back/order" + orderId + "/aliPayCallBack");
-                String key = KeysUtil.getEncString(params.toString());
+                params.put("notifyUrl", getHost(request) + "/back/order/" + orderId + "/aliPayCallBack");
+                KeysUtil keysUtil = new KeysUtil();
+                String key = keysUtil.getEncString(JSONObject.toJSONString(params));
                 System.err.println(params.toString());
                 System.err.println(key);
                 return ResponseDTO.createBySuccess(key);
@@ -254,6 +256,7 @@ public class HotelOrderController extends BaseController {
     		@RequestBody Map<String, Object> params,
     		HttpServletRequest request) {
         TOrder order = tOrderService.selectById(orderId);
+        System.err.println(order);
         try {
             if (params.get("outTradeNo") != null && params.get("outTradeNo").toString().trim().length() > 0) {
 //                ErpRefundBo bo = new ErpRefundBo();
