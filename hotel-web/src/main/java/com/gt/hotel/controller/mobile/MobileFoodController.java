@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
+import com.gt.api.exception.SignException;
 import com.gt.api.util.KeysUtil;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -29,10 +30,13 @@ import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.param.FoodMobileParameter;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
+import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.FoodSettleVo;
 import com.gt.hotel.vo.FoodVo;
+import com.gt.hotel.vo.OrderFoodDetailVo;
 import com.gt.hotel.web.service.TFoodService;
 import com.gt.hotel.web.service.THotelService;
+import com.gt.hotel.web.service.THotelSettingService;
 import com.gt.hotel.web.service.TOrderFoodService;
 import com.gt.hotel.web.service.TOrderService;
 
@@ -56,6 +60,9 @@ public class MobileFoodController extends BaseController {
     THotelService tHotelService;
     
     @Autowired
+    THotelSettingService hotelSettingService;
+    
+    @Autowired
     TOrderService tOrderService;
     
     @Autowired
@@ -63,6 +70,9 @@ public class MobileFoodController extends BaseController {
     
     @Autowired
     WebServerConfigurationProperties properties;
+    
+    @Autowired
+    WXMPApiUtil wXMPApiUtil;
     
     @ApiOperation(value = "菜品列表", notes = "菜品列表")
     @GetMapping(value = "{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -84,6 +94,11 @@ public class MobileFoodController extends BaseController {
     	invalidParameter(bindingResult);
     	Member member = getMember(request);
     	order.setHotelId(hotelId);
+    	OrderFoodDetailVo detailVo = order.getFoods().get(0);
+    	try {
+			wXMPApiUtil.sendMsg(member.getBusid(), detailVo.getFoodProvidesPhone(), "您有新的订餐订单，请到管理后查收(多粉平台)");
+		} catch (SignException e) {
+		}
 		return ResponseDTO.createBySuccess(tOrderFoodService.mobileFoodOrderBook(member, order));
 	}
 	
@@ -137,6 +152,7 @@ public class MobileFoodController extends BaseController {
 			String obj;
 			obj = KeysUtil.getEncString(SubQrPayParams.toJSONString());
 			modelAndView.setViewName("redirect:" + properties.getWxmpService().getApiMap().get("payapi").toString()+obj);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			modelAndView.setViewName("/error");

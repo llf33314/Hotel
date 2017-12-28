@@ -33,6 +33,7 @@ import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TActivity;
 import com.gt.hotel.entity.THotel;
+import com.gt.hotel.entity.THotelSetting;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderCoupons;
 import com.gt.hotel.entity.TOrderRoom;
@@ -49,6 +50,7 @@ import com.gt.hotel.vo.MobileRoomOrderVo;
 import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.TActivityService;
 import com.gt.hotel.web.service.THotelService;
+import com.gt.hotel.web.service.THotelSettingService;
 import com.gt.hotel.web.service.TOrderCouponsService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
@@ -93,6 +95,9 @@ public class MobileRoomController extends BaseController {
 
 	@Autowired
     WebServerConfigurationProperties properties;
+	
+	@Autowired
+	THotelSettingService hotelSettingService;
 
     @ApiOperation(value = "预定", notes = "预定")
     @GetMapping(value = "{hotelId}/book/{categoryId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -143,6 +148,15 @@ public class MobileRoomController extends BaseController {
         Member member = getMember(request);
         JSONObject json = new JSONObject();
         json.put("orderId", tOrderRoomService.mobileBookOrder(info, member, bookParam));
+        Wrapper<THotelSetting> w = new EntityWrapper<>();
+    	w.eq("hotel_id", hotelId);
+		THotelSetting hotelSetting = hotelSettingService.selectOne(w);
+		if(hotelSetting.getSmsEnable().equals(CommonConst.ENABLED)) {
+			try {
+				wXMPApiUtil.sendMsg(member.getBusid(), hotelSetting.getSmsPhone(), "您有新的订房订单，请到管理后查收(多粉平台)");
+			} catch (SignException e) {
+			}
+		}
         return ResponseDTO.createBySuccess(json);
     }
 	
