@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -27,7 +28,6 @@ import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.enums.ResponseEnums;
-import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
@@ -200,31 +200,37 @@ public class MobilePersonalController extends BaseController {
 		
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@ApiOperation(value = "核销早餐券(二维码链接)", notes = "核销早餐券")
 	@GetMapping(value = "{hotelId}/writeOffBQ/{bqId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseDTO writeOffBreakfastQuantity(
+	public ModelAndView writeOffBreakfastQuantity(
 			@PathVariable("hotelId") Integer hotelId, 
 			@PathVariable("bqId") @ApiParam("早餐券ID") Integer bqId, 
 			@ModelAttribute RoomCardParam param, 
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			ModelAndView modelAndView) {
 		Member member = getMember(request);
+		TBreakfastCoupons breakfastCoupon = breakfastCouponsService.selectById(bqId);
 		Wrapper<TAuthorization> w = new EntityWrapper<>();
 		w.eq("member_id", member.getId());
 		TAuthorization authorization = authorizationService.selectOne(w);
-		if(authorization != null && Arrays.asList(authorization.getFunctionIds().split(",")).contains(
-				Integer.valueOf(CommonConst.FUNCTION_WRITE_OFF).toString())) {
+		if(authorization != null &&
+				!breakfastCoupon.getWriteOffStatus().equals(1) && 
+				Arrays.asList(authorization.getFunctionIds().split(",")).contains(Integer.valueOf(CommonConst.FUNCTION_WRITE_OFF).toString())) {
 			TBreakfastCoupons bc = new TBreakfastCoupons();
 			bc.setId(bqId);
 			bc.setWriteOffStatus(1);
 			bc.setWriter(authorization.getAccountId());
 			if(!breakfastCouponsService.updateById(bc)) {
-				throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
+				modelAndView.addObject("msg", "核销失败");
+			}else {
+				modelAndView.addObject("msg", "核销成功");
 			}
 		}else {
-			return ResponseDTO.createByErrorMessage("无核销权限");
+			modelAndView.addObject("msg", "核销失败");
+//			return ResponseDTO.createByErrorMessage("无核销权限");
 		}
-		return ResponseDTO.createBySuccess();
+		modelAndView.setViewName("/error/defaultError.html");
+		return modelAndView;
 	}
 	
 	/********************************************************* 我的房卡 *************************************************************************/

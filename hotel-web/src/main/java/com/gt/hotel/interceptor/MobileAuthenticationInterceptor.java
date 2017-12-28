@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -120,7 +121,7 @@ public class MobileAuthenticationInterceptor extends HandlerInterceptorAdapter {
         }
         return true;
     }
-
+    
     /**
      * 放行 uri 地址
      *

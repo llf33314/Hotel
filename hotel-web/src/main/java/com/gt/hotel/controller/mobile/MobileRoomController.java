@@ -221,6 +221,7 @@ public class MobileRoomController extends BaseController {
 					}
 					modelAndView.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotel.getId());
 				}else {
+					modelAndView.addObject("msg", "太贵了");
 					modelAndView.setViewName("/error/defaultError.html");
 				}
 			}else {

@@ -7,6 +7,7 @@ import com.gt.hotel.exception.NeedLoginException;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,4 +34,5 @@ public class BackAuthenticationInterceptor extends HandlerInterceptorAdapter {
         }
         return true;
     }
+    
 }
