@@ -105,10 +105,14 @@
         FROM t_order a
         JOIN t_order_food b ON a.id = b.order_id
         LEFT JOIN t_order_food_detail c ON b.id = c.order_food_id
+        LEFT JOIN t_food e ON c.food_id = e.id 
         JOIN t_hotel d ON d.id = a.hotel_id
         WHERE a.mark_modified = 0
         <if test="busid != null">
             AND a.bus_id = #{busid}
+        </if>
+        <if test="param.foodProvidesName != null">
+            AND e.food_provides = #{param.foodProvidesName}
         </if>
         <if test="param.memberId != null">
             AND a.member_id = #{param.memberId}

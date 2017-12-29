@@ -260,6 +260,7 @@ public class MobileRoomController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			modelAndView.addObject("msg", "支付失败");
 			modelAndView.setViewName("/error/defaultError.html");
 		}
     	return modelAndView;
@@ -275,6 +276,7 @@ public class MobileRoomController extends BaseController {
         try{
         	tOrderRoomService.moblieHotelRoomPayReturnUrl(orderId);
         }catch (Exception e) {
+        	modelAndView.addObject("msg", "支付回调失败");
         	modelAndView.setViewName("/error/defaultError.html");
 		}
     	modelAndView.setViewName("redirect:/mobile/index.html/#/book/roomSet/" + hotelId);
