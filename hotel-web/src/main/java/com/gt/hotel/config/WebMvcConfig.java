@@ -2,6 +2,7 @@ package com.gt.hotel.config;
 
 import com.gt.hotel.interceptor.BackAuthenticationInterceptor;
 import com.gt.hotel.interceptor.MobileAuthenticationInterceptor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,19 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         return new BackAuthenticationInterceptor();
     }
 
+    /**
+     * <pre>
+     *     Bean spring boot 启动 创建bean
+     *     ConditionalOnMissingBean 防止重复创建bean
+     * </pre>
+     *
+     * @return GlobalExceptionHandler
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public GlobalExceptionHandler globRequestBodyAdviceHandler() {
+        return new GlobalExceptionHandler();
+    }
 
     /**
      * 快速解决页面转向问题

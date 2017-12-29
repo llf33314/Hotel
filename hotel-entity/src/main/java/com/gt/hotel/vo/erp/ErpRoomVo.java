@@ -1,6 +1,7 @@
 package com.gt.hotel.vo.erp;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <pre>
@@ -15,6 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @date 2017-12-28
  * @since 1.0.0
  */
+@Data
 public class ErpRoomVo {
 
     @ApiModelProperty("房间ID")

@@ -16,9 +16,12 @@ import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
+import com.gt.hotel.param.erp.ErpRoomCategoryParam;
 import com.gt.hotel.vo.*;
 import com.gt.hotel.vo.erp.ErpRoomCategoryVo;
+import com.gt.hotel.vo.erp.ErpRoomVo;
 import com.gt.hotel.web.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -36,6 +40,7 @@ import java.util.List;
  * @author
  * @since 2017-10-09
  */
+@Slf4j
 @Service
 public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, TRoomCategory> implements TRoomCategoryService {
 
@@ -283,7 +288,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         rp.setUpdatedBy(busId);
         rp.setHotelId(per.getHotelId());
         if (!rp.insertOrUpdate()) {
-        	throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
+            throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
     }
 
@@ -323,18 +328,45 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         return l;
     }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req) {
-		Page<MobileRoomCategoryVo> page = req.initPage();
-		List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req, page);
-		page.setRecords(l);
-		return page;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req) {
+        Page<MobileRoomCategoryVo> page = req.initPage();
+        List<MobileRoomCategoryVo> l = tRoomCategoryDAO.queryMobileRoomCategory(hotelId, req, page);
+        page.setRecords(l);
+        return page;
+    }
 
 
     @Override
-    public List<ErpRoomCategoryVo> findErpGroupRoomList(Integer hotelId) {
-        return this.tRoomCategoryDAO.findErpGroupRoomList(hotelId);
+    public List<ErpRoomCategoryVo> findErpGroupRoomList(Integer hotelId, ErpRoomCategoryParam.RoomCategorySearch categorySearch) {
+        // FIXME: 2017/12/29 添加缓存
+        List<ErpRoomCategoryVo> groupRoomList = this.tRoomCategoryDAO.findErpGroupRoomList(hotelId);
+        boolean isSearch = categorySearch != null && (categorySearch.getFloor() != null || categorySearch.getRoomNum() != null || categorySearch.getRoomStatus() != null);
+        List<ErpRoomCategoryVo> categoryVoList = new LinkedList<>();
+        // 启用条件搜索
+        if (isSearch) {
+            // 查询条件
+            for (ErpRoomCategoryVo categoryVo : groupRoomList) {
+                List<ErpRoomVo> roomVoList = new LinkedList<>();
+                for (ErpRoomVo roomVo : categoryVo.getRoomList()) {
+                    boolean roomNum = categorySearch.getRoomNum() != null && roomVo.getRoomNum().contains(categorySearch.getRoomNum());
+                    boolean roomStatus = categorySearch.getRoomStatus() != null && categorySearch.getRoomStatus().equals(roomVo.getStatus());
+                    boolean roomFloor = categorySearch.getFloor() != null && categorySearch.getFloor().equals(roomVo.getFloor());
+                    // 符合上述任意一条件
+                    if (roomNum || roomStatus || roomFloor) {
+                        log.info(" roomVo : {}", roomVo);
+                        roomVoList.add(roomVo);
+                    }
+                }
+                // 筛选出来符合的条件 并且有数据的
+                if (roomVoList.size() > 0) {
+                    categoryVo.setRoomList(roomVoList);
+                    categoryVoList.add(categoryVo);
+                }
+            }
+        }
+        log.info("筛选出来的总共有 : {}", categoryVoList.size() > 0 ? categoryVoList.size() : groupRoomList.size());
+        return categoryVoList.size() > 0 ? categoryVoList : groupRoomList;
     }
 }

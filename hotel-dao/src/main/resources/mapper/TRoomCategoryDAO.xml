@@ -30,7 +30,7 @@
 
     <resultMap id="ErpRoomCategoryVo" type="com.gt.hotel.vo.erp.ErpRoomCategoryVo">
         <!-- 客房列表 -->
-        <collection property="roomList" select="com.gt.hotel.dao.TRoomDAO.queryRoomListAll" column="{hotelId=hotelId,categoryId=id}"/>
+        <collection property="roomList" select="com.gt.hotel.dao.TRoomDAO.findRoomList" column="{hotelId=hotelId,categoryId=id}"/>
         <!-- 预约客房数量 -->
         <!--<result property="bookingCount" select="com.gt.hotel.dao.TOrderDAO.erpFindTodayBookingByCategoryId" column="{hotelId=hotelId,categoryId=id}"/>-->
 
@@ -123,8 +123,9 @@
              FROM t_order o LEFT JOIN t_order_room tor ON o.order_num = tor.order_num
              WHERE
                  # 所有的 到店支付 或 已支付 均确认过后的订单 则会扣减库存
+                 # todo: Between 未测试。
                  tor.room_in_time BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
-                 AND ((o.pay_type = 2) OR (o.pay_status = 1)) AND o.order_status IN (1, 4) AND o.mark_modified = 0 AND tor.category_id = category.id) bookingCount
+                 AND ((o.pay_type = 2) OR (o.pay_status = 1)) AND o.order_status IN (1, 4) AND o.mark_modified = 0 AND tor.category_id = category.id) bookingCount # 某房型当日预订入住数量
         FROM t_room_category category
         WHERE category.hotel_id = #{hotelId} AND category.mark_modified = 0
     </select>

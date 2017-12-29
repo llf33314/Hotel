@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.vo.RoomVo;
+import com.gt.hotel.vo.erp.ErpRoomVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -29,17 +30,29 @@ public interface TRoomDAO extends BaseMapper<TRoom> {
     List<RoomVo> queryRoomList(@Param("hotelId") Integer hotelId, @Param("categoryId") Integer categoryId, @Param("page") Pagination page);
 
     /**
-     * 
      * @param hotelId
      * @param categoryId
      * @return
      */
-	List<RoomVo> queryRoomListAll(@Param("hotelId") Integer hotelId, @Param("categoryId") Integer categoryId, @Param("roomNumber") String roomNumber);
+    List<RoomVo> queryRoomListAll(@Param("hotelId") Integer hotelId, @Param("categoryId") Integer categoryId, @Param("roomNumber") String roomNumber);
+
+    /**
+     * <pre>
+     *      categoryId is null 查找 某酒店下的客房列表
+     *      if categoryId is not null 查找某酒店下某房型下的客房列表
+     * </pre>
+     *
+     * @param hotelId
+     * @param categoryId
+     * @return
+     */
+    List<ErpRoomVo> findRoomList(@Param("hotelId") Integer hotelId, @Param("categoryId") Integer categoryId);
 
 
     /**
      * 有效的客房
      * 如果，返回的结果 >1 则存在某一客房在这时间某段内已经被入住
+     *
      * @param ids List<Integer>
      * @return
      */

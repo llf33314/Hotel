@@ -2,6 +2,7 @@ package com.gt.hotel.controller.erp;
 
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.param.erp.ErpRoomCategoryParam;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.erp.ErpRoomCategoryVo;
@@ -44,8 +45,8 @@ public class ErpHotelReceptionController extends BaseController {
      */
     @ApiOperation(value = "获取房态列表数据", notes = "各房型下的各个房态列表")
     @GetMapping(value = "/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseDTO<List<ErpRoomCategoryVo>> index(@PathVariable("hotelId") Integer hotelId) {
-        List<ErpRoomCategoryVo> roomList = roomCategoryService.findErpGroupRoomList(hotelId);
+    public ResponseDTO<List<ErpRoomCategoryVo>> index(@PathVariable("hotelId") Integer hotelId, ErpRoomCategoryParam.RoomCategorySearch categorySearch) {
+        List<ErpRoomCategoryVo> roomList = roomCategoryService.findErpGroupRoomList(hotelId,categorySearch);
         return ResponseDTO.createBySuccess(roomList);
     }
 

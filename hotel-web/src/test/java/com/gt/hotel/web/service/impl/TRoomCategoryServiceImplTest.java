@@ -2,6 +2,7 @@ package com.gt.hotel.web.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.gt.hotel.BasicTest;
+import com.gt.hotel.param.erp.ErpRoomCategoryParam;
 import com.gt.hotel.vo.erp.ErpRoomCategoryVo;
 import com.gt.hotel.web.service.TRoomCategoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,11 @@ public class TRoomCategoryServiceImplTest extends BasicTest {
     @Test
     public void findErpGroupRoomList() throws Exception {
         Integer hotelid = 6337;
-        List<ErpRoomCategoryVo> roomList = tRoomCategoryService.findErpGroupRoomList(hotelid);
+        ErpRoomCategoryParam.RoomCategorySearch categorySearch = new ErpRoomCategoryParam.RoomCategorySearch();
+        //categorySearch.setRoomNum("2");
+        categorySearch.setFloor("3");
+        log.info("categorySearch : {}", categorySearch);
+        List<ErpRoomCategoryVo> roomList = tRoomCategoryService.findErpGroupRoomList(hotelid, categorySearch);
         Assert.assertNotNull(roomList);
         for (ErpRoomCategoryVo roomCategoryVo : roomList) {
             log.info("roomCatrgory Name : {} count : {} \n roomListSize : {} \n 预订客房数量：{}  \n roomList : {}",

@@ -1,6 +1,5 @@
 package com.gt.hotel.vo.erp;
 
-import com.gt.hotel.vo.RoomVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -54,7 +53,7 @@ public class ErpRoomCategoryVo {
      * 客房列表
      */
     @ApiModelProperty("客房列表")
-    private List<RoomVo> roomList;
+    private List<ErpRoomVo> roomList;
 
 
 }
