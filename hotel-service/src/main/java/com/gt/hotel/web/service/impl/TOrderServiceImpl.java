@@ -243,25 +243,30 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 
         // FIXME: 2017/12/28 orderRoom 缺少客房ID 客房编号
 
-        TOrderRoom orderRoom = new TOrderRoom();
         List<TOrderRoomCustomer> customers = new ArrayList<>();
-        orderRoom.setCustomerIdType(param.getCustomerIdType());
-        orderRoom.setCustomerIdCard(param.getCustomerIdCard());
-        orderRoom.setCustomerGender(param.getCustomerGender());
-        if (order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
-            orderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
-            orderRoom.setPayTime(date);
-        }
-        orderRoom.setUpdatedAt(date);
-        orderRoom.setUpdatedBy(busId);
         Wrapper<TOrderRoom> wrapper = new EntityWrapper<>();
         wrapper.eq("order_id", orderId);
-        TOrderRoom orderRoom2 = tOrderRoomService.selectOne(wrapper);
-        if (!tOrderRoomService.update(orderRoom, wrapper)) {
-            throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
-        }
-
+        List<TOrderRoom> orderRooms = tOrderRoomService.selectList(wrapper);
+        TOrderRoom orderRoom2 = orderRooms.get(0);
+        int ii = 0;
+        List<TOrderRoom> ors = new ArrayList<>();
         for (HotelOrderRoomParameter.OrderRoom o : param.getRooms()) {
+        	TOrderRoom tOrderRoom = orderRooms.get(ii);
+        	tOrderRoom.setCustomerIdCard(param.getCustomerIdCard());
+        	tOrderRoom.setCustomerIdType(param.getCustomerIdType());
+        	tOrderRoom.setCustomerIdCard(param.getCustomerIdCard());
+        	tOrderRoom.setCustomerGender(param.getCustomerGender());
+        	tOrderRoom.setRoomNum(o.getRoomNum());
+        	tOrderRoom.setRoomId(o.getRoomId());
+            if (order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE) || order.getRealPrice().equals(0)) {
+            	tOrderRoom.setPayStatus(CommonConst.PAY_STATUS_PAID);
+            	tOrderRoom.setPayTime(date);
+            }
+            tOrderRoom.setUpdatedAt(date);
+            tOrderRoom.setUpdatedBy(busId);
+            ors.add(tOrderRoom);
+        	ii++;
+        	
             TOrderRoomCustomer customer = new TOrderRoomCustomer();
             customer.setIdType(param.getCustomerIdType());
             customer.setIdCard(param.getCustomerIdCard());
@@ -274,8 +279,11 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
             customer.setCreatedBy(busId);
             customer.setUpdatedAt(date);
             customer.setUpdatedBy(busId);
-            customer.setOrderRoomId(orderRoom2.getId());
+            customer.setOrderRoomId(tOrderRoom.getId());
             customers.add(customer);
+        }
+        if (!tOrderRoomService.updateBatchById(ors)) {
+            throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
         if (!tOrderRoomCustomerService.insertBatch(customers)) {
             throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
@@ -283,7 +291,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         TOrderRoom tOrderRoom = tOrderRoomService.selectOne(wrapper);
         TRoomCategory category = tRoomCategoryService.selectById(tOrderRoom.getCategoryId());
         if (category.getBreakfastEnable().equals(CommonConst.ENABLED)) {
-        	Integer days = DateUtil.differentDays(orderRoom2.getRoomInTime(), orderRoom2.getRoomOutTime());
+			Integer days = DateUtil.differentDays(orderRoom2.getRoomInTime(), orderRoom2.getRoomOutTime());
         	days = days == 0 ? 1 : days;
         	Calendar cal = Calendar.getInstance();
         	cal.setTime(orderRoom2.getRoomInTime());

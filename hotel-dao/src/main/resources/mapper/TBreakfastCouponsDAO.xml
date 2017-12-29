@@ -30,10 +30,7 @@
 		created_at createdAt, updated_by updatedBy, updated_at updatedAt 
 		FROM t_breakfast_coupons 
 		WHERE order_id = #{orderId} AND room_num = #{roomNum} 
-		<![CDATA[
-		AND (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(created_at))>=-86400 
-		AND (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(created_at))<=86400
-		]]>
+		AND DATE_FORMAT(created_at, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
 	</select>
 
 </mapper>
