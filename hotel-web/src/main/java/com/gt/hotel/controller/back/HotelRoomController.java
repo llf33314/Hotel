@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TRoomCalendar;
+import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.param.RoomCalendarParamter;
 import com.gt.hotel.param.RoomCategoryParameter;
@@ -79,6 +82,11 @@ public class HotelRoomController extends BaseController {
         ResponseDTO msg = invalidParameterII(bindingResult);
         if (msg != null) {
             return msg;
+        }
+        Wrapper<TRoomCategory> w = new EntityWrapper<>();
+        w.eq("name", roomCategory.getName()).eq("hotel_id", roomCategory.getHotelId());
+		if(tRoomCategoryService.selectOne(w) != null) {
+        	return ResponseDTO.createByErrorMessage("房型名称相同");
         }
         Integer id = tRoomCategoryService.roomCategoryCU(getLoginUser(request).getId(), roomCategory);
         QueryRoomCategoryOne q = new QueryRoomCategoryOne();

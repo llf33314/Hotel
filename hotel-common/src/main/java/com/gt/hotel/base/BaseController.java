@@ -50,7 +50,10 @@ public abstract class BaseController {
      * @return int
      */
     protected BusUser getLoginUser(HttpServletRequest request) {
-        return SessionUtils.getLoginUser(request);
+    	BusUser busUser = new BusUser();
+    	busUser.setId(36);
+//        return SessionUtils.getLoginUser(request);
+		return busUser;
     }
 
     /**
