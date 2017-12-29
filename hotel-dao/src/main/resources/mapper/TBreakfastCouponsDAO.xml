@@ -29,7 +29,11 @@
 		write_off_status writeOffStatus, writer, created_by createdBy,
 		created_at createdAt, updated_by updatedBy, updated_at updatedAt 
 		FROM t_breakfast_coupons 
-		WHERE order_id = #{orderId} AND room_num = #{roomNum}
+		WHERE order_id = #{orderId} AND room_num = #{roomNum} 
+		<![CDATA[
+		AND (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(created_at))>=-86400 
+		AND (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(created_at))<=86400
+		]]>
 	</select>
 
 </mapper>

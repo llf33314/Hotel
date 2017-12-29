@@ -6,11 +6,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge，chrome=1">
     <meta name="HandheldFriendly" content="true">
     <meta name="MobileOptimized" content="320">
     <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>多粉客来驿PMS_智慧酒店管理系统_酒店客房管理软件_客来驿登录_用多粉，好生意</title>
     <meta name="keywords" content="多粉客来驿PMS，为商家提供一整套智能化的酒店运营管理方案，帮助酒店实现“去前台化”的目标，真正简化前台流程，减少运营成本，提升住户体验，提高管理水平，增加酒店收入。">
@@ -21,47 +21,114 @@
             padding: 0;
         }
 
-        .errorPage {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -100%);
-            text-align: center;
+        @media screen and (min-width: 769px) {
+            .errorPage {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -100%);
+                text-align: center;
+            }
+            img {
+                display: block;
+                margin: 0 auto;
+                margin-bottom: 15px;
+            }
+            h2 {
+                font-size: 46px;
+                color: #5e7489;
+                margin-bottom: 10px;
+            }
+
+            h3 {
+                font-size: 32px;
+                color: #5e7489;
+                margin-bottom: 50px;
+            }
+
+            a {
+                box-sizing: border-box;
+                display: block;
+                width: 180px;
+                line-height: 58px;
+                border: 2px solid #5e7489;
+                color: #5e7489;
+                text-decoration: none;
+                outline: none;
+                margin: 0 auto;
+                font-size: 24px;
+                border-radius: 3px;
+                letter-spacing: 1px;
+            }
         }
 
-        img {
+        @media screen and (max-width: 768px) {
+            .errorPage {
+                color: #999999;
+                line-height: 1;
+                text-align: center;
+                padding-top: 1rem;
+            }
 
-            display: block;
-            margin: 0 auto;
-            margin-bottom: 15px;
-        }
+            h2 {
+                font-size: 0.36rem;
+                line-height: 1;
+                font-size: 0.46rem;
+                color: #5e7489;
+            }
 
-        h2 {
-            font-size: 46px;
-            color: #5e7489;
-            margin-bottom: 10px;
-        }
+            h3 {
+                line-height: 1;
+                font-size: 0.3rem;
+                margin: 0.25rem 0 0.9rem 0;
+                font-size: 0.32rem;
+                color: #5e7489;
+            }
 
-        h3 {
-            font-size: 32px;
-            color: #5e7489;
-            margin-bottom: 50px;
-        }
+            img {
+                width: 1.36rem;
+                display: block;
+                margin: 0 auto;
+                margin-bottom: 0.35rem;
+            }
 
-        a {
-            box-sizing: border-box;
-            display: block;
-            width: 180px;
-            line-height: 58px;
-            border: 2px solid #5e7489;
-            color: #5e7489;
-            text-decoration: none;
-            outline: none;
-            margin: 0 auto;
-            font-size: 24px;
-            border-radius: 3px;
+            a {
+                box-sizing: border-box;
+                display: block;
+                width: 2rem;
+                line-height: 0.8rem;
+                color: #5e7489;
+                text-decoration: none;
+                outline: none;
+                margin: 0 auto;
+                font-size: 0.27rem;
+                border-radius: 3px;
+                position: relative;
+                letter-spacing: 1px;
+            }
+            a:after {
+                content: " ";
+                width: 200%;
+                height: 200%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                border: 2px solid #5e7489;
+                -webkit-transform: scale(.5);
+                transform: scale(.5);
+                -webkit-transform-origin: 0 0;
+                transform-origin: 0 0;
+                box-sizing: border-box;
+                border-radius: 10px;
+            }
         }
     </style>
+    <script>
+        window.onload = function () {
+            document.getElementsByTagName('html')[0].style.fontSize =
+                document.getElementsByTagName('html')[0].offsetWidth / 7.5 + 'px';
+        }
+    </script>
 </head>
 
 <body>

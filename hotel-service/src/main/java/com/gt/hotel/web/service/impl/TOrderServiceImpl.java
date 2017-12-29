@@ -1,5 +1,20 @@
 package com.gt.hotel.web.service.impl;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -9,7 +24,12 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderDAO;
 import com.gt.hotel.dao.TRoomDAO;
-import com.gt.hotel.entity.*;
+import com.gt.hotel.entity.TBreakfastCoupons;
+import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.entity.TOrderFood;
+import com.gt.hotel.entity.TOrderRoom;
+import com.gt.hotel.entity.TOrderRoomCustomer;
+import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelOrderParameter.CheckInParam;
@@ -18,24 +38,23 @@ import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.ExcelUtil;
 import com.gt.hotel.util.ExportUtil;
-import com.gt.hotel.vo.*;
-import com.gt.hotel.web.service.*;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.joda.time.DateTime;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.gt.hotel.vo.BusinessConditionsVo;
+import com.gt.hotel.vo.DepositVo;
+import com.gt.hotel.vo.HotelBackFoodOrderVo;
+import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.IncomeDetailsVo;
+import com.gt.hotel.vo.OrderRoomCustomerVo;
+import com.gt.hotel.web.service.TBreakfastCouponsService;
+import com.gt.hotel.web.service.TOrderFoodService;
+import com.gt.hotel.web.service.TOrderRoomCustomerService;
+import com.gt.hotel.web.service.TOrderRoomService;
+import com.gt.hotel.web.service.TOrderService;
+import com.gt.hotel.web.service.TRoomCategoryService;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -242,7 +261,6 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
             throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
 
-
         for (HotelOrderRoomParameter.OrderRoom o : param.getRooms()) {
             TOrderRoomCustomer customer = new TOrderRoomCustomer();
             customer.setIdType(param.getCustomerIdType());
@@ -265,21 +283,29 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         TOrderRoom tOrderRoom = tOrderRoomService.selectOne(wrapper);
         TRoomCategory category = tRoomCategoryService.selectById(tOrderRoom.getCategoryId());
         if (category.getBreakfastEnable().equals(CommonConst.ENABLED)) {
-            List<TBreakfastCoupons> bcs = new ArrayList<>();
-            for (int i = 0; i < customers.size(); i++) {
-                for (int j = 0; j < category.getBreakfastQuantity(); j++) {
-                    TBreakfastCoupons breakfastCoupons = new TBreakfastCoupons();
-                    breakfastCoupons.setOrderId(orderId);
-                    breakfastCoupons.setCategoryId(tOrderRoom.getCategoryId());
-                    breakfastCoupons.setRoomNum(customers.get(i).getRoomNum());
-                    breakfastCoupons.setCode(System.currentTimeMillis() + "" + Math.round(Math.random() * 9999999));
-                    breakfastCoupons.setWriteOffStatus(0);
-                    breakfastCoupons.setCreatedAt(date);
-                    breakfastCoupons.setCreatedBy(busId);
-                    breakfastCoupons.setUpdatedBy(busId);
-                    bcs.add(breakfastCoupons);
-                }
-            }
+        	Integer days = DateUtil.differentDays(orderRoom2.getRoomInTime(), orderRoom2.getRoomOutTime());
+        	days = days == 0 ? 1 : days;
+        	Calendar cal = Calendar.getInstance();
+        	cal.setTime(orderRoom2.getRoomInTime());
+        	cal.add(Calendar.DAY_OF_YEAR, -1);
+        	List<TBreakfastCoupons> bcs = new ArrayList<>();
+        	for (int x = 0; x < days; x++) {
+        		cal.add(Calendar.DAY_OF_YEAR, 1);
+        		for (int i = 0; i < customers.size(); i++) {
+        			for (int j = 0; j < category.getBreakfastQuantity(); j++) {
+        				TBreakfastCoupons breakfastCoupons = new TBreakfastCoupons();
+        				breakfastCoupons.setOrderId(orderId);
+        				breakfastCoupons.setCategoryId(tOrderRoom.getCategoryId());
+        				breakfastCoupons.setRoomNum(customers.get(i).getRoomNum());
+        				breakfastCoupons.setCode(System.currentTimeMillis() + "" + Math.round(Math.random() * 9999999));
+        				breakfastCoupons.setWriteOffStatus(0);
+        				breakfastCoupons.setCreatedAt(cal.getTime());
+        				breakfastCoupons.setCreatedBy(busId);
+        				breakfastCoupons.setUpdatedBy(busId);
+        				bcs.add(breakfastCoupons);
+        			}
+        		}
+        	}
             if (!breakfastCouponsService.insertBatch(bcs)) {
                 throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
             }

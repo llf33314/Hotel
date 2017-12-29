@@ -159,8 +159,8 @@ public class HotelOrderController extends BaseController {
                                     HttpServletRequest request) {
         Integer busid = getLoginUser(request).getId();
         TOrder order = tOrderService.selectById(orderId);
-        order.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
-        tOrderService.updateById(order);
+//        order.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
+//        tOrderService.updateById(order);
         if (!(order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID) && order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED))) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
         }
@@ -342,8 +342,8 @@ public class HotelOrderController extends BaseController {
                                         HttpServletRequest request) {
         Integer busid = getLoginUser(request).getId();
         TOrder order = tOrderService.selectById(orderId);
-        order.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
-        tOrderService.updateById(order);
+//        order.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
+//        tOrderService.updateById(order);
         Wrapper<TOrderRoom> w = new EntityWrapper<>();
         w.eq("order_id", orderId);
 		TOrderRoom orderRoom = orderRoomService.selectOne(w);
