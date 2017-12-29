@@ -18,7 +18,7 @@ public class RoomVo {
 
     @ApiModelProperty("房间ID")
     private Integer id;
-    
+
     @ApiModelProperty("房型ID")
     private Integer categoryId;
 
@@ -32,10 +32,16 @@ public class RoomVo {
     private String roomNum;
 
     @ApiModelProperty("楼层")
-    private String floor;
-
-    @ApiModelProperty("房间状态 字典值 TODO: 后续给出编号  -- 可定义为字典值：在住、空房、脏房、已预订、已锁定、维护")
-    private String status;
+    private String  floor;
+    /**
+     * 1	空房
+     * 2	锁定
+     * 3	在住
+     * 4	清洁
+     * 5	维护
+     */
+    @ApiModelProperty("房间状态 字典值 1\t空房,2\t锁定,3\t在住,4\t清洁,5\t维护")
+    private Integer status;
 
     @ApiModelProperty("0 正常 1 禁用 2 删除")
     private Integer markModified;
@@ -54,4 +60,5 @@ public class RoomVo {
 
     @ApiModelProperty("押金")
     private Integer deposit;
+
 }

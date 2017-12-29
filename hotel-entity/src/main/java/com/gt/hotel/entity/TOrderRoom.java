@@ -60,6 +60,10 @@ public class TOrderRoom extends Model<TOrderRoom> {
      */
     private String  roomNum;
     /**
+     * 客房ID
+     */
+    private Integer roomId;
+    /**
      * 预订客户姓名
      */
     private String  customerName;

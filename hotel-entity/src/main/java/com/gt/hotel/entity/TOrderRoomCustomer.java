@@ -55,6 +55,10 @@ public class TOrderRoomCustomer extends Model<TOrderRoomCustomer> {
      */
     private String  roomNum;
     /**
+     * 客房ID
+     */
+    private Integer roomId;
+    /**
      * 标记备注 0 启用 1 禁用 2 删除 默认0  可查看 sys_dictionary.dict_type_id=2
      */
     @TableLogic

@@ -1,26 +1,5 @@
 package com.gt.hotel.controller.erp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -47,10 +26,24 @@ import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TRoomCategoryService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * 酒店ERP - 通用
@@ -61,10 +54,10 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/erp/common")
 public class ErpHotelCommonController extends BaseController {
-	
+
 	@Autowired
     private WXMPApiUtil wxmpApiUtil;
-	
+
 	@Autowired
     private WebServerConfigurationProperties properties;
 
@@ -102,7 +95,7 @@ public class ErpHotelCommonController extends BaseController {
 				hvs.add(hv);
 				sids.add(h.getShopId());
 			}
-			
+
             List<HotelShopInfo> s = new ArrayList<>();
             for (HotelWsWxShopInfoExtend shop : shops) {
                 if(sids.contains(shop.getId())) {
@@ -139,7 +132,7 @@ public class ErpHotelCommonController extends BaseController {
     	SignBean sign = SignUtils.sign(properties.getWxmpService().getSignKey(), JSONObject.toJSONString(map));
     	return ResponseDTO.createBySuccess(sign);
     }
-    
+
     @ApiOperation(value = "erp退出登录", notes = "erp退出登录")
     @GetMapping(value = "logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<JSONObject> logout(HttpServletRequest request) {
@@ -147,7 +140,7 @@ public class ErpHotelCommonController extends BaseController {
     	cookie.setMaxAge(0);
     	return ResponseDTO.createBySuccess();
     }
-    
+
     @ApiOperation(value = "配置", notes = "配置")
     @GetMapping(value = "config", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<ConfigVO> config(HttpServletRequest request) {
@@ -159,7 +152,7 @@ public class ErpHotelCommonController extends BaseController {
     	vo.setMaterialUrl(properties.getWxmpService().getMaterialUrl());
     	return ResponseDTO.createBySuccess(vo);
     }
-    
+
 	@ApiOperation(value = "房间类型列表", notes = "房间类型列表")
 	@GetMapping(value = "roomCategory/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<RoomCategoryVo>> getRoomCategory(
@@ -171,7 +164,7 @@ public class ErpHotelCommonController extends BaseController {
 		Page<RoomCategoryVo> page = roomCategoryService.queryRoomCategory(param);
 		return ResponseDTO.createBySuccess(page);
 	}
-	
+
 	@ApiOperation(value = "酒店信息", notes = "酒店信息")
 	@GetMapping(value = "hotel/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<HotelVo> getHotel(

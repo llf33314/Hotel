@@ -11,6 +11,7 @@ import com.gt.hotel.param.RoomParameter.RoomPermanent;
 import com.gt.hotel.param.RoomParameter.RoomPermanentQuery;
 import com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate;
 import com.gt.hotel.vo.*;
+import com.gt.hotel.vo.erp.ErpRoomCategoryVo;
 
 import java.util.List;
 
@@ -122,19 +123,27 @@ public interface TRoomCategoryService extends BaseService<TRoomCategory> {
 
     /**
      * 查询 房间列表 全部
+     *
      * @param hotelId
      * @param categoryId
      * @return
      */
-	List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber);
+    List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber);
 
-	/**
-	 * 移动端 首页房型列表 
-	 * @param hotelId 
-	 * @param req 
-	 * @return
-	 */
-	Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req);
+    /**
+     * 移动端 首页房型列表
+     *
+     * @param hotelId
+     * @param req
+     * @return
+     */
+    Page<MobileRoomCategoryVo> queryMobileRoomCategory(Integer hotelId, MobileQueryRoomCategory req);
 
-
+    /**
+     * 获取房态列表
+     *
+     * @param hotelId 酒店ID
+     * @return List<ErpRoomCategoryVo>
+     */
+    List<ErpRoomCategoryVo> findErpGroupRoomList(Integer hotelId);
 }
