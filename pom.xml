@@ -51,7 +51,7 @@
         <dev.lib.jjwt>0.7.0</dev.lib.jjwt>
         <dev.lib.lombok>1.16.18</dev.lib.lombok>
         <dev.lib.joda-time>2.9.9</dev.lib.joda-time>
-        <dev.lib.gt-api>1.3.24-SNAPSHOT</dev.lib.gt-api>
+        <dev.lib.gt-api>1.3.27-SNAPSHOT</dev.lib.gt-api>
         <dev.lib.guava>20.0</dev.lib.guava>
     </properties>
 
