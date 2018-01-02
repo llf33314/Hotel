@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.MobileQueryRoomCategory;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
-import com.gt.hotel.param.erp.ErpRoomCategoryParam;
 import com.gt.hotel.vo.MobileRoomCategoryVo;
 import com.gt.hotel.vo.RoomCategoryVo;
 import com.gt.hotel.vo.erp.ErpRoomCategoryVo;
@@ -26,7 +25,6 @@ public interface TRoomCategoryDAO extends BaseMapper<TRoomCategory> {
     /**
      * 查询 房型列表
      *
-     * @param hotelId 酒店ID
      * @param page
      * @return
      */
@@ -41,21 +39,11 @@ public interface TRoomCategoryDAO extends BaseMapper<TRoomCategory> {
      */
     List<MobileRoomCategoryVo> queryMobileRoomCategory(@Param("hotelId") Integer hotelId, @Param("param") MobileQueryRoomCategory req,
                                                        @Param("page") Pagination page);
-//	List<MobileRoomCategoryVo> queryMobileRoomCategory(@Param("hotelId") Integer hotelId, @Param("param") MobileQueryRoomCategory req);
-
-    /**
-     * 查找移动端 房型列表 分页
-     * @param page 分页
-     * @param hotelId 酒店ID
-     * @param req MobileQueryRoomCategory
-     * @return Page<MobileRoomBookableVo>
-     */
-    //List<MobileRoomBookableVo> findMobileRoomCategoryVoList(@Param("page") Pagination page, @Param("hotelId") Integer hotelId, @Param("param") MobileQueryRoomCategory req);
 
     /**
      * 查询房型下房间列表
      *
-     * @param hotelId        酒店ID
+     * @param hotelId 酒店ID
      * @return List<ErpRoomCategoryVo>
      */
     List<ErpRoomCategoryVo> findErpGroupRoomList(@Param("hotelId") Integer hotelId);

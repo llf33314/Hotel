@@ -29,5 +29,4 @@ public class ErpHotelInventoryController extends BaseController {
     private WebServerConfigurationProperties properties;
 
 
-    
 }

@@ -1,13 +1,12 @@
 package com.gt.hotel.param;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 
 /**
  * 房间 请求对象
@@ -27,6 +26,10 @@ public class RoomParameter {
         @ApiModelProperty(value = "房型ID", required = true)
         @NotNull(message = "房型ID不能为空")
         private Integer categoryId;
+
+        @ApiModelProperty(value = "酒店ID",required = true)
+        @NotNull(message = "酒店ID不能为空")
+        private Integer hotelId;
 
         @ApiModelProperty(value = "房间编号", required = true)
         @NotEmpty(message = "房间编号不能为空")

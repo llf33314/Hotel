@@ -38,13 +38,14 @@
 	</sql>
 
 	<select id="erpQueryAgreementOrganization" resultType="com.gt.hotel.vo.AgreementOrganizationVo">
-		SELECT c.`name` packageName, b.`name` hotelName, <include refid="Base_Column_List_Vo" />
-		FROM t_agreement_organization a 
-		JOIN t_hotel b ON a.hotel_id = b.id 
+		SELECT c.`name` packageName, b.`name` hotelName,
+		<include refid="Base_Column_List_Vo"/>
+		FROM t_agreement_organization a
+		JOIN t_hotel b ON a.hotel_id = b.id
 		JOIN t_package c ON c.id = a.package_id 
 		WHERE a.mark_modified = 0 
 		<if test="hotelId != null">
-			AND a.hotel_id = #{hotelId} 
+			AND b.id = #{hotelId}
 		</if>
 		<if test="param.status != null">
 			AND a.`status` = #{param.status} 

@@ -97,7 +97,8 @@ public class ErpHotelCommonController extends BaseController {
 			}
 
             List<HotelShopInfo> s = new ArrayList<>();
-            for (HotelWsWxShopInfoExtend shop : shops) {
+			assert shops != null;
+			for (HotelWsWxShopInfoExtend shop : shops) {
                 if(sids.contains(shop.getId())) {
                 	HotelShopInfo hsi = new HotelShopInfo();
                 	hsi.setShopId(shop.getId());
@@ -154,13 +155,12 @@ public class ErpHotelCommonController extends BaseController {
     }
 
 	@ApiOperation(value = "房间类型列表", notes = "房间类型列表")
-	@GetMapping(value = "roomCategory/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(value = "roomCategory/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<RoomCategoryVo>> getRoomCategory(
-			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+			@ApiParam("门店ID") @PathVariable("hotelId") Integer hotelId,
 			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param,
 			BindingResult bindingResult) {
 		invalidParameter(bindingResult);
-//		param.setPageSize(9999);
 		Page<RoomCategoryVo> page = roomCategoryService.queryRoomCategory(param);
 		return ResponseDTO.createBySuccess(page);
 	}

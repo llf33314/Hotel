@@ -28,7 +28,7 @@ public interface TAgreementOrganizationService extends BaseService<TAgreementOrg
 	/**
 	 * 编辑 协议单位or中介
 	 * @param busId
-	 * @param shopId
+	 * @param hotelId
 	 * @param insert
 	 */
 	void erpInsertAgreementOrganization(Integer busId, Integer hotelId, AgreementInsert insert);

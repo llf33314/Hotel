@@ -35,6 +35,10 @@ public class TRoom extends Model<TRoom> {
      */
     private Integer categoryId;
     /**
+     * 酒店ID 冗余参数
+     */
+    private Integer hotelId;
+    /**
      * 客房编号
      */
     private String  number;

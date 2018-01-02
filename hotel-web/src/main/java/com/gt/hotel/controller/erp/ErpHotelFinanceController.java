@@ -30,6 +30,4 @@ public class ErpHotelFinanceController extends BaseController {
     private WebServerConfigurationProperties properties;
 
 
-    
-
 }
