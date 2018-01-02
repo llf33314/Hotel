@@ -23,4 +23,7 @@ public class ConfigVO {
 	@ApiModelProperty("素材库服务器路径")
 	private String materialUrl;
 	
+	@ApiModelProperty("支付宝退款路径")
+	private String alipayRefundUrl;
+	
 }

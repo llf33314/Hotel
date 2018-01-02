@@ -40,6 +40,7 @@ public class HotelConfigController extends BaseController {
     	vo.setSocketUrl(properties.getWxmpService().getSocketUrl());
     	vo.setApiUrl(properties.getWxmpService().getServiceUrl());
     	vo.setMaterialUrl(properties.getWxmpService().getMaterialUrl());
+    	vo.setAlipayRefundUrl(properties.getWxmpService().getAlipayRefundUrl());
     	return ResponseDTO.createBySuccess(vo);
     }
     
