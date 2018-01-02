@@ -176,14 +176,21 @@ public class HotelOrderController extends BaseController {
                 params.put("notifyUrl", getHost(request) + "/back/order/" + orderId + "/aliPayCallBack");
                 KeysUtil keysUtil = new KeysUtil();
                 String key = keysUtil.getEncString(JSONObject.toJSONString(params));
-                System.err.println(params.toString());
-                System.err.println(key);
                 return ResponseDTO.createBySuccess(key);
                 //微信
             } else if (order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
                 JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(),
                         order.getRealPrice() / 100d, order.getRealPrice() / 100d);
                 if (result.getInteger("code").equals(0) || result.getString("msg").equals("订单已全额退款")) {
+                    Wrapper<TOrder> wrapper = new EntityWrapper<>();
+                    wrapper.eq("id", orderId);
+                    TOrder newOrder = new TOrder();
+                    newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+                    newOrder.setRefundAmount(order.getRealPrice());
+                    newOrder.setUpdatedBy(busid);
+                    if (!tOrderService.update(newOrder, wrapper)) {
+                        return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+                    } else {
 //                    ErpRefundBo bo = new ErpRefundBo();
 //                    bo.setBusId(order.getBusId());
 //                    bo.setOrderCode(order.getOrderNum());
@@ -194,15 +201,6 @@ public class HotelOrderController extends BaseController {
 //                    bo.setRefundFenbi(order.getFb() / 100d);
 //                    bo.setRefundDate(System.currentTimeMillis());
 //                    wxmpApiUtil.memberRefundErp(bo);
-                    Wrapper<TOrder> wrapper = new EntityWrapper<>();
-                    wrapper.eq("id", orderId);
-                    TOrder newOrder = new TOrder();
-                    newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
-                    newOrder.setRefundAmount(order.getRealPrice());
-                    newOrder.setUpdatedBy(busid);
-                    if (!tOrderService.update(newOrder, wrapper)) {
-                        return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
-                    } else {
                         return ResponseDTO.createBySuccess();
                     }
                 } else {
@@ -383,17 +381,7 @@ public class HotelOrderController extends BaseController {
             } else if (order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
                 JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(),
                         refundsP.getRefundFee() / 100d, order.getRealPrice() / 100d);
-                if (result.getInteger("code").equals(0)) {
-                    ErpRefundBo bo = new ErpRefundBo();
-                    bo.setBusId(order.getBusId());
-                    bo.setOrderCode(order.getOrderNum());
-                    // ali = 0, wx = 1, 储值卡 = 5
-                    bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2));
-                    bo.setRefundMoney(0d);
-                    bo.setRefundJifen(order.getIntegral());
-                    bo.setRefundFenbi(order.getFb() / 100d);
-                    bo.setRefundDate(System.currentTimeMillis());
-                    wxmpApiUtil.memberRefundErp(bo);
+                if (result.getInteger("code").equals(0) || result.getString("msg").equals("订单已全额退款")) {
                     Wrapper<TOrder> wrapper = new EntityWrapper<>();
                     wrapper.eq("id", orderId);
                     TOrder newOrder = new TOrder();
@@ -404,6 +392,16 @@ public class HotelOrderController extends BaseController {
                     if (!tOrderService.update(newOrder, wrapper)) {
                         return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
                     } else {
+//                    	ErpRefundBo bo = new ErpRefundBo();
+//                    	bo.setBusId(order.getBusId());
+//                    	bo.setOrderCode(order.getOrderNum());
+//                    	// ali = 0, wx = 1, 储值卡 = 5
+//                    	bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2));
+//                    	bo.setRefundMoney(0d);
+//                    	bo.setRefundJifen(order.getIntegral());
+//                    	bo.setRefundFenbi(order.getFb() / 100d);
+//                    	bo.setRefundDate(System.currentTimeMillis());
+//                    	wxmpApiUtil.memberRefundErp(bo);
                         return ResponseDTO.createBySuccess();
                     }
                 } else {

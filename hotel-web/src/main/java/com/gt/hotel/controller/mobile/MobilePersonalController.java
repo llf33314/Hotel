@@ -215,8 +215,7 @@ public class MobilePersonalController extends BaseController {
 			ModelAndView modelAndView) {
 		Member member = getMember(request);
 		THotel hotel = tHotelService.selectById(hotelId);
-		modelAndView.addObject("msg", "核销失败");
-		modelAndView.setViewName("/error/defaultError.html");
+		modelAndView.setViewName("/writeOff/writeOffFail.html");
 		try {
 			if (member == null) {
 				Map<String, Object> queryMap = new HashMap<>();
@@ -238,10 +237,12 @@ public class MobilePersonalController extends BaseController {
 					bc.setWriteOffStatus(1);
 					bc.setWriter(authorization.getAccountId());
 					if(breakfastCouponsService.updateById(bc)) {
-						modelAndView.addObject("msg", "核销成功");
+						modelAndView.setViewName("/writeOff/writeOffSuccess.html");
+					}else {
+						modelAndView.setViewName("/writeOff/writeOffFail.html");
 					}
 				}else {
-					modelAndView.addObject("msg", "无核销权限");
+					modelAndView.setViewName("/writeOff/writeOffFail.html");
 				}
 			}
 		} catch (UnsupportedEncodingException e) {

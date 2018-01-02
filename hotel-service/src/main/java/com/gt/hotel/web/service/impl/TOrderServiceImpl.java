@@ -295,7 +295,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         	days = days == 0 ? 1 : days;
         	Calendar cal = Calendar.getInstance();
         	cal.setTime(orderRoom2.getRoomInTime());
-        	cal.add(Calendar.DAY_OF_YEAR, -1);
+//        	cal.add(Calendar.DAY_OF_YEAR, -1);
         	List<TBreakfastCoupons> bcs = new ArrayList<>();
         	for (int x = 0; x < days; x++) {
         		cal.add(Calendar.DAY_OF_YEAR, 1);

@@ -30,7 +30,7 @@
 		created_at createdAt, updated_by updatedBy, updated_at updatedAt 
 		FROM t_breakfast_coupons 
 		WHERE order_id = #{orderId} AND room_num = #{roomNum} 
-		AND DATE_FORMAT(created_at, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+		<!-- AND DATE_FORMAT(created_at, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') -->
 	</select>
 
 </mapper>
