@@ -58,35 +58,35 @@ public class ErpHotelManagerController extends BaseController {
 	TPackageRoomService packageRoomService;
 	
     @ApiOperation(value = "协议单位or中介列表", notes = "协议单位or中介列表")
-    @GetMapping(value = "organization/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "organization/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<AgreementOrganizationVo>> organizationR(
-    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		@ModelAttribute AgreementParamter.AgreementQuery query, 
     		BindingResult bindingResult) {
     	invalidParameter(bindingResult);
-        Page<AgreementOrganizationVo> page = agreementOrganizationService.erpQueryAgreementOrganization(shopId, query);
+        Page<AgreementOrganizationVo> page = agreementOrganizationService.erpQueryAgreementOrganization(hotelId, query);
         return ResponseDTO.createBySuccess(page);
     }
     
     @ApiOperation(value = "协议单位or中介 详情", notes = "协议单位or中介 详情")
-    @GetMapping(value = "organization/{shopId}/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "organization/{hotelId}/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<AgreementOrganizationVo> organizationR(
-    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		@ApiParam("组织ID") @PathVariable("id") Integer id) {
     	return ResponseDTO.createBySuccess(agreementOrganizationService.erpQueryAgreementOrganizationDetail(id));
     }
     
     @SuppressWarnings("rawtypes")
 	@ApiOperation(value = "编辑 协议单位or中介", notes = "编辑 协议单位or中介")
-    @PostMapping(value = "organization/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "organization/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO organizationCU(
-    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		@RequestBody AgreementParamter.AgreementInsert insert, 
     		BindingResult bindingResult, 
     		HttpServletRequest request) {
     	invalidParameter(bindingResult);
     	Integer busId = getLoginUser(request).getId();
-		agreementOrganizationService.erpInsertAgreementOrganization(busId, shopId, insert);
+		agreementOrganizationService.erpInsertAgreementOrganization(busId, hotelId, insert);
     	return ResponseDTO.createBySuccess();
     }
     
@@ -109,22 +109,22 @@ public class ErpHotelManagerController extends BaseController {
     }
     
     @ApiOperation(value = "套餐 列表", notes = "套餐 列表")
-    @GetMapping(value = "package/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "package/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<PackageVo>> packageR(
-    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		@ModelAttribute PackageParamter.PackageQuery query, 
     		BindingResult bindingResult) {
     	invalidParameter(bindingResult);
-    	Page<PackageVo> page = packageService.erpQueryPackage(shopId, query);
+    	Page<PackageVo> page = packageService.erpQueryPackage(hotelId, query);
         return ResponseDTO.createBySuccess(page);
     }
     
     @ApiOperation(value = "套餐房间 列表", notes = "套餐房间 列表")
-    @GetMapping(value = "package/{shopId}/{packageId}/packageRoom", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "package/{hotelId}/{packageId}/packageRoom", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<List<PackageRoomVo>> packageRoomR(
-    		@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		@ApiParam("组织ID") @PathVariable("packageId") Integer packageId) {
-        return ResponseDTO.createBySuccess(packageRoomService.erpQueryPackageRoom(shopId, packageId));
+        return ResponseDTO.createBySuccess(packageRoomService.erpQueryPackageRoom(hotelId, packageId));
     }
     
 }

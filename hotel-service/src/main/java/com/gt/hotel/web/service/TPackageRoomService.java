@@ -18,7 +18,7 @@ public interface TPackageRoomService extends BaseService<TPackageRoom> {
 
 	/**
 	 * 套餐房间 列表
-	 * @param shopId
+	 * @param hotelId
 	 * @param packageId
 	 * @return
 	 */

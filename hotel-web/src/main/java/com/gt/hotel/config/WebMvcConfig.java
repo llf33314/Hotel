@@ -91,7 +91,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(mobileAuthenticationInterceptor()).addPathPatterns("/mobile/**");
-        registry.addInterceptor(backAuthenticationInterceptor()).addPathPatterns("/back/**");
+        registry.addInterceptor(backAuthenticationInterceptor()).addPathPatterns("/back/**").addPathPatterns("/erp/**");
         super.addInterceptors(registry);
     }
 

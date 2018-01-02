@@ -27,7 +27,7 @@ public interface TAgreementOrganizationDAO extends BaseMapper<TAgreementOrganiza
 	 * @param page
 	 * @return
 	 */
-	List<AgreementOrganizationVo> erpQueryAgreementOrganization(@Param("shopId") Integer shopId, @Param("param") AgreementQuery query,
+	List<AgreementOrganizationVo> erpQueryAgreementOrganization(@Param("hotelId") Integer hotelId, @Param("param") AgreementQuery query,
 			@Param("page") Pagination page);
 
 }

@@ -26,8 +26,8 @@
 		SELECT <include refid="Base_Column_List" /> 
 		FROM t_package a 
 		WHERE a.mark_modified = 0 
-		<if test="shopId != null">
-			AND shop_id = #{shopId} 
+		<if test="hotelId != null">
+			AND hotel_id = #{hotelId} 
 		</if> 
 		<if test="param.id != null">
 			AND a.id = #{param.id}

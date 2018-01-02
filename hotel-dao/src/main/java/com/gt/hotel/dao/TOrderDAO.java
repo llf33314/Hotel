@@ -78,16 +78,16 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
      * @param nowEnd
      * @return
      */
-    BusinessConditionsVo erpGetBusinessConditions(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("nowStart") String nowStart, @Param("nowEnd") String nowEnd);
+    BusinessConditionsVo erpGetBusinessConditions(@Param("busId") Integer busId, @Param("hotelId") Integer hotelId, @Param("nowStart") String nowStart, @Param("nowEnd") String nowEnd);
 
     /**
      * @param busId
-     * @param shopId
+     * @param hotelId
      * @param startDate
      * @param endDate
      * @return
      */
-    List<TOrder> getTotalRevenue(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("startDate") String startDate, @Param("endDate") String endDate);
+    List<TOrder> getTotalRevenue(@Param("busId") Integer busId, @Param("hotelId") Integer hotelId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 
     /**
      * 收入明细
@@ -98,7 +98,7 @@ public interface TOrderDAO extends BaseMapper<TOrder> {
      * @param page
      * @return
      */
-    List<IncomeDetailsVo> getIncomeDetailsByDate(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("param") HotelPage hpage, @Param("page") Pagination page);
+    List<IncomeDetailsVo> getIncomeDetailsByDate(@Param("busId") Integer busId, @Param("hotelId") Integer hotelId, @Param("param") HotelPage hpage, @Param("page") Pagination page);
 
     /**
      * 根据房型获取 今日预订(入住) 客房数量

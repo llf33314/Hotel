@@ -34,8 +34,8 @@
 		<if test="packageId != null">
 			AND a.package_id =  #{packageId} 
 		</if>
-		<if test="shopId != null">
-			AND b.shop_id = #{shopId} 
+		<if test="hotelId != null">
+			AND b.hotel_id = #{hotelId} 
 		</if>
 	</select>
 </mapper>

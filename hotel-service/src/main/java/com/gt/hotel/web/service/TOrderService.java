@@ -132,19 +132,19 @@ public interface TOrderService extends BaseService<TOrder> {
 	/**
 	 * 酒店营业状况
 	 * @param busid
-	 * @param shopId
+	 * @param hotelId
 	 * @param format "yyyy-MM-dd"
 	 * @return
 	 */
-	BusinessConditionsVo erpGetBusinessConditions(Integer busid, Integer shopId, String format);
+	BusinessConditionsVo erpGetBusinessConditions(Integer busid, Integer hotelId, String format);
 
 	/**
 	 * 收入明细
-	 * @param shopId
+	 * @param hotelId
 	 * @param hpage
 	 * @return
 	 */
-	Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer shopId, HotelPage hpage);
+	Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer hotelId, HotelPage hpage);
 
 	/**
 	 * 

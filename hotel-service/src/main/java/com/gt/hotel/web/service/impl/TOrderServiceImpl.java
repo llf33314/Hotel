@@ -403,17 +403,17 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
     }
 
     @Override
-    public BusinessConditionsVo erpGetBusinessConditions(Integer busId, Integer shopId, String now) {
+    public BusinessConditionsVo erpGetBusinessConditions(Integer busId, Integer hotelId, String now) {
         String nowStart = now + " 00:00:00";
         String nowEnd = now + " 23:59:59";
-        return tOrderDAO.erpGetBusinessConditions(busId, shopId, nowStart, nowEnd);
+        return tOrderDAO.erpGetBusinessConditions(busId, hotelId, nowStart, nowEnd);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer shopId, HotelPage hpage) {
+    public Page<IncomeDetailsVo> erpGetIncomeDetails(Integer busId, Integer hotelId, HotelPage hpage) {
         Page<IncomeDetailsVo> page = hpage.initPage();
-        List<IncomeDetailsVo> l = tOrderDAO.getIncomeDetailsByDate(busId, shopId, hpage, page);
+        List<IncomeDetailsVo> l = tOrderDAO.getIncomeDetailsByDate(busId, hotelId, hpage, page);
         //TODO 暂缺 商品消费 & 其他
         page.setRecords(l);
         return page;

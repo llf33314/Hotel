@@ -436,12 +436,12 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
     }
 
     @Override
-    public RoomCheackInCountVo roomCheckInCount(Integer busId, Integer shopId) {
-        return tOrderRoomDAO.roomCheckInCount(busId, shopId);
+    public RoomCheackInCountVo roomCheckInCount(Integer busId, Integer hotelId) {
+        return tOrderRoomDAO.roomCheckInCount(busId, hotelId);
     }
 
     @Override
-    public List<CheackInListRevenueVo> erpGetOccupancyRevenue(String now, Integer busId, Integer shopId) {
+    public List<CheackInListRevenueVo> erpGetOccupancyRevenue(String now, Integer busId, Integer hotelId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<CheackInListRevenueVo> l = new ArrayList<>();
         List<String> dates = new ArrayList<>();
@@ -462,9 +462,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         }
         String startDate = dates.get(dates.size() - 1);
         String endDate = dates.get(0);
-        List<TOrderRoom> ors = tOrderRoomDAO.getCheckInRoom(busId, shopId, startDate, endDate);
-        List<TOrder> os = orderDAO.getTotalRevenue(busId, shopId, startDate, endDate);
-        int roomCount = tOrderRoomDAO.roomCheckInCount(busId, shopId).getRoomCount();
+        List<TOrderRoom> ors = tOrderRoomDAO.getCheckInRoom(busId, hotelId, startDate, endDate);
+        List<TOrder> os = orderDAO.getTotalRevenue(busId, hotelId, startDate, endDate);
+        int roomCount = tOrderRoomDAO.roomCheckInCount(busId, hotelId).getRoomCount();
         for (String day : dates) {
             CheackInListRevenueVo cil = new CheackInListRevenueVo();
             Integer checkInRoomCount = 0;

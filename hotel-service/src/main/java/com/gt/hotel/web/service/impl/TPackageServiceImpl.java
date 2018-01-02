@@ -27,9 +27,9 @@ public class TPackageServiceImpl extends BaseServiceImpl<TPackageDAO, TPackage> 
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<PackageVo> erpQueryPackage(Integer shopId, PackageQuery query) {
+	public Page<PackageVo> erpQueryPackage(Integer hotelId, PackageQuery query) {
 		Page<PackageVo> page = query.initPage();
-		page.setRecords(packageDAO.erpQueryPackage(shopId, query, page));
+		page.setRecords(packageDAO.erpQueryPackage(hotelId, query, page));
 		return page;
 	}
 	

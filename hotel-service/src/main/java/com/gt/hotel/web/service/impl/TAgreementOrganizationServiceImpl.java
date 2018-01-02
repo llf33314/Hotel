@@ -53,21 +53,19 @@ public class TAgreementOrganizationServiceImpl extends BaseServiceImpl<TAgreemen
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<AgreementOrganizationVo> erpQueryAgreementOrganization(Integer shopId, AgreementQuery query) {
+	public Page<AgreementOrganizationVo> erpQueryAgreementOrganization(Integer hotelId, AgreementQuery query) {
 		Page<AgreementOrganizationVo> page = query.initPage();
-		page.setRecords(agreementOrganizationDAO.erpQueryAgreementOrganization(shopId, query, page));
+		page.setRecords(agreementOrganizationDAO.erpQueryAgreementOrganization(hotelId, query, page));
 		return page;
 	}
 
 	@Override
-	public void erpInsertAgreementOrganization(Integer busId, Integer shopId, AgreementInsert insert) {
+	public void erpInsertAgreementOrganization(Integer busId, Integer hotelId, AgreementInsert insert) {
 		Date date = new Date();
 		if(insert.getId() == null) {
 			TAgreementOrganization a = new TAgreementOrganization();
 			BeanUtils.copyProperties(insert, a);
-			Wrapper<THotel> wrapper = new EntityWrapper<>();
-			wrapper.eq("shop_id", shopId);
-			THotel hotel = hotelService.selectOne(wrapper);
+			THotel hotel = hotelService.selectById(hotelId);
 			a.setHotelId(hotel.getId());
 			a.setCreatedAt(date);
 			a.setCreatedBy(busId);

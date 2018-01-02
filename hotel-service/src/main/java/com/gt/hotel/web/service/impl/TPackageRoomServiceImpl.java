@@ -26,8 +26,8 @@ public class TPackageRoomServiceImpl extends BaseServiceImpl<TPackageRoomDAO, TP
 	TPackageRoomDAO packageRoomDAO;
 	
 	@Override
-	public List<PackageRoomVo> erpQueryPackageRoom(Integer shopId, Integer packageId) {
-		return packageRoomDAO.erpQueryPackageRoom(shopId, packageId);
+	public List<PackageRoomVo> erpQueryPackageRoom(Integer hotelId, Integer packageId) {
+		return packageRoomDAO.erpQueryPackageRoom(hotelId, packageId);
 	}
 	
 }

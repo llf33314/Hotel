@@ -68,18 +68,18 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	/**
 	 * 客房入住数
 	 * @param busId
-	 * @param shopId
+	 * @param hotelId
 	 * @return
 	 */
-	RoomCheackInCountVo roomCheckInCount(Integer busId, Integer shopId);
+	RoomCheackInCountVo roomCheckInCount(Integer busId, Integer hotelId);
 
 	/**
 	 * 近一周入住率
 	 * @param busId
-	 * @param shopId
+	 * @param hotelId
 	 * @return
 	 */
-	List<CheackInListRevenueVo> erpGetOccupancyRevenue(String now, Integer busId, Integer shopId);
+	List<CheackInListRevenueVo> erpGetOccupancyRevenue(String now, Integer busId, Integer hotelId);
 
 	/**
 	 * 我的房卡

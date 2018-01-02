@@ -166,12 +166,10 @@ public class ErpHotelCommonController extends BaseController {
 	}
 
 	@ApiOperation(value = "酒店信息", notes = "酒店信息")
-	@GetMapping(value = "hotel/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(value = "hotel/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<HotelVo> getHotel(
-			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId) {
-		Wrapper<THotel> arg0 = new EntityWrapper<>();
-		arg0.eq("shop_id", shopId);
-		THotel th = hotelService.selectOne(arg0);
+			@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId) {
+		THotel th = hotelService.selectById(hotelId);
         HotelVo h = new HotelVo();
         BeanUtils.copyProperties(th, h);
         h.setHotelId(th.getId());

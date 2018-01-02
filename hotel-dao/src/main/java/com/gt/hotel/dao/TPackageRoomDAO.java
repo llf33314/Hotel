@@ -24,6 +24,6 @@ public interface TPackageRoomDAO extends BaseMapper<TPackageRoom> {
 	 * @param packageId
 	 * @return
 	 */
-	List<PackageRoomVo> erpQueryPackageRoom(@Param("shopId") Integer shopId, @Param("packageId") Integer packageId);
+	List<PackageRoomVo> erpQueryPackageRoom(@Param("hotelId") Integer hotelId, @Param("packageId") Integer packageId);
 
 }

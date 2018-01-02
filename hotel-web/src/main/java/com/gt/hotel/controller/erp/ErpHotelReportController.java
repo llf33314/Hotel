@@ -1,5 +1,18 @@
 package com.gt.hotel.controller.erp;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
@@ -10,20 +23,11 @@ import com.gt.hotel.vo.IncomeDetailsVo;
 import com.gt.hotel.vo.RoomCheackInCountVo;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
-import java.util.List;
 
 /**
  * 酒店ERP - 统计报表
@@ -43,44 +47,44 @@ public class ErpHotelReportController extends BaseController {
 
 
     @ApiOperation(value = "酒店营业状况(支出需对接进销存后)", notes = "酒店营业状况(支出需对接进销存后)")
-    @GetMapping(value = "businessConditions", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "businessConditions/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<BusinessConditionsVo> businessConditions(
-    		@ApiParam("门店ID") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		HttpServletRequest request) {
     	Integer busId = getLoginUser(request).getId();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    	BusinessConditionsVo b = orderService.erpGetBusinessConditions(busId, shopId, sdf.format(System.currentTimeMillis()));
+    	BusinessConditionsVo b = orderService.erpGetBusinessConditions(busId, hotelId, sdf.format(System.currentTimeMillis()));
     	return ResponseDTO.createBySuccess(b);
     }
  
     @ApiOperation(value = "客房入住数", notes = "客房入住数")
-    @GetMapping(value = "roomCheckInCount", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "roomCheckInCount/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<RoomCheackInCountVo> roomCheckInCount(
-    		@ApiParam("门店ID") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		HttpServletRequest request) {
     	Integer busId = getLoginUser(request).getId();
-    	return ResponseDTO.createBySuccess(orderRoomService.roomCheckInCount(busId, shopId));
+    	return ResponseDTO.createBySuccess(orderRoomService.roomCheckInCount(busId, hotelId));
     }
     
     @ApiOperation(value = "收入明细", notes = "收入明细")
-    @GetMapping(value = "incomeDetails", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "incomeDetails/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<Page<IncomeDetailsVo>> incomeDetails(
-    		@ApiParam("门店ID") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		@ModelAttribute HotelPage hpage,
     		HttpServletRequest request) {
     	Integer busId = getLoginUser(request).getId();
-    	Page<IncomeDetailsVo> page = orderService.erpGetIncomeDetails(busId, shopId, hpage);
+    	Page<IncomeDetailsVo> page = orderService.erpGetIncomeDetails(busId, hotelId, hpage);
     	return ResponseDTO.createBySuccess(page);
     }
     
     @ApiOperation(value = "近一周入住率", notes = "近一周入住率")
-    @GetMapping(value = "occupancyRate", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "occupancyRate/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<List<CheackInListRevenueVo>> occupancyRate(
-    		@ApiParam("门店ID") Integer shopId,
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
     		@ApiParam("当前日期(yyyy-MM-dd)(可空)") String now, 
     		HttpServletRequest request) {
     	Integer busId = getLoginUser(request).getId();
-		List<CheackInListRevenueVo> l = orderRoomService.erpGetOccupancyRevenue(now, busId, shopId);
+		List<CheackInListRevenueVo> l = orderRoomService.erpGetOccupancyRevenue(now, busId, hotelId);
     	return ResponseDTO.createBySuccess(l);
     }
     

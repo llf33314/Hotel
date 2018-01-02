@@ -19,11 +19,11 @@ public interface TAgreementOrganizationService extends BaseService<TAgreementOrg
 
 	/**
 	 * 协议单位or中介列表
-	 * @param shopId
+	 * @param hotelId
 	 * @param query
 	 * @return
 	 */
-	Page<AgreementOrganizationVo> erpQueryAgreementOrganization(Integer shopId, AgreementQuery query);
+	Page<AgreementOrganizationVo> erpQueryAgreementOrganization(Integer hotelId, AgreementQuery query);
 
 	/**
 	 * 编辑 协议单位or中介
@@ -31,7 +31,7 @@ public interface TAgreementOrganizationService extends BaseService<TAgreementOrg
 	 * @param shopId
 	 * @param insert
 	 */
-	void erpInsertAgreementOrganization(Integer busId, Integer shopId, AgreementInsert insert);
+	void erpInsertAgreementOrganization(Integer busId, Integer hotelId, AgreementInsert insert);
 
 	/**
 	 * 协议单位or中介 详情

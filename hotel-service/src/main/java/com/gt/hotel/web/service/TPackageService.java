@@ -18,10 +18,10 @@ public interface TPackageService extends BaseService<TPackage> {
 
 	/**
 	 * 套餐 列表
-	 * @param shopId
+	 * @param hotelId
 	 * @param query
 	 * @return
 	 */
-	Page<PackageVo> erpQueryPackage(Integer shopId, PackageQuery query);
+	Page<PackageVo> erpQueryPackage(Integer hotelId, PackageQuery query);
 	
 }

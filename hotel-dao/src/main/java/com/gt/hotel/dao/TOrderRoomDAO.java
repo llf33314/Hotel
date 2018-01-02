@@ -40,10 +40,10 @@ public interface TOrderRoomDAO extends BaseMapper<TOrderRoom> {
 	/**
 	 * 客房入住数
 	 * @param busId
-	 * @param shopId
+	 * @param hotelId
 	 * @return
 	 */
-	RoomCheackInCountVo roomCheckInCount(@Param("busId") Integer busId, @Param("shopId") Integer shopId);
+	RoomCheackInCountVo roomCheckInCount(@Param("busId") Integer busId, @Param("hotelId") Integer hotelId);
 
 	/**
 	 * 入住房间数
@@ -53,7 +53,7 @@ public interface TOrderRoomDAO extends BaseMapper<TOrderRoom> {
 	 * @param endDate
 	 * @return
 	 */
-	List<TOrderRoom> getCheckInRoom(@Param("busId") Integer busId, @Param("shopId") Integer shopId, @Param("startDate") String startDate, @Param("endDate") String endDate);
+	List<TOrderRoom> getCheckInRoom(@Param("busId") Integer busId, @Param("hotelId") Integer hotelId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 
 	/**
 	 * 我的房卡

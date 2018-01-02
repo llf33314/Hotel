@@ -27,6 +27,6 @@ public interface TPackageDAO extends BaseMapper<TPackage> {
 	 * @param page
 	 * @return
 	 */
-	List<PackageVo> erpQueryPackage(@Param("shopId") Integer shopId, @Param("param") PackageQuery query, @Param("page") Pagination page);
+	List<PackageVo> erpQueryPackage(@Param("hotelId") Integer hotelId, @Param("param") PackageQuery query, @Param("page") Pagination page);
 
 }
