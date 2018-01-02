@@ -40,6 +40,8 @@ public class WebServerConfigurationProperties {
         
         private String wxmpLogin;
         
+        private String alipayRefundUrl;
+        
         private Map<String,String> apiMap;
     }
 

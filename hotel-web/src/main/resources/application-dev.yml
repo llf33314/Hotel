@@ -129,6 +129,7 @@ hotel:
             imageUrl: http://maint.duofriend.com/upload
             materialUrl: https://suc.deeptel.com.cn
             socketUrl: https://socket.deeptel.com.cn
+            alipayRefundUrl: https://deeptel.com.cn/alipay/79B4DE7C/refundVer2.do
             #商家后台登录
             wxmpLogin: ${hotel.webserver.WxmpService.serviceUrl}/user/tologin.do
             # Api接口列表

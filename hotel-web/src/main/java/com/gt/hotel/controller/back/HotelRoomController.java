@@ -83,10 +83,12 @@ public class HotelRoomController extends BaseController {
         if (msg != null) {
             return msg;
         }
-        Wrapper<TRoomCategory> w = new EntityWrapper<>();
-        w.eq("name", roomCategory.getName()).eq("hotel_id", roomCategory.getHotelId());
-		if(tRoomCategoryService.selectOne(w) != null) {
-        	return ResponseDTO.createByErrorMessage("房型名称相同");
+        if(roomCategory.getCategoryId() == null) {
+        	Wrapper<TRoomCategory> w = new EntityWrapper<>();
+        	w.eq("name", roomCategory.getName()).eq("hotel_id", roomCategory.getHotelId());
+        	if(tRoomCategoryService.selectOne(w) != null) {
+        		return ResponseDTO.createByErrorMessage("房型名称相同");
+        	}
         }
         Integer id = tRoomCategoryService.roomCategoryCU(getLoginUser(request).getId(), roomCategory);
         QueryRoomCategoryOne q = new QueryRoomCategoryOne();
