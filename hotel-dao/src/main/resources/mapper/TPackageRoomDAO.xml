@@ -2,21 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.TPackageRoomDAO">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TPackageRoom">
-		<id column="id" property="id" />
-		<result column="package_id" property="packageId" />
-		<result column="category_id" property="categoryId" />
-		<result column="category_name" property="categoryName" />
-		<result column="rack_rate" property="rackRate" />
-		<result column="discount" property="discount" />
-		<result column="agreement_price" property="agreementPrice" />
-		<result column="mark_modified" property="markModified" />
-		<result column="created_by" property="createdBy" />
-		<result column="created_at" property="createdAt" />
-		<result column="updated_by" property="updatedBy" />
-		<result column="updated_at" property="updatedAt" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TPackageRoom">
+        <id column="id" property="id"/>
+        <result column="package_id" property="packageId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="rack_rate" property="rackRate"/>
+        <result column="discount" property="discount"/>
+        <result column="agreement_price" property="agreementPrice"/>
+        <result column="mark_modified" property="markModified"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
@@ -26,16 +26,17 @@
         a.id, a.package_id, a.category_id, a.category_name, a.rack_rate, a.discount, a.agreement_price, a.mark_modified, a.created_by, a.created_at, a.updated_by, a.updated_at
     </sql>
 
-	<select id="erpQueryPackageRoom" resultType="com.gt.hotel.vo.PackageRoomVo">
-		SELECT <include refid="Base_Column_List_VO"/>
-		FROM t_package_room a 
-		JOIN t_package b ON a.package_id = b.id 
-		WHERE a.mark_modified = 0 
-		<if test="packageId != null">
-			AND a.package_id =  #{packageId} 
-		</if>
-		<if test="shopId != null">
-			AND b.shop_id = #{shopId} 
-		</if>
-	</select>
+    <select id="erpQueryPackageRoom" resultType="com.gt.hotel.vo.PackageRoomVo">
+        SELECT
+        <include refid="Base_Column_List_VO"/>
+        FROM t_package_room a
+        JOIN t_package b ON a.package_id = b.id
+        WHERE a.mark_modified = 0
+        <if test="packageId != null">
+            AND a.package_id = #{packageId}
+        </if>
+        <if test="hotelId != null">
+            AND b.hotel_id = #{hotelId}
+        </if>
+    </select>
 </mapper>

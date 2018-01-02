@@ -79,8 +79,8 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         return page;
     }
 
-    @Transactional
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer roomCategoryCU(Integer busid, CategorySaveOrUpdate roomCategory) {
         Date date = new Date();
         TRoomCategory tRoomCategory = new TRoomCategory();
@@ -197,8 +197,8 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         }
     }
 
-    @Transactional
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void editRooms(Integer busid, Integer categoryId, List<com.gt.hotel.param.RoomParameter.RoomSaveOrUpdate> rooms) {
         Date date = new Date();
         List<TRoom> entityList = new ArrayList<>();
@@ -340,7 +340,7 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
 
     @Override
     public List<ErpRoomCategoryVo> findErpGroupRoomList(Integer hotelId, ErpRoomCategoryParam.RoomCategorySearch categorySearch) {
-        // FIXME: 2017/12/29 添加缓存
+        // FIXME: 2017/12/29 添加缓存 完善今日预离
         List<ErpRoomCategoryVo> groupRoomList = this.tRoomCategoryDAO.findErpGroupRoomList(hotelId);
         boolean isSearch = categorySearch != null && (categorySearch.getFloor() != null || categorySearch.getRoomNum() != null || categorySearch.getRoomStatus() != null);
         List<ErpRoomCategoryVo> categoryVoList = new LinkedList<>();
@@ -355,7 +355,6 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
                     boolean roomFloor = categorySearch.getFloor() != null && categorySearch.getFloor().equals(roomVo.getFloor());
                     // 符合上述任意一条件
                     if (roomNum || roomStatus || roomFloor) {
-                        log.info(" roomVo : {}", roomVo);
                         roomVoList.add(roomVo);
                     }
                 }
@@ -366,7 +365,6 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
                 }
             }
         }
-        log.info("筛选出来的总共有 : {}", categoryVoList.size() > 0 ? categoryVoList.size() : groupRoomList.size());
         return categoryVoList.size() > 0 ? categoryVoList : groupRoomList;
     }
 }

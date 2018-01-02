@@ -22,6 +22,6 @@ public interface TPackageService extends BaseService<TPackage> {
 	 * @param query
 	 * @return
 	 */
-	Page<PackageVo> erpQueryPackage(Integer shopId, PackageQuery query);
+	Page<PackageVo> erpQueryPackage(Integer hotelId, PackageQuery query);
 	
 }

@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TRoom">
         <id column="id" property="id"/>
+        <result column="hotel_id" property="hotelId"/>
         <result column="category_id" property="categoryId"/>
         <result column="number" property="number"/>
         <result column="floor" property="floor"/>
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        t_room.id, t_room.category_id, t_room.number, t_room.floor, t_room.status, t_room.mark_modified, t_room.created_by, t_room.created_at, t_room.updated_by, t_room.updated_at
+        t_room.id, t_room.hotel_id, t_room.category_id, t_room.number, t_room.floor, t_room.status, t_room.mark_modified, t_room.created_by, t_room.created_at, t_room.updated_by, t_room.updated_at
     </sql>
 
     <select id="queryRoomList" resultType="com.gt.hotel.vo.RoomVo">

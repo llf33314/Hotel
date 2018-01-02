@@ -1,14 +1,13 @@
 package com.gt.hotel.dao;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TAgreementOrganization;
 import com.gt.hotel.param.AgreementParamter.AgreementQuery;
 import com.gt.hotel.vo.AgreementOrganizationVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,12 +21,12 @@ public interface TAgreementOrganizationDAO extends BaseMapper<TAgreementOrganiza
 
 	/**
 	 * 协议单位or中介列表
-	 * @param shopId
+	 * @param hotelId
 	 * @param query
 	 * @param page
 	 * @return
 	 */
-	List<AgreementOrganizationVo> erpQueryAgreementOrganization(@Param("shopId") Integer shopId, @Param("param") AgreementQuery query,
+	List<AgreementOrganizationVo> erpQueryAgreementOrganization(@Param("hotelId") Integer hotelId, @Param("param") AgreementQuery query,
 			@Param("page") Pagination page);
 
 }

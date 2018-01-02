@@ -97,7 +97,8 @@ public class ErpHotelCommonController extends BaseController {
 			}
 
             List<HotelShopInfo> s = new ArrayList<>();
-            for (HotelWsWxShopInfoExtend shop : shops) {
+			assert shops != null;
+			for (HotelWsWxShopInfoExtend shop : shops) {
                 if(sids.contains(shop.getId())) {
                 	HotelShopInfo hsi = new HotelShopInfo();
                 	hsi.setShopId(shop.getId());
@@ -154,23 +155,22 @@ public class ErpHotelCommonController extends BaseController {
     }
 
 	@ApiOperation(value = "房间类型列表", notes = "房间类型列表")
-	@GetMapping(value = "roomCategory/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(value = "roomCategory/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<Page<RoomCategoryVo>> getRoomCategory(
-			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId,
+			@ApiParam("门店ID") @PathVariable("hotelId") Integer hotelId,
 			@Validated @ModelAttribute RoomCategoryParameter.QueryRoomCategory param,
 			BindingResult bindingResult) {
 		invalidParameter(bindingResult);
-//		param.setPageSize(9999);
 		Page<RoomCategoryVo> page = roomCategoryService.queryRoomCategory(param);
 		return ResponseDTO.createBySuccess(page);
 	}
 
 	@ApiOperation(value = "酒店信息", notes = "酒店信息")
-	@GetMapping(value = "hotel/{shopId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(value = "hotel/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseDTO<HotelVo> getHotel(
-			@ApiParam("门店ID") @PathVariable("shopId") Integer shopId) {
+			@ApiParam("门店ID") @PathVariable("hotelId") Integer hotelId) {
 		Wrapper<THotel> arg0 = new EntityWrapper<>();
-		arg0.eq("shop_id", shopId);
+		arg0.eq("hotel_id", hotelId);
 		THotel th = hotelService.selectOne(arg0);
         HotelVo h = new HotelVo();
         BeanUtils.copyProperties(th, h);
