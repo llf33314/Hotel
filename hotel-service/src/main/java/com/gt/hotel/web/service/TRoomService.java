@@ -1,5 +1,7 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoom;
 
@@ -13,5 +15,12 @@ import com.gt.hotel.entity.TRoom;
  * @since 2017-10-09
  */
 public interface TRoomService extends BaseService<TRoom> {
+
+	/**
+	 * 订单入住房间
+	 * @param orderId
+	 * @return
+	 */
+	List<TRoom> queryOrderRooms(Integer orderId);
 
 }

@@ -57,4 +57,11 @@ public interface TRoomDAO extends BaseMapper<TRoom> {
      * @return
      */
     int checkValidRooms(List<Integer> ids);
+
+    /**
+     * 订单入住房间
+     * @param orderId
+     * @return
+     */
+	List<TRoom> queryOrderRooms(@Param("orderId") Integer orderId);
 }

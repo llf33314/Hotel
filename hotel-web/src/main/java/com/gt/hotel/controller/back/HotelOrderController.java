@@ -41,7 +41,6 @@ import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TOrder;
-import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelOrderParameter;
@@ -342,104 +341,17 @@ public class HotelOrderController extends BaseController {
         TOrder order = tOrderService.selectById(orderId);
 //        order.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
 //        tOrderService.updateById(order);
-        Wrapper<TOrderRoom> w = new EntityWrapper<>();
-        w.eq("order_id", orderId);
-		TOrderRoom orderRoom = orderRoomService.selectOne(w);
         if (!order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN) && 
         		!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID) && 
         		!order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE)) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
         }
         try {
-            WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
-            //线下订单
-            if((orderRoom != null && orderRoom.getOrderFrom().equals(1)) || order.getRealPrice() == 0 || order.getPayType().equals(2)) {
-            	Wrapper<TOrder> wrapper = new EntityWrapper<>();
-                wrapper.eq("id", orderId);
-                TOrder newOrder = new TOrder();
-                newOrder.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
-                newOrder.setUpdatedBy(busid);
-                newOrder.setRefundAmount(refundsP.getRefundFee() == null ? 0 : refundsP.getRefundFee());
-                newOrder.setRefundReason(refundsP.getRefundReason());
-                if (!tOrderService.update(newOrder, wrapper)) {
-                    return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
-                } else {
-                    return ResponseDTO.createBySuccess();
-                }
-            }
-            //支付宝
-            if (order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
-                JSONObject params = new JSONObject();
-                params.put("out_trade_no", order.getOrderNum());
-                params.put("busId", order.getBusId());
-                params.put("desc", "酒店后台退款");
-                params.put("fee", refundsP.getRefundFee() / 100d);
-                params.put("notifyUrl", getHost(request) + "/back/order" + orderId + "/aliPayCallBack");
-                String key = KeysUtil.getEncString(params.toJSONString());
-                return ResponseDTO.createBySuccess(key);
-                //微信
-            } else if (order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
-                JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(),
-                        refundsP.getRefundFee() / 100d, order.getRealPrice() / 100d);
-                if (result.getInteger("code").equals(0) || result.getString("msg").equals("订单已全额退款")) {
-                    Wrapper<TOrder> wrapper = new EntityWrapper<>();
-                    wrapper.eq("id", orderId);
-                    TOrder newOrder = new TOrder();
-                    newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
-                    newOrder.setUpdatedBy(busid);
-                    newOrder.setRefundAmount(refundsP.getRefundFee());
-                    newOrder.setRefundReason(refundsP.getRefundReason());
-                    if (!tOrderService.update(newOrder, wrapper)) {
-                        return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
-                    } else {
-//                    	ErpRefundBo bo = new ErpRefundBo();
-//                    	bo.setBusId(order.getBusId());
-//                    	bo.setOrderCode(order.getOrderNum());
-//                    	// ali = 0, wx = 1, 储值卡 = 5
-//                    	bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2));
-//                    	bo.setRefundMoney(0d);
-//                    	bo.setRefundJifen(order.getIntegral());
-//                    	bo.setRefundFenbi(order.getFb() / 100d);
-//                    	bo.setRefundDate(System.currentTimeMillis());
-//                    	wxmpApiUtil.memberRefundErp(bo);
-                        return ResponseDTO.createBySuccess();
-                    }
-                } else {
-                    return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
-                }
-                //储蓄卡
-            } else if (order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {
-                ErpRefundBo bo = new ErpRefundBo();
-                bo.setBusId(order.getBusId());
-                bo.setOrderCode(order.getOrderNum());
-                // ali = 0, wx = 1, 储值卡 = 5
-                bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2));
-                bo.setRefundMoney(refundsP.getRefundFee() / 100d);
-                bo.setRefundJifen(order.getIntegral());
-                bo.setRefundFenbi(order.getFb() / 100d);
-                bo.setRefundDate(System.currentTimeMillis());
-                JSONObject result = wxmpApiUtil.memberRefundErp(bo);
-                if (result.getInteger("code").equals(0)) {
-                    Wrapper<TOrder> wrapper = new EntityWrapper<>();
-                    wrapper.eq("id", orderId);
-                    TOrder newOrder = new TOrder();
-                    newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
-                    newOrder.setUpdatedBy(busid);
-                    newOrder.setRefundAmount(refundsP.getRefundFee());
-                    if (!tOrderService.update(newOrder, wrapper)) {
-                        return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
-                    } else {
-                        return ResponseDTO.createBySuccess();
-                    }
-                } else {
-                    return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
-        }
-        return ResponseDTO.createByError();
+			return tOrderService.checkOut(busid, order, refundsP, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseDTO.createByError();
+		}
     }
 
     ////////////////////////////////////////////////////////////↓餐饮↓ //////////////////////////////////////////////////////////

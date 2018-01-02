@@ -313,4 +313,27 @@ public final class CommonConst {
      */
     public static final int FUNCTION_WRITE_OFF  = 21;
 
+    /****************************** 房间状态 ******************************/
+    /**
+     * 空房
+     */
+    public static final int ROOM_STATUS_VACANT_ROOM  = 1;
+    /**
+     * 锁定
+     */
+    public static final int ROOM_STATUS_LOCK  = 2;
+    /**
+     * 在住
+     */
+    public static final int ROOM_STATUS_IN_THE_LIVE  = 3;
+    /**
+     * 清洁
+     */
+    public static final int ROOM_STATUS_CLEAN  = 4;
+    /**
+     * 维护
+     */
+    public static final int ROOM_STATUS_MAINTAIN  = 5;
+    
+    
 }

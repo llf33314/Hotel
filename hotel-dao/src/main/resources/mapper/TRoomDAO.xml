@@ -82,4 +82,10 @@
         </if>
     </select>
 
+	<select id="queryOrderRooms" resultMap="BaseResultMap">
+		SELECT a.id 
+		FROM t_room a 
+		JOIN t_order_room_customer b ON a.id = b.room_id 
+		WHERE b.order_id = #{orderId};
+	</select>
 </mapper>

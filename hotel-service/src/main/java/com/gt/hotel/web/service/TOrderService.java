@@ -1,20 +1,28 @@
 package com.gt.hotel.web.service;
 
-import com.baomidou.mybatisplus.plugins.Page;
-import com.gt.api.bean.session.Member;
-import com.gt.hotel.base.BaseService;
-import com.gt.hotel.entity.TOrder;
-import com.gt.hotel.param.HotelOrderParameter.CheckInParam;
-import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
-import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
-import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
-import com.gt.hotel.param.HotelPage;
-import com.gt.hotel.vo.*;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.joda.time.DateTime;
 
-import java.util.List;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.Member;
+import com.gt.hotel.base.BaseService;
+import com.gt.hotel.dto.ResponseDTO;
+import com.gt.hotel.entity.TOrder;
+import com.gt.hotel.param.HotelOrderParameter.CheckInParam;
+import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
+import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
+import com.gt.hotel.param.HotelOrderParameter.RefundsParam;
+import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
+import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.vo.BusinessConditionsVo;
+import com.gt.hotel.vo.DepositVo;
+import com.gt.hotel.vo.HotelBackFoodOrderVo;
+import com.gt.hotel.vo.HotelBackRoomOrderVo;
+import com.gt.hotel.vo.IncomeDetailsVo;
 
 /**
  * <p>
@@ -170,6 +178,14 @@ public interface TOrderService extends BaseService<TOrder> {
 	 * @param busid
 	 */
 	void orderComplete(Integer orderId, Integer busid);
+
+	/**
+	 * 退房
+	 * @param busid
+	 * @param orderId
+	 * @param refundsP
+	 */
+	ResponseDTO<String> checkOut(Integer busid, TOrder order, RefundsParam refundsP, HttpServletRequest request) throws Exception;
 
 
 }

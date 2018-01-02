@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -15,32 +17,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.api.bean.session.Member;
+import com.gt.api.bean.session.WxPublicUsers;
+import com.gt.api.util.KeysUtil;
+import com.gt.api.util.SessionUtils;
+import com.gt.entityBo.ErpRefundBo;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dao.TOrderDAO;
-import com.gt.hotel.dao.TRoomDAO;
+import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.entity.TBreakfastCoupons;
 import com.gt.hotel.entity.TOrder;
 import com.gt.hotel.entity.TOrderFood;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.entity.TOrderRoomCustomer;
+import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.entity.TRoomCategory;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.HotelOrderParameter.CheckInParam;
 import com.gt.hotel.param.HotelOrderParameter.FoodOrderQuery;
 import com.gt.hotel.param.HotelOrderParameter.OffLineOrder;
+import com.gt.hotel.param.HotelOrderParameter.RefundsParam;
 import com.gt.hotel.param.HotelOrderParameter.RoomOrderQuery;
 import com.gt.hotel.param.HotelOrderRoomParameter;
 import com.gt.hotel.param.HotelPage;
 import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.ExcelUtil;
 import com.gt.hotel.util.ExportUtil;
+import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.BusinessConditionsVo;
 import com.gt.hotel.vo.DepositVo;
 import com.gt.hotel.vo.HotelBackFoodOrderVo;
@@ -53,6 +63,7 @@ import com.gt.hotel.web.service.TOrderRoomCustomerService;
 import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TOrderService;
 import com.gt.hotel.web.service.TRoomCategoryService;
+import com.gt.hotel.web.service.TRoomService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -81,7 +92,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
     TOrderFoodService tOrderFoodService;
 
     @Autowired
-    private TRoomDAO tRoomDAO;
+    private TRoomService roomService;
 
     @Autowired
     TRoomCategoryService tRoomCategoryService;
@@ -89,6 +100,9 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
     @Autowired
     TBreakfastCouponsService breakfastCouponsService;
 
+    @Autowired
+    private WXMPApiUtil wxmpApiUtil;
+    
     @SuppressWarnings("unchecked")
     @Override
     public Page<HotelBackRoomOrderVo> queryRoomOrder(Integer busId, RoomOrderQuery param) {
@@ -250,6 +264,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         TOrderRoom orderRoom2 = orderRooms.get(0);
         int ii = 0;
         List<TOrderRoom> ors = new ArrayList<>();
+        List<TRoom> rooms = new ArrayList<>();
         for (HotelOrderRoomParameter.OrderRoom o : param.getRooms()) {
         	TOrderRoom tOrderRoom = orderRooms.get(ii);
         	tOrderRoom.setCustomerIdCard(param.getCustomerIdCard());
@@ -273,6 +288,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
             customer.setCustomerGender(param.getCustomerGender());
             customer.setRoomNum(o.getRoomNum());
             customer.setOrderId(orderId);
+            customer.setRoomId(o.getRoomId());
             customer.setName(param.getCustomerName());
             customer.setPhone(param.getCustomerPhone());
             customer.setCreatedAt(date);
@@ -281,7 +297,13 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
             customer.setUpdatedBy(busId);
             customer.setOrderRoomId(tOrderRoom.getId());
             customers.add(customer);
+            TRoom room = new TRoom();
+            room.setId(o.getRoomId());
+            room.setStatus(CommonConst.ROOM_STATUS_IN_THE_LIVE);
+            rooms.add(room);
         }
+        roomService.updateBatchById(rooms);
+        
         if (!tOrderRoomService.updateBatchById(ors)) {
             throw new ResponseEntityException(ResponseEnums.SAVE_ERROR);
         }
@@ -694,4 +716,106 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
         f.setUpdatedBy(busid);
         tOrderFoodService.update(f, fw);
     }
+
+	@Transactional
+	@Override
+	public ResponseDTO<String> checkOut(Integer busid, TOrder order, RefundsParam refundsP, HttpServletRequest request) throws Exception{
+    	StringBuffer url = request.getRequestURL();
+		WxPublicUsers publicUser = SessionUtils.getLoginPbUser(request);
+		Wrapper<TOrderRoom> w = new EntityWrapper<>();
+        w.eq("order_id", order.getId());
+		TOrderRoom orderRoom = tOrderRoomService.selectOne(w);
+		
+		List<TRoom> rooms = roomService.queryOrderRooms(order.getId());
+		for(TRoom room : rooms) {
+			room.setStatus(CommonConst.ROOM_STATUS_VACANT_ROOM);
+		}
+		roomService.updateBatchById(rooms);
+		
+        //线下订单
+        if((orderRoom != null && orderRoom.getOrderFrom().equals(1)) || order.getRealPrice() == 0 || order.getPayType().equals(2)) {
+        	Wrapper<TOrder> wrapper = new EntityWrapper<>();
+            wrapper.eq("id", order.getId());
+            TOrder newOrder = new TOrder();
+            newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+            newOrder.setUpdatedBy(busid);
+            newOrder.setRefundAmount(refundsP.getRefundFee() == null ? 0 : refundsP.getRefundFee());
+            newOrder.setRefundReason(refundsP.getRefundReason());
+            if (!this.update(newOrder, wrapper)) {
+                return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+            } else {
+                return ResponseDTO.createBySuccess();
+            }
+        }
+        //支付宝
+        if (order.getPayType().equals(CommonConst.PAY_TYPE_ALI)) {
+            JSONObject params = new JSONObject();
+            params.put("out_trade_no", order.getOrderNum());
+            params.put("busId", order.getBusId());
+            params.put("desc", "酒店后台退款");
+            params.put("fee", refundsP.getRefundFee() / 100d);
+            params.put("notifyUrl", url.delete(url.length() - request.getRequestURI().length(), url.length()).toString() + "/back/order" + order.getId() + "/aliPayCallBack");
+            String key = KeysUtil.getEncString(params.toJSONString());
+            return ResponseDTO.createBySuccess(key);
+            //微信
+        } else if (order.getPayType().equals(CommonConst.PAY_TYPE_WX)) {
+            JSONObject result = wxmpApiUtil.wxmemberPayRefund(publicUser.getAppid(), publicUser.getMchId(), order.getOrderNum(),
+                    refundsP.getRefundFee() / 100d, order.getRealPrice() / 100d);
+            if (result.getInteger("code").equals(0) || result.getString("msg").equals("订单已全额退款")) {
+                Wrapper<TOrder> wrapper = new EntityWrapper<>();
+                wrapper.eq("id", order.getId());
+                TOrder newOrder = new TOrder();
+                newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+                newOrder.setUpdatedBy(busid);
+                newOrder.setRefundAmount(refundsP.getRefundFee());
+                newOrder.setRefundReason(refundsP.getRefundReason());
+                if (!this.update(newOrder, wrapper)) {
+                    return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+                } else {
+//                	ErpRefundBo bo = new ErpRefundBo();
+//                	bo.setBusId(order.getBusId());
+//                	bo.setOrderCode(order.getOrderNum());
+//                	// ali = 0, wx = 1, 储值卡 = 5
+//                	bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2));
+//                	bo.setRefundMoney(0d);
+//                	bo.setRefundJifen(order.getIntegral());
+//                	bo.setRefundFenbi(order.getFb() / 100d);
+//                	bo.setRefundDate(System.currentTimeMillis());
+//                	wxmpApiUtil.memberRefundErp(bo);
+                    return ResponseDTO.createBySuccess();
+                }
+            } else {
+                return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
+            }
+            //储蓄卡
+        } else if (order.getPayType().equals(CommonConst.PAY_TYPE_VALUE_CARD)) {
+            ErpRefundBo bo = new ErpRefundBo();
+            bo.setBusId(order.getBusId());
+            bo.setOrderCode(order.getOrderNum());
+            // ali = 0, wx = 1, 储值卡 = 5
+            bo.setRefundPayType((CommonConst.PAY_TYPE_VALUE_CARD + 2));
+            bo.setRefundMoney(refundsP.getRefundFee() / 100d);
+            bo.setRefundJifen(order.getIntegral());
+            bo.setRefundFenbi(order.getFb() / 100d);
+            bo.setRefundDate(System.currentTimeMillis());
+            JSONObject result = wxmpApiUtil.memberRefundErp(bo);
+            if (result.getInteger("code").equals(0)) {
+                Wrapper<TOrder> wrapper = new EntityWrapper<>();
+                wrapper.eq("id", order.getId());
+                TOrder newOrder = new TOrder();
+                newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+                newOrder.setUpdatedBy(busid);
+                newOrder.setRefundAmount(refundsP.getRefundFee());
+                if (!this.update(newOrder, wrapper)) {
+                    return ResponseDTO.createByErrorMessage(ResponseEnums.OPERATING_ERROR.getMsg());
+                } else {
+                    return ResponseDTO.createBySuccess();
+                }
+            } else {
+                return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
+            }
+        }
+		return ResponseDTO.createByError();
+	}
+
 }

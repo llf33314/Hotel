@@ -4,6 +4,10 @@ import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.dao.TRoomDAO;
 import com.gt.hotel.entity.TRoom;
 import com.gt.hotel.web.service.TRoomService;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,5 +21,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TRoomServiceImpl extends BaseServiceImpl<TRoomDAO, TRoom> implements TRoomService {
+	
+	@Autowired
+	private TRoomDAO roomDAO;
+
+	@Override
+	public List<TRoom> queryOrderRooms(Integer orderId) {
+		return roomDAO.queryOrderRooms(orderId);
+	}
 
 }
