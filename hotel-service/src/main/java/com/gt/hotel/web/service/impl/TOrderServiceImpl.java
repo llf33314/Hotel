@@ -730,13 +730,16 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
 		for(TRoom room : rooms) {
 			room.setStatus(CommonConst.ROOM_STATUS_VACANT_ROOM);
 		}
-		roomService.updateBatchById(rooms);
+		if(!rooms.isEmpty()) {
+			roomService.updateBatchById(rooms);
+		}
 		
         //线下订单
         if((orderRoom != null && orderRoom.getOrderFrom().equals(1)) || order.getRealPrice() == 0 || order.getPayType().equals(2)) {
         	Wrapper<TOrder> wrapper = new EntityWrapper<>();
             wrapper.eq("id", order.getId());
             TOrder newOrder = new TOrder();
+            newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
             newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
             newOrder.setUpdatedBy(busid);
             newOrder.setRefundAmount(refundsP.getRefundFee() == null ? 0 : refundsP.getRefundFee());
@@ -766,6 +769,7 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
                 wrapper.eq("id", order.getId());
                 TOrder newOrder = new TOrder();
                 newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+                newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
                 newOrder.setUpdatedBy(busid);
                 newOrder.setRefundAmount(refundsP.getRefundFee());
                 newOrder.setRefundReason(refundsP.getRefundReason());
@@ -799,11 +803,13 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
             bo.setRefundFenbi(order.getFb() / 100d);
             bo.setRefundDate(System.currentTimeMillis());
             JSONObject result = wxmpApiUtil.memberRefundErp(bo);
-            if (result.getInteger("code").equals(0)) {
+            System.err.println(result);
+//            if (result.getInteger("code").equals(0)) {
                 Wrapper<TOrder> wrapper = new EntityWrapper<>();
                 wrapper.eq("id", order.getId());
                 TOrder newOrder = new TOrder();
                 newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+                newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
                 newOrder.setUpdatedBy(busid);
                 newOrder.setRefundAmount(refundsP.getRefundFee());
                 if (!this.update(newOrder, wrapper)) {
@@ -811,9 +817,9 @@ public class TOrderServiceImpl extends BaseServiceImpl<TOrderDAO, TOrder> implem
                 } else {
                     return ResponseDTO.createBySuccess();
                 }
-            } else {
-                return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
-            }
+//            } else {
+//                return ResponseDTO.createByErrorMessage(ResponseEnums.REFUNDS_ERROR.getMsg());
+//            }
         }
 		return ResponseDTO.createByError();
 	}

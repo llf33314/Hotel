@@ -158,8 +158,6 @@ public class HotelOrderController extends BaseController {
                                     HttpServletRequest request) {
         Integer busid = getLoginUser(request).getId();
         TOrder order = tOrderService.selectById(orderId);
-//        order.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
-//        tOrderService.updateById(order);
         if (!(order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID) && order.getOrderStatus().equals(CommonConst.ORDER_CANCALLED))) {
             return ResponseDTO.createByErrorMessage(ResponseEnums.PAY_STATUS_ERROR.getMsg());
         }
@@ -266,6 +264,7 @@ public class HotelOrderController extends BaseController {
                     wrapper.eq("id", orderId);
                     TOrder newOrder = new TOrder();
                     newOrder.setPayStatus(CommonConst.PAY_STATUS_REFUNDS);
+                    newOrder.setOrderStatus(CommonConst.ORDER_COMPLETED);
                     newOrder.setRefundAmount(order.getRealPrice());
                     if (tOrderService.update(newOrder, wrapper)) {
                         wxmpApiUtil.getSocketApi("hotel:socket", null, "success");
@@ -339,8 +338,6 @@ public class HotelOrderController extends BaseController {
                                         HttpServletRequest request) {
         Integer busid = getLoginUser(request).getId();
         TOrder order = tOrderService.selectById(orderId);
-//        order.setPayStatus(CommonConst.PAY_STATUS_UNREFUNDS);
-//        tOrderService.updateById(order);
         if (!order.getOrderStatus().equals(CommonConst.ORDER_CHECK_IN) && 
         		!order.getPayStatus().equals(CommonConst.PAY_STATUS_PAID) && 
         		!order.getPayType().equals(CommonConst.PAY_TYPE_OFFLINE)) {
