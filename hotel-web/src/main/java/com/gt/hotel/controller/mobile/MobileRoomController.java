@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -139,8 +140,8 @@ public class MobileRoomController extends BaseController {
             req.setCategoryId(bookParam.getCategoryId());
             req.setRoomInTime(sdf.format(bookParam.getRoomInTime()));
             req.setRoomOutTime(sdf.format(bookParam.getRoomOutTime()));
-            MobileRoomCategoryVo mrcv = tRoomCategoryService.queryMobileRoomCategory(hotelId, req).getRecords().get(0);
-            if (bookParam.getRoomOrderNum() > (mrcv.getRoomCount() - mrcv.getOrderCount())) {
+            List<MobileRoomCategoryVo> mrcv = tRoomCategoryService.queryMobileRoomCategory(hotelId, req).getRecords();
+            if (mrcv == null || mrcv.size() < 0 || bookParam.getRoomOrderNum() > (mrcv.get(0).getRoomCount() - mrcv.get(0).getOrderCount())) {
                 return ResponseDTO.createByErrorMessage("房间数量不足");
             }
         }
