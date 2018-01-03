@@ -57,4 +57,24 @@ public interface TRoomDAO extends BaseMapper<TRoom> {
      * @return
      */
     int checkValidRooms(List<Integer> ids);
+
+
+    /**
+     * <pre>
+     *     根据客房状态统计 客房数量
+     * </pre>
+     * @param hotelId 客房ID
+     * @param roomStatus 客房状态
+     * @return int
+     */
+    int roomStatusStatistics(@Param("hotelId")Integer hotelId,@Param("roomStatus")Integer roomStatus);
+
+    /**
+     * <pre>
+     *     获取酒店楼层列表
+     * </pre>
+     * @param hotelId 酒店ID
+     * @return List<int>
+     */
+    List<Integer> getFloorList(Integer hotelId);
 }

@@ -13,26 +13,26 @@ public final class RoomStatusConst {
     /**
      * 空房
      */
-    public static final String VACANT_ROOM = "1";
+    public static final int VACANT_ROOM = 1;
     /**
      * 锁
      */
-    public static final String LOCK        = "2";
+    public static final int LOCK        = 2;
     /**
      * 在住
      */
-    public static final String STAY_IN_THE = "3";
+    public static final int CHECK_IN    = 3;
     /**
-     * 已预订
+     * 已预订 FixMe: 考虑中
      */
-    public static final String RESERVED    = "";
+    //public static final int RESERVED    = 6;
     /**
      * 清洁
      */
-    public static final String CLEAN       = "4";
+    public static final int CLEAN       = 4;
     /**
      * 维护
      */
-    public static final String MAINTAIN    = "5";
+    public static final int MAINTAIN    = 5;
 
 }

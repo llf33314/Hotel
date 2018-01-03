@@ -82,4 +82,18 @@
         </if>
     </select>
 
+    <select id="roomStatusStatistics" resultType="int">
+        SELECT count(room.id) AS count
+        FROM t_room room
+        WHERE
+            room.hotel_id = ${hotelId} AND room.mark_modified = 0 AND room.status = #{roomStatus}
+    </select>
+
+    <select id="getFloorList" resultType="_int">
+        SELECT floor
+        FROM t_room room
+        WHERE room.hotel_id = #{hotelId}
+        GROUP BY floor ASC
+    </select>
+
 </mapper>
