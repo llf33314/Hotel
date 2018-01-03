@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TRoom;
+import com.gt.hotel.vo.erp.ErpRoomStatusVo;
 
 /**
  * <p>
@@ -15,6 +16,15 @@ import com.gt.hotel.entity.TRoom;
  * @since 2017-10-09
  */
 public interface TRoomService extends BaseService<TRoom> {
+    /**
+     * <pre>
+     *     客房状态统计
+     * </pre>
+     *
+     * @param hotelId 酒店ID
+     * @return ErpRoomStatusVo
+     */
+    ErpRoomStatusVo findRoomsGroupStatistics(Integer hotelId);
 
 	/**
 	 * 订单入住房间
@@ -23,4 +33,13 @@ public interface TRoomService extends BaseService<TRoom> {
 	 */
 	List<TRoom> queryOrderRooms(Integer orderId);
 
+    /**
+     * <pre>
+     *     获取楼层列表
+     * </pre>
+     *
+     * @param hotelId 酒店ID
+     * @return List
+     */
+    List<Integer> getFloorList(Integer hotelId);
 }
