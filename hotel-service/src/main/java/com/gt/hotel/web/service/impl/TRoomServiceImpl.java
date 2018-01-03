@@ -27,17 +27,14 @@ public class TRoomServiceImpl extends BaseServiceImpl<TRoomDAO, TRoom> implement
 	
 	@Autowired
 	private TRoomDAO roomDAO;
+	
+	@Autowired
+	private TOrderRoomDAO orderRoomDAO;
 
 	@Override
 	public List<TRoom> queryOrderRooms(Integer orderId) {
 		return roomDAO.queryOrderRooms(orderId);
 	}
-
-    @Autowired
-    private TRoomDAO roomDAO;
-
-    @Autowired
-    private TOrderRoomDAO orderRoomDAO;
 
     @Override
     public ErpRoomStatusVo findRoomsGroupStatistics(Integer hotelId) {
