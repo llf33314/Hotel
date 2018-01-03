@@ -90,17 +90,21 @@
 		 	a.restriction_number restrictionNumber, a.show_room_enable showRoomEnable, a.number_threshold numberThreshold, a.activity_rules activityRules,
 		 	b.activity_type activityType, b.check_in_time checkInTime, b.check_in_period checkInPeriod, b.check_out_period checkOutPeriod, b.min_purchase_number minPurchaseNumber, 
 			c.category_id categoryId, c.category_name categoryName, c.room_id roomId, c.room_num roomNum, c.rack_rate rackRate, c.activity_id activityId, c.activity_price activity_price,
-			(COUNT(c.id)-
+			e.deposit, a.activity_name activityName,
+			<!-- (COUNT(c.id)-
 			<![CDATA[
 				IFNULL((SELECT SUM(number) number FROM t_order_room WHERE NOW() >= room_in_time AND NOW() <= room_out_time AND category_id = c.category_id AND activity_id = a.id), 0)
 			]]>  
-			) remainder, e.deposit, a.activity_name activityName 
+			) remainder, --> 
+			COUNT(f.id) remainder 
 		FROM t_activity a 
 		JOIN t_activity_detail b ON a.id = b.activity_id 
 		LEFT JOIN t_activity_room c ON a.id = c.activity_id
 		JOIN t_room_category e ON c.category_id = e.id 
-		WHERE a.publish_status = 0 AND a.mark_modified = 0 AND a.hotel_id = #{hotelId} AND c.mark_modified = 0 AND a.id = #{activityId}
+		JOIN t_room f ON c.room_id = f.id  
+		WHERE a.publish_status = 0 AND a.mark_modified = 0 AND a.hotel_id = #{hotelId} AND c.mark_modified = 0 AND a.id = #{activityId} AND f.`status` = 1 
 		GROUP BY c.category_id 
+		HAVING remainder > 0 
 	</select>
 	
 </mapper>

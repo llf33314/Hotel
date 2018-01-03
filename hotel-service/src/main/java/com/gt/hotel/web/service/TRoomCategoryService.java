@@ -129,7 +129,7 @@ public interface TRoomCategoryService extends BaseService<TRoomCategory> {
      * @param categoryId
      * @return
      */
-    List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber);
+    List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String string, Integer status, Integer activityId);
 
     /**
      * 移动端 首页房型列表
@@ -148,4 +148,5 @@ public interface TRoomCategoryService extends BaseService<TRoomCategory> {
      * @return List<ErpRoomCategoryVo>
      */
     List<ErpRoomCategoryVo> findErpGroupRoomList(Integer hotelId, ErpRoomCategoryParam.RoomCategorySearch categorySearch);
+
 }

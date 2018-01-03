@@ -262,8 +262,8 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
 
 
     @Override
-    public List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber) {
-        return tRoomDAO.queryRoomListAll(hotelId, categoryId, roomNumber);
+    public List<RoomVo> queryRoomList(Integer hotelId, Integer categoryId, String roomNumber, Integer status, Integer activityId) {
+        return tRoomDAO.queryRoomListAll(hotelId, categoryId, roomNumber, status, activityId);
     }
 
     @SuppressWarnings("unchecked")
@@ -367,4 +367,5 @@ public class TRoomCategoryServiceImpl extends BaseServiceImpl<TRoomCategoryDAO, 
         }
         return categoryVoList.size() > 0 ? categoryVoList : groupRoomList;
     }
+
 }

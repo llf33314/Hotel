@@ -141,7 +141,7 @@ public class MobileRoomController extends BaseController {
             req.setRoomInTime(sdf.format(bookParam.getRoomInTime()));
             req.setRoomOutTime(sdf.format(bookParam.getRoomOutTime()));
             List<MobileRoomCategoryVo> mrcv = tRoomCategoryService.queryMobileRoomCategory(hotelId, req).getRecords();
-            if (!(mrcv != null && mrcv.size() > 0 && bookParam.getRoomOrderNum() < (mrcv.get(0).getRoomCount() - mrcv.get(0).getOrderCount()))) {
+            if (mrcv == null || mrcv.size() <= 0 || bookParam.getRoomOrderNum() > (mrcv.get(0).getRoomCount() - mrcv.get(0).getOrderCount())) {
                 return ResponseDTO.createByErrorMessage("房间数量不足");
             }
         }

@@ -43,7 +43,8 @@
         t_room.created_by createdBy, t_room.created_at createdAt, t_room.updated_by updatedBy, t_room.updated_at updatedAt,
         t_room_category.`name` categoryName, t_room_category.rack_rate rackRate, t_room_category.deposit
         FROM t_room
-        JOIN t_room_category ON t_room.category_id = t_room_category.id
+        JOIN t_room_category ON t_room.category_id = t_room_category.id 
+        LEFT JOIN t_activity_room b ON b.room_id = t_room.id 
         WHERE t_room.mark_modified = 0 AND t_room_category.mark_modified = 0
         <if test="hotelId != null">
             AND t_room_category.hotel_id = #{hotelId}
@@ -54,6 +55,13 @@
         <if test="roomNumber != null">
             AND t_room.number LIKE #{roomNumber}
         </if>
+        <if test="roomStatus != null">
+            AND t_room.status LIKE #{roomStatus}
+        </if>
+        <if test="activityId != null">
+            AND b.activity_id = #{activityId} 
+        </if>
+        GROUP BY t_room.id
     </select>
 
     <select id="checkValidRooms" resultType="java.lang.Integer">
@@ -96,7 +104,7 @@
             room.hotel_id = ${hotelId} AND room.mark_modified = 0 AND room.status = #{roomStatus}
     </select>
 
-    <select id="getFloorList" resultType="_int">
+    <select id="getFloorList" resultType="String">
         SELECT floor
         FROM t_room room
         WHERE room.hotel_id = #{hotelId}

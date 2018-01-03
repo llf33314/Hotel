@@ -51,7 +51,7 @@ public class TRoomServiceImpl extends BaseServiceImpl<TRoomDAO, TRoom> implement
 
 
     @Override
-    public List<Integer> getFloorList(Integer hotelId){
+    public List<String> getFloorList(Integer hotelId){
         return this.roomDAO.getFloorList(hotelId);
     }
 

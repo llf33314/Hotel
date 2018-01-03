@@ -134,8 +134,11 @@ public class HotelRoomController extends BaseController {
     @ApiOperation(value = "房间 集合 ALL", notes = "房间 集合 ALL")
     @GetMapping(value = "{hotelId}/roomAll", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO<List<RoomVo>> roomRList(@PathVariable("hotelId") @ApiParam("酒店ID") Integer hotelId,
-                                               @ApiParam("房型ID") Integer categoryId, @ApiParam("房型号") String roomNumber) {
-        List<RoomVo> l = tRoomCategoryService.queryRoomList(hotelId, categoryId, "%" + roomNumber.trim() + "%");
+    		@ApiParam("房型ID") Integer categoryId, 
+    		@ApiParam("房型号") String roomNumber,
+    		@ApiParam("活动ID(活动订单)") Integer activityId,
+    		@ApiParam("入住状态(入住功能模块传1，其他暂时不传)") Integer status) {
+        List<RoomVo> l = tRoomCategoryService.queryRoomList(hotelId, categoryId, "%" + roomNumber.trim() + "%", status, activityId);
         return ResponseDTO.createBySuccess(l);
     }
 

@@ -41,5 +41,5 @@ public interface TRoomService extends BaseService<TRoom> {
      * @param hotelId 酒店ID
      * @return List
      */
-    List<Integer> getFloorList(Integer hotelId);
+    List<String> getFloorList(Integer hotelId);
 }
