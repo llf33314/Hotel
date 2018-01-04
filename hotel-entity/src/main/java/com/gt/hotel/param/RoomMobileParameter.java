@@ -98,6 +98,9 @@ public class RoomMobileParameter {
 
         @ApiModelProperty(value = "钟点房入住时间 HH:mm:ss")
         private String hourRoomCheckInTime;
+        
+        @ApiModelProperty(value = "房费")
+        private Integer roomPrice;
     }
 
     @Data

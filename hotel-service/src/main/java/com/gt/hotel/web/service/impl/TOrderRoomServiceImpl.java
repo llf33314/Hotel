@@ -113,8 +113,9 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
     public Integer mobileBookOrder(THotel hotel, Member member, BookParam bookParam) throws ParseException {
         // TODO: 2017/12/20 需要增加客房历史流水记录，方便跟踪入住客房房价历史。
         // FIXME: 2017/12/20 修订业务操作 创建订单多笔订单数量 Bug
+    	RoomOrderPriceVO orderPriceVO = null;
         try {
-            RoomOrderPriceVO orderPriceVO = mobilePriceCalculation(hotel.getId(), member, bookParam);
+             orderPriceVO = mobilePriceCalculation(hotel.getId(), member, bookParam);
             if (!bookParam.getPayPrice().equals(orderPriceVO.getPayPrice())) {
                 log.warn("bookParam Price : {} , orderPriceVo Price : {}", bookParam.getPayPrice(), orderPriceVO.getPayPrice());
                 throw new ResponseEntityException(ResponseEnums.PRICE_FAILED);
@@ -152,7 +153,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
             orderRoom.setHotelId(hotel.getId());
             orderRoom.setHotelName(hotel.getName());
             orderRoom.setReceivablePrice(bookParam.getPayPrice());
-            orderRoom.setRoomPrice(bookParam.getDisplayPrice());
+            orderRoom.setRoomPrice(orderPriceVO.getRoomPrice());
             orderRoom.setOrderFrom(CommonConst.SOURCE_MOBILE);
             orderRoom.setGuestType(0);
             orderRoom.setCreatedAt(date);
