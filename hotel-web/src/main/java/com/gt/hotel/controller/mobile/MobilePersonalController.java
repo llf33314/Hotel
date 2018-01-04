@@ -24,6 +24,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.Member;
+import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
 import com.gt.hotel.dto.ResponseDTO;
@@ -237,6 +238,7 @@ public class MobilePersonalController extends BaseController {
 					bc.setWriteOffStatus(1);
 					bc.setWriter(authorization.getAccountId());
 					if(breakfastCouponsService.updateById(bc)) {
+						wXMPApiUtil.getSocketApi("hotelwrite" + member.getId(), null, "success");
 						modelAndView.setViewName("/writeOff/writeOffSuccess.html");
 					}else {
 						modelAndView.setViewName("/writeOff/writeOffFail.html");
@@ -245,7 +247,7 @@ public class MobilePersonalController extends BaseController {
 					modelAndView.setViewName("/writeOff/writeOffFail.html");
 				}
 			}
-		} catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException | SignException e) {
 			e.printStackTrace();
 		}
 		return modelAndView;

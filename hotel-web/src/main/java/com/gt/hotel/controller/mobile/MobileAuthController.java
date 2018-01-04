@@ -88,7 +88,7 @@ public class MobileAuthController extends BaseController {
     			entity.setUpdatedBy(busId);
     			entity.setMemberId(member.getId());
     			if (authorization.getMemberId() != null && tAuthorizationService.update(entity, wrapper)) {
-    				wxmpApiUtil.getSocketApi("hotel:backsocket", null, "success");
+    				System.err.println(wxmpApiUtil.getSocketApi("hotelauthor" + hotelId, null, "success"));
     				model.setViewName("/author/success.html");
     			} else {
     				model.setViewName("/author/fail.html");
