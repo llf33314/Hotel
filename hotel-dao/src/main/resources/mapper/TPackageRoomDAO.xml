@@ -26,7 +26,7 @@
         a.id, a.package_id, a.category_id, a.category_name, a.rack_rate, a.discount, a.agreement_price, a.mark_modified, a.created_by, a.created_at, a.updated_by, a.updated_at
     </sql>
 
-	<select id="erpQueryPackageRoom" resultType="com.gt.hotel.vo.PackageRoomVo">
+	<select id="erpQueryPackageRoom" resultType="com.gt.hotel.vo.erp.PackageRoomVo">
 		SELECT <include refid="Base_Column_List_VO"/>
 		FROM t_package_room a 
 		JOIN t_package b ON a.package_id = b.id 
@@ -38,4 +38,13 @@
 			AND b.hotel_id = #{hotelId} 
 		</if>
 	</select>
+	
+	<update id="erpUpdateBatch">
+		UPDATE t_package_room 
+    	SET mark_modified = #{packageRoom.markModified}, updated_by = #{file.updatedBy} 
+    	WHERE mark_modified = #{mark} AND id IN 
+    	<foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+			#{item} 
+    	</foreach>
+	</update>
 </mapper>

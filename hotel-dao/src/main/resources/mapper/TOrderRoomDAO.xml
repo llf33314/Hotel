@@ -2,161 +2,180 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gt.hotel.dao.TOrderRoomDAO">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.gt.hotel.entity.TOrderRoom">
-        <id column="id" property="id"/>
-        <result column="order_id" property="orderId"/>
-        <result column="order_num" property="orderNum"/>
-        <result column="hotel_id" property="hotelId"/>
-        <result column="hotel_name" property="hotelName"/>
-        <result column="category_id" property="categoryId"/>
-        <result column="category_name" property="categoryName"/>
-        <result column="check_in_way" property="checkInWay"/>
-        <result column="room_num" property="roomNum"/>
-        <result column="room_id" property="roomId"/>
-        <result column="customer_name" property="customerName"/>
-        <result column="customer_id_type" property="customerIdType"/>
-        <result column="customer_id_card" property="customerIdCard"/>
-        <result column="customer_id_card_image" property="customerIdCardImage"/>
-        <result column="customer_phone" property="customerPhone"/>
-        <result column="number" property="number"/>
-        <result column="room_in_time" property="roomInTime"/>
-        <result column="room_out_time" property="roomOutTime"/>
-        <result column="rack_rate" property="rackRate"/>
-        <result column="receivable_price" property="receivablePrice"/>
-        <result column="deposit" property="deposit"/>
-        <result column="room_price" property="roomPrice"/>
-        <result column="order_from" property="orderFrom"/>
-        <result column="pay_time" property="payTime"/>
-        <result column="pay_status" property="payStatus"/>
-        <result column="activity_id" property="activityId"/>
-        <result column="completion_time" property="completionTime"/>
-        <result column="create_time" property="createTime"/>
-        <result column="mark_modified" property="markModified"/>
-        <result column="created_by" property="createdBy"/>
-        <result column="created_at" property="createdAt"/>
-        <result column="updated_by" property="updatedBy"/>
-        <result column="updated_at" property="updatedAt"/>
-        <result column="guest_type" property="guestType"/>
-        <result column="customer_gender" property="customerGender"/>
-        <result column="check_standard" property="checkStandard"/>
-        <result column="check_out_instructions" property="checkOutInstructions"/>
-        <result column="deposit_visible" property="depositVisible"/>
-        <result column="hour_room_check_in_time" property="hourRoomCheckInTime"/>
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.gt.hotel.entity.TOrderRoom">
+		<id column="id" property="id" />
+		<result column="order_id" property="orderId" />
+		<result column="order_num" property="orderNum" />
+		<result column="hotel_id" property="hotelId" />
+		<result column="hotel_name" property="hotelName" />
+		<result column="category_id" property="categoryId" />
+		<result column="category_name" property="categoryName" />
+		<result column="check_in_way" property="checkInWay" />
+		<result column="room_num" property="roomNum" />
+		<result column="room_id" property="roomId" />
+		<result column="customer_name" property="customerName" />
+		<result column="customer_id_type" property="customerIdType" />
+		<result column="customer_id_card" property="customerIdCard" />
+		<result column="customer_id_card_image" property="customerIdCardImage" />
+		<result column="customer_phone" property="customerPhone" />
+		<result column="number" property="number" />
+		<result column="room_in_time" property="roomInTime" />
+		<result column="room_out_time" property="roomOutTime" />
+		<result column="rack_rate" property="rackRate" />
+		<result column="receivable_price" property="receivablePrice" />
+		<result column="deposit" property="deposit" />
+		<result column="room_price" property="roomPrice" />
+		<result column="order_from" property="orderFrom" />
+		<result column="pay_time" property="payTime" />
+		<result column="pay_status" property="payStatus" />
+		<result column="activity_id" property="activityId" />
+		<result column="completion_time" property="completionTime" />
+		<result column="create_time" property="createTime" />
+		<result column="mark_modified" property="markModified" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_at" property="createdAt" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_at" property="updatedAt" />
+		<result column="guest_type" property="guestType" />
+		<result column="customer_gender" property="customerGender" />
+		<result column="check_standard" property="checkStandard" />
+		<result column="check_out_instructions" property="checkOutInstructions" />
+		<result column="deposit_visible" property="depositVisible" />
+		<result column="hour_room_check_in_time" property="hourRoomCheckInTime" />
+		<result column="organization_id" property="organizationId" />
+	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        order_id, order_num, hotel_id, hotel_name, category_id, category_name, check_in_way, room_num, room_id, customer_name, customer_id_type, customer_id_card, customer_id_card_image, customer_phone, number, room_in_time, room_out_time, rack_rate, receivable_price, deposit, room_price, order_from, pay_time, pay_status, activity_id, completion_time, create_time, mark_modified, created_by, created_at, updated_by, updated_at, guest_type, customer_gender, check_standard, hour_room_check_in_time
-    </sql>
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		order_id, order_num, hotel_id, hotel_name, category_id, category_name,
+		check_in_way, room_num, room_id, customer_name, customer_id_type,
+		customer_id_card, customer_id_card_image, customer_phone, number,
+		room_in_time, room_out_time, rack_rate, receivable_price, deposit,
+		room_price, order_from, pay_time, pay_status, activity_id,
+		completion_time, create_time, mark_modified, created_by, created_at,
+		updated_by, updated_at, guest_type, customer_gender, check_standard,
+		hour_room_check_in_time, organization_id
+	</sql>
 
-    <sql id="Base_Column_List_VO">
-        t_order_room.order_id orderId, t_order_room.order_num orderNum, t_order_room.hotel_id
-        hotelId, t_order_room.hotel_name hotelName, t_order_room.category_id
-        categoryId, t_order_room.category_name categoryName,
-        t_order_room.check_in_way checkInWay, t_order_room.room_num roomNum,
-        t_order_room.customer_name customerName, t_order_room.customer_id_type
-        customerIdType, t_order_room.customer_id_card customerIdCard,
-        t_order_room.customer_id_card_image customerIdCardImage,
-        t_order_room.customer_phone customerPhone, t_order_room.number,
-        t_order_room.room_in_time roomInTime, t_order_room.room_out_time
-        roomOutTime, t_order_room.rack_rate rackRate,
-        t_order_room.receivable_price receivablePrice, t_order_room.deposit,
-        t_order_room.room_price roomPrice, t_order_room.order_from FROM,
-        t_order_room.pay_time payTime, t_order_room.pay_status payStatus,
-        t_order_room.activity_id activityId, t_order_room.completion_time
-        completionTime, t_order_room.create_time createTime,
-        t_order_room.mark_modified markModified, t_order_room.created_by
-        createdBy, t_order_room.created_at createdAt, t_order_room.updated_by
-        updatedBy, t_order_room.updated_at updatedAt, t_order_room.guest_type guestType,
-        t_order_room.customer_gender customerGender, check_standard checkStandard,
-        hour_room_check_in_time hourRoomCheckInTime
-    </sql>
+	<sql id="Base_Column_List_VO">
+		t_order_room.order_id orderId, t_order_room.order_num orderNum, t_order_room.hotel_id
+		hotelId, t_order_room.hotel_name hotelName, t_order_room.category_id
+		categoryId, t_order_room.category_name categoryName,
+		t_order_room.check_in_way checkInWay, t_order_room.room_num roomNum,
+		t_order_room.customer_name customerName, t_order_room.customer_id_type
+		customerIdType, t_order_room.customer_id_card customerIdCard,
+		t_order_room.customer_id_card_image customerIdCardImage,
+		t_order_room.customer_phone customerPhone, t_order_room.number,
+		t_order_room.room_in_time roomInTime, t_order_room.room_out_time
+		roomOutTime, t_order_room.rack_rate rackRate,
+		t_order_room.receivable_price receivablePrice, t_order_room.deposit,
+		t_order_room.room_price roomPrice, t_order_room.order_from FROM,
+		t_order_room.pay_time payTime, t_order_room.pay_status payStatus,
+		t_order_room.activity_id activityId, t_order_room.completion_time
+		completionTime, t_order_room.create_time createTime,
+		t_order_room.mark_modified markModified, t_order_room.created_by
+		createdBy, t_order_room.created_at createdAt, t_order_room.updated_by
+		updatedBy, t_order_room.updated_at updatedAt, t_order_room.guest_type
+		guestType,
+		t_order_room.customer_gender customerGender, check_standard checkStandard,
+		hour_room_check_in_time hourRoomCheckInTime, organization_id organizationId
+	</sql>
 
-    <select id="queryMobileRoomOrderOne" resultType="com.gt.hotel.vo.MobileRoomOrderVo">
-        SELECT
-            a.id                          orderId,
-            b.customer_name               customerName,
-            b.customer_phone              customerPhone,
-            b.room_in_time                roomInTime,
-            b.room_out_time               roomOutTime,
-            b.category_name               categoryName,
-            b.number,
-            a.pay_type                    payType,
-            a.remark,
-            a.hotel_id                    hotelId,
-            c.`name`,
-            c.phone,
-            c.address,
-            c.latitude,
-            c.longitude,
-            a.fb,
-            a.integral,
-            a.fb_discount                 fbDiscount,
-            a.integral_discount           integralDiscount,
-            b.deposit,
-            IFNULL(d.coupons_discount, 0) couponsDiscount,
-            IFNULL(d.coupons_id, 0)       couponsId,
-            IFNULL(d.coupons_num, 0)      couponsNum,
-            a.real_price                  realPrice,
-            b.activity_id                 activityId
-        FROM t_order a
-            JOIN t_order_room b ON a.id = b.order_id
-            JOIN t_hotel c ON a.hotel_id = c.id
-            LEFT JOIN t_order_coupons d ON a.id = d.order_id
-        WHERE a.id = #{orderId} AND a.member_id = #{memberId}
-        GROUP BY orderId
-    </select>
+	<select id="queryMobileRoomOrderOne" resultType="com.gt.hotel.vo.MobileRoomOrderVo">
+		SELECT
+		a.id orderId,
+		b.customer_name customerName,
+		b.customer_phone customerPhone,
+		b.room_in_time roomInTime,
+		b.room_out_time roomOutTime,
+		b.category_name categoryName,
+		b.number,
+		a.pay_type payType,
+		a.remark,
+		a.hotel_id hotelId,
+		c.`name`,
+		c.phone,
+		c.address,
+		c.latitude,
+		c.longitude,
+		a.fb,
+		a.integral,
+		a.fb_discount fbDiscount,
+		a.integral_discount integralDiscount,
+		b.deposit,
+		IFNULL(d.coupons_discount, 0) couponsDiscount,
+		IFNULL(d.coupons_id, 0) couponsId,
+		IFNULL(d.coupons_num, 0) couponsNum,
+		a.real_price realPrice,
+		b.activity_id activityId
+		FROM t_order a
+		JOIN t_order_room b ON a.id = b.order_id
+		JOIN t_hotel c ON a.hotel_id = c.id
+		LEFT JOIN t_order_coupons d ON a.id = d.order_id
+		WHERE a.id = #{orderId} AND a.member_id = #{memberId}
+		GROUP BY orderId
+	</select>
 
-    <select id="queryMobileRoomOrderSUM" resultType="Integer">
-        SELECT SUM(bill_price)
-        FROM t_order
-        WHERE member_id = #{memberId} AND order_status = 3
-    </select>
+	<select id="queryMobileRoomOrderSUM" resultType="Integer">
+		SELECT SUM(bill_price)
+		FROM t_order
+		WHERE member_id = #{memberId} AND order_status = 3
+	</select>
 
-    <select id="roomCheckInCount" resultType="com.gt.hotel.vo.RoomCheackInCountVo">
-        SELECT
-            (SELECT SUM(a.room_count)
-             FROM t_room_category a
-                 JOIN t_hotel b ON a.hotel_id = b.id
-             WHERE b.id = #{hotelId} AND b.bus_id = #{busId} AND a.mark_modified = 0) roomCount,
-            (SELECT SUM(c.number)
-             FROM t_order a
-                 JOIN t_hotel b ON a.hotel_id = b.id
-                 JOIN t_order_room c ON a.id = c.order_id
-             WHERE b.id = #{hotelId} AND b.bus_id = #{busId} AND a.order_status = 4)  checkInRoomCount;
-    </select>
+	<select id="roomCheckInCount" resultType="com.gt.hotel.vo.RoomCheackInCountVo">
+		SELECT
+		(SELECT SUM(a.room_count)
+		FROM t_room_category a
+		JOIN t_hotel b ON a.hotel_id = b.id
+		WHERE b.id = #{hotelId} AND b.bus_id = #{busId} AND a.mark_modified = 0)
+		roomCount,
+		(SELECT SUM(c.number)
+		FROM t_order a
+		JOIN t_hotel b ON a.hotel_id = b.id
+		JOIN t_order_room c ON a.id = c.order_id
+		WHERE b.id = #{hotelId} AND b.bus_id = #{busId} AND a.order_status = 4)
+		checkInRoomCount;
+	</select>
 
-    <select id="getCheckInRoom" resultType="com.gt.hotel.entity.TOrderRoom">
-        SELECT
-        <include refid="Base_Column_List_VO"/>
-        FROM t_order_room a
-        JOIN t_order b ON a.order_id = b.id
-        JOIN t_hotel c ON b.hotel_id = c.id
-        WHERE a.room_in_time BETWEEN #{startDate} AND #{endDate} AND b.mark_modified = 0 AND b.order_status = 4 AND c.id = #{hotelId} AND c.bus_id = #{busId};
-    </select>
+	<select id="getCheckInRoom" resultType="com.gt.hotel.entity.TOrderRoom">
+		SELECT
+		<include refid="Base_Column_List_VO" />
+		FROM t_order_room a
+		JOIN t_order b ON a.order_id = b.id
+		JOIN t_hotel c ON b.hotel_id = c.id
+		WHERE a.room_in_time BETWEEN #{startDate} AND #{endDate} AND
+		b.mark_modified = 0 AND b.order_status = 4 AND c.id = #{hotelId} AND
+		c.bus_id = #{busId};
+	</select>
 
-    <resultMap id="RoomCardVo" type="com.gt.hotel.vo.RoomCardVo">
-        <collection property="BreakfastCoupons" select="com.gt.hotel.dao.TBreakfastCouponsDAO.findBreakfastCoupons"
-                    column="{orderId=orderId, roomNum=roomNum}"/>
-    </resultMap>
+	<resultMap id="RoomCardVo" type="com.gt.hotel.vo.RoomCardVo">
+		<collection property="BreakfastCoupons"
+			select="com.gt.hotel.dao.TBreakfastCouponsDAO.findBreakfastCoupons"
+			column="{orderId=orderId, roomNum=roomNum}" />
+	</resultMap>
 
-    <select id="findRoomCard" resultMap="RoomCardVo">
-        SELECT a.id orderId, b.room_num roomNum, IF(d.breakfast_enable = 0, d.breakfast_quantity, 0) breakfastQuantity, e.free_deposit_enable freeDepositEnable, e.vip_check_out vipCheckOut,
-        c.number, c.rack_rate rackRate, c.deposit, a.fb_discount fbDiscount, a.integral_discount integralDiscount, f.coupons_discount couponsDiscount, MIN(e.vip_level) vipLevel,
-        c.room_price roomPrice, c.hotel_name hotelName, b.`name` customerName, b.phone customerPhone, c.order_from orderFrom
-        FROM t_order a
-        JOIN t_order_room_customer b ON a.id = b.order_id
-        JOIN t_order_room c ON a.id = c.order_id
-        JOIN t_room_category d ON c.category_id = d.id
-        LEFT JOIN t_hotel_member_setting e ON a.hotel_id = e.hotel_id
-        LEFT JOIN t_order_coupons f ON a.id = f.order_id
-        WHERE a.member_id = #{memberId}
-        AND a.mark_modified = 0
-        AND a.order_status = 4
-        <if test="vip != null">
-            AND e.vip_level = #{vip}
-        </if>
-        GROUP BY b.room_num
-    </select>
+	<select id="findRoomCard" resultMap="RoomCardVo">
+		SELECT a.id orderId, b.room_num roomNum, IF(d.breakfast_enable = 0,
+		d.breakfast_quantity, 0) breakfastQuantity, e.free_deposit_enable
+		freeDepositEnable, e.vip_check_out vipCheckOut,
+		c.number, c.rack_rate rackRate, c.deposit, a.fb_discount fbDiscount,
+		a.integral_discount integralDiscount, f.coupons_discount
+		couponsDiscount, MIN(e.vip_level) vipLevel,
+		c.room_price roomPrice, c.hotel_name hotelName, b.`name` customerName, b.phone
+		customerPhone, c.order_from orderFrom
+		FROM t_order a
+		JOIN t_order_room_customer b ON a.id = b.order_id
+		JOIN t_order_room c ON a.id = c.order_id
+		JOIN t_room_category d ON c.category_id = d.id
+		LEFT JOIN t_hotel_member_setting e ON a.hotel_id = e.hotel_id
+		LEFT JOIN t_order_coupons f ON a.id = f.order_id
+		WHERE a.member_id = #{memberId}
+		AND a.mark_modified = 0
+		AND a.order_status = 4
+		<if test="vip != null">
+			AND e.vip_level = #{vip}
+		</if>
+		GROUP BY b.room_num
+	</select>
 </mapper>

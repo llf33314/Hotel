@@ -21,9 +21,12 @@
     <sql id="Base_Column_List">
         id, name, hotel_id, shop_id, remark, module, mark_modified, created_by, created_at, updated_by, updated_at
     </sql>
+    <sql id="Base_Column_List_Vo">
+        id, name, hotel_id hotelId, shop_id shopId, remark, module, mark_modified markModified, created_by createdBy, created_at createdAt, updated_by updatedBy, updated_at updatedAt 
+    </sql>
 
-	<select id="erpQueryPackage" resultType="com.gt.hotel.vo.PackageVo">
-		SELECT <include refid="Base_Column_List" /> 
+	<select id="erpQueryPackage" resultType="com.gt.hotel.vo.erp.PackageVo">
+		SELECT <include refid="Base_Column_List_Vo" /> 
 		FROM t_package a 
 		WHERE a.mark_modified = 0 
 		<if test="hotelId != null">

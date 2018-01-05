@@ -37,7 +37,7 @@
 		a.updated_at
 	</sql>
 
-	<select id="erpQueryAgreementOrganization" resultType="com.gt.hotel.vo.AgreementOrganizationVo">
+	<select id="erpQueryAgreementOrganization" resultType="com.gt.hotel.vo.erp.AgreementOrganizationVo">
 		SELECT c.`name` packageName, b.`name` hotelName,
 		<include refid="Base_Column_List_Vo"/>
 		FROM t_agreement_organization a
@@ -61,4 +61,63 @@
 		</if>
 		
 	</select>
+	
+	<resultMap id="ReceivablesVo" type="com.gt.hotel.vo.erp.ReceivablesVo">
+        <collection property="customers" select="com.gt.hotel.dao.TAgreementOrganizationDAO.erpQueryReceivablesCustomers" column="{orderId=id}"/>
+        <collection property="rooms" select="com.gt.hotel.dao.TAgreementOrganizationDAO.erpQueryReceivablesRoom" column="{orderId=id}"/>
+    </resultMap>
+	<select id="erpQueryReceivables" resultMap="ReceivablesVo">
+		SELECT a.id, a.order_num orderNum, b.customer_name customerName, b.customer_phone customerPhone, a.updated_by operationId, 
+			a.real_price realPrice, c.`name`, c.contract_num contractNum, TO_DAYS(b.room_out_time) - TO_DAYS(b.room_in_time) daysStay,
+			b.room_in_time roomInTime, b.room_out_time roomOutTime, b.guest_type guestType, b.customer_id_type customerIdType, 
+			b.customer_id_card customerIdCard, b.customer_gender customerGender, a.pay_type payType, b.check_standard checkStandard, 
+			a.remark, a.receivable_price receivablePrice, b.deposit, b.number roomOrderNum, b.room_price, b.rack_rate rackRate,
+			IFNULL((a.fb_discount + a.integral_discount + SUM(d.coupons_discount)), 0) discountedPrice, b.activity_id activityId, 
+			a.bill_price billPrice, a.fb, a.integral, a.order_coupons_id orderCouponsId, a.hotel_id hotelId, a.bus_id busId, 
+			a.member_id memberId, a.refund_amount refundAmount, a.create_time createTime, b.order_from orderFrom 
+		FROM t_order a 
+		JOIN t_order_room b ON a.id = b.order_id 
+		JOIN t_agreement_organization c ON b.organization_id = c.id 
+		LEFT JOIN t_order_coupons d ON a.id = d.order_id
+		WHERE a.hotel_id = #{hotelId} AND a.order_status = 3 
+		<if test="param.module != null">
+		AND c.module = #{param.module} 
+		</if>
+		<if test="param.roomInTime != null">
+		<if test="param.roomOutTime != null">
+		AND (b.room_in_time BETWEEN #{param.roomInTime} AND #{param.roomOutTime})
+		</if> 
+		</if>
+		<if test="param.keyword != null">
+		AND (c.`name` LIKE #{param.keyword} OR c.contract_num LIKE #{param.keyword}
+			 OR b.customer_name LIKE #{param.keyword} OR b.customer_phone LIKE #{param.keyword} OR a.order_num LIKE #{param.keyword})
+		</if>
+		GROUP BY a.id 
+	</select>
+	
+	<select id="erpQueryReceivablesCustomers" resultType="com.gt.hotel.vo.erp.ReceivablesCustomersVo">
+		SELECT a.`name` customerName, a.phone customerPhone, a.id_type customerIdType, a.id_card customerIdCard 
+		FROM t_order_room_customer a 
+		WHERE a.order_id = #{orderId}
+	</select>
+	
+	<select id="erpQueryReceivablesRoom" resultType="com.gt.hotel.vo.erp.ReceivablesRoomVo">
+		SELECT a.category_name categoryName, a.room_num roomNum, a.category_id categoryId, 
+			TO_DAYS(a.room_out_time) - TO_DAYS(a.room_in_time) daysStay, b.remark, a.deposit, 
+			a.room_price roomPrice, a.rack_rate rackRate, 
+			`IF`(c.breakfast_enable = 0,c.breakfast_quantity,0) breakfastQuantity
+		FROM t_order_room a 
+		JOIN t_order b ON a.order_id = b.id 
+		JOIN t_room_category c ON a.category_id = c.id 
+		WHERE b.id = #{orderId}
+	</select>
+	
+	<select id="erpQueryReceivablesTotalPrice" resultType="Long">
+		SELECT SUM(a.real_price) 
+		FROM t_order a 
+		JOIN t_order_room b ON a.id = b.order_id 
+		JOIN t_agreement_organization c ON b.organization_id = c.id 
+		WHERE a.hotel_id = #{hotelId} AND a.order_status = 3 AND c.module = #{param.module} 
+	</select>
+	
 </mapper>

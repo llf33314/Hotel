@@ -3,9 +3,9 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotel;
-import com.gt.hotel.param.ERPParameter.ERPSave;
 import com.gt.hotel.param.HotelParameter.HotelQuery;
 import com.gt.hotel.param.HotelParameter.HotelSaveOrUpdate;
+import com.gt.hotel.param.erp.ERPParameter.ERPSave;
 import com.gt.hotel.vo.HotelVo;
 
 /**

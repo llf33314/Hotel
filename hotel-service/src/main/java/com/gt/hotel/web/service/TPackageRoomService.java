@@ -1,10 +1,10 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TPackageRoom;
-import com.gt.hotel.vo.PackageRoomVo;
-
-import java.util.List;
+import com.gt.hotel.vo.erp.PackageRoomVo;
 
 /**
  * <p>
@@ -23,5 +23,7 @@ public interface TPackageRoomService extends BaseService<TPackageRoom> {
 	 * @return
 	 */
 	List<PackageRoomVo> erpQueryPackageRoom(Integer hotelId, Integer packageId);
+
+	void erpUpdateBatch(TPackageRoom pr, List<Integer> ids, Integer mark);
 	
 }

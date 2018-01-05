@@ -1,5 +1,13 @@
 package com.gt.hotel.web.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -10,21 +18,16 @@ import com.gt.hotel.entity.TAgreementOrganization;
 import com.gt.hotel.entity.TPackageRoom;
 import com.gt.hotel.enums.ResponseEnums;
 import com.gt.hotel.exception.ResponseEntityException;
-import com.gt.hotel.param.AgreementParamter.AgreementInsert;
-import com.gt.hotel.param.AgreementParamter.AgreementQuery;
-import com.gt.hotel.vo.AgreementOrganizationVo;
-import com.gt.hotel.vo.PackageRoomVo;
+import com.gt.hotel.param.erp.AgreementParamter.AgreementInsert;
+import com.gt.hotel.param.erp.AgreementParamter.AgreementQuery;
+import com.gt.hotel.param.erp.AgreementParamter.ReceivablesQuery;
+import com.gt.hotel.vo.erp.AgreementOrganizationVo;
+import com.gt.hotel.vo.erp.PackageRoomVo;
+import com.gt.hotel.vo.erp.ReceivablesVo;
 import com.gt.hotel.web.service.TAgreementOrganizationService;
 import com.gt.hotel.web.service.THotelService;
 import com.gt.hotel.web.service.TPackageRoomService;
 import com.gt.hotel.web.service.TPackageService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * <p>
@@ -102,5 +105,18 @@ public class TAgreementOrganizationServiceImpl extends BaseServiceImpl<TAgreemen
         a.setPackageRoomVos(packageRoomVos);
         return a;
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<ReceivablesVo> erpQueryReceivables(Integer hotelId, ReceivablesQuery query) {
+		Page<ReceivablesVo> page = query.initPage();
+		page.setRecords(agreementOrganizationDAO.erpQueryReceivables(hotelId, query, page));
+		return page;
+	}
+
+	@Override
+	public Long erpQueryReceivablesTotalPrice(Integer hotelId) {
+		return agreementOrganizationDAO.erpQueryReceivablesTotalPrice(hotelId);
+	}
 
 }

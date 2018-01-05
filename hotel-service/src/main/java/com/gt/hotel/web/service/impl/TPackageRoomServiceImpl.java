@@ -1,14 +1,15 @@
 package com.gt.hotel.web.service.impl;
 
-import com.gt.hotel.base.BaseServiceImpl;
-import com.gt.hotel.dao.TPackageRoomDAO;
-import com.gt.hotel.entity.TPackageRoom;
-import com.gt.hotel.vo.PackageRoomVo;
-import com.gt.hotel.web.service.TPackageRoomService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.gt.hotel.base.BaseServiceImpl;
+import com.gt.hotel.dao.TPackageRoomDAO;
+import com.gt.hotel.entity.TPackageRoom;
+import com.gt.hotel.vo.erp.PackageRoomVo;
+import com.gt.hotel.web.service.TPackageRoomService;
 
 /**
  * <p>
@@ -27,6 +28,11 @@ public class TPackageRoomServiceImpl extends BaseServiceImpl<TPackageRoomDAO, TP
 	@Override
 	public List<PackageRoomVo> erpQueryPackageRoom(Integer hotelId, Integer packageId) {
 		return packageRoomDAO.erpQueryPackageRoom(hotelId, packageId);
+	}
+
+	@Override
+	public void erpUpdateBatch(TPackageRoom pr, List<Integer> ids, Integer mark) {
+		packageRoomDAO.erpUpdateBatch(pr, ids, mark);
 	}
 	
 }

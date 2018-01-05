@@ -3,9 +3,11 @@ package com.gt.hotel.web.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TAgreementOrganization;
-import com.gt.hotel.param.AgreementParamter.AgreementInsert;
-import com.gt.hotel.param.AgreementParamter.AgreementQuery;
-import com.gt.hotel.vo.AgreementOrganizationVo;
+import com.gt.hotel.param.erp.AgreementParamter.AgreementInsert;
+import com.gt.hotel.param.erp.AgreementParamter.AgreementQuery;
+import com.gt.hotel.param.erp.AgreementParamter.ReceivablesQuery;
+import com.gt.hotel.vo.erp.AgreementOrganizationVo;
+import com.gt.hotel.vo.erp.ReceivablesVo;
 
 /**
  * <p>
@@ -39,5 +41,20 @@ public interface TAgreementOrganizationService extends BaseService<TAgreementOrg
 	 * @return
 	 */
 	AgreementOrganizationVo erpQueryAgreementOrganizationDetail(Integer id);
-	
+
+	/**
+	 * 单位or中介 收款查询 列表
+	 * @param hotelId
+	 * @param query
+	 * @return
+	 */
+	Page<ReceivablesVo> erpQueryReceivables(Integer hotelId, ReceivablesQuery query);
+
+	/**
+	 * 总收款
+	 * @param hotelId
+	 * @return
+	 */
+	Long erpQueryReceivablesTotalPrice(Integer hotelId);
+
 }

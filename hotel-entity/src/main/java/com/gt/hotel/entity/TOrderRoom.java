@@ -180,7 +180,10 @@ public class TOrderRoom extends Model<TOrderRoom> {
      * 钟点房入住时间 HH:mm:ss
      */
     private Date    hourRoomCheckInTime;
-
+    /**
+     * 单位/中介 ID
+     */
+    private Integer organizationId;
 
     @Override
     protected Serializable pkVal() {

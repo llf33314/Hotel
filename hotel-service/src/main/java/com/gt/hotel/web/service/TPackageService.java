@@ -1,10 +1,12 @@
 package com.gt.hotel.web.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.BusUser;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TPackage;
-import com.gt.hotel.param.PackageParamter.PackageQuery;
-import com.gt.hotel.vo.PackageVo;
+import com.gt.hotel.param.erp.PackageParamter.PackageCU;
+import com.gt.hotel.param.erp.PackageParamter.PackageQuery;
+import com.gt.hotel.vo.erp.PackageVo;
 
 /**
  * <p>
@@ -23,5 +25,12 @@ public interface TPackageService extends BaseService<TPackage> {
 	 * @return
 	 */
 	Page<PackageVo> erpQueryPackage(Integer hotelId, PackageQuery query);
+
+	/**
+	 * 套餐 - 新增/编辑
+	 * @param user
+	 * @param packageCU
+	 */
+	void erpPackageCU(BusUser user, PackageCU packageCU);
 	
 }

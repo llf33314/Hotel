@@ -1,11 +1,12 @@
 package com.gt.hotel.dao;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.gt.hotel.entity.TPackageRoom;
-import com.gt.hotel.vo.PackageRoomVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.gt.hotel.entity.TPackageRoom;
+import com.gt.hotel.vo.erp.PackageRoomVo;
 
 /**
  * <p>
@@ -24,5 +25,7 @@ public interface TPackageRoomDAO extends BaseMapper<TPackageRoom> {
 	 * @return
 	 */
 	List<PackageRoomVo> erpQueryPackageRoom(@Param("hotelId") Integer hotelId, @Param("packageId") Integer packageId);
+
+	void erpUpdateBatch(@Param("packageRoom") TPackageRoom pr, @Param("ids") List<Integer> ids, @Param("mark") Integer mark);
 
 }

@@ -1,14 +1,13 @@
 package com.gt.hotel.web.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.TAuthorization;
-import com.gt.hotel.param.ERPParameter.AuthorSave;
-import com.gt.hotel.param.ERPParameter;
-import com.gt.hotel.param.HotelPage;
+import com.gt.hotel.param.erp.ERPParameter;
+import com.gt.hotel.param.erp.ERPParameter.AuthorSave;
 import com.gt.hotel.vo.AuthorizationVo;
-
-import java.util.List;
 
 /**
  * <p>
