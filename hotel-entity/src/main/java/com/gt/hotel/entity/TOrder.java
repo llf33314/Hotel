@@ -43,7 +43,7 @@ public class TOrder extends Model<TOrder> {
      */
 	private Integer memberId;
     /**
-     * 支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金
+     * 支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金 =6 挂账
      */
 	private Integer payType;
     /**

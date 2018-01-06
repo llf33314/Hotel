@@ -128,7 +128,7 @@ public class ErpHotelFinanceController extends BaseController {
     }
     
     @SuppressWarnings("rawtypes")
-    @ApiOperation(value = "协议单位or中介 - 驳回", notes = "协议单位or中介 - 驳回")
+    @ApiOperation(value = "协议单位or中介 - 驳回/取消", notes = "协议单位or中介 - 驳回/取消")
     @PostMapping(value = "{hotelId}/organizationReject/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseDTO organizationReject(
     		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId,
@@ -147,7 +147,7 @@ public class ErpHotelFinanceController extends BaseController {
     	}
     	return ResponseDTO.createBySuccess();
     }
-
+    
     @SuppressWarnings("rawtypes")
     @ApiOperation(value = "设置 - 套餐 - 新增/编辑", notes = "设置 - 套餐 - 新增/编辑")
     @PostMapping(value = "{hotelId}/package", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

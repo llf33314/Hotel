@@ -237,6 +237,10 @@ public final class CommonConst {
      * 5 现金
      */
     public static final Integer PAY_TYPE_CASH        = 5;
+    /**
+     * 6 挂账
+     */
+    public static final Integer PAY_TYPE_HANGING     = 6;
 
     /****************************** 是否已扫码授权 0 是 1 否 ******************************/
 

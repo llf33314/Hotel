@@ -57,7 +57,7 @@ public class ReceivablesVo {
     @ApiModelProperty("会员ID")
     private Integer memberId;
     
-    @ApiModelProperty("支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金")
+    @ApiModelProperty("支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金 =6 挂账")
 	private Integer payType;
 
     @ApiModelProperty("订单流程状态 =0 处理中 =1 已确认 =2 已取消 =3 已完成 =4 已入住 默认0")
@@ -150,4 +150,6 @@ public class ReceivablesVo {
     @ApiModelProperty("商品消费")
     private Integer consumption;
     
+    @ApiModelProperty("房间类型")
+    private String categoryName;
 }

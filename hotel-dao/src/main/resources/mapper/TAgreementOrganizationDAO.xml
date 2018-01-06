@@ -74,25 +74,29 @@
 			a.remark, a.receivable_price receivablePrice, b.deposit, b.number roomOrderNum, b.room_price, b.rack_rate rackRate,
 			IFNULL((a.fb_discount + a.integral_discount + SUM(d.coupons_discount)), 0) discountedPrice, b.activity_id activityId, 
 			a.bill_price billPrice, a.fb, a.integral, a.order_coupons_id orderCouponsId, a.hotel_id hotelId, a.bus_id busId, 
-			a.member_id memberId, a.refund_amount refundAmount, a.create_time createTime, b.order_from orderFrom 
+			a.member_id memberId, a.refund_amount refundAmount, a.create_time createTime, b.order_from orderFrom, b.category_name categoryName 
 		FROM t_order a 
 		JOIN t_order_room b ON a.id = b.order_id 
 		JOIN t_agreement_organization c ON b.organization_id = c.id 
 		LEFT JOIN t_order_coupons d ON a.id = d.order_id
 		WHERE a.hotel_id = #{hotelId} AND a.order_status = 3 
 		<if test="param.module != null">
-		AND c.module = #{param.module} 
+			AND c.module = #{param.module} 
+		</if>
+		<if test="param.orderFrom != null">
+			AND b.order_from = #{param.orderFrom} 
 		</if>
 		<if test="param.roomInTime != null">
 		<if test="param.roomOutTime != null">
-		AND (b.room_in_time BETWEEN #{param.roomInTime} AND #{param.roomOutTime})
+			AND (b.room_in_time BETWEEN #{param.roomInTime} AND #{param.roomOutTime})
 		</if> 
 		</if>
 		<if test="param.keyword != null">
-		AND (c.`name` LIKE #{param.keyword} OR c.contract_num LIKE #{param.keyword}
-			 OR b.customer_name LIKE #{param.keyword} OR b.customer_phone LIKE #{param.keyword} OR a.order_num LIKE #{param.keyword})
+			AND (c.`name` LIKE #{param.keyword} OR c.contract_num LIKE #{param.keyword}
+				 OR b.customer_name LIKE #{param.keyword} OR b.customer_phone LIKE #{param.keyword} OR a.order_num LIKE #{param.keyword})
 		</if>
 		GROUP BY a.id 
+		ORDER BY a.id DESC 
 	</select>
 	
 	<select id="erpQueryReceivablesCustomers" resultType="com.gt.hotel.vo.erp.ReceivablesCustomersVo">
@@ -105,7 +109,7 @@
 		SELECT a.category_name categoryName, a.room_num roomNum, a.category_id categoryId, 
 			TO_DAYS(a.room_out_time) - TO_DAYS(a.room_in_time) daysStay, b.remark, a.deposit, 
 			a.room_price roomPrice, a.rack_rate rackRate, 
-			`IF`(c.breakfast_enable = 0,c.breakfast_quantity,0) breakfastQuantity
+			IF(c.breakfast_enable = 0,c.breakfast_quantity,0) breakfastQuantity
 		FROM t_order_room a 
 		JOIN t_order b ON a.order_id = b.id 
 		JOIN t_room_category c ON a.category_id = c.id 

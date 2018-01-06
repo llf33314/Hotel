@@ -32,6 +32,7 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.Employee;
 import com.gt.hotel.param.erp.AgreementParamter;
 import com.gt.hotel.param.erp.PackageParamter;
+import com.gt.hotel.util.JXCApiUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.erp.AgreementOrganizationVo;
 import com.gt.hotel.vo.erp.PackageRoomVo;
@@ -71,6 +72,9 @@ public class ErpHotelManagerController extends BaseController {
     
     @Autowired
     private THotelService hotelService;
+    
+    @Autowired
+    private JXCApiUtil jxcApiUtil;
 
     @ApiOperation(value = "协议单位or中介列表", notes = "协议单位or中介列表")
     @GetMapping(value = "organization/{hotelId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -120,6 +124,7 @@ public class ErpHotelManagerController extends BaseController {
     		}
     	}
     	Long totalPrice = agreementOrganizationService.erpQueryReceivablesTotalPrice(hotelId);
+    	totalPrice  = totalPrice == null ? 0 : totalPrice;
     	return ResponseDTO.createBySuccess(totalPrice + "", page);
     }
     
@@ -173,7 +178,8 @@ public class ErpHotelManagerController extends BaseController {
     		@ApiParam("组织ID") @PathVariable("packageId") Integer packageId) {
         return ResponseDTO.createBySuccess(packageRoomService.erpQueryPackageRoom(hotelId, packageId));
     }
-
+    
+    
 }
 
 

@@ -38,7 +38,7 @@ public class MobileRoomOrderVo {
 	@ApiModelProperty(value = "客房数量")
 	private Integer number;
 	
-	@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金")
+	@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 储值卡支付 =4 信用卡 =5 现金 =6 挂账")
 	private Integer payType;
 	
 	@ApiModelProperty(value = "备注")

@@ -50,6 +50,10 @@ public class AgreementParamter {
 		
 		@ApiModelProperty("模块类型： 0 单位 1 中介")
 		private Integer module;
+		
+		@ApiModelProperty("来源 1 后台(线下订单) 2 ERP 3 移动端(H5) 4 小程序  5 客户经理 6 中介，默认 0 未知来源  ")
+		private Integer orderFrom;
+		
 	}
 	
 	@Api(description = "协议单位 or 中介 列表 新增参数")

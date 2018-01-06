@@ -1,5 +1,7 @@
 package com.gt.hotel.vo;
 
+import java.util.Map;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,4 +31,6 @@ public class RoomOrderPriceVO {
 	@ApiModelProperty("支付价")
 	private Integer payPrice = 0;
 	
+	@ApiModelProperty("房型ID - 房价")
+	private Map<String, Integer> roomMap;
 }

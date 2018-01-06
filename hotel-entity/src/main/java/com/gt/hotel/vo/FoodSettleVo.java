@@ -29,7 +29,7 @@ public class FoodSettleVo {
 	@ApiModelProperty(value = "房间号")
 	private String roomNum;
 	
-	@ApiModelProperty(value = "支付方式( =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金)")
+	@ApiModelProperty(value = "支付方式( =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金 =6 挂账)")
 	private Integer payType;
 	
 	@ApiModelProperty(value = "发票抬头")

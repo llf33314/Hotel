@@ -107,7 +107,7 @@ public class HotelOrderParameter {
 		@NotEmpty(message = "酒店名称不能为空")
 		private String hotelName;
 		
-		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金", required = true)
+		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金 =6 挂账", required = true)
 		@NotNull(message = "支付类型不能为空")
 		private Integer payType;
 		
@@ -207,7 +207,7 @@ public class HotelOrderParameter {
 		@ApiModelProperty(value = "酒店名称", required = true)
 		private String hotelName;
 
-		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金", required = true)
+		@ApiModelProperty(value = "支付类型 =0 支付宝 =1 微信 =2 到店支付 =3 会员卡支付 =4 信用卡 =5 现金 =6 挂账", required = true)
 		private Integer payType;
 
 		@ApiModelProperty(value = "入住时间", required = true)

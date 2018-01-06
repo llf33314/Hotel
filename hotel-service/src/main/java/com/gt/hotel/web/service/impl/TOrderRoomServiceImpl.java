@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -153,7 +154,8 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
             orderRoom.setHotelId(hotel.getId());
             orderRoom.setHotelName(hotel.getName());
             orderRoom.setReceivablePrice(bookParam.getPayPrice());
-            orderRoom.setRoomPrice(orderPriceVO.getRoomPrice());
+//            orderRoom.setRoomPrice(orderPriceVO.getRoomPrice());
+            orderRoom.setRoomPrice(orderPriceVO.getRoomMap().get(bookParam.getCategoryId()+""));
             orderRoom.setOrderFrom(CommonConst.SOURCE_MOBILE);
             orderRoom.setGuestType(0);
             orderRoom.setCreatedAt(date);
@@ -247,6 +249,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
     public RoomOrderPriceVO mobilePriceCalculation(Integer hotelId, Member member, BookParam bookParam) throws Exception {
         RoomOrderPriceVO orderPriceVO = new RoomOrderPriceVO();
         Integer price = 0;
+        Map<String, Integer> roomMap = new HashMap<String, Integer>();
         /* 日期 */
 //		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        List<Long> timeList = new ArrayList<Long>();
@@ -314,6 +317,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
                 	}
                 	orderPriceVO.setRoomPrice(price* bookParam.getRoomOrderNum());
                 }
+                roomMap.put(m.getId()+"", price);
             }
         }
         price += bookParam.getDeposit();
@@ -326,6 +330,7 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         }
         orderPriceVO.setDeposit(bookParam.getDeposit() * bookParam.getRoomOrderNum());
         orderPriceVO.setPayPrice(price);
+        orderPriceVO.setRoomMap(roomMap);
         return orderPriceVO;
     }
 
