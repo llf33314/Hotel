@@ -6,7 +6,10 @@ import com.gt.hotel.entity.TAgreementOrganization;
 import com.gt.hotel.param.erp.AgreementParamter.AgreementInsert;
 import com.gt.hotel.param.erp.AgreementParamter.AgreementQuery;
 import com.gt.hotel.param.erp.AgreementParamter.ReceivablesQuery;
+import com.gt.hotel.param.erp.HandingParam.HandingQuery;
 import com.gt.hotel.vo.erp.AgreementOrganizationVo;
+import com.gt.hotel.vo.erp.HandingStatisticsVo;
+import com.gt.hotel.vo.erp.HandingVo;
 import com.gt.hotel.vo.erp.ReceivablesVo;
 
 /**
@@ -56,5 +59,20 @@ public interface TAgreementOrganizationService extends BaseService<TAgreementOrg
 	 * @return
 	 */
 	Long erpQueryReceivablesTotalPrice(Integer hotelId);
+
+	/**
+	 * 挂账管理 - 挂账列表
+	 * @param hotelId
+	 * @param param
+	 * @return
+	 */
+	Page<HandingVo> erpQueryHandingList(Integer hotelId, HandingQuery param);
+
+	/**
+	 * 挂账 - 统计
+	 * @param hotelId
+	 * @return
+	 */
+	HandingStatisticsVo erpQueryHandingStatistics(Integer hotelId);
 
 }

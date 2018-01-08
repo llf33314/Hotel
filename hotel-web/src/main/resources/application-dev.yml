@@ -189,6 +189,8 @@ hotel:
                 newPaySuccessByErpBalance: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/newPaySuccessByErpBalance
                 #会员结算退款
                 refundErp: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/refundErp
+                #查询根据ids查询粉丝信息
+                findMemberByids: ${hotel.webserver.MemberService.serviceUrl}/memberAPI/member/findMemberByids
         JxcService:
             serviceUrl: https://jxc.deeptel.com.cn
             account: erp_5

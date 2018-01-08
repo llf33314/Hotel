@@ -21,7 +21,10 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.param.erp.AgreementParamter.AgreementInsert;
 import com.gt.hotel.param.erp.AgreementParamter.AgreementQuery;
 import com.gt.hotel.param.erp.AgreementParamter.ReceivablesQuery;
+import com.gt.hotel.param.erp.HandingParam.HandingQuery;
 import com.gt.hotel.vo.erp.AgreementOrganizationVo;
+import com.gt.hotel.vo.erp.HandingStatisticsVo;
+import com.gt.hotel.vo.erp.HandingVo;
 import com.gt.hotel.vo.erp.PackageRoomVo;
 import com.gt.hotel.vo.erp.ReceivablesVo;
 import com.gt.hotel.web.service.TAgreementOrganizationService;
@@ -119,4 +122,16 @@ public class TAgreementOrganizationServiceImpl extends BaseServiceImpl<TAgreemen
 		return agreementOrganizationDAO.erpQueryReceivablesTotalPrice(hotelId);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Page<HandingVo> erpQueryHandingList(Integer hotelId, HandingQuery param) {
+		Page<HandingVo> page = param.initPage();
+		page.setRecords(agreementOrganizationDAO.erpQueryHandingList(hotelId, param, page));
+		return page;
+	}
+
+	@Override
+	public HandingStatisticsVo erpQueryHandingStatistics(Integer hotelId) {
+		return agreementOrganizationDAO.erpQueryHandingStatistics(hotelId);
+	}
 }

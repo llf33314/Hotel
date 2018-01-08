@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.gt.hotel.entity.TAgreementOrganization;
 import com.gt.hotel.param.erp.AgreementParamter.AgreementQuery;
 import com.gt.hotel.param.erp.AgreementParamter.ReceivablesQuery;
+import com.gt.hotel.param.erp.HandingParam.HandingQuery;
 import com.gt.hotel.vo.erp.AgreementOrganizationVo;
+import com.gt.hotel.vo.erp.HandingStatisticsVo;
+import com.gt.hotel.vo.erp.HandingVo;
 import com.gt.hotel.vo.erp.ReceivablesCustomersVo;
 import com.gt.hotel.vo.erp.ReceivablesRoomVo;
 import com.gt.hotel.vo.erp.ReceivablesVo;
@@ -47,5 +50,21 @@ public interface TAgreementOrganizationDAO extends BaseMapper<TAgreementOrganiza
 	List<ReceivablesRoomVo> erpQueryReceivablesRoom(@Param("orderId") Integer orderId);
 
 	Long erpQueryReceivablesTotalPrice(Integer hotelId);
+
+	/**
+	 * 挂账列表
+	 * @param hotelId
+	 * @param param
+	 * @param page
+	 * @return
+	 */
+	List<HandingVo> erpQueryHandingList(@Param("hotelId") Integer hotelId, @Param("param") HandingQuery param, @Param("page") Pagination page);
+
+	/**
+	 * 挂账 - 统计
+	 * @param hotelId
+	 * @return
+	 */
+	HandingStatisticsVo erpQueryHandingStatistics(@Param("hotelId") Integer hotelId);
 	
 }

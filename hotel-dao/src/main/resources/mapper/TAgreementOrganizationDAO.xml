@@ -123,5 +123,47 @@
 		JOIN t_agreement_organization c ON b.organization_id = c.id 
 		WHERE a.hotel_id = #{hotelId} AND a.order_status = 3 AND c.module = #{param.module} 
 	</select>
+
+	<select id="erpQueryHandingList" resultType="com.gt.hotel.vo.erp.HandingVo">
+		SELECT a.order_id orderId, a.hotel_id hotelId, a.customer_name customerName, 
+			a.customer_phone customerPhone, '' memberCard, 
+			IF(a.organization_id = null, 1, 0) ifOrganization, b.`name`, 
+			IF(a.pay_status = 0, SUM(a.room_price + a.deposit), 0) handingPrice, 
+			IF(a.pay_status = 1, SUM(a.room_price + a.deposit), 0) remandPrice, 
+			SUM(a.room_price + a.deposit) totalPrice
+		FROM t_order_room a 
+		LEFT JOIN t_agreement_organization b ON a.organization_id = b.id 
+		JOIN t_order c ON a.order_id = c.id 
+		WHERE a.hotel_id = #{hotelId} AND c.pay_type = 6 AND (c.pay_status = 1 OR c.pay_status = 0)
+		<if test="param.keyword != null">
+			AND (customerPhone LIKE #{param.keyword} OR customerName LIKE #{param.keyword})
+		</if> 
+		<if test="param.inTime != null">
+		<if test="param.outTime != null">
+			AND a.pay_time BETWEEN #{param.inTime} AND #{param.outTime} 
+		</if>
+		</if>
+		GROUP BY a.order_id 
+	</select>
+		
+	<select id="erpQueryHandingStatistics" resultType="com.gt.hotel.vo.erp.HandingStatisticsVo">
+		SELECT 
+		(SELECT COUNT(DISTINCT a.customer_name)
+		FROM t_order_room a 
+		JOIN t_order c ON a.order_id = c.id 
+		WHERE a.hotel_id = #{hotelId} AND c.pay_type = 6) totalCustomer, 
+		(SELECT SUM(a.room_price + a.deposit) 
+		FROM t_order_room a 
+		JOIN t_order c ON a.order_id = c.id 
+		WHERE a.hotel_id = #{hotelId} AND c.pay_type = 6) totalPrice, 
+		(SELECT SUM(a.room_price + a.deposit) 
+		FROM t_order_room a 
+		JOIN t_order c ON a.order_id = c.id 
+		WHERE a.hotel_id = #{hotelId} AND c.pay_type = 6 AND c.pay_status = 1) handingPrice, 
+		(SELECT SUM(a.room_price + a.deposit) 
+		FROM t_order_room a 
+		JOIN t_order c ON a.order_id = c.id 
+		WHERE a.hotel_id = #{hotelId} AND c.pay_type = 6 AND c.pay_status = 0) remandPrice
+	</select>
 	
 </mapper>

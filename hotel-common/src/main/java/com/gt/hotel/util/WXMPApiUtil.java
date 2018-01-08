@@ -365,6 +365,29 @@ public final class WXMPApiUtil {
         }
         return json;
     }
+    
+    /**
+     * 查询根据ids查询粉丝信息
+     * @param ids 粉丝id字符集合 逗号隔开
+     * @param busId 商家id
+     * @return
+     * @throws SignException
+     */
+    public JSONObject findMemberByids(Integer ids, Integer busId)
+    		throws SignException {
+    	Map<String, Object> paramObj = new HashMap<String, Object>();
+    	paramObj.put("ids", ids);
+    	paramObj.put("busId", busId);
+    	String url = webServerConfigurationProperties.getWxmpService().getApiMap().get("findMemberByids");
+    	String result = SignHttpUtils.WxmppostByHttp(url, paramObj,
+    			webServerConfigurationProperties.getMemberService().getSignKey());
+    	System.err.println(result);
+    	JSONObject json = null;
+    	if (result != null && result.trim().length() > 0) {
+    		json = JSONObject.parseObject(result);
+    	}
+    	return json;
+    }
 
     /**
      * 微信退款
@@ -575,7 +598,7 @@ public final class WXMPApiUtil {
 
     public static void main(String[] args) {
         try {
-//            Map<String, Object> param = new HashMap<String, Object>();
+            Map<String, Object> param = new HashMap<String, Object>();
 //        	param.put("style", 1197);
 //        	String url = "https://deeptel.com.cn" + "/8A5DA52E/dictApi/getDictApi.do";
 //        	param.put("loginStyle", "1");
@@ -591,10 +614,10 @@ public final class WXMPApiUtil {
 //            JSONObject result = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(param), url, JSONObject.class, "WXMP2017");
 
 //        	param.put("cardNo", "13433550667");
-//        	param.put("memberId", 1071);
-//        	param.put("shopId", 29);
-//        	String url = "http://member.yifriend.net" + "/memberAPI/member/findCardByMembeId";
-//        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
+        	param.put("ids", 1225275);
+        	param.put("busId", 36);
+        	String url = "https://member.deeptel.com.cn" + "/memberAPI/member/findMemberByids";
+        	String result = SignHttpUtils.WxmppostByHttp(url, param, "MV8MMFQUMU1HJ6F2GNH40ZFJJ7Q8LNVM");
 //
 //            System.err.println(result);
 
@@ -606,22 +629,22 @@ public final class WXMPApiUtil {
 //            String result = SignHttpUtils.WxmppostByHttp(url, params, signKey);
 //            System.err.println(result);
 
-        	RequestUtils<NewApiSms> a = new RequestUtils<>();
+//        	RequestUtils<NewApiSms> a = new RequestUtils<>();
 //            JSONObject newApiSms = new JSONObject();
 //            newApiSms.put("mobile", "15013990984");
 //            newApiSms.put("paramsStr", "测试,test,测试1,测试1,测试1,测试1");
 //            newApiSms.put("busId", 36);
 //            newApiSms.put("model", 7);
 //            newApiSms.put("tmplId", 58761L);
-        	NewApiSms b = new NewApiSms();
-        	b.setBusId(36);
-        	b.setMobile("15013990984");
-        	b.setParamsStr("eins,SDG,DGDFG,SFD,ASFSA,ASDFDF");
-        	b.setModel(7);
-        	b.setTmplId(58761L);
-        	a.setReqdata(b);
-            String url = "https://deeptel.com.cn/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsNew.do";
-        	JSONObject result2 = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(a), url, JSONObject.class, "WXMP2017");
+//        	NewApiSms b = new NewApiSms();
+//        	b.setBusId(36);
+//        	b.setMobile("15013990984");
+//        	b.setParamsStr("eins,SDG,DGDFG,SFD,ASFSA,ASDFDF");
+//        	b.setModel(7);
+//        	b.setTmplId(58761L);
+//        	a.setReqdata(b);
+//            String url = "https://deeptel.com.cn/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsNew.do";
+//        	JSONObject result2 = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(a), url, JSONObject.class, "WXMP2017");
         	
 //            JSONObject oldApiSms = new JSONObject();
 //            oldApiSms.put("mobiles", "15013990984");
@@ -631,7 +654,7 @@ public final class WXMPApiUtil {
 //            oldApiSms.put("model", 7);
 //            String url = "https://deeptel.com.cn/8A5DA52E/smsapi/6F6D9AD2/79B4DE7C/sendSmsOld.do";
 //            JSONObject result2 = HttpClienUtils.reqPostUTF8(JSONObject.toJSONString(oldApiSms), url, JSONObject.class, "WXMP2017");
-            System.out.println(result2);
+            System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
         }

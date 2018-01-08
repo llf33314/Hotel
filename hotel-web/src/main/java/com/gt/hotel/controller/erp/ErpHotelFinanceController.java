@@ -22,7 +22,6 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gt.api.bean.session.BusUser;
-import com.gt.api.bean.session.Member;
 import com.gt.api.exception.SignException;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.constant.CommonConst;
@@ -35,9 +34,12 @@ import com.gt.hotel.exception.ResponseEntityException;
 import com.gt.hotel.other.MemberCard;
 import com.gt.hotel.param.RoomCategoryParameter.QueryRoomCategory;
 import com.gt.hotel.param.erp.AgreementParamter;
+import com.gt.hotel.param.erp.HandingParam.HandingQuery;
 import com.gt.hotel.param.erp.PackageParamter.PackageCU;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.vo.erp.HandingStatisticsVo;
+import com.gt.hotel.vo.erp.HandingVo;
 import com.gt.hotel.vo.erp.ReceivablesVo;
 import com.gt.hotel.web.service.TAgreementOrganizationService;
 import com.gt.hotel.web.service.THotelService;
@@ -95,10 +97,10 @@ public class ErpHotelFinanceController extends BaseController {
     		@ApiParam("会员ID") @PathVariable("memberId") Integer memberId,
     		HttpServletRequest request) {
     	THotel hotel = hotelService.selectById(hotelId);
-    	Member member = getMember(request);
     	MemberCard memberCard = null;
     	try {
-    		JSONObject json = wxmpApiUtil.findMemberCard(member.getPhone(), member.getBusid(), hotel.getShopId());
+    		JSONObject member = wxmpApiUtil.findMemberByids(memberId, hotel.getBusId());
+    		JSONObject json = wxmpApiUtil.findMemberCard(member.getString("phone"), hotel.getBusId(), hotel.getShopId());
     		if(json != null && json.getInteger("code").equals(0)) {
     			memberCard = JSONObject.toJavaObject(json.getJSONObject("data"), MemberCard.class);
     		}
@@ -189,6 +191,26 @@ public class ErpHotelFinanceController extends BaseController {
 		param.setPageSize(999999);
 		Page<RoomCategoryVo> page = roomCategoryService.queryRoomCategory(param);
     	return ResponseDTO.createBySuccess(page);
+    }
+    
+    @ApiOperation(value = "挂账管理 - 挂账列表", notes = "挂账管理 - 挂账列表")
+    @GetMapping(value = "{hotelId}/hanging", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<Page<HandingVo>> hangingR(
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId, 
+    		@RequestBody @ApiParam("参数") HandingQuery param) {
+    	if(!StringUtils.isEmpty(param.getKeyword())) {
+    		param.setKeyword("%" + param.getKeyword() + "%");
+    	}
+		Page<HandingVo> page = agreementOrganizationService.erpQueryHandingList(hotelId, param);
+    	return ResponseDTO.createBySuccess(page);
+    }
+    
+    @ApiOperation(value = "挂账管理 - 挂账列表 - 统计", notes = "挂账管理 - 挂账列表 - 统计")
+    @GetMapping(value = "{hotelId}/hangingStatistics", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<HandingStatisticsVo> hangingStatisticsR(
+    		@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId) {
+    	HandingStatisticsVo hs = agreementOrganizationService.erpQueryHandingStatistics(hotelId);
+    	return ResponseDTO.createBySuccess(hs);
     }
     
 }
