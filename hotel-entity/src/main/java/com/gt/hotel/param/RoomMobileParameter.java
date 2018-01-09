@@ -101,6 +101,9 @@ public class RoomMobileParameter {
         
         @ApiModelProperty(value = "房费")
         private Integer roomPrice;
+        
+        @ApiModelProperty(value = "会员ID")
+        private Integer memberId;
     }
 
     @Data

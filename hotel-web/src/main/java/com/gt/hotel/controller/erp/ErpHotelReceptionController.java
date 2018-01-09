@@ -1,24 +1,39 @@
 package com.gt.hotel.controller.erp;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.gt.api.bean.session.BusUser;
 import com.gt.hotel.base.BaseController;
 import com.gt.hotel.dto.ResponseDTO;
 import com.gt.hotel.param.erp.ErpRoomCategoryParam;
+import com.gt.hotel.param.erp.ReceptionParamter.ImmediateCheckInParam;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.erp.ErpRoomCategoryVo;
 import com.gt.hotel.vo.erp.ErpRoomStatusVo;
+import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TRoomCategoryService;
 import com.gt.hotel.web.service.TRoomService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 酒店ERP - 前台
@@ -44,6 +59,9 @@ public class ErpHotelReceptionController extends BaseController {
     @Autowired
     private TRoomService roomService;
 
+    @Autowired
+    private TOrderRoomService orderRoomService;
+    
     /**
      * 获取房型下的 客房列表与状态信息
      *
@@ -104,6 +122,16 @@ public class ErpHotelReceptionController extends BaseController {
         return null;
     }
 
-
+    @SuppressWarnings({"rawtypes"})
+    @ApiOperation(value = "直接入住", notes = "直接入住")
+    @PostMapping(value = "immediateCheckIn", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO immediateCheckIn(@Validated @RequestBody ImmediateCheckInParam order, 
+    		BindingResult bindingResult, 
+    		HttpServletRequest request) {
+        invalidParameter(bindingResult);
+        BusUser user = getLoginUser(request);
+        orderRoomService.erpImmediateCheckIn(order, user);
+        return ResponseDTO.createBySuccess();
+    }
     
 }

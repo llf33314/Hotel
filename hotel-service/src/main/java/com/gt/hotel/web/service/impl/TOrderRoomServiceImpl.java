@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseServiceImpl;
 import com.gt.hotel.constant.CommonConst;
@@ -38,6 +39,7 @@ import com.gt.hotel.other.DuofenCards;
 import com.gt.hotel.other.MemberCard;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
+import com.gt.hotel.param.erp.ReceptionParamter.ImmediateCheckInParam;
 import com.gt.hotel.util.DateUtil;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.ActivityDetailVo;
@@ -523,6 +525,28 @@ public class TOrderRoomServiceImpl extends BaseServiceImpl<TOrderRoomDAO, TOrder
         if (!orderRoomService.updateById(orderRoom)) {
         	throw new ResponseEntityException(ResponseEnums.OPERATING_ERROR);
         }
+	}
+
+
+	@Override
+	public void erpImmediateCheckIn(ImmediateCheckInParam param, BusUser user) {
+		Date date = new Date();
+		TOrder order = new TOrder();
+        BeanUtils.copyProperties(param, order);
+        order.setBusId(user.getId());
+        order.setOrderNum("DD" + System.currentTimeMillis());
+		order.setCreateTime(date);
+        order.setRealPrice(param.getPayPrice());
+        order.setBillPrice(param.getPayPrice());
+        order.setReceivablePrice(param.getPayPrice() - param.getDeposit());
+        order.setCreatedAt(date);
+        order.setCreatedBy(user.getId());
+        order.setUpdatedBy(user.getId());
+        if (!orderService.insert(order)) {
+            throw new ResponseEntityException(ResponseEnums.BOOK_FAILED);
+        }
+        
+        
 	}
 
 }

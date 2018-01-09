@@ -1,18 +1,24 @@
 package com.gt.hotel.web.service;
 
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.BusUser;
 import com.gt.api.bean.session.Member;
 import com.gt.hotel.base.BaseService;
 import com.gt.hotel.entity.THotel;
 import com.gt.hotel.entity.TOrderRoom;
 import com.gt.hotel.param.RoomMobileParameter.BookParam;
 import com.gt.hotel.param.RoomMobileParameter.RoomCardParam;
-import com.gt.hotel.vo.*;
-
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
+import com.gt.hotel.param.erp.ReceptionParamter.ImmediateCheckInParam;
+import com.gt.hotel.vo.CheackInListRevenueVo;
+import com.gt.hotel.vo.MobileRoomOrderVo;
+import com.gt.hotel.vo.RoomCardVo;
+import com.gt.hotel.vo.RoomCheackInCountVo;
+import com.gt.hotel.vo.RoomOrderPriceVO;
 
 /**
  * <p>
@@ -96,5 +102,12 @@ public interface TOrderRoomService extends BaseService<TOrderRoom> {
 	 * @return
 	 */
 	void moblieHotelRoomPayReturnUrl(Integer orderId);
+
+	/**
+	 * 直接入住
+	 * @param order
+	 * @param user
+	 */
+	void erpImmediateCheckIn(ImmediateCheckInParam order, BusUser user);
 
 }

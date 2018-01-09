@@ -18,6 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +28,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.gt.api.bean.session.Member;
 import com.gt.api.bean.sign.SignBean;
 import com.gt.api.exception.SignException;
 import com.gt.api.util.sign.SignUtils;
@@ -39,14 +42,18 @@ import com.gt.hotel.other.HotelShopInfo;
 import com.gt.hotel.other.HotelWsWxShopInfoExtend;
 import com.gt.hotel.other.MemberCard;
 import com.gt.hotel.param.RoomCategoryParameter;
+import com.gt.hotel.param.RoomMobileParameter;
 import com.gt.hotel.properties.WebServerConfigurationProperties;
 import com.gt.hotel.util.WXMPApiUtil;
 import com.gt.hotel.vo.ConfigVO;
+import com.gt.hotel.vo.HotelBackRoomOrderVo;
 import com.gt.hotel.vo.HotelMemberSettingVo;
 import com.gt.hotel.vo.HotelVo;
 import com.gt.hotel.vo.RoomCategoryVo;
+import com.gt.hotel.vo.RoomOrderPriceVO;
 import com.gt.hotel.web.service.THotelMemberSettingService;
 import com.gt.hotel.web.service.THotelService;
+import com.gt.hotel.web.service.TOrderRoomService;
 import com.gt.hotel.web.service.TRoomCategoryService;
 
 import io.swagger.annotations.Api;
@@ -77,6 +84,9 @@ public class ErpHotelCommonController extends BaseController {
 
 	@Autowired
 	THotelMemberSettingService hotelMemberSettingService;
+	
+	@Autowired
+	private TOrderRoomService orderRoomService;
 
     private static final Logger logger = LoggerFactory.getLogger(ErpHotelCommonController.class);
 
@@ -203,8 +213,12 @@ public class ErpHotelCommonController extends BaseController {
 		THotel hotel = hotelService.selectById(hotelId);
     	MemberCard memberCard = null;
     	try {
-    		JSONObject member = wxmpApiUtil.findMemberByids(memberId, hotel.getBusId());
-    		JSONObject json = wxmpApiUtil.findMemberCard(member.getString("phone"), hotel.getBusId(), hotel.getShopId());
+    		JSONObject memberByids = wxmpApiUtil.findMemberByids(memberId, hotel.getBusId());
+    		JSONObject memberInfo = null;
+    		if(memberByids.getIntValue("code") != 0) {
+        		memberInfo = (JSONObject) memberByids.getJSONArray("data").get(0);
+    		}
+    		JSONObject json = wxmpApiUtil.findMemberCard(memberInfo.getString("phone"), hotel.getBusId(), hotel.getShopId());
     		if(json != null && json.getInteger("code").equals(0)) {
     			memberCard = JSONObject.toJavaObject(json.getJSONObject("data"), MemberCard.class);
     		}
@@ -214,4 +228,55 @@ public class ErpHotelCommonController extends BaseController {
         return ResponseDTO.createBySuccess(memberCard);
 	}
 
+	@ApiOperation(value = "搜索会员", notes = "搜索会员")
+	@GetMapping(value = "{hotelId}/searchMember/{phone}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseDTO<Page<HotelBackRoomOrderVo>> searchMember(
+			@ApiParam("酒店ID") @PathVariable("hotelId") Integer hotelId, 
+			@ApiParam("手机") @PathVariable("phone") String phone, 
+			HttpServletRequest request) {
+		Integer busid = getLoginUser(request).getId();
+		THotel hotel = hotelService.selectById(hotelId);
+		try {
+			JSONObject json = wxmpApiUtil.findMemberCard(phone, busid, hotel.getShopId());
+			if(json.getIntValue("code") == 0) {
+				JSONObject card = json.getJSONObject("data");
+				JSONObject result = new JSONObject();
+				result.put("consumption", orderRoomService.queryMobileRoomOrderSUM(card.getInteger("memberId")));
+				result.put("memberInfo", card);
+				return ResponseDTO.createBySuccess();
+			}else {
+				return ResponseDTO.createByError();
+			}
+		} catch (SignException e) {
+			e.printStackTrace();
+			return ResponseDTO.createByError();
+		}
+	}
+	
+	@ApiOperation(value = "价格计算", notes = "价格计算")
+    @PostMapping(value = "{hotelId}/getPrice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseDTO<RoomOrderPriceVO> moblieHotelRoomGetPrice(
+            @PathVariable("hotelId") Integer hotelId,
+            @RequestBody RoomMobileParameter.BookParam bookParam,
+            HttpServletRequest request) {
+        RoomOrderPriceVO price = null;
+        try {
+        	THotel hotel = hotelService.selectById(hotelId);
+        	Member member = null;
+        	JSONObject memberByids = wxmpApiUtil.findMemberByids(bookParam.getMemberId(), hotel.getBusId());
+        	if(memberByids.getIntValue("code") != 0) {
+        		JSONObject memberInfo = (JSONObject) memberByids.getJSONArray("data").get(0); 
+        		member = new Member();
+        		member.setId(memberInfo.getInteger("id"));
+        		member.setBusid(hotel.getBusId());
+        		member.setPhone(memberInfo.getString("phone"));
+        	}
+            price = orderRoomService.mobilePriceCalculation(hotelId, member, bookParam);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.createByErrorMessage("价格计算出错");
+        }
+        return ResponseDTO.createBySuccess(price);
+    }
+	
 }
